@@ -1,0 +1,19 @@
+as_factors: FALSE
+attach_internal_libraries: FALSE
+cache_loading: FALSE
+cache_loaded_data: FALSE
+data_loading: TRUE
+data_loading_header: TRUE
+data_ignore:
+load_libraries: TRUE
+libraries: checkpoint, dataMeta, data.table, devtools, dplyr, DT, ezknitr, flexdashboard, flextable, formatR,
+            formattable, futile.logger, janitor, knitr, lubridate, openxlsx, orca, pacman, pdftools, plyr,
+            ProjectTemplate, readxl, reprex, reshape2, rio, rmarkdown, stringr, tidyverse, tryCatchLog, xlsx,
+            xtable, zoo
+logging: TRUE
+logging_level: INFO
+munging: TRUE
+recursive_loading: TRUE
+sticky_variables: NONE
+version: 0.9.0
+tables_type: data_table
