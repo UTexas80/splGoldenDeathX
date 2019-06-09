@@ -1,0 +1,20 @@
+[renv]
+Version=0.4.0-25
+
+[R]
+Version=3.6.0
+Repositories=
+	CRAN=https://cran.rstudio.com/
+
+[R/Package/ProjectTemplate]
+Package=ProjectTemplate
+Version=0.9.0
+Source=GitHub
+RemoteType=github
+RemoteHost=api.github.com
+RemoteRepo=ProjectTemplate
+RemoteUsername=KentonWhite
+RemoteRef=master
+RemoteSha=fa987a8c7961e0da49a84cdf421d1764e3052115
+Hash=564fe77de87171873c2e206addd904e0
+

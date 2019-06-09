@@ -1,6 +1,6 @@
 # VERSION HISTORY
 z99.version = "1.0.0"
-z99.ModDate = as.Date("2019-01-01")
+z99.ModDate = as.Date("2019-06-09")
 
 # save RData image
 save.image("readability.RData")
@@ -68,7 +68,7 @@ while (last.diagnostic <= nrow(diagnostic)){
 }
 
 finish.time = Sys.time()
-time = finish.time = start.time
+time = finish.time - start.time
 
 # 2019.01.01 - v.1.0.0                                                          http://tinyurl.com/y54k8gsw
 #  1st release                                                                  http://tinyurl.com/yx9w8vje
