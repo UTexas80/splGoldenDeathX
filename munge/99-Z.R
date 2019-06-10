@@ -60,7 +60,7 @@ diagnostic.rows = 19   #MAGIC NUMBER - TRIAL & ERROR
 
 while (last.diagnostic <= nrow(diagnostic)){
   tmp.diagnostic = diagnostic[last.diagnostic:min(nrow(diagnostic),last.diagnostic+diagnostic.rows),]
-  layout(c(1,1))
+  # layout(c(1,1))
   # textplot(cbind(tmp.diagnostic),valign="top") 
 
   
@@ -68,7 +68,7 @@ while (last.diagnostic <= nrow(diagnostic)){
 }
 
 finish.time = Sys.time()
-time = finish.time - start.time
+timeProcessing <- finish.time - start.time
 
 # 2019.01.01 - v.1.0.0                                                          http://tinyurl.com/y54k8gsw
 #  1st release                                                                  http://tinyurl.com/yx9w8vje

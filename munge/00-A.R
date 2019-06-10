@@ -4,7 +4,7 @@
 # checkpoint("2015-01-15") ## or any date in YYYY-MM-DD format after 2014-09-17  https://tinyurl.com/yddh54gn
 
 # Processing Start Time
-start.time = Sys.time()
+start.time <- Sys.time()
 
 # VERSION HISTORY
 a00.version = "1.0.0"
