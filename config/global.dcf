@@ -7,7 +7,7 @@ data_loading_header: TRUE
 data_ignore:
 load_libraries: TRUE
 libraries: checkpoint, dataMeta, data.table, devtools, dplyr, DT, ezknitr, flexdashboard, flextable, formatR, formattable,
-             futile.logger, janitor, knitr, lubridate, openxlsx, orca, pacman, pdftools, plyr, ProjectTemplate, readxl,
+             futile.logger, janitor, knitr, lubridate, openxlsx, orca, pacman, pdftools, plyr, ProjectTemplate, purrr, readxl,
              renv, reprex, reshape2, rio, rmarkdown, stringr, tidyverse, tryCatchLog, xlsx, xtable, zoo
 logging: TRUE
 logging_level: INFO

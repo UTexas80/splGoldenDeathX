@@ -7,6 +7,7 @@ SPL <- tq_get("SPL.AX")                                                         
 SPL<-SPL[complete.cases(SPL),]                                                  # Delete NA
 date_1 <- SPL$date                                                              # Create date variable
 date <- date_1 + 1
+date <- date_1 
 key<-paste(as.character(format(date, "%Y")), as.character(format(date, "%m")), as.character(format(date, "%d")), "spl", sep = "")
 # TTR Processing ----------------------------------------------------------------------------------- 
 ad <- chaikinAD(SPL[,c("high","low","close")], SPL[,"volume"])                  # Chaikin Accumulation / Distribution Index
@@ -154,6 +155,32 @@ tblMA_GoldenDeathX_EMA  <- tblMA_GoldenDeathX_EMA %>%
         )
     )
 
+tblMA_GoldenDeathX_EMA <- data.table(tblMA_GoldenDeathX_EMA)                    # https://tinyurl.com/yytlybll
+# tblMA_GoldenDeathX_EMA <- tblMA_GoldenDeathX_EMA %>%
+#    .[event!=""] %>% .[, group:= rleid(tblMA_GoldenDeathX_EMA$event)]
+# tblMA_GoldenDeathX_EMA[event!=""] 
+tblMA_GoldenDeathX_EMA$group <-rleid(tblMA_GoldenDeathX_EMA$event)              # prefix with 'grp' perform a group by with elements that are contiguous
+# tblMA_GoldenDeathX_EMA[, id := .GRP, by = event]
+# tblMA_GoldenDeathX_EMA$group <-rleid(tblMA_GoldenDeathX_EMA$event, prefix="grp")# prefix with 'grp' perform a group by with elements that are contiguous
+# tblMA_GoldenDeathX_EMA[event!=""][tblMA_GoldenDeathX_EMA$group <-rleid(tblMA_GoldenDeathX_EMA$event) ] 
+tblMA_GoldenDeathX_EMA <-tblMA_GoldenDeathX_EMA %>%
+    unite("event", event, group, sep = "")
+#tblMA_GoldenDeathX_EMA[, count :=.N, by = event]
+# x<-data.table::dcast(dtEMA, key ~date, value.var = 'event', subset=.(event %like% 'D' | event %like% 'G'))
+dtEMA<-tblMA_GoldenDeathX_EMA[order(event)][, .SD[c(1, .N)], by = event]
+x<-data.table::dcast(dtEMA, key ~date, value.var = 'event', subset=.(event %like% 'D' | event %like% 'G'))
+dtEMA<-dtEMA[, .SD[1], by=event][dtEMA[, .SD[2], by=event],on='event', nomatch=0][,c(1,3,12)] 
+tblMA_GoldenDeathX_EMA<-add_count(tblMA_GoldenDeathX_EMA, event)
+# x<-data.table::dcast(dtEMA, key ~date, value.var = 'event', subset=.(event %like% 'D' | event %like% 'G'))
+
+#dtEMA[data.table(SPL), on="date", nomatch=0][,c(1:2,4,8,3)]
+#dtEMA[data.table(SPL), on="date", nomatch=0][,c(1:2,4,8,3)][data.table(SPL), on=c("i.date","date"), nomatch=0]
+
+names(dtEMA)[3]<-"dateEnd"
+SPL<-data.table(SPL)
+setkey(dtEMA,dateEnd)
+setkey(SPL, date)
+dtEMA<-dtEMA[data.table(SPL), on="date", nomatch=0][SPL, nomatch=0][,c(1:2,4,8,3,10,14)]
 #vma <- 
 tblMA_TRIX <- data.frame(key,date,"spl",trix)                                   # Create Triple Smoothed Exponential Oscillator Moving Average Table
 tblMA_VWAS20 <- data.frame(key,date,"spl", vwas.20)                             # Create Volume-weighted moving average table
