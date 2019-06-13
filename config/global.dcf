@@ -6,9 +6,10 @@ data_loading: TRUE
 data_loading_header: TRUE
 data_ignore:
 load_libraries: TRUE
-libraries: checkpoint, dataMeta, data.table, devtools, dplyr, DT, ezknitr, flexdashboard, flextable, formatR, formattable,
-             futile.logger, janitor, knitr, lubridate, openxlsx, orca, pacman, pdftools, plyr, ProjectTemplate, purrr, readxl,
-             renv, reprex, reshape2, rio, rmarkdown, stringr, tidyverse, tryCatchLog, xlsx, xtable, zoo
+libraries: checkpoint, dataMeta, data.table, devtools, DT, ezknitr, FinancialInstrument, flexdashboard, flextable, forecast, foreach, formatR, formattable,
+             futile.logger, highcharter, janitor, knitr, lubridate, openxlsx, orca, pacman, pdftools, PerformanceAnalytics, plyr, ProjectTemplate,
+             quantmod, quantstrat, readxl, renv, reprex, reshape2, rio, rmarkdown, scales, shiny, statar, stringr, tibbletime, tidyquant, tidyverse, timetk, timeSeries, 
+             tryCatchLog, TSstudio, TTR, xlsx, xtable, xts, zoo
 logging: TRUE
 logging_level: INFO
 munging: TRUE

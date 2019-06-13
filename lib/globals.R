@@ -9,6 +9,7 @@ add.config(
   header = "USG Tuition Differential" # header in reports
 )
 
+symbols <- c("SPL.AX")
 # Add project specific configuration that can be overridden from load.project()
 add.config(
   apply.override = TRUE

@@ -70,5 +70,5 @@ while (last.diagnostic <= nrow(diagnostic)){
 finish.time = Sys.time()
 timeProcessing <- finish.time - start.time
 
-# 2019.01.01 - v.1.0.0                                                          http://tinyurl.com/y54k8gsw
+# 2019.06.09 - v.1.0.0                                                          http://tinyurl.com/y54k8gsw
 #  1st release                                                                  http://tinyurl.com/yx9w8vje

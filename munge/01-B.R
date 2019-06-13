@@ -55,17 +55,17 @@ wad <- williamsAD(SPL[,c("high","low","close")])                                
 # Moving Averages
 ema.005 <-EMA(SPL$close, 5)                                                     # Exponential Moving Average - EMA calculates an exponentially-weighted mean, giving more weight to recent observations
 sma.005 <-SMA(SPL$close, 5)                                                     # Simple Moving Average - SMA calculates the arithmetic mean of the series over the past n observations.
-ema.010 <-EMA(SPL$close, 10)                                                     # Exponential Moving Average - EMA calculates an exponentially-weighted mean, giving more weight to recent observations
-sma.010 <-SMA(SPL$close, 10)                                                     # Simple Moving Average - SMA calculates the arithmetic mean of the series over the past n observations.
-sma.015 <-SMA(SPL$close, 15)                                                     # Simple Moving Average - SMA calculates the arithmetic mean of the series over the past n observations.
-ema.020 <-EMA(SPL$close, 20)                                                     # Exponential Moving Average - EMA calculates an exponentially-weighted mean, giving more weight to recent observations
-sma.020 <-SMA(SPL$close, 20)                                                     # Simple Moving Average - SMA calculates the arithmetic mean of the series over the past n observations.
-ema.050 <-EMA(SPL$close, 50)                                                     # Exponential Moving Average - EMA calculates an exponentially-weighted mean, giving more weight to recent observations
-sma.050 <-SMA(SPL$close, 50)                                                     # Simple Moving Average - SMA calculates the arithmetic mean of the series over the past n observations.
-ema.100 <-EMA(SPL$close, 100)                                                     # Exponential Moving Average - EMA calculates an exponentially-weighted mean, giving more weight to recent observations
-sma.100 <-SMA(SPL$close, 100)                                                     # Simple Moving Average - SMA calculates the arithmetic mean of the series over the past n observations.
-ema.200 <-EMA(SPL$close, 200)                                                     # Exponential Moving Average - EMA calculates an exponentially-weighted mean, giving more weight to recent observations
-sma.200 <-SMA(SPL$close, 200)                                                     # Simple Moving Average - SMA calculates the arithmetic mean of the series over the past n observations.
+ema.010 <-EMA(SPL$close, 10)                                                    # Exponential Moving Average - EMA calculates an exponentially-weighted mean, giving more weight to recent observations
+sma.010 <-SMA(SPL$close, 10)                                                    # Simple Moving Average - SMA calculates the arithmetic mean of the series over the past n observations.
+sma.015 <-SMA(SPL$close, 15)                                                    # Simple Moving Average - SMA calculates the arithmetic mean of the series over the past n observations.
+ema.020 <-EMA(SPL$close, 20)                                                    # Exponential Moving Average - EMA calculates an exponentially-weighted mean, giving more weight to recent observations
+sma.020 <-SMA(SPL$close, 20)                                                    # Simple Moving Average - SMA calculates the arithmetic mean of the series over the past n observations.
+ema.050 <-EMA(SPL$close, 50)                                                    # Exponential Moving Average - EMA calculates an exponentially-weighted mean, giving more weight to recent observations
+sma.050 <-SMA(SPL$close, 50)                                                    # Simple Moving Average - SMA calculates the arithmetic mean of the series over the past n observations.
+ema.100 <-EMA(SPL$close, 100)                                                   # Exponential Moving Average - EMA calculates an exponentially-weighted mean, giving more weight to recent observations
+sma.100 <-SMA(SPL$close, 100)                                                   # Simple Moving Average - SMA calculates the arithmetic mean of the series over the past n observations.
+ema.200 <-EMA(SPL$close, 200)                                                   # Exponential Moving Average - EMA calculates an exponentially-weighted mean, giving more weight to recent observations
+sma.200 <-SMA(SPL$close, 200)                                                   # Simple Moving Average - SMA calculates the arithmetic mean of the series over the past n observations.
 
 alma.20 <- ALMA(SPL$close, 20)                                                  # Arnaud Legoux moving average - ALMA inspired by Gaussian filters. Tends to put less weight on most recent observations, reducing tendency to overshoot.
 dema.20 <- DEMA(SPL$close, 20)                                                  # Double Exponential Moving Average
@@ -151,25 +151,44 @@ tblMA_GoldenDeathX_EMA  <- tblMA_GoldenDeathX_EMA %>%
         event = case_when(
             ema.020 > ema.050 & ema.050 > ema.100 & ema.100 > ema.200 ~ "GoldenX", 
             ema.200 > ema.100 & ema.100 > ema.050  & ema.050 > ema.020 ~ "DeathX",
-            TRUE                      ~ ""
+            TRUE                      ~ "n"
         )
     )
 
-tblMA_GoldenDeathX_EMA <- data.table(tblMA_GoldenDeathX_EMA)                    # https://tinyurl.com/yytlybll
+tblMA_GoldenDeathX_EMA <- data.table(tblMA_GoldenDeathX_EMA)
 # tblMA_GoldenDeathX_EMA <- tblMA_GoldenDeathX_EMA %>%
 #    .[event!=""] %>% .[, group:= rleid(tblMA_GoldenDeathX_EMA$event)]
 # tblMA_GoldenDeathX_EMA[event!=""] 
-tblMA_GoldenDeathX_EMA$group <-rleid(tblMA_GoldenDeathX_EMA$event)              # prefix with 'grp' perform a group by with elements that are contiguous
+################################################################################
+## prefix with 'grp' perform a group by with elements that are contiguous ###   https://tinyurl.com/yytlybll
+################################################################################
+tblMA_GoldenDeathX_EMA$group <-rleid(tblMA_GoldenDeathX_EMA$event)
+
+tblMA_GoldenDeathX_EMA <-tblMA_GoldenDeathX_EMA %>%
+    unite("event", event, group, sep = "")
+
+################################################################################
+## Convert data.frame columns from factors to characters ###                    https://tinyurl.com/y4bmk8eq
+################################################################################
+tblMA_GoldenDeathX_EMA %>% mutate_if(is.numeric, as.character) -> tblMA_GoldenDeathX_EMA            
+tblMA_GoldenDeathX_EMA <- tblMA_GoldenDeathX_EMA[, c(2, 1, 3:10)]                                   
+
+################################################################################
+## convert dataframe to xts ###                                                 https://tinyurl.com/y66xbu3h
+################################################################################
+qxts <- xts(tblMA_GoldenDeathX_EMA[,-1], order.by=tblMA_GoldenDeathX_EMA[,1])
+
+
 # tblMA_GoldenDeathX_EMA[, id := .GRP, by = event]
 # tblMA_GoldenDeathX_EMA$group <-rleid(tblMA_GoldenDeathX_EMA$event, prefix="grp")# prefix with 'grp' perform a group by with elements that are contiguous
 # tblMA_GoldenDeathX_EMA[event!=""][tblMA_GoldenDeathX_EMA$group <-rleid(tblMA_GoldenDeathX_EMA$event) ] 
-tblMA_GoldenDeathX_EMA <-tblMA_GoldenDeathX_EMA %>%
-    unite("event", event, group, sep = "")
 #tblMA_GoldenDeathX_EMA[, count :=.N, by = event]
 # x<-data.table::dcast(dtEMA, key ~date, value.var = 'event', subset=.(event %like% 'D' | event %like% 'G'))
+
+
 dtEMA<-tblMA_GoldenDeathX_EMA[order(event)][, .SD[c(1, .N)], by = event]
 x<-data.table::dcast(dtEMA, key ~date, value.var = 'event', subset=.(event %like% 'D' | event %like% 'G'))
-dtEMA<-dtEMA[, .SD[1], by=event][dtEMA[, .SD[2], by=event],on='event', nomatch=0][,c(1,3,12)] 
+dtEMA<-dtEMA[, .SD[1], by=event][dtEMA[, .SD[2], by=event],on='event', nomatch=0][,c(1,3)] 
 tblMA_GoldenDeathX_EMA<-add_count(tblMA_GoldenDeathX_EMA, event)
 # x<-data.table::dcast(dtEMA, key ~date, value.var = 'event', subset=.(event %like% 'D' | event %like% 'G'))
 
