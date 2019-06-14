@@ -176,7 +176,7 @@ tblMA_GoldenDeathX_EMA <- tblMA_GoldenDeathX_EMA[, c(2, 1, 3:10)]
 ################################################################################
 ## convert dataframe to xts ###                                                 https://tinyurl.com/y66xbu3h
 ################################################################################
-qxts <- xts(tblMA_GoldenDeathX_EMA[,-1], order.by=tblMA_GoldenDeathX_EMA[,1])
+xtsGoldenDeathX <- xts(tblMA_GoldenDeathX_EMA[,-1], order.by=tblMA_GoldenDeathX_EMA[,1])
 
 
 # tblMA_GoldenDeathX_EMA[, id := .GRP, by = event]
