@@ -186,9 +186,9 @@ xtsGoldenDeathX <- xts(tblMA_GoldenDeathX_EMA[,-1], order.by=tblMA_GoldenDeathX_
 # x<-data.table::dcast(dtEMA, key ~date, value.var = 'event', subset=.(event %like% 'D' | event %like% 'G'))
 
 
-dtEMA<-tblMA_GoldenDeathX_EMA[order(event)][, .SD[c(1, .N)], by = event]
+# dtEMA<-tblMA_GoldenDeathX_EMA[order(event)][, .SD[c(1, .N)], by = event]
 x<-data.table::dcast(dtEMA, key ~date, value.var = 'event', subset=.(event %like% 'D' | event %like% 'G'))
-dtEMA<-dtEMA[, .SD[1], by=event][dtEMA[, .SD[2], by=event],on='event', nomatch=0][,c(1,3)] 
+# dtEMA<-dtEMA[, .SD[1], by=event][dtEMA[, .SD[2], by=event],on='event', nomatch=0][,c(1,3)] 
 tblMA_GoldenDeathX_EMA<-add_count(tblMA_GoldenDeathX_EMA, event)
 # x<-data.table::dcast(dtEMA, key ~date, value.var = 'event', subset=.(event %like% 'D' | event %like% 'G'))
 

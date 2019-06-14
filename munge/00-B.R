@@ -41,9 +41,9 @@ xtsEMA<-merge(merge(merge(merge(merge(ema005,ema010, join='inner'),ema020, join=
 ## rename columns ###                                                           https://tinyurl.com/y6fwyvwk
 ################################################################################
 names(xtsEMA) <- c("ema005", "ema010", "ema020", "ema050", "ema100", "ema200")  # Renaming the First n Columns Using Base R
-
 xtsEMA_Months<- nmonths(xtsEMA)
 
+dtEMA<-as.data.table(xtsEMA)
 ################################################################################
 ## Exponential Moving Average - EMA calculates an exponentially-weighted mean, ## giving more weight to recent observations ###
 # Simple Moving Average - SMA calculates the arithmetic mean of the series over the past n observations.
@@ -65,18 +65,19 @@ sma.200 <-SMA(SPL$close, 200)
 goldenX<-ema020 > ema050 & ema050 > ema100 & ema100 > ema200
 deathX<-ema200 > ema100 & ema100 > ema050 & ema050 > ema020
 
-dt<-as.data.table(goldenX)
-dt <- dt[EMA==TRUE]
+dtGoldenX<-as.data.table(goldenX)
+dtGoldenX<- dtGoldenX[EMA==TRUE]
 ################################################################################
 ## rename columns ###                                                           https://tinyurl.com/y6fwyvwk
 ################################################################################
-names(dt)[1]<-"date"                                                            # rename column name by index
-setkey(dt,"date")
-dt[, date := as.Date(as.integer(date))]
-dt %>% mutate_if(is.logical, as.character) -> dt                                # convert column from logical to character; xts doesn't recognize TRUE/FALSE
-goldenX.xts <- xts(dt[,-1], order.by=dt[,1])
-priceGoldenX.xts <-t<-SPL.AX[index(goldenX.xts)]
-
+names(dtGoldenX)[1]<-"date"                                                     # rename column name by index
+setkey(dtGoldenX,"date")
+dtGoldenX[, date := as.Date(as.integer(date))]
+dtGoldenX %>% mutate_if(is.logical, as.character) -> dtGoldenX                  # convert column from logical to character; xts doesn't recognize TRUE/FALSE
+goldenX.xts <- xts(dtGoldenX[,-1], order.by=dtGoldenX[,1])
+priceGoldenX.xts <-SPL.AX[index(goldenX.xts)]
+dtGoldenX<-data.table(dtGoldenX)
+dtGoldenX[EMA == "TRUE", EMA := "goldenX"]
 ################################################################################
 ## xtsMonthly Returns in the xts World ###                                      https://tinyurl.com/yyyf4qqw
 ################################################################################
