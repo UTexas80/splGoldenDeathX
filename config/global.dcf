@@ -8,7 +8,7 @@ data_ignore:
 load_libraries: TRUE
 libraries: checkpoint, dataMeta, data.table, devtools, DT, ezknitr, FinancialInstrument, flexdashboard, flextable, forecast, foreach, formatR, formattable,
              futile.logger, highcharter, janitor, knitr, lubridate, openxlsx, orca, pacman, pdftools, PerformanceAnalytics, plotly, plyr, ProjectTemplate,
-             quantmod, quantstrat, readxl, renv, reprex, reshape2, rio, rmarkdown, scales, shiny, statar, stringr, tibbletime, tidyquant, tidyverse, timetk, timeSeries, 
+             quantmod, readxl, renv, reprex, reshape2, rio, rmarkdown, scales, shiny, statar, stringr, tibbletime, tidyquant, tidyverse, timetk, timeSeries, 
              tryCatchLog, TSstudio, TTR, xlsx, xtable, xts, zoo
 logging: TRUE
 logging_level: INFO
