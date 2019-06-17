@@ -187,7 +187,7 @@ xtsGoldenDeathX <- xts(tblMA_GoldenDeathX_EMA[,-1], order.by=tblMA_GoldenDeathX_
 
 
 # dtEMA<-tblMA_GoldenDeathX_EMA[order(event)][, .SD[c(1, .N)], by = event]
-x<-data.table::dcast(dtEMA, key ~date, value.var = 'event', subset=.(event %like% 'D' | event %like% 'G'))
+# x<-data.table::dcast(dtEMA, key ~date, value.var = 'event', subset=.(event %like% 'D' | event %like% 'G'))
 # dtEMA<-dtEMA[, .SD[1], by=event][dtEMA[, .SD[2], by=event],on='event', nomatch=0][,c(1,3)] 
 tblMA_GoldenDeathX_EMA<-add_count(tblMA_GoldenDeathX_EMA, event)
 # x<-data.table::dcast(dtEMA, key ~date, value.var = 'event', subset=.(event %like% 'D' | event %like% 'G'))
@@ -199,7 +199,7 @@ names(dtEMA)[3]<-"dateEnd"
 SPL<-data.table(SPL)
 setkey(dtEMA,dateEnd)
 setkey(SPL, date)
-dtEMA<-dtEMA[data.table(SPL), on="date", nomatch=0][SPL, nomatch=0][,c(1:2,4,8,3,10,14)]
+# dtEMA<-dtEMA[data.table(SPL), on="date", nomatch=0][SPL, nomatch=0][,c(1:2,4,8,3,10,14)]
 #vma <- 
 tblMA_TRIX <- data.frame(key,date,"spl",trix)                                   # Create Triple Smoothed Exponential Oscillator Moving Average Table
 tblMA_VWAS20 <- data.frame(key,date,"spl", vwas.20)                             # Create Volume-weighted moving average table

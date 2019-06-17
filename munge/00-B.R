@@ -44,6 +44,27 @@ names(xtsEMA) <- c("ema005", "ema010", "ema020", "ema050", "ema100", "ema200")  
 xtsEMA_Months<- nmonths(xtsEMA)
 
 dtEMA<-as.data.table(xtsEMA)
+
+
+dtEMA  <- dtEMA %>%
+    mutate(
+        event = case_when(
+            ema020 > ema050 & ema050 > ema100 & ema100 > ema200 ~ "GoldenX", 
+            ema200 > ema100 & ema100 > ema050  & ema050 > ema020 ~ "DeathX",
+            TRUE                      ~ "n"
+        )
+    )
+dtEMA<-data.table(dtEMA)
+################################################################################
+## prefix with 'grp' perform a group by with elements that are contiguous ###   https://tinyurl.com/yytlybll
+################################################################################
+dtEMA$subgroup <-rleid(dtEMA$event)
+dtEMA<-data.table(dtEMA)
+dtEMA[order(event), group := rleid(event)]  
+dtEMA<-data.table(dtEMA)
+dtEMA<-dtEMA[order(group, subgroup)][event ==  'n', eventGroup := rleid(subgroup)]
+dtEMA<-dtEMA[order(group, subgroup)][event ==  'DeathX', eventGroup := rleid(subgroup)]
+dtEMA<-dtEMA[order(group, subgroup)][event ==  'GoldenX', eventGroup := rleid(subgroup)]
 ################################################################################
 ## Exponential Moving Average - EMA calculates an exponentially-weighted mean, ## giving more weight to recent observations ###
 # Simple Moving Average - SMA calculates the arithmetic mean of the series over the past n observations.
@@ -65,11 +86,13 @@ sma.200 <-SMA(SPL$close, 200)
 goldenX<-ema020 > ema050 & ema050 > ema100 & ema100 > ema200
 deathX<-ema200 > ema100 & ema100 > ema050 & ema050 > ema020
 
+
 dtGoldenX<-as.data.table(goldenX)
 dtGoldenX<- dtGoldenX[EMA==TRUE]
 ################################################################################
 ## rename columns ###                                                           https://tinyurl.com/y6fwyvwk
 ################################################################################
+names(dtEMA)[1]<-"date"                                                         # rename column name by index
 names(dtGoldenX)[1]<-"date"                                                     # rename column name by index
 setkey(dtGoldenX,"date")
 dtGoldenX[, date := as.Date(as.integer(date))]
