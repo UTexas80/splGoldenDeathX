@@ -62,9 +62,17 @@ dtEMA$subgroup <-rleid(dtEMA$event)
 dtEMA<-data.table(dtEMA)
 dtEMA[order(event), group := rleid(event)]  
 dtEMA<-data.table(dtEMA)
+
 dtEMA<-dtEMA[order(group, subgroup)][event ==  'n', eventGroup := rleid(subgroup)]
 dtEMA<-dtEMA[order(group, subgroup)][event ==  'DeathX', eventGroup := rleid(subgroup)]
 dtEMA<-dtEMA[order(group, subgroup)][event ==  'GoldenX', eventGroup := rleid(subgroup)]
+################################################################################
+## This replaces the previous three statements ###                              https://tinyurl.com/y4g4jlzn
+# dtEMA<-dtEMA[order(date)][, eventGroupX := rleid(subgroup, by=group, subgroup)]
+# dtEMA<-dtEMA[order(group, subgroup)][, eventGroupX := rleid(subgroup, by=group, subgroup)]
+# dtEMA<-dtEMA[order(group,subgroup)][, eventGroupX := rleid(subgroup, by= event)]
+################################################################################
+
 ################################################################################
 ## Exponential Moving Average - EMA calculates an exponentially-weighted mean, ## giving more weight to recent observations ###
 # Simple Moving Average - SMA calculates the arithmetic mean of the series over the past n observations.
