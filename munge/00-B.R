@@ -67,12 +67,15 @@ dtEMA<-dtEMA[order(group, subgroup)][event ==  'n', eventGroup := rleid(subgroup
 dtEMA<-dtEMA[order(group, subgroup)][event ==  'DeathX', eventGroup := rleid(subgroup)]
 dtEMA<-dtEMA[order(group, subgroup)][event ==  'GoldenX', eventGroup := rleid(subgroup)]
 ################################################################################
+# z<-dtEMA[order(date)][, .N, by=rleid(event)]
+#dtEMA[, grp := .GRP, by=c("event","subgroup")] 
 ## This replaces the previous three statements ###                              https://tinyurl.com/y4g4jlzn
 # dtEMA<-dtEMA[order(date)][, eventGroupX := rleid(subgroup, by=group, subgroup)]
 # dtEMA<-dtEMA[order(group, subgroup)][, eventGroupX := rleid(subgroup, by=group, subgroup)]
 # dtEMA<-dtEMA[order(group,subgroup)][, eventGroupX := rleid(subgroup, by= event)]
 ################################################################################
-
+# dtEMA[,new:=paste0(event,eventGroup)]                                         # Concatenate two columns                                   https://tinyurl.com/y5b69lky
+dtEMA[,eventGroupNum :=paste0(event,paste0(sprintf("%03d",eventGroup)))]        # Concatenate and zero fill two columns                     https://tinyurl.com/yxmv734u
 ################################################################################
 ## Exponential Moving Average - EMA calculates an exponentially-weighted mean, ## giving more weight to recent observations ###
 # Simple Moving Average - SMA calculates the arithmetic mean of the series over the past n observations.
@@ -103,10 +106,10 @@ dtGoldenX<- dtGoldenX[EMA==TRUE]
 names(dtEMA)[1]<-"date"                                                         # rename column name by index
 names(dtGoldenX)[1]<-"date"                                                     # rename column name by index
 setkey(dtGoldenX,"date")
-dtGoldenX[, date := as.Date(as.integer(date))]
+
 dtGoldenX %>% mutate_if(is.logical, as.character) -> dtGoldenX                  # convert column from logical to character; xts doesn't recognize TRUE/FALSE
-goldenX.xts <- xts(dtGoldenX[,-1], order.by=dtGoldenX[,1])
-priceGoldenX.xts <-SPL.AX[index(goldenX.xts)]
+goldenX.xts <- xts(dtGoldenX[,-1], order.by=dtGoldenX[,1])                      # converting data table to xts                              https://tinyurl.com/y66xbu3h
+priceGoldenX.xts <-SPL.AX[index(goldenX.xts)]                                       
 dtGoldenX<-data.table(dtGoldenX)
 dtGoldenX[EMA == "TRUE", EMA := "goldenX"]
 ################################################################################
@@ -128,3 +131,15 @@ asset_returns_xts <- na.omit(Return.calculate(prices_monthly, method = "log"))
 
 # tsPrices  <- getSymbols('SPL.AX',src='yahoo',return.class='ts')
 # zooPrices <- getSymbols('SPL.AX',src='yahoo',return.class='zoo')
+
+aud_usd <- getSymbols("AUD=X",src="yahoo", auto.assign = FALSE) 
+aud_usd<-aud_usd[complete.cases(aud_usd),]
+usd_aud <- 1/aud_usd
+
+dtSPL<-as.data.table(SPL.AX, keep.rownames = TRUE)
+names(dtSPL)[1]<-"date"
+setkey(dtSPL,"date")
+setkey(dtEMA,"date")
+dtSPL<-dtSPL[dtEMA][,c(1:2,18)]
+
+xtsSPL<-as.xts.data.table(dcast.data.table(dtSPL, formula = date~eventGroupNum, value.var = "SPL.AX.Open"))

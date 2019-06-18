@@ -3,6 +3,13 @@ helper.function <- function()
   return(1)
 }
 
+# function to compute simple returns
+simple.ret <- function(x, col.name){
+  x[,col.name] / lag(x[,col.name]) - 1
+}
+
+
+
 # http://www.cookbook-r.com/Manipulating_data/Comparing_data_frames/
 dupsBetweenGroups <- function (df, idcol) {
     # df: the data frame
