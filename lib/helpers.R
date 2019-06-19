@@ -9,7 +9,6 @@ simple.ret <- function(x, col.name){
 }
 
 
-
 # http://www.cookbook-r.com/Manipulating_data/Comparing_data_frames/
 dupsBetweenGroups <- function (df, idcol) {
     # df: the data frame

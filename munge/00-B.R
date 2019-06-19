@@ -142,4 +142,4 @@ setkey(dtSPL,"date")
 setkey(dtEMA,"date")
 dtSPL<-dtSPL[dtEMA][,c(1:2,18)]
 
-xtsSPL<-as.xts.data.table(dcast.data.table(dtSPL, formula = date~eventGroupNum, value.var = "SPL.AX.Open"))
+xtsPrice<-as.xts.data.table(dcast.data.table(dtSPL, formula = date~eventGroupNum, value.var = "SPL.AX.Open"))
