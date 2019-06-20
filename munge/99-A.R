@@ -43,9 +43,13 @@ x<-data.table::data.table(
                  0.19, 0.22, 0.25, 0.25, 0.285, 0.265, 0.29, 0.29, 0.3)
 )
 
+
 setkey(x,"date")
 x$date<-as_date(x$date)
 x<-as.xts(x)
 ReturnsA<-allReturns(x[,"A"])
 ReturnsB<-allReturns(x[,"B"])
 ReturnsC<-allReturns(x[,"C"])
+
+
+ReturnsTot <- data.table(returnsTotA = 2.5641, returnsTotA = -10.0,returnsTotA = 66.6667)

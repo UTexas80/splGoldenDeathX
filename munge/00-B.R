@@ -143,3 +143,4 @@ setkey(dtEMA,"date")
 dtSPL<-dtSPL[dtEMA][,c(1:2,18)]
 
 xtsPrice<-as.xts.data.table(dcast.data.table(dtSPL, formula = date~eventGroupNum, value.var = "SPL.AX.Open"))
+cumReturn<-apply(X = xtsPrice, 2, FUN = function(Z) Return.cumulative(as.numeric(Z), geometric = TRUE))                                     # https://tinyurl.com/y2d2ve83
