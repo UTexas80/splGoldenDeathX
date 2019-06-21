@@ -53,3 +53,23 @@ ReturnsC<-allReturns(x[,"C"])
 
 
 ReturnsTot <- data.table(returnsTotA = 2.5641, returnsTotA = -10.0,returnsTotA = 66.6667)
+na.omit(x$B)[1,]
+head(na.omit(x$B),1)
+tail(na.omit(x$B),1)
+(as.single(tail(na.omit(x$C),1))-as.single(na.omit(x$C)[1,])) / as.single(na.omit(x$C)[1,])
+
+lapply(lapply(x,  na.omit, x[1,]), head, 1)
+lapply(lapply(x,  na.omit, x[1,]), tail, 1)
+
+
+z<-t(data.table((as.single(lapply(lapply(x,  na.omit, x[1,]), tail, 1))-as.single(lapply(lapply(x,  na.omit, x[1,]), head, 1))) / as.single(lapply(lapply(x,  na.omit, x[1,]), head, 1))))
+colnames(z)<-dimnames(x)[[2]]
+rownames(z)<-1
+
+
+a<-t(data.table((as.single(lapply(lapply(xtsPrice,  na.omit, xtsPrice[1,]), tail, 1))-as.single(lapply(lapply(xtsPrice,  na.omit, xtsPrice[1,]), head, 1))) / as.single(lapply(lapply(xtsPrice,  na.omit, xtsPrice[1,]), head, 1))))
+colnames(a)<-dimnames(xtsPrice)[[2]]
+rownames(a)<-1
+
+aa<-t(a)
+aa<-data.table(aa, keep.rownames = TRUE)
