@@ -191,10 +191,10 @@ tblVolumeOBV<-tblVolumeOBV[complete.cases(tblVolumeOBV),]                       
 # Moving Average Tables
 tblMA_ALMA20 <- tblMA_ALMA20[complete.cases(tblMA_ALMA20),]                     # Delete Arnaud Legoux moving average NA
 tblMA_DEMA20 <- tblMA_DEMA20[complete.cases(tblMA_DEMA20),]                     # Delete Double Exponential Moving Average NA
-tblMA_EMA020 <- tblMA_EMA020[complete.cases(tblMA_EMA020),]                        # Delete Exponential Moving Average NA
+tblMA_EMA020 <- tblMA_EMA020[complete.cases(tblMA_EMA020),]                     # Delete Exponential Moving Average NA
 tblMA_EVWMA20 <- tblMA_EVWMA20[complete.cases(tblMA_EVWMA20),]                  # Delete # Elastic Volume-weighted Moving Average NA
 tblMA_HMA20 <- tblMA_HMA20[complete.cases(tblMA_HMA20),]                        # Delete Hull moving average NA
-tblMA_SMA020 <- tblMA_SMA020[complete.cases(tblMA_SMA020),]                        # Delete Simple Moving Average NA
+tblMA_SMA020 <- tblMA_SMA020[complete.cases(tblMA_SMA020),]                     # Delete Simple Moving Average NA
 #vma <- 
 tblMA_TRIX <- tblMA_TRIX[complete.cases(tblMA_TRIX),]                           # Delete Triple Smoothed Exponential Oscillator NA
 tblMA_VWAS20 <- tblMA_VWAS20[complete.cases(tblMA_VWAS20),]                     # Delete Volume-weighted moving average NA

@@ -73,3 +73,9 @@ rownames(a)<-1
 
 aa<-t(a)
 aa<-data.table(aa, keep.rownames = TRUE)
+
+lapply(lapply(x,  na.omit, x[1,]), nrow)
+names(dtEMA)[8:12]<-c("catName", "sequence", "catNum","subCatNum", "catKey")    # didn't like the column names and didn't want to go through lots of code to modify.    
+
+#dtEMA[,key :=paste0(sequence,paste0(sprintf("%02d",catNum)))]                  # Concatenate and zero fill two columns                     https://tinyurl.com/yxmv734u
+dtEMA<-dtEMA[,key :=paste0(sequence,paste0(catNum, paste0(subCatNum)))]         # Concatenate and zero fill three columns                   https://tinyurl.com/yxmv734u
