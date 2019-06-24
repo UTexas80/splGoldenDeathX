@@ -60,22 +60,106 @@ tail(na.omit(x$B),1)
 
 lapply(lapply(x,  na.omit, x[1,]), head, 1)
 lapply(lapply(x,  na.omit, x[1,]), tail, 1)
+# lapply(lapply(x,  na.omit, x[1,]), nrow)
+
+startDateX<- data.table(
+                  as.Date.IDate(
+                        t(
+                              lapply(
+                                    lapply(
+                                          lapply(x,  na.omit, x[1,]), 
+                                    head, 1), 
+                              index)
+                        )
+                  )
+            )
+endDateX<-   data.table(
+                  as.Date.IDate(
+                        t(
+                              lapply(
+                                    lapply(
+                                          lapply(x,  na.omit, x[1,]), 
+                                    tail, 1), 
+                              index)
+                        )
+                  )
+            )
 
 
 z<-t(data.table((as.single(lapply(lapply(x,  na.omit, x[1,]), tail, 1))-as.single(lapply(lapply(x,  na.omit, x[1,]), head, 1))) / as.single(lapply(lapply(x,  na.omit, x[1,]), head, 1))))
 colnames(z)<-dimnames(x)[[2]]
 rownames(z)<-1
 
+zz<-t(z)
+# zz<-rownames(zz)<-dimnames(x)[[2]]
+zz<-data.table(zz, keep.rownames = TRUE)
+zz<-cbind(zz, startDateX,endDateX)
+################################################################################
+## Reorder Columns
+zz <- zz[, c(1,3:4,2)]                                                          
+################################################################################
+## Rename Columns
+names(zz)[1:4]<-c("catName", "startDate", "endDate", "return")
 
+################################################################################
+## Create a table of returns
+################################################################################
 a<-t(data.table((as.single(lapply(lapply(xtsPrice,  na.omit, xtsPrice[1,]), tail, 1))-as.single(lapply(lapply(xtsPrice,  na.omit, xtsPrice[1,]), head, 1))) / as.single(lapply(lapply(xtsPrice,  na.omit, xtsPrice[1,]), head, 1))))
 colnames(a)<-dimnames(xtsPrice)[[2]]
 rownames(a)<-1
 
+################################################################################
+## Start / End Date
+################################################################################
+startDate<- data.table(
+                  as.Date.IDate(
+                        t(
+                              lapply(
+                                    lapply(
+                                          lapply(xtsPrice,  na.omit, xtsPrice[1,]), 
+                                    head, 1), 
+                              index)
+                        )
+                  )
+            )
+endDate<-   data.table(
+                  as.Date.IDate(
+                        t(
+                              lapply(
+                                    lapply(
+                                          lapply(xtsPrice,  na.omit, xtsPrice[1,]), 
+                                    tail, 1), 
+                              index)
+                        )
+                  )
+            )
+
+countDate <- data.table(lapply(lapply(xtsPrice,  na.omit, xtsPrice[1,]), nrow))
+################################################################################
+## transpose
 aa<-t(a)
+################################################################################
 aa<-data.table(aa, keep.rownames = TRUE)
+aa<-cbind(aa, startDate,endDate, countDate)
+################################################################################
+## Reorder Columns
+aa <- aa[, c(1,3:4,5,2)]                                                          
+################################################################################
+## Rename Columns
+names(aa)[1:5]<-c("catName", "startDate", "endDate", "count", "return")  
 
-lapply(lapply(x,  na.omit, x[1,]), nrow)
+
+################################################################################
+## dtEMA rename columns
 names(dtEMA)[8:12]<-c("catName", "sequence", "catNum","subCatNum", "catKey")    # didn't like the column names and didn't want to go through lots of code to modify.    
-
 #dtEMA[,key :=paste0(sequence,paste0(sprintf("%02d",catNum)))]                  # Concatenate and zero fill two columns                     https://tinyurl.com/yxmv734u
-dtEMA<-dtEMA[,key :=paste0(sequence,paste0(catNum, paste0(subCatNum)))]         # Concatenate and zero fill three columns                   https://tinyurl.com/yxmv734u
+################################################################################
+## Concatenate and zero fill three columns                                      https://tinyurl.com/yxmv734u
+## Convert Category Number to letters                                           https://stackoverflow.com/questions/37239715/convert-letters-to-numbers
+################################################################################
+dtEMA<-dtEMA[,key :=paste0(sprintf("%03d",sequence),paste0(LETTERS[catNum]), paste0(sprintf("%03d",subCatNum)))]
+
+
+chart.Boxplot(data.table(a) %>% select(starts_with("Golden"), -ends_with("17")))
+chart.Boxplot(data.table(a) %>% select(starts_with("Death")))
+chart.Boxplot(data.table(a) %>% select(starts_with("n")))
