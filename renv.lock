@@ -1714,6 +1714,12 @@ Version=1.1-1
 Source=CRAN
 Hash=8c4ab1baf12c6f84bea1d293fd92eba9
 
+[R/Package/packagefinder]
+Package=packagefinder
+Version=0.1.4
+Source=CRAN
+Hash=ed5a77658809aa7397f7a0608db66cd0
+
 [R/Package/pacman]
 Package=pacman
 Version=0.5.1
@@ -1725,6 +1731,12 @@ Package=padr
 Version=0.5.0
 Source=CRAN
 Hash=05f801c7c227560d395a422f751db62f
+
+[R/Package/pander]
+Package=pander
+Version=0.6.3
+Source=CRAN
+Hash=5912da6e1c17e43be3f7e65c91f79fe8
 
 [R/Package/pbapply]
 Package=pbapply
