@@ -159,7 +159,43 @@ names(dtEMA)[8:12]<-c("catName", "sequence", "catNum","subCatNum", "catKey")    
 ################################################################################
 dtEMA<-dtEMA[,key :=paste0(sprintf("%03d",sequence),paste0(LETTERS[catNum]), paste0(sprintf("%03d",subCatNum)))]
 
-
+################################################################################
+## Performance Analytics Boxplot(s)
+################################################################################
 chart.Boxplot(data.table(a) %>% select(starts_with("Golden"), -ends_with("17")))
 chart.Boxplot(data.table(a) %>% select(starts_with("Death")))
 chart.Boxplot(data.table(a) %>% select(starts_with("n")))
+
+retByMonth<-monthlyReturn(SPL.AX)                                               # https://tinyurl.com/yxs9km73
+m <- daily2monthly(SPL.AX, FUN=mean, na.rm=TRUE)                                # https://tinyurl.com/yxgrlx4l
+splByMonth<-monthlyfunction(m, FUN=median, na.rm=TRUE)                          # https://tinyurl.com/y4g8hzvr
+
+monthlyMean<-monthlyfunction(retByMonth, mean, na.rm = TRUE)
+monthlyMedian<-monthlyfunction(retByMonth, median, na.rm = TRUE)
+monthlyMin<-monthlyfunction(retByMonth, min, na.rm = TRUE)
+monthlyMax<-monthlyfunction(retByMonth, max, na.rm = TRUE)
+
+
+x.subset <-index(SPL.AX [1:20])
+SPL.AX[x.subset]
+
+################################################################################
+## .xts Dynamic Time-Series using a parameter                                   #https://tinyurl.com/y3h3jbt7
+################################################################################
+times = c(as.POSIXct("2012-11-03 09:45:00 IST"),
+          as.POSIXct("2012-11-05 09:45:00 IST"))
+#create an xts object:
+xts.obj = xts(c(1,2),order.by = times)
+#filter with these dates:
+start.date = as.POSIXct("2012-11-03")
+end.date = as.POSIXct("2012-11-04")
+################################################################################
+xts.obj[paste(start.date,end.date,sep="::")]
+xts.obj[seq(start.date,end.date,by=60)][,1]
+################################################################################
+starting.quarter<-"200101"
+ending.quarter<-"201702"
+spl_price_by_qtr<-SPL.AX[paste(starting.quarter,ending.quarter,sep="/")]
+################################################################################
+# By using an index that is the logical AND of two vectors
+xts.obj[start.date <= index(xts.obj) & index(xts.obj) <= end.date]
