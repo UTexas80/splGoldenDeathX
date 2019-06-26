@@ -120,14 +120,14 @@ asset_returns_xts <- na.omit(Return.calculate(prices_monthly, method = "log"))
 
 
 #   SPL.AX<-SPL.AX[, colSums(is.na(SPL.AX)) < nrow(SPL.AX)]                     # Removing NA columns in xts                                https://tinyurl.com/y4j4ocqg
-
-#   tsPrices <- getSymbols(symbols,src='yahoo',
-#             auto.assign = TRUE,
-#             return.class='ts',
-#             warnings = FALSE) %>% 
-#   map(~Ad(get(.))) %>% 
-#   reduce(merge) %>%
-#   `colnames<-`(symbols)
+p <- getSymbols(symbols, src = 'yahoo', from = "1999-01-01", auto.assign = TRUE, warnings = FALSE) %>% map(-Ad(get(.))) %>% reduce(merge) %>% 'colnames<-'(symbols)
+tsPrices <- getSymbols(symbols,src='yahoo',
+        auto.assign = TRUE,
+        return.class='ts',
+        warnings = FALSE) %>% 
+        map(~Ad(get(.))) %>% 
+        reduce(merge) %>%
+        `colnames<-`(symbols)
 
 # tsPrices  <- getSymbols('SPL.AX',src='yahoo',return.class='ts')
 # zooPrices <- getSymbols('SPL.AX',src='yahoo',return.class='zoo')

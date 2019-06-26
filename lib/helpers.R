@@ -3,7 +3,7 @@ helper.function <- function()
   return(1)
 }
 
-# function to compute simple returns
+# function to compute simple returns https://tinyurl.com/y3jdslbq
 simple.ret <- function(x, col.name){
   x[,col.name] / lag(x[,col.name]) - 1
 }
