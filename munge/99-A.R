@@ -166,9 +166,14 @@ chart.Boxplot(data.table(a) %>% select(starts_with("Golden"), -ends_with("17")))
 chart.Boxplot(data.table(a) %>% select(starts_with("Death")))
 chart.Boxplot(data.table(a) %>% select(starts_with("n")))
 
+
 retByMonth<-monthlyReturn(SPL.AX)                                               # https://tinyurl.com/yxs9km73
-m <- daily2monthly(SPL.AX, FUN=mean, na.rm=TRUE)                                # https://tinyurl.com/yxgrlx4l
-splByMonth<-monthlyfunction(m, FUN=median, na.rm=TRUE)                          # https://tinyurl.com/y4g8hzvr
+spl.max <- rollapply(data=SPL.AX, width=5, FUN=max, fill=NA, partial= TRUE, align="center")
+( spl.max.month <- as.xts(hydroTSM::daily2monthly(SPL.AX, FUN=max) ))
+
+spl.max.annual <- as.xts((daily2annual(spl.max, FUN=max, na.rm=TRUE)))
+# m <- daily2monthly(SPL.AX, FUN=mean, na.rm=TRUE)                                # https://tinyurl.com/yxgrlx4l
+# splByMonth<-monthlyfunction(m, FUN=median, na.rm=TRUE)                          # https://tinyurl.com/y4g8hzvr
 
 monthlyMean<-monthlyfunction(retByMonth, mean, na.rm = TRUE)
 monthlyMedian<-monthlyfunction(retByMonth, median, na.rm = TRUE)

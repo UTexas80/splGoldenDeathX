@@ -1,0 +1,166 @@
+---
+title: "Business_Intelligence_Dashboard_Logistic_Regression"
+author: "Glen C Falk"
+date: "3 jan 2019"
+output: slidy_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(flexdashboard)
+# Load R packages into the library
+# Data management packages
+library(DescTools)
+library(skimr)
+library(plyr)
+library(dplyr)
+library(aod)
+library(readxl)
+# Visualization packages
+library(Deducer)
+library(ggplot2)
+library(plotly)
+# Machine learnning method packages
+library(ROCR)
+library(pROC)
+library(caret)
+library(MASS)
+library(sjPlot)
+# Import dataset
+loan_data <- read.csv("C:/Users/Bruger/Documents/R work/Credit modelling/loan.csv")
+# Selecting the relevant variables in the dataset:
+loan_data <- loan_data[,c("grade","sub_grade","term","loan_amnt","issue_d","loan_status","emp_length",
+                          "home_ownership", "annual_inc","verification_status","purpose","dti",
+                          "delinq_2yrs","addr_state","int_rate", "inq_last_6mths","mths_since_last_delinq",
+                          "mths_since_last_record","open_acc","pub_rec","revol_bal","revol_util","total_acc")]
+# Data management for missing observations
+loan_data$mths_since_last_delinq[is.na(loan_data$mths_since_last_delinq)] <- 0
+loan_data$mths_since_last_record[is.na(loan_data$mths_since_last_record)] <- 0
+var.has.na <- lapply(loan_data, function(x){any(is.na(x))})
+num_na <- which( var.has.na == TRUE )	
+per_na <- num_na/dim(loan_data)[1] 
+loan_data <- loan_data[complete.cases(loan_data),]
+loan_datahis<-loan_data
+# Focus on the historical loans
+loan_data=as.data.frame(loan_data[loan_data$loan_status!="Current", ])
+limits_inc = quantile(loan_data$annual_inc, seq(0,1,0.1))
+labels <- c(0, limits_inc[2:10], "+inf")
+labels <- prettyNum(labels, big.mark = ",")
+labels <- paste(labels[1:10], labels[2:11], sep = "-")
+loan_data$annual_inc <- cut(loan_data$annual_inc, limits_inc, labels = labels, include.lowest = T)
+loan_data[,"annual_inc"] <- as.character(loan_data[,"annual_inc"])
+# Create binary variables for the logistic regression analysis
+# Annual_inc
+loan_data$annual_inc[loan_data$annual_inc == "70,000- 80,000"| loan_data$annual_inc == "80,000- 94,000" | loan_data$annual_inc == "94,000-120,000" | loan_data$annual_inc == "120,000-   +inf" ] <- 1
+loan_data$annual_inc[loan_data$annual_inc != 1] <- 0
+loan_data$annual_inc <- as.numeric(loan_data$annual_inc)
+# Home_ownership
+loan_data$home_ownership <- as.character(loan_data$home_ownership)
+loan_data$home_ownership[loan_data$home_ownership=="OWN" | loan_data$home_ownership=="MORTGAGE"  ] <- 1       
+loan_data$home_ownership[loan_data$home_ownership!=1] <- 0
+# Dealinq_2yrs
+loan_data$delinq_2yrs <- as.character(loan_data$delinq_2yrs)
+loan_data$delinq_2yrs[loan_data$delinq_2yrs=="0"] <- 0
+loan_data$delinq_2yrs[loan_data$delinq_2yrs!= 0] <- 1
+# Verification status: if Verified = 1 ; otherwise = 0
+loan_data$verification_status = as.character(loan_data$verification_status)
+loan_data$verification_status[loan_data$verification_status == "Verified" | loan_data$verification_status == "Source Verified"] = 1
+loan_data$verification_status[loan_data$verification_status != 1] = 0
+loan_data$verification_status=as.numeric(loan_data$verification_status)
+# Dti
+dti_quant <- quantile(loan_data$dti, seq(0, 1, 0.1))
+labels = c(0,prettyNum(dti_quant[2:10], big.mark = ","), "+Inf")
+labels = paste(labels[1:10],labels[2:11], sep = "-")
+loan_data <- mutate(loan_data, dti= cut(loan_data$dti, breaks = dti_quant, labels = factor(labels), include.lowest = T))
+loan_data$dti <- as.character(loan_data$dti)
+loan_data$dti[loan_data$dti == "0-6.57" | loan_data$dti == "12.13-14.32" | loan_data$dti == "14.32-16.49" ] <- 1
+loan_data$dti[loan_data$dti!=1] <- 0
+# Status
+loan_data$loan_status <- as.character(loan_data$loan_status)
+loan_data$loan_status[loan_data$loan_status == "Charged Off" | loan_data$loan_status == "Default" ] <- 1
+loan_data$loan_status[loan_data$loan_status != 1] <- 0
+table(loan_data$loan_status)
+PercTable(loan_data$loan_status)
+# Change to nummeric variables:
+loan_data[,"revol_util"] <- as.numeric(sub("%", "",loan_data$"revol_util", fixed =TRUE))/100
+loan_data[,"int_rate"] <- as.numeric(sub("%", "",loan_data$"int_rate", fixed =TRUE))/100
+loan_data$loan_status <- as.numeric(loan_data$loan_status)
+# Grouping variables
+loan_data$purpose <- as.character(loan_data$purpose)
+loan_data$purpose[loan_data$purpose == "car" | loan_data$purpose == "major_purchase" | 
+                    loan_data$purpose == "home_improvement"| loan_data$purpose == "credit_card" ] <- 2
+loan_data$purpose[loan_data$purpose == "moving" | loan_data$purpose == "small_business" | 
+                    loan_data$purpose == "renewable_energy" ] <- 0
+loan_data$purpose[loan_data$purpose!= 0 & loan_data$purpose!= 2 ] <- 1
+loan_data$purpose <- as.factor(loan_data$purpose)
+
+##Machine Learning: Multiple  Logistic Regression Models
+# Logistic: Logit stepwise Regression
+logregmodI <- glm(loan_status ~ loan_amnt + home_ownership + annual_inc
+            + verification_status + purpose + dti + delinq_2yrs 
+            + int_rate + inq_last_6mths + mths_since_last_delinq 
+            + revol_bal + revol_util + total_acc,
+            data = loan_data, family = binomial(link= "logit"))
+step <- stepAIC(logregmodI, direction="both")
+step$anova
+# Create a training- and testing dataset
+  percing <- floor((nrow(loan_data)/4)*3)       
+  loan <- loan_data[sample(nrow(loan_data)), ]          
+  loan.training <- loan[1:percing, ]              
+  loan.testing <- loan[(percing+1):nrow(loan), ]
+# Begin training of the model
+  fitting.logistic <- glm(loan_status ~ loan_amnt + home_ownership + verification_status + 
+                   purpose + dti + delinq_2yrs + int_rate + inq_last_6mths + 
+                   mths_since_last_delinq + revol_bal + revol_util + total_acc,
+                 data=loan.training,family = binomial(link= "logit"))
+```
+
+## R Markdown
+This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see .
+
+### Chart A - Bar chart of the loan amount
+The below output shows The loan amount with regards to number of loans
+
+```{r, echo = FALSE}
+# Visualization of the data
+# Bar chart of the loan amount
+loanamount_barchart <- ggplot(data=loan_data, aes(loan_data$loan_amnt)) + 
+  geom_histogram(breaks=seq(0, 35000, by=1000), 
+                 col="black", aes(fill=..count..)) +
+  scale_fill_gradient("Count", low="green1", high="yellowgreen")+
+  labs(title="Loan Amount", x="Amount", y="Number of Loans")
+ggplotly(loanamount_barchart)
+```
+
+### Chart B - Box plot of loan amount
+The below plot shows a box plot of the loan amount with respect to different loan status
+
+```{r, echo = FALSE}
+# Box plot of loan amount
+box_plot_stat <- ggplot(loan_datahis, aes(loan_status, loan_amnt))
+box_plot_stat + geom_boxplot(aes(fill = loan_status)) +
+  theme(axis.text.x = element_blank()) +
+  labs(list(title = "Loan amount by status", x = "Loan Status", y = "Amount"))
+```
+
+### Chart C - Logistic regression
+The below table is a logistic regression credit model. It displays the ods ratios in the regression model. An odds ratio is a relative measure of effect, which allows the comparison of a dichotom outcome. An odds ratio greater than 1 indicates that the condition or event is more likely to occur in the group. An odds ratio less than 1 indicates that the condition or event is less likely to occur in the group.
+```{r}
+tab_model(fitting.logistic)
+```
+
+### Chart D - ROC graph visualizaiton
+The below table is a ROC curve of the logistic regression credit model. The value displays how well the model have explained the outcome.
+```{r}
+# AUC and ROC curve
+  fitted.results <- predict(fitting.logistic, newdata = loan.testing, type = "response")
+  loan.testing$prob <- fitted.results
+  pred <- prediction(loan.testing$prob,loan.testing$loan_status)
+  auc1 <- performance(pred, measure = "auc")
+  auc1@y.values
+# Performance function
+ROCRperf = performance(pred, "tpr", "fpr")
+# Plot the ROC graph Add threshold labels 
+plot(ROCRperf, colorize=TRUE, print.cutoffs.at=seq(0,1,by=0.1), text.adj=c(-0.2,1.7))
+abline(0, 1, col= "black")
+```
