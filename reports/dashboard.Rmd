@@ -13,10 +13,33 @@ library(dplyr)
 library(DT)
 library(flexdashboard)
 library(formattable)
+library(PerformanceAnalytics)
 library(plotly)
 library(treemap)
-load("spl.RData")
 knitr::opts_knit$set(root.dir = "..")
+```
+
+Boxplots {data-navmenu="Enrollment Summary"}
+=====================================
+
+Row {data-width=500}
+-----------------------------------------------------------------------
+
+### Performance Summary by Month
+
+```{r echo=FALSE, Returns-Summary-Month}
+viz_bar_returns_by_month <- readRDS("viz_bar_returns_by_month.rds")
+viz_bar_returns_by_month
+```
+
+Row {data-width=500}
+-----------------------------------------------------------------------
+
+### Yearly Returns
+
+```{r echo=FALSE, Returns-Distribution-Yr}
+spl_yearly <- readRDS("spl_yearly.rds")
+plot_ly(spl_yearly, x = ~date, y = ~yearly.returns, type = 'bar', name = 'Returns by Year')
 ```
 
 Charts {data-navmenu="Enrollment Summary"}
@@ -25,11 +48,11 @@ Charts {data-navmenu="Enrollment Summary"}
 Row {data-width=500}
 -----------------------------------------------------------------------
 
-### Return Distribution N
+### Return Distribution Golden Cross
 
-```{r echo=FALSE, Boxplot-Distribution-N}
-viz.BoxplotN <- readRDS("viz.BoxplotN.rds")
-viz.BoxplotN
+```{r echo=FALSE, Boxplot-Distribution-GoldenDeathX}
+returnsByCategory <- readRDS("returnsByCategory.rds")
+chart.Boxplot(data.table(returnsByCategory) %>% select(starts_with("n")))
 ```
 
 Column {data-width=350}

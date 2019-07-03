@@ -108,6 +108,8 @@ a<-t(data.table((as.single(lapply(lapply(xtsPrice,  na.omit, xtsPrice[1,]), tail
 colnames(a)<-dimnames(xtsPrice)[[2]]
 rownames(a)<-1
 
+saveRDS(a, file="returnsByCategory.rds")
+
 ################################################################################
 ## Start / End Date
 ################################################################################
