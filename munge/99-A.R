@@ -163,7 +163,9 @@ dtEMA<-dtEMA[,key :=paste0(sprintf("%03d",sequence),paste0(LETTERS[catNum]), pas
 ################################################################################
 chart.Boxplot(data.table(a) %>% select(starts_with("Golden"), -ends_with("17")))
 chart.Boxplot(data.table(a) %>% select(starts_with("Death")))
-chart.Boxplot(data.table(a) %>% select(starts_with("n")))
+viz.BoxplotN <- chart.Boxplot(data.table(a) %>% select(starts_with("n")))
+
+saveRDS(viz.BoxplotN, file="viz.BoxplotN.rds")
 
 retByMonth<-monthlyReturn(SPL.AX)                                               # https://tinyurl.com/yxs9km73
 spl.max <- rollapply(data=SPL.AX, width=5, FUN=max, fill=NA, partial= TRUE, align="center")

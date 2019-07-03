@@ -1,0 +1,222 @@
+---
+title: "GoldenDeathX"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    theme: spacelab    
+---
+
+```{r setup, include=TRUE}
+library(data.table)
+library(dplyr)
+library(DT)
+library(flexdashboard)
+library(formattable)
+library(plotly)
+library(treemap)
+load("spl.RData")
+knitr::opts_knit$set(root.dir = "..")
+```
+
+Charts {data-navmenu="Enrollment Summary"}
+=====================================
+
+Row {data-width=500}
+-----------------------------------------------------------------------
+
+### Return Distribution N
+
+```{r echo=FALSE, Boxplot-Distribution-N}
+viz.BoxplotN <- readRDS("viz.BoxplotN.rds")
+viz.BoxplotN
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Six Year Enrollment Trend
+
+```{r echo=FALSE, include=TRUE, Total-Enrollment-Trends}
+
+```
+
+### Enrollment TYpe by Year
+
+```{r}
+
+```
+
+### Current Year Enrollment Treemap
+
+```{r}
+
+```
+
+Tables {data-navmenu="Enrollment Summary"}
+=====================================  
+
+Column
+-------------------------------------
+    
+### Table 1
+    
+```{r}
+
+```
+   
+Row
+-------------------------------------
+    
+### Table 2
+    
+```{r}
+
+```
+    
+### Table 3
+
+```{r}
+
+```
+
+Length {data-navmenu="Institution Overview"}
+=====================================
+
+Row
+-----------------------------------------------------------------------
+
+### Program Length - 2 Year
+
+```{r echo=FALSE, Length-Two-Yr}
+
+```
+
+Row
+-----------------------------------------------------------------------
+
+### Program Length - 4 Year
+
+```{r echo=FALSE, Length-Four-Yr}
+
+```
+
+Type {data-navmenu="Institution Overview"}
+=====================================  
+
+Row
+-------------------------------------
+    
+### Program Type - Independent
+    
+```{r echo=FALSE, Type-Independent}
+
+```
+   
+Row
+-------------------------------------
+    
+### Program Type - Public
+    
+```{r echo=FALSE, Type-Public}
+
+```
+
+Charts {data-navmenu="College Detail"}
+=====================================     
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Cost of Attendance-Graduate Resident
+
+```{r echo=FALSE, COA-Grad-Resident2}
+
+```
+
+### Cost of Attendance-Graduate Non Resident
+
+```{r}
+
+```
+
+Tables {data-navmenu="College Detail"}
+=====================================    
+
+Row {data-width=450}
+-------------------------------------
+    
+### Top 10 Institutions
+
+```{r echo=FALSE, Top-10-Institutions}
+
+```
+    
+### Bottom 10 Institutions
+
+```{r echo=FALSE, Bottom-10-Institutions}
+
+```
+
+Row
+-------------------------------------
+    
+### Institutional Ranking
+    
+```{r}
+
+```
+
+Page 1 {data-navmenu="Fin Aid Awd"}
+=====================================    
+
+Row
+-------------------------------------
+    
+### Financial Aid Award-Undergraduate Resident
+
+```{r echo=FALSE, Fin-Aid-Awd-Undergrad-Resident}
+
+```
+    
+### Financial Aid Award Non Resident
+
+```{r echo=FALSE, Fin-Aid-Awd-NonResident}
+
+```
+
+Column
+-------------------------------------
+    
+### Financial Aid Award
+    
+```{r}
+
+```
+
+Page 2 {data-navmenu="Fin Aid Awd"}
+=====================================    
+
+Column 
+-------------------------------------
+    
+### Chart 1
+    
+```{r}
+
+```
+   
+Column {.tabset}
+-------------------------------------
+   
+### Chart 2
+
+```{r echo=FALSE, Fin-Aid-Awd2-Undergrad-Resident}
+
+```
+ 
+### Chart 3
+    
+```{r echo=FALSE, Fin-Aid-Awd2-NonResident}
+
+```
