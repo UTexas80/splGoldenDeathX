@@ -52,3 +52,6 @@ _bookdown_files
 # Packrat
 packrat/lib*/
 packrat/src/
+
+# Packrat
+/spl.RData

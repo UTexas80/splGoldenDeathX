@@ -3,7 +3,7 @@ z99.version = "1.0.0"
 z99.ModDate = as.Date("2019-06-09")
 
 # save RData image
-save.image("spl.RData")
+# save.image("spl.RData")
 rmarkdown::render(input="./reports/dashboard.Rmd")
 
 ## DIAGNOSTIC PAGE
