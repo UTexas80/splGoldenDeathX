@@ -3,7 +3,7 @@ z99.version = "1.0.0"
 z99.ModDate = as.Date("2019-06-09")
 
 # save RData image
-save.image("readability.RData")
+save.image("splGoldenDeathX.RData")
 
 ## DIAGNOSTIC PAGE
 s.info = sessionInfo()

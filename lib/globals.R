@@ -6,7 +6,7 @@ add.config(
   lastYr = as.numeric(format(Sys.Date(), format="%y")) - 1,
   LastYr4 = as.numeric(format(Sys.Date(), format="%Y"))-1,
   currentAY = as.numeric(paste(as.numeric(format(Sys.Date(), format="%y")) - 1, as.numeric(format(Sys.Date(), format="%y")), sep = "")),
-  header = "USG Tuition Differential" # header in reports
+  header = "SPL GoldenDeathX" # header in reports
 )
 
 symbols <- c("CSL.AX", "SPL.AX")

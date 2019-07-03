@@ -45,7 +45,6 @@ xtsEMA_Months<- nmonths(xtsEMA)
 
 dtEMA<-as.data.table(xtsEMA)
 
-
 dtEMA  <- dtEMA %>%
     mutate(
         event = case_when(
@@ -96,7 +95,6 @@ sma.200 <-SMA(SPL$close, 200)
 
 goldenX<-ema020 > ema050 & ema050 > ema100 & ema100 > ema200
 deathX<-ema200 > ema100 & ema100 > ema050 & ema050 > ema020
-
 
 dtGoldenX<-as.data.table(goldenX)
 dtGoldenX<- dtGoldenX[EMA==TRUE]

@@ -148,7 +148,6 @@ aa <- aa[, c(1,3:4,5,2)]
 ## Rename Columns
 names(aa)[1:5]<-c("catName", "startDate", "endDate", "count", "return")  
 
-
 ################################################################################
 ## dtEMA rename columns
 names(dtEMA)[8:12]<-c("catName", "sequence", "catNum","subCatNum", "catKey")    # didn't like the column names and didn't want to go through lots of code to modify.    
@@ -166,7 +165,6 @@ chart.Boxplot(data.table(a) %>% select(starts_with("Golden"), -ends_with("17")))
 chart.Boxplot(data.table(a) %>% select(starts_with("Death")))
 chart.Boxplot(data.table(a) %>% select(starts_with("n")))
 
-
 retByMonth<-monthlyReturn(SPL.AX)                                               # https://tinyurl.com/yxs9km73
 spl.max <- rollapply(data=SPL.AX, width=5, FUN=max, fill=NA, partial= TRUE, align="center")
 ( spl.max.month <- as.xts(hydroTSM::daily2monthly(SPL.AX, FUN=max) ))
@@ -179,7 +177,6 @@ monthlyMean<-monthlyfunction(retByMonth, mean, na.rm = TRUE)
 monthlyMedian<-monthlyfunction(retByMonth, median, na.rm = TRUE)
 monthlyMin<-monthlyfunction(retByMonth, min, na.rm = TRUE)
 monthlyMax<-monthlyfunction(retByMonth, max, na.rm = TRUE)
-
 
 x.subset <-index(SPL.AX [1:20])
 SPL.AX[x.subset]

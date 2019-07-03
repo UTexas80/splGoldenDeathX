@@ -1,7 +1,7 @@
-library(quantmod)                                                               # Load quantmod
-library(tibble)                                                                 # Load tibble
-library(tidyquant)                                                              # Loads tidyquant, tidyverse, lubridate, quantmod, TTR, and xts
-library(TTR)                                                                    # Technical Trading Rules package
+# library(quantmod)                                                               # Load quantmod
+# library(tibble)                                                                 # Load tibble
+# library(tidyquant)                                                              # Loads tidyquant, tidyverse, lubridate, quantmod, TTR, and xts
+# library(TTR)                                                                    # Technical Trading Rules package
 # SPL Processing -----------------------------------------------------------------------------------
 SPL <- tq_get("SPL.AX")                                                         # Get SPL Stock Prices
 SPL<-SPL[complete.cases(SPL),]                                                  # Delete NA
