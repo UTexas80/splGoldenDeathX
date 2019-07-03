@@ -2,7 +2,7 @@
 title: "GoldenDeathX"
 output: 
   flexdashboard::flex_dashboard:
-    orientation: columns
+    orientation: rows
     vertical_layout: fill
     theme: spacelab    
 ---
@@ -28,8 +28,11 @@ Row {data-width=500}
 ### Performance Summary by Month
 
 ```{r echo=FALSE, Returns-Summary-Month}
-viz_bar_returns_by_month <- readRDS("viz_bar_returns_by_month.rds")
-viz_bar_returns_by_month
+spl_month_close <- readRDS("spl_month_close.rds")
+charts.PerformanceSummary(
+    ROC(spl_month_close, n = 1, type = "discrete"),
+    main = "SPL Performance Summary"
+)
 ```
 
 Row {data-width=500}
