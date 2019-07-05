@@ -7,31 +7,70 @@ output:
     theme: spacelab    
 ---
 
-```{r setup, include=TRUE}
+```{r setup, echo=FALSE, include=TRUE}
 library(data.table)
 library(dplyr)
 library(DT)
 library(flexdashboard)
 library(formattable)
+library(hydroTSM)
 library(PerformanceAnalytics)
 library(plotly)
+library(quantmod)
+library(scales)
+library(tidyquant)
 library(treemap)
+library(xts)
+library(zoo)
 knitr::opts_knit$set(root.dir = "..")
+```
+
+```{r price, echo=FALSE}
+SPL <- tq_get("SPL.AX")
+SPL<-
+  SPL[complete.cases(SPL),]
+
+SPL.AX <- 
+    SPL.AX %>%
+    na.omit()
+```
+
+```{r returns, echo=FALSE}
+SPL.AX.monthly <- SPL.AX[endpoints(SPL.AX, on ="months")]
+spl_month_close <- SPL.AX.monthly[,4]
+tRet<-periodReturn(SPL.AX,period='yearly')
+SPL.AX.yearly<-data.table(date=index(tRet), coredata(tRet))
+```
+
+```{r, performance, eval=spl_month_close, echo=FALSE, fig.width= 15}
+charts.PerformanceSummary(
+    ROC(spl_month_close, n = 1, type = "discrete"),
+    main = "SPL Performance Summary"
+)
+```
+
+```{r vbox, eval=spl_month_close}
+valueBox(last(spl_month_close,1), icon = "fa-pencil", href="#details")
+```
+
+
+```{r tables-mtcars}
+knitr::kable(iris[1:5, ], caption = 'A caption')
 ```
 
 Boxplots {data-navmenu="Enrollment Summary"}
 =====================================
 
-Row {data-width=500}
+column {data-width=1000}
 -----------------------------------------------------------------------
 
 ### Performance Summary by Month
 
-```{r echo=FALSE, Returns-Summary-Month}
+```{r Returns-Summary-Month, echo=FALSE, out.width= 15}
 spl_month_close <- readRDS("spl_month_close.rds")
 charts.PerformanceSummary(
     ROC(spl_month_close, n = 1, type = "discrete"),
-    main = "SPL Performance Summary"
+    main = "SPL Performance Summary", width = 1000
 )
 ```
 
@@ -40,7 +79,7 @@ Row {data-width=500}
 
 ### Yearly Returns
 
-```{r echo=FALSE, Returns-Distribution-Yr}
+```{r Returns-Distribution-Yr, echo=FALSE}
 spl_yearly <- readRDS("spl_yearly.rds")
 plot_ly(spl_yearly, x = ~date, y = ~yearly.returns, type = 'bar', name = 'Returns by Year')
 ```
@@ -53,7 +92,7 @@ Row {data-width=500}
 
 ### Return Distribution Golden Cross
 
-```{r echo=FALSE, Boxplot-Distribution-GoldenDeathX}
+```{r Boxplot-Distribution-GoldenDeathX, echo=FALSE}
 returnsByCategory <- readRDS("returnsByCategory.rds")
 chart.Boxplot(data.table(returnsByCategory) %>% select(starts_with("n")))
 ```
@@ -63,7 +102,7 @@ Column {data-width=350}
 
 ### Six Year Enrollment Trend
 
-```{r echo=FALSE, include=TRUE, Total-Enrollment-Trends}
+```{r  Total-Enrollment-Trends, echo=FALSE, include=TRUE}
 
 ```
 
@@ -114,7 +153,7 @@ Row
 
 ### Program Length - 2 Year
 
-```{r echo=FALSE, Length-Two-Yr}
+```{r  Length-Two-Yr, echo=FALSE}
 
 ```
 
@@ -123,7 +162,7 @@ Row
 
 ### Program Length - 4 Year
 
-```{r echo=FALSE, Length-Four-Yr}
+```{r Length-Four-Yr, echo=FALSE}
 
 ```
 
@@ -135,7 +174,7 @@ Row
     
 ### Program Type - Independent
     
-```{r echo=FALSE, Type-Independent}
+```{r Type-Independent, echo=FALSE}
 
 ```
    
@@ -144,7 +183,7 @@ Row
     
 ### Program Type - Public
     
-```{r echo=FALSE, Type-Public}
+```{r Type-Public, echo=FALSE}
 
 ```
 
@@ -156,7 +195,7 @@ Column {data-width=350}
 
 ### Cost of Attendance-Graduate Resident
 
-```{r echo=FALSE, COA-Grad-Resident2}
+```{r COA-Grad-Resident2, echo=FALSE}
 
 ```
 
@@ -174,13 +213,13 @@ Row {data-width=450}
     
 ### Top 10 Institutions
 
-```{r echo=FALSE, Top-10-Institutions}
+```{r Top-10-Institutions, echo=FALSE}
 
 ```
     
 ### Bottom 10 Institutions
 
-```{r echo=FALSE, Bottom-10-Institutions}
+```{r Bottom-10-Institutions, echo=FALSE}
 
 ```
 
@@ -201,13 +240,13 @@ Row
     
 ### Financial Aid Award-Undergraduate Resident
 
-```{r echo=FALSE, Fin-Aid-Awd-Undergrad-Resident}
+```{r Fin-Aid-Awd-Undergrad-Resident, echo=FALSE}
 
 ```
     
 ### Financial Aid Award Non Resident
 
-```{r echo=FALSE, Fin-Aid-Awd-NonResident}
+```{r Fin-Aid-Awd-NonResident, echo=FALSE}
 
 ```
 
@@ -237,12 +276,12 @@ Column {.tabset}
    
 ### Chart 2
 
-```{r echo=FALSE, Fin-Aid-Awd2-Undergrad-Resident}
+```{r Fin-Aid-Awd2-Undergrad-Resident, echo=FALSE}
 
 ```
  
 ### Chart 3
     
-```{r echo=FALSE, Fin-Aid-Awd2-NonResident}
+```{r Fin-Aid-Awd2-NonResident, echo=FALSE }
 
 ```

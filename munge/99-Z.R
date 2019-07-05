@@ -5,6 +5,7 @@ z99.ModDate = as.Date("2019-06-09")
 # save RData image
 # save.image("spl.RData")
 rmarkdown::render(input="./reports/dashboard.Rmd")
+# xaringan::infinite_moon_reader("./reports/dashboard.Rmd")
 
 ## DIAGNOSTIC PAGE
 s.info = sessionInfo()
