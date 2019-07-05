@@ -50,7 +50,7 @@ charts.PerformanceSummary(
 ```
 
 ```{r vbox, eval=spl_month_close}
-valueBox(last(spl_month_close,1), icon = "fa-pencil", href="#details")
+valueBox(start(SPL.AX)-end(SPL.AX), icon = "fa-pencil", href="#details")
 ```
 
 

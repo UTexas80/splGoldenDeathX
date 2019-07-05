@@ -8,6 +8,7 @@ SPL<-SPL[complete.cases(SPL),]                                                  
 ################################################################################
 xtsPrices <- 
   getSymbols(symbols, src = 'yahoo', 
+            from = dateFrom,
              auto.assign = TRUE, 
              warnings = FALSE) %>% 
   map(~Ad(get(.))) %>% 
