@@ -33,6 +33,14 @@ SPL<-
 SPL.AX <- 
     SPL.AX %>%
     na.omit()
+
+xtsPrices <- 
+  getSymbols(symbols, src = 'yahoo', 
+             auto.assign = TRUE, 
+             warnings = FALSE) %>% 
+  map(~Ad(get(.))) %>% 
+  reduce(merge) %>%
+  `colnames<-`(symbols)
 ```
 
 ```{r returns, echo=FALSE}
@@ -50,7 +58,7 @@ charts.PerformanceSummary(
 ```
 
 ```{r vbox, eval=spl_month_close}
-valueBox(start(SPL.AX)-end(SPL.AX), icon = "fa-pencil", href="#details")
+valueBox(end(SPL.AX)-start(SPL.AX), icon = "fa-pencil", href="#details")
 ```
 
 
