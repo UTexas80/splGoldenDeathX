@@ -3,12 +3,6 @@ helper.function <- function()
   return(1)
 }
 
-# function to compute simple returns https://tinyurl.com/y3jdslbq
-simple.ret <- function(x, col.name){
-  x[,col.name] / lag(x[,col.name]) - 1
-}
-
-
 # http://www.cookbook-r.com/Manipulating_data/Comparing_data_frames/
 dupsBetweenGroups <- function (df, idcol) {
     # df: the data frame
@@ -52,4 +46,37 @@ dupsBetweenGroups <- function (df, idcol) {
 
     # Return the vector of which entries are duplicated across groups
     return(dupBetween)
+}
+
+################################################################################
+## Clean, Consistent Column Names                                               https://tinyurl.com/yy3wo8rq                          
+################################################################################
+clean_names <- function(.data, unique = FALSE) {
+  n <- if (is.data.frame(.data)) colnames(.data) else .data
+
+  n <- gsub("%+", "_pct_", n)
+  n <- gsub("\\$+", "_dollars_", n)
+  n <- gsub("\\++", "_plus_", n)
+  n <- gsub("-+", "_minus_", n)
+  n <- gsub("\\*+", "_star_", n)
+  n <- gsub("#+", "_cnt_", n)
+  n <- gsub("&+", "_and_", n)
+  n <- gsub("@+", "_at_", n)
+
+  n <- gsub("[^a-zA-Z0-9_]+", "_", n)
+  n <- gsub("([A-Z][a-z])", "_\\1", n)
+  n <- tolower(trimws(n))
+  
+  n <- gsub("(^_+|_+$)", "", n)
+  
+  n <- gsub("_+", "_", n)
+  
+  if (unique) n <- make.unique(n, sep = "_")
+  
+  if (is.data.frame(.data)) {
+    colnames(.data) <- n
+    .data
+  } else {
+    n
+  }
 }
