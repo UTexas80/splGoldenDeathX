@@ -108,7 +108,7 @@ a<-t(data.table((as.single(lapply(lapply(xtsPrice,  na.omit, xtsPrice[1,]), tail
 colnames(a)<-dimnames(xtsPrice)[[2]]
 rownames(a)<-1
 
-saveRDS(a, file="returnsByCategory.rds")
+# saveRDS(a, file="returnsByCategory.rds")
 
 ################################################################################
 ## Start / End Date
@@ -167,7 +167,7 @@ chart.Boxplot(data.table(a) %>% select(starts_with("Golden"), -ends_with("17")))
 chart.Boxplot(data.table(a) %>% select(starts_with("Death")))
 viz.BoxplotN <- chart.Boxplot(data.table(a) %>% select(starts_with("n")))
 
-saveRDS(viz.BoxplotN, file="viz.BoxplotN.rds")
+# saveRDS(viz.BoxplotN, file="viz.BoxplotN.rds")
 
 retByMonth<-monthlyReturn(SPL.AX)                                               # https://tinyurl.com/yxs9km73
 spl.max <- rollapply(data=SPL.AX, width=5, FUN=max, fill=NA, partial= TRUE, align="center")

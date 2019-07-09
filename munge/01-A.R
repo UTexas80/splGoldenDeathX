@@ -15,6 +15,13 @@ charts.PerformanceSummary(
 
 plot_ly(SPL.AX.yearly, x = ~date, y = ~yearly.returns, type = 'bar', name = 'Returns by Year')
 
+################################################################################
+## Step 1: Falkulate the Cumulative Percentage Return (IDT) ###
+################################################################################
+cumPctRet<-percent(1+(as.numeric(xts::last(SPL.AX[,4]))-as.numeric(xts::first(SPL.AX[,4]))) / as.numeric(xts::first(SPL.AX[,4])))
+yrRet <- na.omit(allReturns(SPL.AX[,4])[,5])
+
+
 # VERSION HISTORY
 a01.version = "1.0.0"
 a01.ModDate = as.Date("2019-06-09")

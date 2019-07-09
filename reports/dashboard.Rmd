@@ -7,7 +7,8 @@ output:
     theme: spacelab    
 ---
 
-```{r setup, echo=FALSE, include=TRUE}
+```{r setup, echo=FALSE, include=FALSE}
+knitr::opts_knit$set(root.dir = "..", echo = FALSE)
 library(data.table)
 library(dplyr)
 library(DT)
@@ -22,74 +23,58 @@ library(tidyquant)
 library(treemap)
 library(xts)
 library(zoo)
-knitr::opts_knit$set(root.dir = "..")
-```
-
-```{r price, echo=FALSE}
-SPL <- tq_get("SPL.AX")
-SPL<-
-  SPL[complete.cases(SPL),]
-
-SPL.AX <- 
-    SPL.AX %>%
-    na.omit()
-
-xtsPrices <- 
-  getSymbols(symbols, src = 'yahoo', 
-             auto.assign = TRUE, 
-             warnings = FALSE) %>% 
-  map(~Ad(get(.))) %>% 
-  reduce(merge) %>%
-  `colnames<-`(symbols)
-```
-
-```{r returns, echo=FALSE}
-SPL.AX.monthly <- SPL.AX[endpoints(SPL.AX, on ="months")]
-spl_month_close <- SPL.AX.monthly[,4]
-tRet<-periodReturn(SPL.AX,period='yearly')
-SPL.AX.yearly<-data.table(date=index(tRet), coredata(tRet))
-```
-
-```{r, performance, eval=spl_month_close, echo=FALSE, fig.width= 15}
-charts.PerformanceSummary(
-    ROC(spl_month_close, n = 1, type = "discrete"),
-    main = "SPL Performance Summary"
-)
-```
-
-```{r vbox, eval=spl_month_close}
-valueBox(end(SPL.AX)-start(SPL.AX), icon = "fa-pencil", href="#details")
-```
-
-
-```{r tables-mtcars}
-knitr::kable(iris[1:5, ], caption = 'A caption')
 ```
 
 Boxplots {data-navmenu="Enrollment Summary"}
 =====================================
 
-column {data-width=1000}
+
+Row {data-width=350}
 -----------------------------------------------------------------------
 
-### Performance Summary by Month
+### Number of Trade Days
 
-```{r Returns-Summary-Month, echo=FALSE, out.width= 15}
-spl_month_close <- readRDS("spl_month_close.rds")
-charts.PerformanceSummary(
-    ROC(spl_month_close, n = 1, type = "discrete"),
-    main = "SPL Performance Summary", width = 1000
-)
+```{r vbox-trade-days, eval=SPL.AX}
+valueBox(paste(format(ndays(SPL.AX), big.mark = ","), "days"), caption = "# of Trade Days", icon="fa-pencil")
+```
+
+### Number of Calendar Days
+
+```{r vbox-calendar-days, eval=SPL.AX}
+valueBox(format(difftime(xts::last(SPL.AX), xts::first(SPL.AX)),big.mark=","), caption = "# of Calendar Days", icon="fa-pencil")
 ```
 
 Row {data-width=500}
 -----------------------------------------------------------------------
 
+### Monthly Returns Summary
+
+```{r Returns-Summary-Month, eval=spl_month_close}
+charts.PerformanceSummary(
+    ROC(spl_month_close, n = 1, type = "discrete"),
+    main = "SPL Performance Summary"
+    )
+```
+
 ### Yearly Returns
 
-```{r Returns-Distribution-Yr, echo=FALSE}
-spl_yearly <- readRDS("spl_yearly.rds")
-plot_ly(spl_yearly, x = ~date, y = ~yearly.returns, type = 'bar', name = 'Returns by Year')
+```{r Returns-Distribution-Yr, eval=SPL.AX.yearly, include=TRUE}
+plot_ly(SPL.AX.yearly, x = ~date, y = ~yearly.returns, type = 'bar', name = 'Returns by Year')
+```
+
+Row {data-width=500}
+-----------------------------------------------------------------------
+
+### Monthly Returns Table
+
+```{r table-returns-monthly, eval=retByMonth}
+knitr::kable(retByMonth)
+```
+
+### Yearly Returns Table
+
+```{r table-returns-yearly, eval=SPL.AX.yearly}
+knitr::kable(SPL.AX.yearly)
 ```
 
 Charts {data-navmenu="Enrollment Summary"}
@@ -100,25 +85,13 @@ Row {data-width=500}
 
 ### Return Distribution Golden Cross
 
-```{r Boxplot-Distribution-GoldenDeathX, echo=FALSE}
-returnsByCategory <- readRDS("returnsByCategory.rds")
-chart.Boxplot(data.table(returnsByCategory) %>% select(starts_with("n")))
+```{r Boxplot-Distribution-GoldenDeathX}
+
 ```
 
 Column {data-width=350}
 -----------------------------------------------------------------------
 
-### Six Year Enrollment Trend
-
-```{r  Total-Enrollment-Trends, echo=FALSE, include=TRUE}
-
-```
-
-### Enrollment TYpe by Year
-
-```{r}
-
-```
 
 ### Current Year Enrollment Treemap
 
@@ -161,7 +134,7 @@ Row
 
 ### Program Length - 2 Year
 
-```{r  Length-Two-Yr, echo=FALSE}
+```{r  Length-Two-Yr}
 
 ```
 
@@ -170,7 +143,7 @@ Row
 
 ### Program Length - 4 Year
 
-```{r Length-Four-Yr, echo=FALSE}
+```{r Length-Four-Yr}
 
 ```
 
@@ -182,7 +155,7 @@ Row
     
 ### Program Type - Independent
     
-```{r Type-Independent, echo=FALSE}
+```{r Type-Independent}
 
 ```
    
@@ -191,7 +164,7 @@ Row
     
 ### Program Type - Public
     
-```{r Type-Public, echo=FALSE}
+```{r Type-Public}
 
 ```
 
@@ -203,7 +176,7 @@ Column {data-width=350}
 
 ### Cost of Attendance-Graduate Resident
 
-```{r COA-Grad-Resident2, echo=FALSE}
+```{r COA-Grad-Resident2}
 
 ```
 
@@ -221,13 +194,13 @@ Row {data-width=450}
     
 ### Top 10 Institutions
 
-```{r Top-10-Institutions, echo=FALSE}
+```{r Top-10-Institutions}
 
 ```
     
 ### Bottom 10 Institutions
 
-```{r Bottom-10-Institutions, echo=FALSE}
+```{r Bottom-10-Institutions}
 
 ```
 
@@ -248,13 +221,13 @@ Row
     
 ### Financial Aid Award-Undergraduate Resident
 
-```{r Fin-Aid-Awd-Undergrad-Resident, echo=FALSE}
+```{r Fin-Aid-Awd-Undergrad-Resident}
 
 ```
     
 ### Financial Aid Award Non Resident
 
-```{r Fin-Aid-Awd-NonResident, echo=FALSE}
+```{r Fin-Aid-Awd-NonResident}
 
 ```
 
@@ -284,12 +257,12 @@ Column {.tabset}
    
 ### Chart 2
 
-```{r Fin-Aid-Awd2-Undergrad-Resident, echo=FALSE}
+```{r Fin-Aid-Awd2-Undergrad-Resident}
 
 ```
  
 ### Chart 3
     
-```{r Fin-Aid-Awd2-NonResident, echo=FALSE }
+```{r Fin-Aid-Awd2-NonResident}
 
 ```
