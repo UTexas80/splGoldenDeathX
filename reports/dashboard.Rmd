@@ -1,33 +1,37 @@
----
 title: "GoldenDeathX"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
     vertical_layout: fill
-    theme: spacelab    
----
+    theme: spacelab
+--- 
+
 
 ```{r setup, echo=FALSE, include=FALSE}
 knitr::opts_knit$set(root.dir = "..", echo = FALSE)
 library(data.table)
 library(dplyr)
 library(DT)
+library(dygraphs)
 library(flexdashboard)
 library(formattable)
+library(highcharter)
 library(hydroTSM)
 library(PerformanceAnalytics)
 library(plotly)
 library(quantmod)
 library(scales)
+library(shiny)
+library(shinydashboard)
 library(tidyquant)
 library(treemap)
 library(xts)
 library(zoo)
+data("WorldPhones")
 ```
 
 Boxplots {data-navmenu="Enrollment Summary"}
 =====================================
-
 
 Row {data-width=350}
 -----------------------------------------------------------------------
@@ -43,6 +47,7 @@ valueBox(paste(format(ndays(SPL.AX), big.mark = ","), "days"), caption = "# of T
 ```{r vbox-calendar-days, eval=SPL.AX}
 valueBox(format(difftime(xts::last(SPL.AX), xts::first(SPL.AX)),big.mark=","), caption = "# of Calendar Days", icon="fa-pencil")
 ```
+
 
 Row {data-width=500}
 -----------------------------------------------------------------------
@@ -67,14 +72,14 @@ Row {data-width=500}
 
 ### Monthly Returns Table
 
-```{r table-returns-monthly, eval=retByMonth}
-knitr::kable(retByMonth)
-```
+```{r table-returns-monthly}
+# datatable(retByMonth)
+ ```
 
 ### Yearly Returns Table
 
 ```{r table-returns-yearly, eval=SPL.AX.yearly}
-knitr::kable(SPL.AX.yearly)
+#knitr::kable(SPL.AX.yearly)
 ```
 
 Charts {data-navmenu="Enrollment Summary"}

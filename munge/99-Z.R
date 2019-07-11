@@ -4,7 +4,15 @@ z99.ModDate = as.Date("2019-06-09")
 
 # save RData image
 # save.image("spl.RData")
-rmarkdown::render(input="./reports/dashboard.Rmd")
+# rmarkdown::render(input="./reports/dashboard.Rmd")
+# rmarkdown::render(input="./reports/Flexdashboard.Rmd")
+
+################################################################################
+## Call rmarkdown::run() instead of render() because it is a shiny document  ### https://tinyurl.com/y2y2azny
+## (http://rmarkdown.rstudio.com/authoring_shiny.html).                      ###
+################################################################################
+rmarkdown::run("./reports/Flexdashboard.Rmd")
+
 # xaringan::infinite_moon_reader("./reports/dashboard.Rmd")
 
 ## DIAGNOSTIC PAGE

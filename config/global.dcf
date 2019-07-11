@@ -6,10 +6,10 @@ data_loading: TRUE
 data_loading_header: TRUE
 data_ignore:
 load_libraries: TRUE
-libraries:   xts, zoo, checkpoint, curl, dataMeta, datapasta, data.table, devtools, DT, ezknitr, FinancialInstrument, flexdashboard, flextable, forecast, foreach, formatR, formattable,
-             futile.logger, highcharter, hydroTSM, janitor, knitr, lubridate, openxlsx, orca, packagefinder, pacman, pdftools, PerformanceAnalytics, plotly, plyr, ProjectTemplate,
-             quantmod, readxl, renv, reprex, reshape2, rio, rmarkdown, scales, shiny, SIT, statar, stringr, styler, tibble, tibbletime, tidyquant, tidyverse, timetk, timeSeries, 
-             treemap, tryCatchLog, TSstudio, TTR, xaringan, xlsx, xtable
+libraries:  xts, zoo, billboarder, checkpoint, curl, dataMeta, datapasta, data.table, devtools, DT, dygraphs, ezknitr, FinancialInstrument, flexdashboard, flextable, forecast, foreach, 
+            formatR, formattable, futile.logger, highcharter, hydroTSM, janitor, knitr, lubridate, openxlsx, orca, packagefinder, pacman, pdftools, PerformanceAnalytics, plotly,
+            plyr, ProjectTemplate, quantmod, readxl, renv, reprex, reshape2, rio, rmarkdown, scales, shiny, shinydashboard, shinydashboardPlus, shinyEffects, shinyjqui, SIT, 
+            statar, stringr, styler, tibble, tibbletime, tidyquant, tidyverse, timetk, timeSeries, treemap, tryCatchLog, TSstudio, TTR, xaringan, xlsx, xtable
 logging: TRUE
 logging_level: INFO
 munging: TRUE
