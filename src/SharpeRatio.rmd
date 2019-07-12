@@ -1,0 +1,218 @@
+---
+title: "Sharpe Ratio"
+runtime: shiny
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    source_code: embed
+---
+
+```{r setup, message = FALSE}
+library(flexdashboard)
+library(highcharter)
+library(tidyquant)
+library(timetk)
+library(shiny)
+library(scales)
+```
+
+Sidebar {.sidebar}
+=====================================
+  
+```{r}
+
+fluidRow(
+  column(5,
+  textInput("stock1", "Stock 1", "SPY")),
+  column(5,
+  numericInput("w1", "Portf. %", 25, min = 1, max = 100))
+)  
+
+fluidRow(
+  column(5,
+  textInput("stock2", "Stock 2", "EFA")),
+  column(5,
+  numericInput("w2", "Portf. %", 25, min = 1, max = 100))
+)
+
+fluidRow(
+  column(5,
+  textInput("stock3", "Stock 3", "IJS")),
+  column(5,
+  numericInput("w3", "Portf. %", 20, min = 1, max = 100))
+)
+
+fluidRow(
+  column(5,
+  textInput("stock4", "Stock 4", "EEM")),
+  column(5,
+  numericInput("w4", "Portf. %", 20, min = 1, max = 100))
+)
+
+fluidRow(
+  column(5,
+  textInput("stock5", "Stock 5", "AGG")),
+  column(5,
+  numericInput("w5", "Portf. %", 10, min = 1, max = 100))
+)
+
+
+fluidRow(
+  column(7,
+  dateInput("date", "Starting Date", "2013-01-01", format = "yyyy-mm-dd")))
+
+fluidRow(
+  column(5,
+  numericInput("rfr", "RFR%", .03, min = 0, max = 1, step = .0002)),
+  column(5,
+  numericInput("window", "Window", 6, min = 3, max = 24, step = 2))
+)
+
+actionButton("go", "Submit")
+```
+
+```{r}
+# market calculations
+
+rfr <- eventReactive(input$go, {input$rfr/100})
+
+window <- eventReactive(input$go, {input$window}) 
+
+
+market_returns <- eventReactive(input$go, {
+  
+    getSymbols("SPY", src = 'yahoo', 
+            from = input$date, 
+             auto.assign = TRUE, 
+             warnings = FALSE) %>% 
+    map(~Ad(get(.))) %>% 
+    reduce(merge) %>%
+    `colnames<-`("SPY") %>% 
+    to.monthly(indexAt = "lastof", 
+               OHLC = FALSE) %>% 
+    Return.calculate(method = "log") %>% 
+    na.omit()  
+})
+
+market_sharpe <- eventReactive(input$go, {
+  
+  SharpeRatio(market_returns(),
+              Rf = rfr(), 
+              FUN = "StdDev")
+})
+
+market_rolling_sharpe <- eventReactive(input$go, {
+  
+  rollapply(market_returns(), 
+            window(), 
+            function(x) 
+            SharpeRatio(x, 
+                        Rf = rfr(), 
+                        FUN = "StdDev")) %>% 
+  na.omit()
+})
+```
+
+```{r}
+# Portfolio calculations
+
+portfolio_returns <- eventReactive(input$go, {
+  
+  symbols <- c(input$stock1, input$stock2, input$stock3, input$stock4, input$stock5)
+  
+  validate(need(input$w1 + input$w2 + input$w3 + input$w4 + input$w5 == 100, 
+                "The portfolio weights must sum to 100%!"))
+  
+  w <- c(input$w1/100, input$w2/100, input$w3/100, input$w4/100, input$w5/100)
+  
+  getSymbols(symbols, src = 'yahoo', from = input$date, 
+             auto.assign = TRUE, warnings = FALSE) %>% 
+  map(~Ad(get(.))) %>% 
+  reduce(merge) %>%
+  `colnames<-`(symbols) %>% 
+  to.monthly(indexAt = "lastof", 
+             OHLC = FALSE) %>% 
+  Return.calculate(method = "log") %>% 
+  na.omit() %>% 
+  Return.portfolio(weights = w)
+  
+})
+
+
+portfolio_rolling_sharpe <- eventReactive(input$go, {
+
+  rollapply(portfolio_returns(),
+            window(),
+            function(x) SharpeRatio(x, 
+                                    Rf = rfr(), 
+                                    FUN = "StdDev")) %>% 
+  na.omit()
+})
+
+portfolio_sharpe <- eventReactive(input$go, {
+  
+  validate(need(input$w1 + input$w2 + input$w3 + input$w4 + input$w5 == 100, "------"))
+  
+  SharpeRatio(portfolio_returns(),
+              Rf = rfr(), 
+              FUN = "StdDev")
+  
+})
+```
+
+Sharpe Ratio
+=====================================  
+
+Row {data-height=800}
+-----------------------------------------------------------------------
+
+### Rolling Sharpe
+
+```{r}
+renderHighchart({
+  
+  validate(need(input$go, "Please choose your portfolio assets, weights, rfr, rolling window and start date and click submit."))
+  
+  
+  highchart(type = "stock") %>%
+  hc_title(text = "Rolling Sharpe") %>%
+  hc_add_series(portfolio_rolling_sharpe(), name = "Portfolio", color = "cornflowerblue") %>%
+  hc_add_series(market_rolling_sharpe(), name = "Market", color = "green") %>%
+  hc_navigator(enabled = FALSE) %>% 
+  hc_scrollbar(enabled = FALSE) %>% 
+  hc_exporting(enabled = TRUE) %>% 
+  hc_legend(enabled = TRUE, align = "right", verticalAlign = "middle",
+            layout = "vertical")
+
+  
+})
+```
+
+
+Row {data-height=200}
+-----------------------------------------------------------------------
+
+### The Sharpe Ratio of Your Portfolio
+
+```{r}
+renderValueBox({
+  
+  
+  valueBox(value = tags$p(round(portfolio_sharpe(), 4), 
+                          style = "font-size: 70%;"), 
+           color = "primary")
+})
+
+```
+
+### Sharpe Ratio of S&P500 in same time period
+
+```{r}
+renderValueBox({
+  
+  valueBox(value = tags$p(round(market_sharpe(), 4), 
+                          style = "font-size: 70%;"), 
+           color = "primary")
+})
+
+```

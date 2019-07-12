@@ -1,0 +1,174 @@
+---
+title: "Sector Correlations"
+runtime: shiny
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    source_code: embed
+---
+
+
+```{r setup, message = FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(tidyquant)
+library(highcharter)
+
+# A function to build an xts object to hold both sector and index returns.
+sector_correlations <- function(sector, period = "weeks", window = 10) {
+
+symbols <- c(sector, "SPY")
+  
+prices <- 
+    getSymbols(symbols, src = 'yahoo', 
+               auto.assign = TRUE, warnings = FALSE) %>% 
+    map(~Cl(get(.))) %>% 
+    reduce(merge) %>%
+    `colnames<-`(symbols)
+
+prices_period <- to.period(prices, period = period, OHLC = FALSE)
+# get monthly log returns
+returns <-na.omit(ROC(prices_period, 1, type = "continuous"))
+# change date format
+index(returns) <- as.Date(as.yearmon(index(returns), format = '%Y%m'))
+
+
+returns$rolling_cor <- rollapply(returns, window, 
+                                 function(x) 
+                                 cor(x[, 1], x[, 2], use = "pairwise.complete.obs"), 
+                                 by.column = FALSE)
+# We care about the name because it will be displayed in the dygraph when a user hovers.
+
+names(returns) <- c(paste(sector, "Returns", sep = ""), "SPY Returns", paste(sector, "/SPY Correlation", sep = ""))
+
+assign("sector_correlations", returns, .GlobalEnv)
+}
+
+```
+
+
+Sidebar {.sidebar}
+=====================================
+  
+```{r}
+helpText("Choose a sector")
+
+# Don't make the user memorize the ETF ticker symbols! 
+# Let them choose the intuitive sector name and then translate to the 
+# ticker symbol in the background.
+
+fluidRow(
+  column(9,
+  selectInput("sector", "Sector ETF",
+                c(
+                  "Energy" = "XLE",
+                  "Financials" = "XLF",
+                  "Health Care" = "XLV",
+                  "Industrials" = "XLI", 
+                  "Materials" = "XLB", 
+                  "Technology" = "XLK", 
+                  "Utilities" = "XLU",
+                  "Cons Discretionary" = "XLY", 
+                  "Cons Staples" = "XLP")))
+)  
+
+
+helpText("Choose a returns time period and a rolling window")
+
+fluidRow(
+  column(7,
+  selectInput("period", "Time Period", c("days", "weeks", "months", "quarters"))),
+  column(7,
+  numericInput("window", " Rolling Window", 10, min = 5, max = 50, step = 5))
+)
+
+actionButton("go", "Submit")
+```
+
+```{r}
+
+# Build our correlation time series object here
+# so we can access it throughout the rest of the app.
+
+sector_correlation <- eventReactive(input$go, {
+  sector_corr <- sector_correlations(input$sector, input$period, input$window)
+  sector_corr[, 3]
+})
+
+# We'll use these in the value boxes.
+avg <- reactive({ 
+  avg <- round(mean(sector_correlation(),  na.rm=T), 2)
+  })
+mini <- reactive({
+  mini <- round(min(sector_correlation(),  na.rm=T), 2)
+  })
+maxi <- reactive({
+  maxi <- round(max(sector_correlation(),  na.rm=T), 2)
+  })
+
+```
+
+Rolling Correlation
+===================================== 
+
+Row {data-height=600}
+-----------------------------------------------------------------------
+
+### Sector/SP500 Rolling Correlation
+
+```{r}
+
+renderHighchart({
+
+  # The output of this is an xts
+  sector_correlation <- sector_correlation()
+  
+  highchart(type = "stock") %>% 
+    hc_title(text = "Rolling Correlation") %>%
+    hc_add_series(sector_correlation, name = names(sector_correlation[, 1]), color = "green") %>%
+    hc_add_theme(hc_theme_flat()) %>%
+    hc_navigator(enabled = FALSE) %>% 
+    hc_scrollbar(enabled = FALSE)
+})
+
+```
+
+Row {data-height=200}
+-----------------------------------------------------------------------
+
+### Mean Rolling Correlation
+
+```{r}
+valueBoxOutput("approvalBox1")
+output$approvalBox1<-renderValueBox({
+ 
+  # Display the mean we calculated in 'avg' reactive function above.
+  
+  valueBox(value = avg(), icon = "fa-line-chart", color = "primary")
+  
+})
+```
+
+### Max Rolling Correlation
+
+```{r}
+valueBoxOutput("approvalBox2")
+output$approvalBox2<-renderValueBox({
+  
+  # Display the max we calculated in the setup
+  valueBox(value = maxi(), icon = "fa-line-chart", color = "primary")
+  
+})
+```
+
+### Min Rolling Correlation
+
+```{r}
+valueBoxOutput("approvalBox3")
+output$approvalBox3<-renderValueBox({
+  
+  # Display the min we calculated in the setup
+  valueBox(value = mini(), icon = "fa-line-chart", color = "primary")
+  
+})
+```

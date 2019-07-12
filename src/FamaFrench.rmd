@@ -1,0 +1,239 @@
+---
+title: "Fama French Shiny 3 Factor"
+runtime: shiny
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    source_code: embed
+---
+
+```{r setup, message = FALSE}
+
+library(tidyquant)
+library(tidyverse)
+library(timetk)
+library(broom)
+library(tibbletime)
+library(scales)
+library(readr)
+library(highcharter)
+
+knitr::opts_chunk$set(message=FALSE, warning=FALSE)
+
+temp <- tempfile()
+
+download.file(
+  # location of file to be downloaded
+  "http://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/Global_3_Factors_CSV.zip",
+  # where we want R to store that file
+  temp)
+
+Global_3_Factors <- 
+  read_csv(unz(temp, "Global_3_Factors.csv"), 
+           skip = 6) %>%
+  rename(date = X1) %>% 
+  mutate_at(vars(-date), as.numeric) %>% 
+  mutate(date = ymd(parse_date_time(date, "%Y%m"))) 
+```
+
+
+Sidebar {.sidebar}
+=====================================
+  
+```{r}
+
+fluidRow(
+  column(6,
+  textInput("stock1", "Stock 1", "SPY")),
+  column(5,
+  numericInput("w1", "Portf. %", 25, min = 1, max = 100))
+)  
+
+fluidRow(
+  column(6,
+  textInput("stock2", "Stock 2", "EFA")),
+  column(5,
+  numericInput("w2", "Portf. %", 25, min = 1, max = 100))
+)
+
+fluidRow(
+  column(6,
+  textInput("stock3", "Stock 3", "IJS")),
+  column(5,
+  numericInput("w3", "Portf. %", 20, min = 1, max = 100))
+)
+
+fluidRow(
+  column(6,
+  textInput("stock4", "Stock 4", "EEM")),
+  column(5,
+  numericInput("w4", "Portf. %", 20, min = 1, max = 100))
+)
+
+fluidRow(
+  column(6,
+  textInput("stock5", "Stock 5", "AGG")),
+  column(5,
+  numericInput("w5", "Portf. %", 10, min = 1, max = 100))
+)
+
+fluidRow(
+  column(7,
+  dateInput("date", "Starting Date", min = "1990-01-01", "2013-01-01", format = "yyyy-mm-dd")),
+  column(5,
+  numericInput("window", "Window", 24, min = 12, max = 100, step = 6))
+)
+
+actionButton("go", "Submit")
+```
+
+
+
+```{r}
+
+prices <- eventReactive(input$go, {
+  
+  symbols <- c(input$stock1, input$stock2, input$stock3, input$stock4, input$stock5)
+  
+  getSymbols(symbols, src = 'yahoo', from = input$date, 
+             auto.assign = TRUE, warnings = FALSE) %>% 
+  map(~Ad(get(.))) %>% 
+  reduce(merge) %>%
+  `colnames<-`(symbols)
+})
+
+
+portfolio_returns_tq_rebalanced_monthly_first_day <- eventReactive(input$go, {
+  
+  prices <- prices()
+  w <- c(input$w1/100, input$w2/100, input$w3/100, input$w4/100, input$w5/100)
+  
+  portfolio_returns_tq_rebalanced_monthly_first_day <- 
+      prices %>% 
+      to.monthly(indexAt = "firstof", OHLC = FALSE) %>% 
+      tk_tbl(preserve_index = TRUE, rename_index = "date") %>%
+      gather(asset, returns, -date) %>% 
+      group_by(asset) %>%  
+      mutate(returns = (log(returns) - log(lag(returns)))) %>% 
+      na.omit() %>%
+      tq_portfolio(assets_col  = asset, 
+               returns_col = returns,
+               weights     = w,
+               col_rename  = "returns",
+               rebalance_on = "months")
+  
+})
+
+
+ff_dplyr_byhand <- eventReactive(input$go, {
+
+  portfolio_returns_tq_rebalanced_monthly_first_day <-
+    portfolio_returns_tq_rebalanced_monthly_first_day()
+  
+  ff_dplyr_byhand <-
+  portfolio_returns_tq_rebalanced_monthly_first_day %>%
+  left_join(Global_3_Factors, by = "date") %>%
+  mutate(MKT_RF = `Mkt-RF`/100,
+         SMB = SMB/100,
+         HML = HML/100,
+         RF = RF/100,
+         R_excess = round(returns - RF, 4)) %>%  
+  do(model = lm(R_excess ~ MKT_RF + SMB + HML, data = .)) %>% 
+  tidy(model, conf.int = T, conf.level = .95) %>% 
+  mutate_if(is.numeric, funs(round(., 3))) %>%
+  filter(term != "(Intercept)")
+})
+
+rolling_ff_glanced <- eventReactive(input$go, {
+  
+rolling_lm <- rollify(.f = function(R_excess, MKT_RF, SMB, HML) {
+                              lm(R_excess ~ MKT_RF + SMB + HML)
+                           }, 
+                      window = input$window, 
+                      unlist = FALSE)
+  
+ 
+portfolio_returns_tq_rebalanced_monthly_first_day <- 
+  portfolio_returns_tq_rebalanced_monthly_first_day()
+  
+rolling_ff_glanced <-
+  portfolio_returns_tq_rebalanced_monthly_first_day %>%
+  left_join(Global_3_Factors, by = "date") %>% 
+  mutate(MKT_RF = `Mkt-RF`/100,
+         SMB = SMB/100,
+         HML = HML/100,
+         RF = RF/100,
+         R_excess = round(returns - RF, 4)) %>% 
+  mutate(rolling_ff = rolling_lm(R_excess, MKT_RF, SMB, HML)) %>% 
+  slice(-1:-(input$window -1)) %>%
+  mutate(glanced = map(rolling_ff, 
+                      glance)) %>% 
+  unnest(glanced) %>% 
+  select(date, r.squared, adj.r.squared, p.value) %>% 
+  tk_xts(date_var = date, silent = TRUE)
+
+})
+
+
+```
+
+Fama French
+=====================================
+
+Row 1
+-----------------------------
+
+### Rolling r squared
+
+```{r}
+renderHighchart({
+  
+ rolling_ff_glanced <- rolling_ff_glanced()
+  
+  highchart(type = "stock") %>% 
+  hc_add_series(rolling_ff_glanced$adj.r.squared,
+                color = "cornflowerblue",
+                name = "r-squared") %>% 
+  hc_title(text = "Rolling FF 3-Factor R-Squared") %>%
+  hc_add_theme(hc_theme_flat()) %>%
+  hc_navigator(enabled = FALSE) %>% 
+  hc_scrollbar(enabled = FALSE) %>% 
+  hc_exporting(enabled = TRUE)
+})
+```
+
+
+Row 2 {.tabset}
+-------------------
+
+### Model Results
+
+```{r}
+renderTable({
+  ff_dplyr_byhand()
+})
+```
+
+### Betas
+
+```{r}
+renderPlot({
+  ff_dplyr_byhand() %>%
+  ggplot(aes(x = term, 
+             y = estimate, 
+             shape = term, 
+             color = term)) + 
+  geom_point() +
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high)) +
+  labs(title = "FF 3-Factor Coefficients",
+       subtitle = "with conf intervals",
+       x = "",
+       y = "coefficient",
+       caption = "data source: FF website and yahoo! Fin") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption  = element_text(hjust = 0))
+
+    })
+```

@@ -1,0 +1,216 @@
+---
+title: "Rolling FF R Squared and Betas"
+runtime: shiny
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    source_code: embed
+---
+
+```{r setup, message = FALSE}
+
+library(tidyquant)
+library(tidyverse)
+library(timetk)
+library(broom)
+library(tibbletime)
+library(highcharter)
+library(scales)
+library(readr)
+knitr::opts_chunk$set(message=FALSE, warning=FALSE)
+
+temp <- tempfile()
+
+
+```
+
+
+Sidebar {.sidebar}
+=====================================
+  
+```{r}
+
+factor_choices <- c("Global 5 Factor Monthly" = "Global_5_Factors",
+                  "Japan 5 Factor Monthly" = "Japan_5_Factors",
+                  "Euro 5 Factor Monthly" = "Europe_5_Factors",
+                  "Global ex US 5 Factor Monthly" = "Global_ex_US_5_Factors",
+                  "Asia Ex Japan 5 Factor Monthly" = "Asia_Pacific_ex_Japan_5_Factors",
+                  "North America 5 Factor Monthly" = "North_America_5_Factors")
+
+
+selectInput("factor", 
+            "FF Factor",
+            choices = factor_choices,
+            selected = "Global 5 Factor Monthly")
+
+helpText("Enter your fund tickers separated by a comma.")
+
+fluidRow(
+  column(12,
+  textInput("funds", "Funds", "IJS, EEM, XLF"))
+)  
+
+
+fluidRow(
+  column(7,
+  dateInput("date", 
+            "Starting Date", 
+            "2012-12-31", 
+            min = "1990-01-01", 
+            max = "2018-01-01", 
+            format = "yyyy-mm-dd")),
+  column(5,
+  numericInput("window", "Window", 24, min = 12, max = 100, step = 6))
+)
+
+actionButton("go", "Submit")
+```
+
+```{r}
+
+fund_returns_tq <- eventReactive(input$go, {
+
+funds <- str_replace_all(input$funds, pattern = " ", repl = "")
+
+symbols <- flatten_chr(strsplit(funds, ","))
+
+
+fund_returns_tq <- 
+  tq_get(symbols, 
+         get = "stock.prices",
+         from =  input$date) %>% 
+  select(date, symbol, adjusted) %>% 
+  group_by(symbol) %>% 
+  tq_transmute(
+        select      = adjusted,
+        mutate_fun  = to.period,
+        period      = "months",
+        indexAt     = "firstof"
+    ) %>%
+  mutate(returns = (log(adjusted) - log(lag(adjusted)))) %>%
+  select(-adjusted) %>%
+  na.omit()
+
+})
+
+```
+
+
+
+```{r}
+
+rolling_ff_funds <- eventReactive(input$go, {
+  
+fund_returns_tq <- fund_returns_tq()
+
+factors_address <- 
+  paste("http://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/", 
+        input$factor,
+        "_CSV.zip", 
+        sep = "" )
+
+download.file(factors_address, 
+              temp,
+              quiet = TRUE)
+
+
+factors_csv_name <- 
+  paste(input$factor, ".csv", sep = "")
+
+  
+Global_5_Factors <- 
+  read_csv(unz(temp, factors_csv_name), 
+           skip = 6) %>% 
+  rename(date = X1) %>% 
+  mutate_at(vars(-date), as.numeric) %>% 
+  mutate(date = ymd(parse_date_time(date, "%Y%m"))) %>% 
+  #filter(date >= 
+   #first(fund_returns_tq$date) & date <= 
+   #last(fund_returns_tq$date)) %>% 
+  mutate_if(is.numeric, funs(./100))
+
+rolling_lm <- rollify(.f = function(R_excess, `Mkt_RF`, SMB, HML, RMW, CMA) {
+                              lm(R_excess ~ `Mkt_RF` + SMB + HML + RMW + CMA)
+                           }, 
+                      window = input$window, 
+                      unlist = FALSE)
+  
+ff_funds_joined <- 
+  fund_returns_tq %>% 
+  spread(symbol, returns) %>%
+  mutate(date = ymd(date)) %>% 
+  left_join(Global_5_Factors) %>%
+  gather(symbol, returns, -date, -`Mkt-RF`, -SMB, -HML, -RMW, -CMA, -RF) %>%
+  mutate(R_excess = returns - RF) %>%
+  select(date, symbol, returns, everything(), -RF, -returns) %>% 
+  group_by(symbol) %>% 
+  mutate(rolling_ff = rolling_lm(R_excess, `Mkt-RF`, SMB, HML, RMW, CMA)) %>% 
+  slice(-1:-input$window)
+ 
+
+
+})
+```
+
+```{r, eval = FALSE}
+
+rolling_r_squared_xts <- eventReactive(input$go, {
+  rolling_ff() %>% 
+  mutate(glanced = map(rolling_lm, glance)) %>% 
+  unnest(glanced) %>% 
+  select(date, r.squared) %>% 
+  tk_xts(date_var = date)
+})
+```
+
+
+Fama French
+=====================================
+
+Row 1
+---------------------
+
+### Rolling r squared
+
+```{r}
+renderPlot({
+  rolling_ff_funds() %>%
+  mutate(rolling_ff = 
+           map(rolling_ff, glance)) %>% 
+  unnest(rolling_ff) %>% 
+  select(date, symbol, r.squared, adj.r.squared, p.value) %>% 
+  group_by(symbol) %>% 
+  ggplot(aes(x = date, y = adj.r.squared, color = symbol)) + 
+  geom_line() +  
+  facet_wrap(~symbol) +
+  labs(title = "Rolling Adjusted R Squared",
+       subtitle = "FF 5 factor model",
+       caption = "source: ff website") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption  = element_text(hjust = 0))
+})
+```
+
+Row 2
+---------------------
+
+### Rolling betas for each factor for each fund
+
+```{r}
+renderPlot({
+rolling_ff_funds() %>%
+  mutate(rolling_ff =  
+           map(rolling_ff, tidy, conf.int = T, conf.level = .95)) %>%
+  unnest(rolling_ff) %>% 
+  select(date, symbol, term, estimate, conf.low, conf.high) %>% 
+  filter(term != "(Intercept)") %>% 
+  group_by(term) %>% 
+  ggplot(aes(x = date, y = estimate, color = term)) + 
+  geom_line() + 
+  #geom_errorbar(aes(ymin = conf.low, ymax = conf.high), alpha = .3)  +
+  facet_wrap(~symbol)
+})  
+```
+```

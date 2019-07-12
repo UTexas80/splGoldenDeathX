@@ -1,0 +1,209 @@
+---
+title: "Trend Strategy"
+runtime: shiny
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    source_code: embed
+---
+
+```{r setup, message = FALSE}
+
+library(tidyquant)
+library(tidyverse)
+library(timetk)
+library(broom)
+library(tibbletime)
+library(highcharter)
+library(scales)
+library(readr)
+library(flexdashboard)
+
+knitr::opts_chunk$set(message=FALSE, warning=FALSE)
+
+
+```
+
+
+Sidebar {.sidebar}
+=====================================
+  
+```{r}
+
+textInput("asset", "Asset to trade", "^GSPC")
+
+
+dateRangeInput("date", "Period to backtest",
+               start  = "1990-01-01",
+               end    = Sys.Date(),
+               min    = "1980-01-01",
+               max    = Sys.Date(),
+               format = "yyyy-mm-dd",
+               sep = "-")
+
+
+actionButton("go", "Submit")
+```
+
+```{r}
+
+roll_mean_50 <- 
+  rollify(mean, window = 50)
+
+roll_mean_200 <- 
+  rollify(mean, window = 200)
+
+prices <- eventReactive(input$go, {
+  
+  symbols <- c(input$asset, "^IRX")
+  
+  tq_get(symbols, 
+         get = "stock.prices",
+         from = input$date[1],
+         to = input$date[2])
+    
+})
+
+sma_trend_results <- eventReactive(input$go, {
+
+prices <- prices()
+
+sma_trend_results <- 
+  prices %>% 
+  select(symbol, date, adjusted) %>% 
+  spread(symbol, adjusted) %>%
+  select(date, `^IRX`, everything()) %>% 
+  `colnames<-`(c("date", "treas", "asset")) %>% 
+  mutate(sma_200 = roll_mean_200(asset),
+         sma_50 = roll_mean_50(asset),
+         asset_returns = log(asset) - log(lag(asset)), 
+         daily_treas = (1 + (treas/100)) ^ (1/252) - 1) %>% 
+  na.omit() %>% 
+  mutate(trend_signal = ifelse(sma_50 > sma_200, 1, 0),
+         z_spread = (asset - sma_200),
+         z_score = (z_spread - mean(z_spread))/sd(z_spread),
+         z_signal = ifelse(
+                            lag(z_score, 1) < -.05 & 
+                            lag(z_score, 2) < -.05 &
+                            lag(z_score, 3) < -.05, 
+                            0, 1),
+         trend_z_returns = if_else(lag(trend_signal) == 1 &
+                                 z_signal == 1, 
+                                 (trend_signal * asset_returns), daily_treas),
+         trend_returns =  if_else(lag(trend_signal) == 1,
+                                 (trend_signal * asset_returns), daily_treas),
+         buy_hold_returns = (.9 * asset_returns) + (.1 * daily_treas)) %>% 
+  select(date, trend_signal, z_signal, buy_hold_returns, trend_returns, trend_z_returns, daily_treas) %>%
+  na.omit() %>% 
+  mutate(
+         trend_growth = accumulate(1 + trend_returns, `*`),
+         trend_z_growth = accumulate(1 + trend_z_returns, `*`),
+         buy_hold_growth = accumulate(1 + buy_hold_returns, `*`))
+
+
+})
+
+```
+
+Trend Strat
+=====================================
+
+Row 1 {.tabset}
+---------------------
+
+### Growth
+
+```{r}
+renderPlot({
+  
+  sma_trend_results() %>%
+  select(date, trend_growth, trend_z_growth, buy_hold_growth) %>% 
+  gather(strategy, growth, -date) %>% 
+  ggplot(aes(x = date, y = growth, color = strategy)) +
+  geom_line()
+})
+```
+
+### Hc
+
+```{r}
+renderHighchart({
+  
+  sma_hc <- sma_trend_results() %>%
+  select(date, trend_growth, trend_z_growth, buy_hold_growth) %>% 
+  tk_xts(date_var = date) 
+  
+  highchart(type = "stock") %>% 
+  hc_title(text = "Growth") %>%
+  hc_add_series(sma_hc$trend_growth, color = "cornflowerblue",  name = "trend") %>%
+  hc_add_series(sma_hc$buy_hold_growth, color = "green", name = "buy_hold") %>%
+  hc_add_series(sma_hc$trend_z_growth, color = "pink", name = "trend-z") %>%   
+  hc_add_theme(hc_theme_flat()) %>%
+  hc_navigator(enabled = FALSE) %>% 
+  hc_scrollbar(enabled = FALSE) %>% 
+  hc_legend(enabled = TRUE)
+  
+})
+```
+
+
+### Explanation
+```{r}
+renderText(
+  "This Shiny app allows you to choose an asset and a time period and visualize how a dollar would have grown when invested in a portfolio of 90% the chosen asset and 10%  t-bills verus a strategy that buys the asset 100% when the the 50 day moving average of the asset is higher than the 200 day moving average of the asset."
+)
+```
+
+Row 2 {.tabset}
+---------------------
+
+
+### Strategy statistics
+
+```{r}
+renderTable( {
+  sma_trend_results() %>%
+  select(date, trend_returns, buy_hold_returns, trend_z_growth) %>% 
+  gather(strategy, returns, -date) %>% 
+  group_by(strategy) %>% 
+  tq_performance(Ra = returns,
+                 performance_fun = table.Stats) %>% 
+  select(Observations, NAs, Skewness, Variance, Kurtosis, Stdev)
+})
+```
+
+### Bootstrapped distribution
+
+```{r}
+renderPlot({
+
+samples <- 1000
+
+sma_trend_results <- sma_trend_results()
+
+  rerun(.n = samples, 
+      sample(sma_trend_results$trend_returns, 
+             30, 
+             replace = T)) %>%  
+  `names<-`(paste("sample", 1:samples, sep = " ")) %>%
+  simplify_all() %>% 
+  as_tibble() %>% 
+  gather(sample, thirty_dailies) %>% 
+  group_by(sample) %>% 
+  summarise(mean = mean(thirty_dailies)) %>%  
+  ungroup() %>% 
+  mutate(se = sd(mean),
+            upper_ci = mean(mean) + (2 * se),
+            lower_ci = mean(mean) - (2 * se)) %>% 
+  ggplot(aes(x = mean)) +
+  geom_histogram(binwidth = .0001, fill = "cornflowerblue") + 
+  geom_segment(aes(x = upper_ci, 
+                   xend = upper_ci, 
+                   y = 0, 
+                   yend = Inf)) +
+  geom_segment(aes(x = lower_ci, 
+                   xend = lower_ci, 
+                   y = 0, 
+                   yend = Inf))
+})
+```
