@@ -1,0 +1,111 @@
+---
+title: "Performance Summary"
+date: "`r params$reportdate`"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    source_code: embed
+    vertical_layout: fill
+params:
+  dateStart: "2002-01-02"
+  dynamictitle: "My report"
+  reportdate: !r Sys.Date()
+  symbol: SPL.AX
+  ticker: SPL.AX
+runtime: shiny
+theme: spacelab
+---
+
+```{r setup, echo=FALSE, include=FALSE, message = FALSE}
+knitr::opts_knit$set(root.dir = "..", echo = FALSE)
+library(dygraphs)
+library(flexdashboard)
+library(highcharter)
+library(PerformanceAnalytics)
+library(quantmod)
+library(shiny)
+library(tidyverse)
+library(tidyquant)
+library(timetk)
+
+# Function to calculate monthly returns on a stock
+monthly_stock_returns <- function(ticker, start_year) {
+  # Download the data from Yahoo finance
+  symbol <- getSymbols(ticker, src = 'yahoo', from = start_year,
+                       auto.assign = FALSE, warnings = FALSE)
+  # Tranform it to monthly returns using the periodReturn function from quantmod
+  data <- periodReturn(symbol, period = 'monthly', type = 'log')
+
+  # Let's rename the column of returns to something intuitive because the column
+  # name is what will eventually be displayed on the time series graph
+  colnames(data) <- as.character(ticker)
+
+  # We want to be able to work with the xts objects that result from this function
+  # so let's explicitly put them to the global environment with an easy to use
+  # name, the stock ticker
+  assign(ticker, data, .GlobalEnv)
+}
+
+```
+
+Page 1
+=====================================  
+
+Input {.sidebar}
+-------------------------------------
+  
+```{r}
+
+dateRangeInput("dateRange",
+               "Historical data",
+               start = params$dateStart,
+               end   = Sys.Date())
+
+actionButton("go", "Submit")
+
+prices <- eventReactive(input$go, {
+
+prices <- getSymbols("SPL.AX", src = 'yahoo',
+          auto.assign = TRUE, warnings = FALSE) %>% 
+          map(~Ad(get(.))) %>% 
+          reduce(merge) 
+prices <- as.xts(prices)
+})
+```
+
+Row {data-height=50}
+-------------------------------------
+
+### Number of Flexdashboard Calendar Days
+
+```{r vbox-calendar-days, eval=prices}
+flexdashboard::renderValueBox('1')
+# valueBox(paste(format(ndays(prices), big.mark = ","), "days"), caption = "# of Trade Days", icon="fa-pencil")
+```
+
+### Number of ShinyDashboard Trade Days
+
+```{r vbox-trade-days}
+# renderValueBox({
+#  valueBox(value = "sharpe_ratio()", icon = "fa-line-chart", color = "purple")
+# })
+
+```
+
+Row {data-height=500}
+-------------------------------------
+### Chart 4
+```{r}
+renderPlot(prices)
+```
+
+Page 2
+=====================================     
+
+### Chart 2.1
+    
+```{r}
+flexdashboard::renderGauge({
+    gauge(60, min = 0, max = 100, symbol = "%") 
+  })
+```

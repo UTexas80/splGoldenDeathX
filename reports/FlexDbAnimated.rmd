@@ -1,0 +1,274 @@
+---
+title: "Friday Flexin' by @lenkiefer"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    social: menu
+    source_code: embed
+---
+
+```{r data-and-setup, include=FALSE,cach=T}
+library(flexdashboard)
+library(data.table)
+library(quantmod)
+library(tidyverse)
+library(tweenr)
+library(animation)
+library(plotly)
+library(crosstalk)
+library(bsplus)
+
+#data discussed at: http://lenkiefer.com/2017/01/18/workin-workout
+
+ur.data<-fread("https://download.bls.gov/pub/time.series/la/la.data.1.CurrentS")
+ur.series<-fread("https://download.bls.gov/pub/time.series/la/la.series")
+
+ur.list<-ur.series[area_type_code =="A" &   #get states
+                   measure_code == "3"  &   #get unemployment rate
+                   seasonal == "S",         #get seasonally adjusted data
+                   c("series_id","area_code","series_title"),
+                   with=F]
+                   
+ur.area<-fread("https://download.bls.gov/pub/time.series/la/la.area",
+               col.names=
+                 c("area_type_code","area_code","area_text","display_level",
+                   "selectable","sort_sequence","blank"))                   
+
+ur.dt<-merge(ur.data,ur.list,by="series_id",all.y=T)
+
+ur.dt[,month:=as.numeric(substr(ur.dt$period,2,3))]
+ur.dt$date<- as.Date(ISOdate(ur.dt$year,ur.dt$month,1) ) #set up date variable
+ur.dt<-merge(ur.dt,ur.area[,c("area_text","area_code"),with=F],by="area_code")
+
+
+# Load national unemployment rate using quantmod and FRED database
+
+# helpful reference https://jeffreybreen.wordpress.com/tag/quantmod/
+
+unrate = getSymbols('UNRATE',src='FRED', auto.assign=F) 
+unrate.df = data.frame(date=time(unrate), coredata(unrate) )
+ur.dt2<-ur.dt[,c("date","area_text","value"),with=F]
+
+## rename variables
+ur.dt2<-dplyr::rename(ur.dt2, state=area_text)
+ur.dt2<-dplyr::rename(ur.dt2, ur=value)
+
+
+ur.dt2<-merge(ur.dt2,unrate.df,by="date")
+ur.dt2<-dplyr::rename(ur.dt2, ur.us=UNRATE)  #rename UNRATE to ur.us
+
+# create variables for use in ribbon chart
+ur.dt2[,up:=ifelse(ur>ur.us,ur,ur.us)]
+ur.dt2[,down:=ifelse(urur.us,"Worse","Better")),sides="b")+
+  scale_color_manual(values=c("#4575b4","#d73027"),name="Better or worse than U.S.")
+```
+
+Column {data-width=100}
+-----------------------------------------------------------------------
+
+### About
+
+```{r}
+valueBox("Intro", icon = "fa-question",href="#info",color="success")
+```
+
+### Original small multiple
+
+```{r}
+valueBox("Trends", icon = "fa-line-chart",href="#small-multiple")
+```
+
+
+### Interactive chart
+    
+```{r}
+valueBox("Explore", icon = "fa-hand-pointer-o ",href="#interactive")
+```
+   
+### Animated chart
+
+```{r}
+valueBox("Watch", icon = "glyphicon-play",href="#animated")
+```
+
+Small multiple
+===================================== 
+
+Column {data-width=900}
+-----------------------------------------------------------------------
+
+### Original graph based on workout at: http://lenkiefer.com/2017/01/18/workin-workout
+
+```{r, fig.height=12,fig.width=8}
+## See http://lenkiefer.com/2017/01/18/workin-workout for discussion
+
+ggplot(data=ur.plot,aes(x=date,y=ur))+
+  geom_line(color="black")+
+  geom_line(linetype=2,aes(y=ur.us))+
+  geom_ribbon(aes(ymin=ur,ymax=down),fill="#d73027",alpha=0.5)+
+  geom_ribbon(aes(ymin=ur,ymax=up),fill="#4575b4",alpha=0.5)+
+  facet_wrap(~state,ncol=5,scales="free_x")+
+  theme_minimal()+
+  theme(legend.position="top",
+        plot.caption=element_text(hjust=0),
+        plot.subtitle=element_text(face="italic"),
+        plot.title=element_text(size=14,face="bold"))+
+  labs(x="",y="",
+       title="The state of U.S. jobs - Working out @hrbmstr's workout of @stiles' Viz",
+       subtitle="Solid line is state unemployment rate, dotted line is U.S. average unemployment rate\nRed (blue) indicates the state level is higher (lower) than the national average",
+       caption="@lenkiefer Data Source: U.S. Bureau of Labor Statistics\nViz based on https://rud.is/b/2017/01/18/workout-wednesday-redux-2017-week-3/, itself based on http://thedailyviz.com/2016/12/14/four-decades-of-state-unemployment-rates-in-small-multiples-part-2/")+  geom_rug(aes(color=ifelse(ur>ur.us,"Worse","Better")),sides="b")+
+  scale_color_manual(values=c("#4575b4","#d73027"),name="Better or worse than U.S.")
+```
+
+Column {data-width=100}
+-----------------------------------------------------------------------
+
+### About
+
+```{r}
+valueBox("Intro", icon = "fa-question",href="#info")
+```
+
+### Original small multiple
+
+```{r}
+valueBox("Trends", icon = "fa-line-chart",href="#small-multiple",color="success")
+```
+
+### Interactive chart
+    
+```{r}
+valueBox("Explore", icon = "fa-hand-pointer-o ",href="#interactive")
+```
+   
+### Animated chart
+
+```{r}
+valueBox("Watch", icon = "glyphicon-play",href="#animated")
+```
+
+
+Interactive
+===================================== 
+
+
+Column {data-width=900}
+-------------------------------------
+
+### Unemployment trends
+
+Each line represents a state. Use the filter box to highlight an individual state.
+
+
+```{r}
+bscols(widths=c(2,NA),
+  list(filter_select("state", "Select state to highlight for plot", d3, ~state,multiple=F)),
+  plot_ly(data=d3,x = ~date, y = ~ur,height=650,text=~mytext) %>% 
+    #add_lines(name="Selected state",colors="red",alpha=0.7, hoverinfo = "text") %>% 
+    add_ribbons(ymin=~ur.us,ymax=~up,color=I("red"),alpha=0.2,name="Worse than U.S.",hoverinfo="none") %>%
+        add_ribbons(ymin=~down,ymax=~ur.us,color=I("blue"),alpha=0.2,name="Better than U.S.",hoverinfo="none") %>%
+            add_lines(name="Selected state ",color=I("black"),alpha=0.7, hoverinfo ="text", text=~mytext) %>% 
+        add_lines(name="US ",text=~mytext.us,color=I("gray"),alpha=0.7, y=~ur.us,hoverinfo = "text", mode = 'lines+markers') %>% 
+    #add_lines(name="All State",data=d3a,x=~date,y=~hpa12,              colors="black",color=~state,alpha=0.1,showlegend=F,hoverinfo="none") %>%
+     layout(title = "State unemployment rate relative to U.S.",xaxis = list(title="Date"), yaxis = list(title="Unemployment rate (%,SA)"))
+)
+```
+
+Column {data-width=100}
+-----------------------------------------------------------------------
+
+### About
+
+```{r}
+valueBox("Intro", icon = "fa-question",href="#info")
+```
+
+### Original small multiple
+
+```{r}
+valueBox("Trends", icon = "fa-line-chart",href="#small-multiple")
+```
+
+### Interactive chart
+    
+```{r}
+valueBox("Explore", icon = "fa-hand-pointer-o ",href="#interactive",color="success")
+```
+   
+### Animated chart
+
+```{r}
+valueBox("Watch", icon = "glyphicon-play",href="#animated")
+```
+
+
+Animated
+===================================== 
+
+Column {data-width=900}
+-------------------------------------
+
+### Click the play button at bottom to animate the chart
+
+```{r}
+
+g<-
+  ggplot(data=ur.plot,aes(x=date,y=ur,frame=state,ids=date,label=paste(state,"solid line, U.S. dotted line")))+
+  geom_line(color="black")+
+  geom_line(linetype=2,aes(y=ur.us),size=1.05,color="gray")+
+  geom_ribbon(aes(ymin=ur,ymax=down),fill="#d73027",alpha=0.5)+
+  geom_ribbon(aes(ymin=ur,ymax=up),fill="#4575b4",alpha=0.5)+
+ # facet_wrap(~state,ncol=10,scales="free_x")+
+  theme_minimal()+
+  scale_x_date(date_labels="'%y")+
+  #annotate("text", x = median(ur.plot$date,na.rm=T), y = 16, label="State solid line, U.S. dotted line",hjust=0)+
+  geom_text(data=ur.plot[date==median(ur.plot$date)],fontface="bold",y=16,size=8)+
+  theme(legend.position="top",
+        plot.caption=element_text(hjust=0),
+        #axis.text.x=element_text(size=6),
+        plot.subtitle=element_text(face="italic"),
+        plot.title=element_text(size=12,face="bold"))+
+  labs(x="",y="Unemployment rate (%)",
+       title="Red (blue) indicates the state unemployment rate is higher (lower) than the national average",
+       subtitle="State (solid line) and National (dotted line) Unemployment rate",
+       caption="@lenkiefer Data Source: U.S. Bureau of Labor Statistics\nViz based on https://rud.is/b/2017/01/18/workout-wednesday-redux-2017-week-3/,\nitself based on http://thedailyviz.com/2016/12/14/four-decades-of-state-unemployment-rates-in-small-multiples-part-2/")+
+  scale_color_manual(values=c("#4575b4","#d73027"),name="Better or worse than U.S.")
+
+ggplotly(g) %>%  animation_opts(2000, easing ='cubic-in-out') #%>%
+  #add_text(x=0.5,y=1,text=~state) %>%
+   #animation_button( y = 0, yanchor = "bottom") %>%
+   #animation_button(x = 1, xanchor = "right", y = 0, yanchor = "bottom") %>%
+  #animation_slider(currentvalue = list(prefix = "State: ", font = list(color = "red")))
+#animation_slider(currentvalue = list(visible=T,prefix = "State: ", font = list(color = "red"),x = 0.5, xanchor = "right", y = 1, yanchor = "top"))
+
+```
+
+Column {data-width=100}
+-----------------------------------------------------------------------
+
+### About
+
+```{r}
+valueBox("Intro", icon = "fa-question",href="#info")
+```
+
+### Original small multiple
+
+```{r}
+valueBox("Trends", icon = "fa-line-chart",href="#small-multiple")
+```
+
+
+### Interactive chart
+    
+```{r}
+valueBox("Explore", icon = "fa-hand-pointer-o ",href="#interactive")
+```
+   
+
+### Animated chart
+
+```{r}
+valueBox("Watch", icon = "glyphicon-play",href="#animated",color="success")
+```

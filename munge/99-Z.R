@@ -11,7 +11,8 @@ z99.ModDate = as.Date("2019-06-09")
 ## Call rmarkdown::run() instead of render() because it is a shiny document  ### https://tinyurl.com/y2y2azny
 ## (http://rmarkdown.rstudio.com/authoring_shiny.html).                      ###
 ################################################################################
-rmarkdown::run("./reports/Flexdashboard.Rmd")
+# rmarkdown::run("./reports/Flexdashboard.Rmd")
+rmarkdown::run("./reports/_Flexdashboard.Rmd")
 
 # xaringan::infinite_moon_reader("./reports/dashboard.Rmd")
 
