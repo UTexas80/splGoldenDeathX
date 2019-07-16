@@ -1,0 +1,821 @@
+---
+title: "Housing's best year in a decade by @lenkiefer"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    theme: flatly
+    social: menu
+    source_code: embed
+---
+
+```{r setup, include=FALSE,cache=F,message=F,}
+library(flexdashboard)
+library(tidyverse,quietly=T)
+library(data.table,quietly=T)
+library(htmlTable,quietly=T)
+library(viridis,quietly=T)
+library(ggbeeswarm,quietly=T)
+library(zoo,quietly=T)
+library(DT,quietly=T)
+library(maps,quietly=T)
+library(plotly,quietly=T)
+library(scales,quietly=T)
+### Run this file to create data ###
+#source("code/dataload2016.R")
+
+### Run this to load data into file
+load("mydata.RData")
+### 
+```
+
+Sidebar {.sidebar}
+=====================================
+
+### Contents
+
+### [Mortgage Rate Trends](#mortgage-rates)
+
+*How did mortgage rates evolve in 2016? What were the key factors driving rates?*
+
+
+### [Home Sales Trends](#home-sales)
+
+*Home sales in 2016 were the best in a decade. Why? What are new home sales trends?*
+
+### [House Price Trends](#house-prices)
+
+*House prices in the U.S. reach their pre-recession peak in fall of 2016. At least nationally. At least not adjusted for inflation. How do house price trends vary by geography?*
+
+### [About](#about-1)
+
+*This is a flexdashboard implementation of my [2016 year-in-review](http://lenkiefer.com/chartbooks/dec2016/index.html). Find out more (beyond the source code) about how this document was built.*
+
+
+
+Intro 
+===================================== 
+
+Column {data-width=800}
+-----------------------------------------------------------------------
+
+### Introduction
+
+By many measures 2016 was the best year for housing in a decade. Back in May I shared some trends on housing markets and then in December I did a full year recap.  This document is a flexdashboard version of my [December 2016 year-in-review article](http://lenkiefer.com/chartbooks/dec2016/index.html).
+
+The original article was made use the [Tufte handout Rmarkdown template](http://rstudio.github.io/tufte/), which makes use of margin notes and annotations.  This version is a [flexdashboard](http://rmarkdown.rstudio.com/flexdashboard/index.html). Flex dashboard are meant to be interactive, but outside of a data table there's no interaction in this version.
+
+Instead, I'm remixing my earlier article to try out the flexdashboard features. In future I'll be using more [htmlwidgets](http://www.htmlwidgets.org/) to add more interactivity.
+
+I've been tracking trends in the housing and mortgage market throughout the year, sharing many different data visualizations. Let's look back on this year's best data visualizations and what they tell us about key trends.
+
+Mortgage rates {.storyboard}
+=========================================
+
+### Weekly rates in 2016. Rates fell for most of the year, particularly in late June after Brexit. But rates rose sharply following the U.S. general election.
+
+```{r}
+ggplot(data=pmms30yr[year(date)==2016], aes(x=date,y=rate,label=rate))+geom_line(size=1.1)+
+  theme(legend.position="none")+theme_minimal()+
+  scale_x_date(date_breaks="1 month", date_labels="%b")+
+  geom_text(data=tail(pmms30yr[year(date)==2016],1),nudge_x=0,nudge_y=.06)+
+  geom_point(data=tail(pmms30yr[year(date)==2016],1),size=2,color="red",alpha=0.75)  +
+  labs(x="", y="",
+       title="30-year Fixed Mortgage Rate (%)",
+       subtitle="weekly rates in 2016",
+       caption="@lenkiefer Source: Freddie Mac Primary Mortgage Market Survey")+
+        theme(    plot.title=element_text(size=18),
+                plot.caption=element_text(hjust=0),
+                plot.background = element_rect(fill = "#fffff8",colour = "#fffff8")
+           )
+```
+
+*** 
+
+**30-year mortgage rates in 2016**
+
+Mortgage rates on 30-year fixed mortgages started the year at about 4% and fell for most of the year. But starting in the fall and accelerating after the U.S. election on November 8th rates began to rise. As of the last week of 2016, 30-year mortgage rates averaged 4.32 percent.
+
+Falling mortgage rates for most of the year helped to support housing and mortgage rates.  Lower mortgage rates reduce the cost of homeownership significantly by lowering the required monthly mortgage principal and interest rates. For example, a $200,000 30-year fixed rate loan at 3.5 percent interest give you nearly $890 in monthly mortgage payments. At 4.25 percent, monthly payments increase almost $100 to about $984.
+
+Lower rates also help drive mortgage refinance activity.  Homeowners can lower their monthly payments by refinancing an existing loans. Not only do refinances usually lower the rate on the loan, they also generally extend the term (e.g. refinancing a 3-year old 30-year fixed mortgage with 27 year remaining into a new 30-year loan.), which generally results in lower monthly payments.
+
+### Compare the mortgage rates by week of year
+
+```{r}
+ggplot(data=pmms30yr[year>2012 & week<= 52], 
+           aes(x=week,y=rate,label=paste(" ",year),color=paste(" ",year)))+
+    geom_line(size=1.05,aes(linetype=paste(" ",year)))+theme_minimal()+
+    theme(legend.position="none")+
+    scale_x_continuous(limits=c(0,54),breaks=seq(0,55,5))+
+    scale_y_continuous(limits=c(3.25,4.75),breaks=seq(3.25,5,0.25))+
+    geom_text(data=pmms30yr[year>2012 & week==52],hjust=0)+
+    geom_point(data=pmms30yr[year>2012 & week==52],size=3.5,alpha=0.75)+
+    labs(x="Week Number", y="",
+         title="30-year Fixed Mortgage Rate by Week of Year",
+         subtitle="comparing 2013, 2014, 2015 and 2016",
+         caption="@lenkiefer Source: Freddie Mac Primary Mortgage Market Survey")+
+        theme(    plot.title=element_text(size=18),
+                plot.caption=element_text(hjust=0),
+                plot.background = element_rect(fill = "#fffff8",colour = "#fffff8")  )
+
+```
+
+*** 
+
+**Comparing weekly mortgage rates by year**
+
+This chart compares weekly trends in mortgage rates across calendar years.  The x axis is the week number of the year (1st week, 2nd week,...,52nd week).  By comparing any vertical slice you can see how rates compare to previous years.
+
+For most of 2016, rates were down on a year-over-year basis.  The big spike in mortgage rates at the end of the year looks similar to the Taper Talk period in spring 2013 when rates rose sharply.  Will housing markets respond like they did in 2013? We'll have to wait and see in early 2017 as we get data reflecting trends after the post-election rate spike.
+
+### On a year-over-year basis rates have been down much more often than up in recent years
+
+```{r}
+g3<-
+  ggplot(data=pmms30yr[date>'1979-12-31'],  
+       #We're going to subset the data to be after Dec 31, 2000.  
+       #We could use filter function, but instead I'm using the data.table() shorthand
+        aes(x=date,y=d52,label=rate))+geom_line()+theme_minimal()+
+    #set date breaks at 1 year, format as 2000 ("%Y"), 00 would be "%y"
+    scale_x_date(breaks=seq(as.Date("1980-01-01"),as.Date("2020-01-01"),"5 years"), date_labels="%Y")+  
+  #add text, marker and reference line for last observation
+  geom_area(aes(y=d52.down),fill=viridis(5)[4],alpha=0.5)+  #shade green if down
+  geom_area(aes(y=d52.up),fill=viridis(5)[2],alpha=0.5)+    # shade blue if up
+  labs(x="", y="",
+       title="30-year Fixed Mortgage Rate",
+       subtitle="52-week change in percentage points",
+       caption="@lenkiefer Source: Freddie Mac Primary Mortgage Market Survey")+
+  theme(plot.title=element_text(size=14),
+                        plot.background = element_rect(fill = "#fffff8",colour = "#fffff8"))+
+  theme(axis.text=element_text(size=8))+
+  theme(plot.caption=element_text(hjust=0))+
+  geom_rug(data=pmms30yr[year(date)>1979 & d52<0,],
+           aes(y=d52.down),color=viridis(5)[4],alpha=0.5,sides="b")+  # Only put rug at bottom
+  geom_rug(data=pmms30yr[year(date)>1979 & d52>0,],
+           aes(y=d52.up),color=viridis(5)[2],alpha=0.5,sides="b") 
+
+g3
+
+```
+
+***
+
+**Rates have been trending down for over 30 years with only brief periods of increases.**
+
+This chart shows the year-over-year (52-week) change in mortgage rates over time.  There is a rug plot on the bottom that shows periods of rate declines in green and rate increases in blue. Mortgage rates have been on the decline for over 30 years.  
+
+Other than a brief period at the start of 2015, rates have been declining since 2013-14.
+
+### Stripchart shows trends at a glance
+
+```{r}
+  ggplot(data=pmms30yr[year>2000 & year<2017 ,],aes(x=week,y=1,color=d52,fill=d52))+
+  geom_col()+
+  scale_fill_viridis(name="52-week\nChange (pp)",discrete=F,option="B")+
+  scale_color_viridis(name="52-week\nChange (pp)",discrete=F,option="B")+
+  theme_minimal()+
+  facet_wrap(~year,ncol=4)+
+  theme(axis.ticks.y=element_blank(),
+        axis.text.y=element_blank(),
+        panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),
+        plot.background = element_rect(fill = "#fffff8",colour = "#fffff8"),
+        axis.text.x=element_text(size=6))+
+    labs(x="", y="",
+       title="30-year Fixed Mortgage Rate",
+       subtitle="52-week change in percentage points",
+       caption="@lenkiefer Source: Freddie Mac Primary Mortgage Market Survey")+
+  scale_x_continuous(breaks=c(1,26,52),labels=c("Jan","Jul","Dec"))+
+    theme(plot.title=element_text(size=14))+
+  theme(axis.text=element_text(size=8))+
+  theme(plot.caption=element_text(hjust=0))
+```
+
+***
+
+**Stripcharts of annual changes show genral trends**
+
+This chart shows and alternative way of looking at year-over-year changes. It's actually a compressed bar chart, with each slice of a strip one weekly value. The values are placed in a tights space so that you have a filmstrip like appearance.
+
+While you can't read the values from this chart as clearly as a line chart (or a table), you can quickly get a feel for the important trends in the data. The bright yellow periods are when mortgage rates were rising, while the dark purple corresponds to periods when rates were falling. It's pretty easy to see that 2001, 2003, 2009 and 2012 were years when rates fell a lot, while 2006, 2013, and 2014 were when rates were rising relative to the previous year.
+
+### Mortgage rate tile chart as an alternative way to visualizae rate trends
+
+```{r}
+
+g.tile<-
+  ggplot(data=pmms30yr[year>2000 & year<2017,],aes(x=id,y=yearf,color=d52,fill=d52))+
+  geom_tile(color="gray")+
+  scale_x_continuous(breaks=seq(0,50,10))+
+  scale_fill_viridis(name="52-week\nChange (pp)",discrete=F,option="B")+
+  scale_color_viridis(name="52-week\nChange (pp)",discrete=F,option="B")+
+  theme_minimal()+labs(x="week of year",y="year",
+                       title="Annual change in 30-year fixed mortgage rates",
+                       subtitle="52-week change in rates in percentage points",
+                       caption="@lenkiefer Source: Freddie Mac Primary Mortgage Market Survey")+
+  theme(legend.position="top",plot.caption=element_text(hjust=0))+
+  theme(axis.text.y=element_text(size=6),
+                plot.background = element_rect(fill = "#fffff8",colour = "#fffff8"),
+        axis.text.x=element_text(size=6))
+
+g.tile
+```
+
+***
+
+**Tile charts as another visualization tool**
+
+We can also compare the year-over-year changes with this tile chart.  Like the strip chart above, each square shows one week color-coded to correspond to the year-over-year change.  The bright yellow swatches are when rates rose, while dark purple was when rates fell by a large amount.  You can see a moderately dark patch in the middle of 2016 corresponding to the post-Brexit declines in rates.
+
+
+### Factors driving mortgage rates
+
+Many factors drive interest rates, but some of the most significant factors include inflation trends and Federal Reserve policy decisions.  If inflation, or even just inflation *expectations* pick up, long-term interest rates include mortgage rates will increase.  Indeed, part of the reason long-term interest rates rose after the U.S. election was because of anticipated increased inflation.
+
+Federal Reserve policy will influence the path of short term rates, as well as inflation and economic growth. There is not a strong short-term link between mortgage rates and federal reserve policy, but over time, short-term interest rate movements tend to drive longer-term interest rate movements.
+
+*Notes*
+See this recent note from the Federal Reserve on the relation of inflation and perceptions of inflation: https://www.federalreserve.gov/econresdata/notes/feds-notes/2016/inflation-perceptions-and-inflation-expectations-20161205.html
+
+See e.g. this recent article in the *Wall Street Journal* http://www.wsj.com/articles/bond-rout-deepens-after-fed-rate-signals-1481794245.
+
+See my post http://lenkiefer.com/2016/05/19/mortgage-rates-and-the-fed-funds for some graphs comparing movements in mortgage rates, Treasury yields, and the Fed Funds rate.
+
+### Inflation trends 1: Consumer price inflation being drive by housing and medical care.
+
+```{r}
+ggplot(data=cpi6n[date==dd[i] & !(item.name %in% c("Transportation","Services","Other goods and services"))],aes(x=item.name,y=cpi12,color=cpi12))+
+  scale_color_viridis(option="D",name="Annual Inflation\nRate (%) ",discrete=F,direction=-1,end=0.85,
+                      label=percent)+
+  geom_segment(aes(xend=item.name,yend=0),size=1.2)+coord_flip()+
+  geom_text(size=4,aes(label=paste(" ",percent(round(cpi12,3))," "),
+                hjust=ifelse(cpi12>0,0,1)))+  #flip justification if point postiive or negative
+    geom_point(size=2)+
+    theme_minimal()+   
+  theme(legend.position="top",legend.text=element_text(size=7),
+        plot.background = element_rect(fill = "#fffff8",colour = "#fffff8"),
+        legend.key.width=unit(1.75,"cm"))+
+  scale_y_continuous(label=percent,limits=c(-0.02,.055),breaks=seq(-0.2,.08,.01))  +
+  labs(x="", y="Consumer Price Index (y/y % change NSA)",
+       title="Consumer Price Inflation (y/y % change Nov 2016)",
+       subtitle="by major category",
+       caption="@lenkiefer Source: U.S. Bureau of Labor Statistics")+
+  theme(plot.title=element_text(size=14))+
+  theme(plot.caption=element_text(hjust=0))
+```
+
+***
+
+**Housing and medical care driving inflation**
+
+I've been covering inflation trends throughout the year. [See for example this post.](http://lenkiefer.com/2016/11/21/consumer-price-viz) Recently, inflation has trended a bit higher.  Housing and medical care are two areas that are contributing most to recent inflation growth.
+
+At the moment, inflation is not that high. Headline CPI, which includes volatile food and energy prices is running 1.7 percent on a year-over-year basis.  The Core CPI, which excludes food and energy prices, is rising a little faster at 2.1 percent. These numbers are still pretty low, and haven't moved up that much in recent months. It seems to be that expectations of future inflation are driving interest rates more than realized inflation.
+
+*Notes*
+The U.S. Bureau of Labor Statistics provide data on the Consumer Price Index. I often like to look at the special aggregate indices prepared by the BLS. Summaries of these data can be found in Table 3 (https://www.bls.gov/news.release/cpi.t03.htm) of the regular CPI new release.
+
+### Inflation trends 2: A look at year-over-year inflation by category
+
+```{r }
+i<-length(dd)  #set index to last date
+ggplot(data=cpi6n[date<=dd[i] & !(item.name %in% c("Transportation","Services","Other goods and services"))],aes(x=date,y=cpi12,color=item.name))+
+  geom_area(aes(fill=item.name),alpha=0.5)+
+  theme_minimal()+   theme(legend.justification=c(0,0), legend.position="none")+
+  scale_y_continuous(label=percent)+
+  geom_hline(yintercept=0,linetype=2,color="black")+
+  scale_x_date(limits =xlim)+
+  labs(x="", y="Consumer Price Index (y/y % change NSA)",
+       title="Consumer Price Inflation (y/y %)",
+       subtitle="by major category",
+       caption="@lenkiefer Source: U.S. Bureau of Labor Statistics")+
+  theme(plot.title=element_text(size=14),
+                  plot.background = element_rect(fill = "#fffff8",colour = "#fffff8"))+
+  theme(plot.caption=element_text(hjust=0,vjust=1,margin=margin(t=10)))+
+  theme(plot.margin=unit(c(0.25,0.25,0.25,0.25),"cm"))+facet_wrap(~item.name,ncol=2)
+```
+
+***
+
+**Inflation trends by category**
+
+I've been covering inflation trends throughout the year. [See for example this post.](http://lenkiefer.com/2016/11/21/consumer-price-viz) Recently, inflation has trended a bit higher.  Housing and medical care are two areas that are contributing most to recent inflation growth.
+
+At the moment, inflation is not that high. Headline CPI, which includes volatile food and energy prices is running 1.7 percent on a year-over-year basis.  The Core CPI, which excludes food and energy prices, is rising a little faster at 2.1 percent. These numbers are still pretty low, and haven't moved up that much in recent months. It seems to be that expectations of future inflation are driving interest rates more than realized inflation.
+
+*Notes*
+The U.S. Bureau of Labor Statistics provide data on the Consumer Price Index. I often like to look at the special aggregate indices prepared by the BLS. Summaries of these data can be found in Table 3 (https://www.bls.gov/news.release/cpi.t03.htm) of the regular CPI new release.
+
+### Inflation trends 3: Longer-term trends in inflation.
+
+```{r}
+ggplot(data=cpi6,aes(x=date,y=cpi00,color=item.name))+geom_line()+
+  theme_minimal()+   theme(legend.justification=c(0,0), legend.position="none")+scale_y_log10(limits=c(90,200),breaks=c(90,100,120,140,160,180,200))+
+  #scale_x_date(limits =xlim)+
+    scale_x_date(labels= date_format("%b-%Y"),
+                 limits = as.Date(c('2000-01-01','2018-12-31')))+
+  geom_text(
+    data = cpi6[date==dd[i]],
+    aes(label = item.name),
+    size = 3,
+    nudge_x = 1) +
+    labs(x="", y="Consumer Price Index (log scale, Jan 2000=100, SA)",
+         title="Consumer Prices",
+         subtitle="by major category",
+         caption="@lenkiefer Source: U.S. Bureau of Labor Statistics")+
+  theme(plot.title=element_text(size=14),
+                  plot.background = element_rect(fill = "#fffff8",colour = "#fffff8"))+
+    theme(plot.caption=element_text(hjust=0,vjust=1,margin=margin(t=10)))+
+    theme(plot.margin=unit(c(0.25,0.25,0.25,0.25),"cm"))
+
+```
+
+
+
+***
+**Since 2000, medical care has outstripped other price categories**
+
+I've been covering inflation trends throughout the year. [See for example this post.](http://lenkiefer.com/2016/11/21/consumer-price-viz) Recently, inflation has trended a bit higher.  Housing and medical care are two areas that are contributing most to recent inflation growth.
+
+At the moment, inflation is not that high. Headline CPI, which includes volatile food and energy prices is running 1.7 percent on a year-over-year basis.  The Core CPI, which excludes food and energy prices, is rising a little faster at 2.1 percent. These numbers are still pretty low, and haven't moved up that much in recent months. It seems to be that expectations of future inflation are driving interest rates more than realized inflation.
+
+*Notes*
+The U.S. Bureau of Labor Statistics provide data on the Consumer Price Index. I often like to look at the special aggregate indices prepared by the BLS. Summaries of these data can be found in Table 3 (https://www.bls.gov/news.release/cpi.t03.htm) of the regular CPI new release.
+
+### Federal Reserve policy will also drive interest rates. What do the FOMC dots tell us?
+
+```{r fig-dotplot1,cache=T, fig.cap = "FOMC dot plot", warning=FALSE, cache=TRUE,echo=FALSE}
+d9<-fread("~/Data Viz/blog/dots/dec2016.txt")
+#d9<-d9[y != 2019,]
+ylist<-unique(d9$y)
+df<-data.frame(rate=numeric(),x=numeric())
+#str(df)
+for (yy in 1:length(ylist)){
+  for (i in 1:length(d9[y==ylist[yy]]$x) ){
+    for (j in 1:d9[y==ylist[yy] ]$count[i])
+    {if (d9[y==ylist[yy]]$count[i]>0){
+      myc<-j
+      df1<-data.frame(rate=d9[y==ylist[yy]]$x[i],x=ifelse(d9[y==ylist[yy]]$count[i] %% 2 ==1, 
+                                                          ifelse(myc %% 2 ==1,yy+(-1)^myc * (myc-1)*0.04,yy+(-1)^myc * (myc)*0.04),
+                                                          yy-.02+(-1)^myc * (myc)*0.04)   )
+      df<-rbind(df,df1)
+    }}}}
+
+df9<-df
+df9<-rbind(df9,data.frame(rate=8,x=4))
+
+#tween the data sets.
+df9$date<-factor("December 2016")
+
+
+caption <- "@lenkiefer Source: Federal Reserve Board Note: Each shaded circle indicates the value (rounded to the nearest 1/8 percentage point) of an individual participant's judgment of the midpoint of the appropriate target range for the federal funds rate or the appropriate target level for the federal funds rate at the end of the specified calendar year or over the longer run. One participant did not submit longer-run projections in June, September or December 2016. "
+
+
+ggplot(data=df9,aes(x=x,y=rate))+
+  theme_minimal()+scale_x_continuous(breaks=seq(1,5,1),labels=c("2016","2017","2018","2019","Longer Run"))+
+  geom_point(size=2,aes(color="red"))+scale_y_continuous(limits=c(0,4.5))+
+  #scale_color_manual(limits=c("March 2016","June 2016"),values=c("red","#00B0F0"))+
+  labs(y="Midpoint of target range or target level for the federal funds rate (%)",x="Horizon",
+       subtitle=head(df9,1)$date,
+       title="FOMC participants' assessments of appropriate monetary policy:\nMidpoint of target range or target level for the federal funds rate",
+       caption=label_wrap_gen(100)(caption))+
+  theme(plot.title=element_text(size=14))+theme(plot.caption=element_text(hjust=0,vjust=1,margin=margin(t=10)))+
+  theme(plot.margin=unit(c(0.25,0.25,0.25,0.25),"cm"))+  theme(legend.justification=c(0,0), legend.position="none")+
+    theme(legend.justification=c(0,0), legend.position="none")+
+          theme(plot.title=element_text(size=14),
+                axis.text.y=element_text(size=8),
+                axis.text.x=element_text(size=8),
+                axis.title.y=element_text(size=9),
+                plot.caption=element_text(hjust=0),
+                plot.background = element_rect(fill = "#fffff8",colour = "#fffff8")
+           )
+
+```
+
+*** 
+**Dot plots**
+
+In addition to the possibility of higher inflation next year, interest rates are moving higher in anticipation of movements in short term interest rates.  We can see some of the reason for this by looking at the Fed's dot plot.
+
+The dot plot is a special chart that shows the distribution of expectations of the Federal Open Market Committee (FOMC) for the federal funds rate. Specifically it captures the views of each individual FOMC member for the following:
+
+> Each shaded circle indicates the value (rounded to the nearest 1/8 percentage point) of an individual participant's judgment of the midpoint of the appropriate target range for the federal funds rate or the appropriate target level for the federal funds rate at the end of the specified calendar year or over the longer run. 
+
+*Notes*
+See my post http://lenkiefer.com/2016/06/22/Make-a-dotplot for more on the dotplot and how to make these plots.
+
+### The outlook for longer-term rates
+
+```{r fig-rates3, fig.margin=T,  cache=T, echo=FALSE, warning=FALSE,message=F }
+library(tidyverse)
+library(viridis)
+library(ggbeeswarm)
+ggplot(data=pm.a,aes(x=year,y=Avg,fill=Avg))+geom_col()+theme_minimal()+scale_fill_viridis()+
+  geom_hline(yintercept=3.5,color="black",linetype=2)+
+  labs(x="",y="",title="30-year mortgage rates in 2016 lowest since 1971",
+       subtitle="Annual average of weekly rates in percentage points",
+       caption="@lenkiefer Source: Freddie Mac Primary Mortgage Market Survey")+
+  theme(legend.position="none",
+        plot.background = element_rect(fill = "#fffff8",colour = "#fffff8"),
+        plot.caption=element_text(hjust=0)        )
+```
+
+***
+
+**Will rates rise in 2017?**
+
+Whether or not the Fed raises rates aggressively in 2017 or if inflation ticks up will have a lot to do with how high mortgage rates might go in 2017. At this point, uncertainty is high. But for most of 2016, rates remained extremely low. In fact, for the full year 2016, 30-year fixed mortgage rates had the lowest annual average since at least 1971.
+
+Home sales {.storyboard}
+=========================================
+
+### Home sales the best in a decade, compare the last 10 years month-by-month
+
+```{r}
+ggplot(data=tdata[month<12 & year>2006,],aes(y=tsales,x=factor(year),fill=mname,label=mname))+
+  scale_fill_viridis(discrete=T,end=0.95,direction=1,option="D")+
+  geom_bar(stat="identity",alpha=0.75,color="gray")+
+  theme_minimal()+  coord_flip()+
+  scale_y_continuous(breaks=seq(0,7000,1000))+
+  geom_hline(yintercept=tdata[year==2016 & month==11]$sc,linetype=2,color="black")+
+  xlab("")+ylab("")+
+  geom_text(data=tdata[year>2006 & month<12],color="white",aes(y=sc),nudge_y=0.25,hjust=1.1)+
+    labs(title="Total (New + Existing) Home Sales (Ths. NSA)",
+       caption="@lenkiefer Source: Census/HUD and National Asscociation of Realtors")+
+  theme(plot.title=element_text(size=12))+
+  theme(plot.caption=element_text(hjust=0,vjust=1,margin=margin(t=10),size=10))+
+  theme(legend.justification=c(0,0), legend.position="none")+
+          theme(    plot.title=element_text(size=18),
+                plot.caption=element_text(hjust=0),
+                plot.background = element_rect(fill = "#fffff8",colour = "#fffff8")
+           )
+```
+
+***
+
+**Best in a decade**
+
+Low mortgage rates in 2016 helped home sales reach their highest level in a decade. Through the first 11 months of the year total home sales (the sum of new and existing homes sales) is the highest since 2006. Barring an epic collapse in home sales, December will push the annual total in home sales to the highest in a decade.
+
+
+### New home sales trending higher, but still well below historic average.
+
+```{r}
+ggplot(data=newdata, aes(x=date,y=sales, label = slabel))+geom_line()+
+  geom_line(data=newdata,aes(x=date,y=down),linetype=2) +
+  geom_line(data=newdata,aes(x=date,y=up),linetype=2) +
+  geom_ribbon(data=newdata,aes(x=date,ymin=down,ymax=up),fill=plasma(5)[5],alpha=0.5)  +
+  scale_y_continuous(limits = c(200,1050), breaks=seq(200,1200,100)) + 
+  geom_point(data=tail(newdata,1),colour = "red", size = 2,alpha=0.8)+
+  scale_x_date(labels= date_format("%Y"),date_breaks="1 year",
+               limits = as.Date(c('2007-01-01','2016-12-31'))) +
+  geom_hline(yintercept=tail(newdata,1)$sales,linetype=3,color="red")+
+  theme(axis.title.x = element_blank()) +   # Remove x-axis label
+  theme_minimal()+
+  labs(x=NULL, y=NULL,
+       title="New Home Sales (Ths., SAAR)",
+       subtitle=paste(as.character(tail(newdata,1)$date,format="%b-%Y"),":",tail(newdata,1)$slabel),
+       caption="@lenkiefer Source: Census/HUD, dotted lines denote confidence interval")+
+  theme(plot.caption=element_text(hjust=0,vjust=1,margin=margin(t=10)),
+        plot.subtitle=element_text(color="red"),
+        plot.background = element_rect(fill = "#fffff8",colour = "#fffff8"),
+        plot.margin=unit(c(0.5,0.5,0.5,0.75),"cm"))
+```
+
+***
+
+**New home sales estimates are noisy**
+
+New home sales are tabulated in a joint release by the U.S. Census Bureau and Department of Housing and Urban Development (HUD) while existing home sales data are reported by the National Association of Realtors. New home sales are estimated with low precision. The confidence interval for monthly changes are typically greater than +/- 10%. Existing home sales are not reported with a confidence interval.
+
+
+### Housing starts well below historical averages
+
+```{r}
+
+g.line<-
+  ggplot(data=sdata,aes(x=date,y=starts-1500,fill=starts-1500))+  #geom_step(color="gray")+
+  geom_col(alpha=0.82)+
+  scale_fill_viridis()+
+  scale_y_continuous(breaks=seq(-1000,1000,500),labels=seq(500,2500,500),limits=c(-1500,1500))+
+  theme_minimal()+
+  labs(x="",y="",title="Housing Starts (Ths. SAAR)",
+                                            caption="@lenkiefer Source: Census/HUD")+
+  theme(legend.position="none",plot.caption=element_text(hjust=0),
+        plot.title=element_text(size=12),
+                        plot.background = element_rect(fill = "#fffff8",colour = "#fffff8"))+
+  scale_x_date(date_breaks="10 years",date_labels="%Y")
+
+
+g.tile<-
+  ggplot(data=sdata,aes(x=reorder(as.character(date,format="%b"),month),y=factor(yearf),fill=starts))+
+  geom_tile(alpha=0.82,color="white")+
+    scale_fill_viridis()+theme_minimal()+labs(x="",y="",
+                                            caption="@lenkiefer Source: Census/HUD")+
+  theme(legend.position="none",plot.caption=element_text(hjust=0))+
+  theme(axis.text.y=element_text(size=6),
+                        plot.background = element_rect(fill = "#fffff8",colour = "#fffff8"),
+        axis.text.x=element_text(size=6))
+multiplot(g.line,g.tile,layout=matrix(c(1,2), nrow=1, byrow=TRUE))
+```
+
+***
+
+**Housing starts and house prices**
+
+Housing supply has been slow to recover. We can see that in the aggregate data, where housing supply is very low relative to historic averages. The graph below shows deviations in monthly housing starts (at an annual rate) from 1.5 million. Historically housing starts have averaged about 1.5 million units, but that's a fairly conservative estimate for "normal". The U.S. population in 2016 is significantly higher than it was in the past. All else being equal, that implies we probably need more than 1.5 million units to meet long-run demand. I've estimated long-run demand to be closer to 1.7 million.
+
+Housing construction belong long-run demand will keep upward pressure on house prices.
+
+For some more commentary on housing supply, its relationship to population and house price trends see http://lenkiefer.com/2016/05/22/population-growth-housing-supply-and-house-prices. At the link you can see a pretty strong correlation between longer-run house price growth and the gap between population and housing supply growth. Areas where population growth has outstripped housing supply are areas where price growth tends to be stronger.
+
+House Prices {.storyboard}
+=========================================
+
+### National prices back to pre-recession peak (not adjusted for inflation)
+
+```{r}
+   ggplot(data=statedata[year(date)>1999 & state =="US.SA"], aes(x=date, y=hpi))+
+  geom_line()+theme_minimal()+
+  scale_y_log10(breaks=seq(90,200,10))+
+  geom_hline(color="red",linetype=2,yintercept=tail(statedata[state =="US.SA"],1)$hpi)+
+  geom_point(data=tail(statedata[state =="US.SA"],1),color="red",size=3,alpha=0.82)+
+  labs(y="", x="",
+         title="U.S. house prices are at an all-time high\n(not adjusted for inflation)",
+         subtitle="House price index (log scale, Dec 2000 =100, SA)",
+         caption="@lenkiefer Source: Freddie Mac house price index")+
+    theme(plot.title=element_text(size=12),
+          plot.caption=element_text(size=8,hjust=0,vjust=1,margin=margin(t=10)),
+          plot.margin=unit(c(0.25,0.25,0.25,0.25),"cm"),
+          plot.background = element_rect(fill = "#fffff8",colour = "#fffff8"),
+          legend.justification=c(0,0), legend.position=c(.8,.75))
+```
+
+***
+
+**House prices back above pre-recession nominal peak**
+
+Low mortgage rates help to boost homebuyer affordability, which is good because house prices are growing faster than incomes in most markets. For the full year 2016 house prices will probably grow around 6 percent on a year-over-year basis.
+
+House prices are (just barely) above their pre-recession peak without adjusting for inflation. Adjusting for inflation house prices are still down about 20 percent from their inflation-adjusted peak
+
+### State price trends small multiple shows dispersion across states. Lots of variation around national trends
+
+```{r}
+#set a maximum date with year and month
+yy<-2016 #year 
+mm<-9    #month- march is latest available
+#Create the plot, exlude if state = 'US' or state = 'DC', and year < 2000:
+g<-
+ ggplot(data=statedata[state !="US.SA" & state !="US.NSA" & state !="DC" & year>1999 & year<=yy], aes(x=date,y=hpi))+
+  #set theme
+  theme_minimal()+
+  #set dates, 
+  #the axis will be tight so we'll only show the year every 4 years and only print the last 2 digits
+  scale_x_date(labels= date_format("%y"),date_breaks="4 year",
+               limits = as.Date(c('2000-01-01','2016-12-31'))) +
+  #set y axis, I prefer a log axis for indices like this
+  scale_y_log10(limits=c(70,350), breaks=c(75,100,150,250,350))+
+  #plot data with black line
+  geom_line(color="black")  +
+   
+  #add a marker at teh end
+  geom_point(data=statedata[state !="US.SA" & state !="US.NSA" & state != "DC" & year==yy & month==mm], color="red", alpha=0.7)+
+  #use the facet feature to plot each state as it's own small plot
+  facet_wrap(~state, ncol=10) +
+  # add a horiztonal line at the last data point, helpufl to compare to prior peak
+  geom_hline(data = statedata[year==yy & month==mm& state !="US.SA" & state !="US.NSA" & state !="DC"], aes(yintercept = hpi), linetype=2,alpha=0.8)+
+   #modify plot features
+  theme(plot.title=element_text(face="bold",size=12),
+        axis.text.y=element_text(size=6),
+        axis.text.x=element_text(size=6),
+        plot.caption=element_text(hjust=0),
+        plot.background = element_rect(fill = "#fffff8",colour = "#fffff8"))+
+  xlab("")+ylab("House price index, log scale")+
+  #create a subtitle that prints the last date, useful later
+  labs(caption="@lenkiefer Source: Freddie Mac House Price Index (Dec 2000 = 100, NSA)",
+       subtitle=paste(as.character(statedata[year==yy & month==mm & state=="US.SA"]$date,format="%b-%Y")),
+       title="State house price trends")
+g
+```
+
+*** 
+
+**State house price trends**
+
+The plot shows a small multiple of state house price indices since 2000. You can see that many states are above their pre-recession peak, but not all.  You can also see that there's quite a bit of variation among states in terms of their history.  Some states, like California and Florida experienced very volatile prices.  Other states, like Texas have been fairly stable.
+
+### Dot plot lets you compare house price trends across states
+
+```{r}
+ ggplot(data=statedata[(year==2016) & month==9 & state !="DC" & state !="US.NSA"], aes(x=hpi, y=reorder(state,-hpi), label=state,color=hpa12))+
+    geom_text(nudge_x = 0.025,size=2)  +
+    geom_point()+scale_x_log10(limits=c(70,350), breaks=c(70,100,150,250,350))+
+    geom_segment(aes(xend=hpi12min,x=hpi12max,y=state,yend=state),alpha=0.7)+
+    theme_minimal()  +
+    scale_colour_gradient(low="red",high="blue",name = "12-month HPA",labels = percent)+
+    labs(y="", x="House price index (log scale, Dec 2000 =100, NSA)",
+         title="State house price dynamics",
+         subtitle=paste(as.character(statedata[year==2016 & month==9 & state=="CA"]$date,format="%b-%Y")),
+         caption="@lenkiefer Source: Freddie Mac house price index, each dot a state, lines trailing 12-month min-max")+
+    theme(plot.title=element_text(size=18))+
+    theme(plot.caption=element_text(size=8,hjust=0,vjust=1,margin=margin(t=10)))+
+    theme(plot.margin=unit(c(0.25,0.25,0.25,0.25),"cm"))+ 
+      theme(axis.text.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          axis.line.y=element_blank(),
+          plot.background = element_rect(fill = "#fffff8",colour = "#fffff8"),
+          panel.grid.major.y=element_blank())+
+    theme(legend.justification=c(0,0), legend.position=c(.8,.75))
+```
+
+*** 
+
+**State house price trends**
+
+The plot shows the value of the house price index in September 2016 relative to the past 12 months. The color corresponds to the pace of house price appreciation, and the tail represents the range of the index over the past 12 months.
+
+Hawaii has the highest index value (meaning that house prices have grown most in HI relative to December 2000), but the fastest year-over-year growth has been in Washington state. You can see that in the graph by the blueness of the dot and in the length of the tail.
+
+### Metro house prices since 2000 show even more dispersion than state trends
+
+```{r}
+ggplot(data=dm[year>1999,],aes(x=date,y=hpa12,group=metro))+
+  geom_line(alpha=0.25,size=0.25)+ theme_minimal()+
+  theme(legend.position="none",plot.caption=element_text(hjust=0),
+        plot.subtitle=element_text(face="italic"),
+        plot.background = element_rect(fill = "#fffff8",colour = "#fffff8"))+
+  scale_y_continuous(label=percent)+
+  coord_cartesian(xlim=c(as.Date("2000-01-01"),as.Date("2016-12-31")))+
+  labs(x="",y="Annual House Price Percent Change",
+       title="Distribution of year-over-year house price growth across metros", subtitle="Each line a metro",
+       caption="@lenkiefer Source: Freddie Mac House Price Index (NSA)")
+```
+
+***
+
+**Metro house price trends**
+
+This hairball shows trends in year-over-year percent changes in house prices by metro area.  We can see a huge range of variation across metros and over time. The central tendency across metros is to grow at a moderate pace, but there's substantial variation and some markets exhibit extreme volatility. Let's explore a little more.
+
+### Distribution of metro house price annual appreciation in September 2016
+
+```{r}
+
+#make a function to create a dot histogram, similar to above
+myf<-function(mydate){
+d<-dm[date==mydate,]
+myhist<-hist(d$hpa12,plot=FALSE, breaks=seq(-.45,62,.005) )
+N<-length(myhist$mids)
+d<-d[order(hpa12),]
+myindex<-0
+d$counter<-0
+for (i in 1:N){
+  for (j in 1:myhist$counts[i])
+  {if (myhist$counts[i]>0){
+    myindex<-myindex+1
+    d[myindex, counter:=j]
+    d[myindex, vbin:=myhist$mids[i]]
+  }}}
+d$date<-factor(d$date)
+d.out<-as.data.frame(d[, list(date,vbin,counter,hpa12,metro)])
+return(d.out)
+}
+
+#create a plot using our function
+
+ggplot(data=myf(unique(dm[year==2016 & month==9,]$date)),
+           aes(x=vbin,y=counter,label=metro))+geom_point(size=1.5,color="#00B0F0")+theme_minimal()+
+    labs(x="Annual House Price Growth (Y/Y % change, NSA index)",
+         y="Count of Metros",
+         title="Metro House Price Distribution",
+         caption="@lenkiefer Source: Freddie Mac House Price Index. Each dot a metro area",
+         subtitle=format(as.Date("2016-09-01"),"%b-%Y"))+
+    coord_cartesian(xlim=c(-0.2,.2),ylim=c(0,35))+
+    theme(plot.title=element_text(size=16),
+          plot.background = element_rect(fill = "#fffff8",colour = "#fffff8")  )+
+    scale_x_continuous(labels=percent,breaks=seq(-.4,.4,.1))+
+    theme(plot.caption=element_text(hjust=0,vjust=1,margin=margin(t=10)))+
+    theme(legend.justification=c(0,0), legend.position="top")
+```
+
+***
+
+**Metro house distribution**
+
+In this chart each dot represents a metro area with its annual house price appreciation (% change) rate depicted on the x axis. The data are bucketed into 0.5 percentage point buckets and stacked when more than one metro falls within that range. We can see that in September 2016 only a few metro areas experienced a year-over-year *decline* in house prices.  Most metros are positive, with the median at 4.6%.
+
+*Notes*
+
+See http://lenkiefer.com/2016/04/06/dot-plots-and-distributions for how to make this type of plot in R.
+
+### How is your state doing? Explore a state house price table 
+
+```{r}
+#create state data for use
+statedata$hpa.peak<-round(100*(statedata$hpi/statedata$hpi.max08 -1),1)
+statedata$hpa.trough<-round(100*(statedata$hpi/statedata$hpi.min08 -1),1)
+statedata$hpa100<-round(100*statedata$hpa12,1)
+sdt<-statedata[state !="US.NSA" & date=="2016-09-01",c(2,17,15,16),with=F]
+
+ datatable(sdt, 
+  caption =  htmltools::tags$caption(
+    style = 'caption-side: top; text-align: left;',
+    htmltools::strong('State house price trends, September 2016: '), 'year-over-year percent change in house prices', 
+    htmltools::br(),htmltools::em("Source: Freddie Mac House Price Index, use search boxes and arrows to filter/sort data." )),
+   colnames = c( "State"='state' ,"Annual percent change in house prices"="hpa100",
+                "Percent Above/Below Pre-2008 Peak"="hpa.peak",
+                "Percent Above post-2008 Trough"="hpa.trough"
+                ),
+  filter = 'top',
+  class="display compact",
+  options = list(  pageLength = 50,
+            width=800,
+            columnDefs = list(
+     
+  )))
+```
+
+***
+
+**State house price table**
+
+You can search and filter it.
+
+### How is your local market doing?  Explore a metro house price table.
+
+```{r}
+datatable(
+  cbind(' ' = '▽',subset(dt,country.etc !="NA")), escape = -2,
+  caption =  htmltools::tags$caption(
+    style = 'caption-side: top; text-align: left;',
+    htmltools::strong('Metro house price trends, September 2016: '), 'year-over-year percent change in house prices', 
+                               htmltools::br(),htmltools::em("Source: Freddie Mac House Price Index, use search boxes and arrows to filter/sort data." )),
+  colnames = c( "Principal State"='state' ,"Metro"="metro","Annual percent change in house prices"="hpa",
+                "Percent Above/Below Pre-2008 Peak"="hpa.peak",
+                "Percent Above post-2008 Trough"="hpa.trough"
+                ),
+  filter = 'top',
+  class="display compact",
+  options = list(  pageLength = 50,
+            width=800,
+            columnDefs = list(
+      list(visible = FALSE, targets = c(0,1,3,4,5,6,8,9,10)),
+              list(orderable = FALSE, className = 'details-control', targets = 1)
+              )
+            ),
+  callback = JS("
+                table.column(1).nodes().to$().css({cursor: 'pointer'});
+                var format = function(d) {
+                return ' Principal city: ' + d[4] + ', Principal state: ' + d[6] + ',metro population: ' + d[5] + '';
+                };
+                table.on('click', 'td.details-control', function() {
+                var td = $(this), row = table.row(td.closest('tr'));
+                if (row.child.isShown()) {
+                row.child.hide();
+                td.html('▽');
+                } else {
+                row.child(format(row.data())).show();
+                td.html('△');
+                }
+                });"
+  ))
+
+```
+
+***
+
+**Metro house price table**
+
+You can search and filter it.
+
+About 
+=========================================
+
+Column {data-width=600}
+-----------------------------------------------------------------------
+
+### Overview: This document is a flexdashboard remix of my [2016 year-in-review](http://lenkiefer.com/chartbooks/dec2016/index.html). 
+
+
+This is a remix of my [2016 year-in-review](http://lenkiefer.com/chartbooks/dec2016/index.html) article.  That document was a collection of many of the data visualizations I shared throughout the year.  These visualizations captured the key trends in housing and mortgage markets.
+
+Column {data-width=400}
+-----------------------------------------------------------------------
+
+### Data Source: Data were collected from a variety of sources. In the source code I load a R workspace image that contains all the data used for this dashboard.
+
+Several different data sources were used in this dashboard.  They are:
+
+* Freddie Mac Primary Mortgage Market Survey
+* Consumer Price Index from the U.S. Bureau of Labor Statistics
+* Federal Reserve dots from the Federal Reserve Board
+* Home sales data
+    + New home sales from Census/HUD
+    + Existing home sales from National Association of Realtors
+* Housing Starts from Census/HUD    
+* Freddie Mac House Price Index
+
+### Data Prepartion Notes
+
+You can download the source code for this dashboard via the link at the top right. If you inspect the source code you will see that I load data via a workspace image and I've commented out a reference to a data loading script that gathers data from different sources and prepares it for this dashboard.  In various places in my blog I've posted code with either example files, links to data sources, or even R code to pull the data down from the web.  Check out http://lenkiefer.com/ for those scripts.

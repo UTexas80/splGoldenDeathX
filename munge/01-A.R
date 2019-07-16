@@ -22,6 +22,13 @@ cumPctRet<-percent(1+(as.numeric(xts::last(SPL.AX[,4]))-as.numeric(xts::first(SP
 yrRet <- na.omit(allReturns(SPL.AX[,4])[,5])
 
 
+calendarDays <- end(SPL.AX)-start(SPL.AX)
+saveRDS(calendarDays, file="calendarDays.rds")
+
+tradeDays <- ndays(SPL.AX)
+saveRDS(tradeDays, file="tradeDays.rds")
+
+
 # VERSION HISTORY
 a01.version = "1.0.0"
 a01.ModDate = as.Date("2019-06-09")

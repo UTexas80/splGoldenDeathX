@@ -10,23 +10,37 @@ params:
   dateStart: "2002-01-02"
   dynamictitle: "My report"
   reportdate: !r Sys.Date()
-  symbol: SPL.AX
-  ticker: SPL.AX
+  ticker: "MSFT"
 runtime: shiny
 theme: spacelab
 ---
 
-```{r setup, echo=FALSE, include=FALSE, message = FALSE}
+```{r global, echo=FALSE, include=FALSE, message = FALSE}
+# load data in 'global' chunk so it can be shared by all users of the dashboard
 knitr::opts_knit$set(root.dir = "..", echo = FALSE)
+library(data.table)
+library(dplyr)
+library(DT)
 library(dygraphs)
 library(flexdashboard)
+library(formattable)
 library(highcharter)
+library(hydroTSM)
 library(PerformanceAnalytics)
+library(plotly)
 library(quantmod)
+library(rmarkdown)
+library(scales)
 library(shiny)
-library(tidyverse)
+library(shinydashboard)
 library(tidyquant)
+library(tidyverse)
 library(timetk)
+library(treemap)
+library(utils)
+library(xts)
+library(zoo)
+
 
 # Function to calculate monthly returns on a stock
 monthly_stock_returns <- function(ticker, start_year) {
@@ -65,39 +79,55 @@ actionButton("go", "Submit")
 
 prices <- eventReactive(input$go, {
 
-prices <- getSymbols("SPL.AX", src = 'yahoo',
+prices <- getSymbols("SPL.AX", src = 'yahoo', 
+          from = format(input$dateRange[1]),
+          to = format(input$dateRange[2]),
           auto.assign = TRUE, warnings = FALSE) %>% 
           map(~Ad(get(.))) %>% 
-          reduce(merge) 
-prices <- as.xts(prices)
+          reduce(merge)
+
 })
+
+tqPrices <- eventReactive(input$go, {
+  
+  tqPrices <- tq_get("SPL.AX", 
+              get = "stock.prices",
+              from = format(input$dateRange[1]),
+              to = format(input$dateRange[2])) 
+    
+})
+
+    
 ```
 
-Row {data-height=50}
+Row {data-height=100}
 -------------------------------------
 
 ### Number of Flexdashboard Calendar Days
 
 ```{r vbox-calendar-days, eval=prices}
-flexdashboard::renderValueBox('1')
-# valueBox(paste(format(ndays(prices), big.mark = ","), "days"), caption = "# of Trade Days", icon="fa-pencil")
+cd <- readRDS("calendarDays.rds")
+flexdashboard::valueBox(paste(format(cd, big.mark = ","), ""), caption = "# of Calendar Days", icon="fa-pencil")
+#flexdashboard: valueBox(paste(format(ndays(prices), big.mark = ","), "days"), caption = "# of Trade Days", icon="fa-pencil")
 ```
 
 ### Number of ShinyDashboard Trade Days
 
 ```{r vbox-trade-days}
-# renderValueBox({
-#  valueBox(value = "sharpe_ratio()", icon = "fa-line-chart", color = "purple")
-# })
-
+td <- readRDS("tradeDays.rds")
+flexdashboard::valueBox(paste(format(td, big.mark = ","), "trading days"), caption = "# of Trade Days", icon="fa-pencil")
+#flexdashboard::valueBox(paste(td, "days", sep = " "), icon="fa-pencil")
 ```
 
 Row {data-height=500}
 -------------------------------------
 ### Chart 4
-```{r}
-renderPlot(prices)
+```{r chartPlot, eval=tqPrices}
+renderTable({
+  tqPrices()
+})
 ```
+
 
 Page 2
 =====================================     
