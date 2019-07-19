@@ -66,6 +66,7 @@ returns$rolling_cor <- rollapply(returns, window,
                                  function(x) 
                                  cor(x[, 1], x[, 2], use = "pairwise.complete.obs"), 
                                  by.column = FALSE)
+
 # We care about the name because it will be displayed in the dygraph when a user hovers.
 
 names(returns) <- c(paste(sector, "Returns", sep = ""), "SPY Returns", paste(sector, "/SPY Correlation", sep = ""))
@@ -111,6 +112,7 @@ actionButton("go", "Submit")
 ```
 
 ```{r sidebarActionGo}
+# We will use this in the value box after the submit button is activated
 
 prices <- eventReactive(input$go, {
 
@@ -145,7 +147,6 @@ xprices <- eventReactive(input$go, {
     
 })
 
-
 portfolio_returns_xts <- eventReactive(input$go, {
   prices <- prices()
   
@@ -160,8 +161,9 @@ portfolio_returns_xts <- eventReactive(input$go, {
     `colnames<-`("returns")
 })  
 
+
 price <- reactive({tq_get("SPL.AX", from = format(input$dateRange[1]), to = format(input$dateRange[2])) %>% 
-  mutate(change = close - open)})     
+  mutate(change = close - open)})
 ```
 
 Row {data-height=50}
@@ -170,14 +172,17 @@ Row {data-height=50}
 ### Number of Calendar Days
 
 ```{r vbox-calendar-days}
-renderValueBox({
+
+valueBoxOutput("approvalBox1")
+
+output$approvalBox1<-renderValueBox({
   xts_price <- tk_xts(price())
   colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
   calendarDays <- end(xts_price)-start(xts_price)
   
   valueBox("",
-      calendarDays,
-      color = "purple"
+      format(calendarDays, big.mark = ","),
+      color = "teal"
 #    icon = 'ion-cash'
   )
 })
@@ -204,16 +209,16 @@ renderValueBox({
 
 ```{r vbox-returns}
 
-
-renderValueBox({
+flexdashboard::renderValueBox({
   xts_price <- tk_xts(price())
-  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
-  cumReturn <- percent(1+(as.numeric(last(xts_price[,4]))-as.numeric(first(xts_price[,4])) / 
-                     as.numeric(xts::first(SPL.AX[,4]))))
+  #colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
+  cumReturn <- percent((as.numeric(last(xts_price[,4])) - as.numeric(first(xts_price[,4]))) / (as.numeric(first(xts_price[,4]))))
 
-  valueBox("",
+  flexdashboard::valueBox(
+      "Percent Return",
       as.character(cumReturn),
-      color = "blue"
+#      color = "purple"
+      color = ifelse(cumReturn > 0, "green", "red")
 #    icon = 'ion-cash'
   )
 })
@@ -221,6 +226,18 @@ renderValueBox({
 
 
 ```
+
+### Gauge 1.1
+    
+```{r}
+flexdashboard::renderGauge({
+  xts_price <- tk_xts(price())
+  cumReturn <- (as.numeric(last(xts_price[,4])) - as.numeric(first(xts_price[,4]))) / (as.numeric(first(xts_price[,4])))
+  
+    gauge(cumReturn, min = -100, max = 100, symbol = "%") 
+  })
+```
+
 
 ### Number of Trade Days
 
@@ -234,8 +251,8 @@ renderValueBox({
   tradeDays <- ndays(xts_price)
   
   valueBox("",
-      tradeDays,
-      icon = icon("credit-card")
+      paste(format(tradeDays, big.mark = ","), " days")
+#      icon = icon("credit-card")
 #    icon = 'ion-cash'
   )
 })
