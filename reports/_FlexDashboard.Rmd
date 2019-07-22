@@ -162,100 +162,94 @@ portfolio_returns_xts <- eventReactive(input$go, {
 })  
 
 
-price <- reactive({tq_get("SPL.AX", from = format(input$dateRange[1]), to = format(input$dateRange[2])) %>% 
+price <- reactive({tq_get("SPL.AX", from = format(input$dateRange[1]), to = format(input$dateRange[2])) %>%
   mutate(change = close - open)})
 ```
 
-Row {data-height=50}
+Row {data-height=75}
 -------------------------------------
 
-### Number of Calendar Days
+###
 
 ```{r vbox-calendar-days}
 
-valueBoxOutput("approvalBox1")
-
-output$approvalBox1<-renderValueBox({
+flexdashboard::renderValueBox({
   xts_price <- tk_xts(price())
-  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
-  calendarDays <- end(xts_price)-start(xts_price)
+  calendarDays <- format(end(xts_price)-start(xts_price), big.mark = ",")
+  calendarDays <- substr(calendarDays, 1, nchar(calendarDays)-5)
   
-  valueBox("",
-      format(calendarDays, big.mark = ","),
-      color = "teal"
-#    icon = 'ion-cash'
+  flexdashboard::valueBox(
+      paste(calendarDays, "", " Calendar Days")
+      ,color = #0000ff
+      ,icon = "fa-calendar"
   )
 })
-#xts_price <- tk_xts(price())
-#calendarDays <- end(xts_price)-start(xts_SPL.AX)
-#cd <- readRDS("calendarDays.rds")
 
-#flexdashboard::valueBox(paste(format(cd, big.mark = ","), ""), caption = "# of Calendar Days", icon="fa-pencil")
-#flexdashboard: valueBox(paste(format(ndays(prices), big.mark = ","), "days"), caption = "# of Trade Days", icon="fa-pencil")
+# valueBoxOutput("approvalBox1")
+# 
+# output$approvalBox1<-renderValueBox({
+#   xts_price <- tk_xts(price())
+#   colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
+#   calendarDays <- end(xts_price)-start(xts_price)
+#   
+#   valueBox("",
+#       format(calendarDays, big.mark = ","),
+#       color = "teal"
+# #    icon = 'ion-cash'
+#   )
+# })
 
-#renderValueBox({
-#  calendarDays <- end(xts_price)-start(xts_price)
-#  
-#valueBox(
-#paste(format(calendarDay, big.mark = ","), ""), 
-#caption = "# of Calendar Days", 
-#icon="fa-pencil"
-#)
-#})
 
 ```
 
-### Percent Return
+###
 
 ```{r vbox-returns}
 
 flexdashboard::renderValueBox({
   xts_price <- tk_xts(price())
-  #colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
   cumReturn <- percent((as.numeric(last(xts_price[,4])) - as.numeric(first(xts_price[,4]))) / (as.numeric(first(xts_price[,4]))))
 
   flexdashboard::valueBox(
-      "Percent Return",
-      as.character(cumReturn),
-#      color = "purple"
-      color = ifelse(cumReturn > 0, "green", "red")
-#    icon = 'ion-cash'
+      paste(as.character(cumReturn), "", " Percent Return")
+      ,color = ifelse(cumReturn > 0, "teal", "red")
+      ,icon = 'ion-cash'
   )
 })
 
-
-
-```
-
-### Gauge 1.1
-    
-```{r}
-flexdashboard::renderGauge({
-  xts_price <- tk_xts(price())
-  cumReturn <- (as.numeric(last(xts_price[,4])) - as.numeric(first(xts_price[,4]))) / (as.numeric(first(xts_price[,4])))
-  
-    gauge(cumReturn, min = -100, max = 100, symbol = "%") 
-  })
 ```
 
 
-### Number of Trade Days
+###
 
 ```{r vbox-trade-days}
 #td <- readRDS("tradeDays.rds")
 #flexdashboard::valueBox(paste(format(td, big.mark = ","), "trading days"), caption = "# of Trade Days", icon="fa-pencil")
 #flexdashboard::valueBox(paste(td, "days", sep = " "), icon="fa-pencil")
-renderValueBox({
+
+flexdashboard::renderValueBox({
   xts_price <- tk_xts(price())
-  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
-  tradeDays <- ndays(xts_price)
-  
-  valueBox("",
-      paste(format(tradeDays, big.mark = ","), " days")
-#      icon = icon("credit-card")
-#    icon = 'ion-cash'
+  tradeDays <- format(ndays(xts_price), big.mark = ",")
+
+  flexdashboard::valueBox(
+      paste(tradeDays, "", " Trade Days")
+      ,color = #0000ff
+      ,icon = "fa-calendar"
   )
 })
+
+
+# renderValueBox({
+#   xts_price <- tk_xts(price())
+#   colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
+#   tradeDays <- ndays(xts_price)
+#   
+#   valueBox("",
+#       paste(format(tradeDays, big.mark = ","), " days")
+#      icon = icon("credit-card")
+#    icon = 'ion-cash'
+#  )
+# })
 ```
 
 Row {data-height=500}
@@ -300,11 +294,23 @@ Page 3
 Column {}
 -------------------------------------
 
-### Gauge 3.1
+### Gauge 3.0
     
 ```{r}
 flexdashboard::renderGauge({
     gauge(60, min = 0, max = 100, symbol = "%") 
+  })
+```
+
+
+### Gauge 3.1
+    
+```{r}
+flexdashboard::renderGauge({
+  xts_price <- tk_xts(price())
+  cumReturn <- (as.numeric(last(xts_price[,4])) - as.numeric(first(xts_price[,4]))) / (as.numeric(first(xts_price[,4])))
+  
+    gauge(cumReturn, min = -100, max = 100, symbol = "%") 
   })
 ```
 
