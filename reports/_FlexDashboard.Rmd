@@ -25,6 +25,7 @@ library(DT)
 library(dygraphs)
 library(flexdashboard)
 library(formattable)
+library(gt)
 library(highcharter)
 library(hydroTSM)
 library(PerformanceAnalytics)
@@ -33,7 +34,9 @@ library(quantmod)
 library(rmarkdown)
 library(scales)
 library(shiny)
+library(shinybusy)
 library(shinydashboard)
+library(shinyWidgets)
 library(tidyquant)
 library(tidyverse)
 library(timetk)
@@ -47,32 +50,6 @@ library(zoo)
 ```{r functions}
 
 # A function to build an xts object to hold both ticker returns.
-sector_correlations <- function(sector, period = "weeks", window = 10) {
-
-prices <- getSymbols("SPL.AX", src = 'yahoo', 
-          from = format(input$dateRange[1]),
-          to = format(input$dateRange[2]),
-          auto.assign = TRUE, warnings = FALSE) %>% 
-          map(~Ad(get(.))) %>% 
-          reduce(merge)
-
-prices_period <- to.period(prices, period = period, OHLC = FALSE)
-# get monthly log returns
-returns <-na.omit(ROC(prices_period, 1, type = "continuous"))
-# change date format
-index(returns) <- as.Date(as.yearmon(index(returns), format = '%Y%m'))
-
-returns$rolling_cor <- rollapply(returns, window, 
-                                 function(x) 
-                                 cor(x[, 1], x[, 2], use = "pairwise.complete.obs"), 
-                                 by.column = FALSE)
-
-# We care about the name because it will be displayed in the dygraph when a user hovers.
-
-names(returns) <- c(paste(sector, "Returns", sep = ""), "SPY Returns", paste(sector, "/SPY Correlation", sep = ""))
-
-assign("sector_correlations", returns, .GlobalEnv)
-}
 
 # Function to calculate monthly returns on a stock
 monthly_stock_returns <- function(ticker, dateStart) {
@@ -90,6 +67,18 @@ monthly_stock_returns <- function(ticker, dateStart) {
   # so let's explicitly put them to the global environment with an easy to use
   # name, the stock ticker
   assign("SPL_returns", data, .GlobalEnv)
+}
+
+
+xprices <- function() {
+
+  symbols <- ("^IRX")
+  
+  tq_get(symbols, 
+         get = "stock.prices",
+         from = input$dateRange[1],
+         to = input$dateRange[2])
+    
 }
 
 ```
@@ -112,20 +101,6 @@ dateRangeInput("dateRange",
 ```
 
 ```{r sidebarActionGo}
-# We will use this in the value box after the submit button is activated
-
-prices <- eventReactive(input$go, {
-
-  prices <- 
-    getSymbols("SPL.AX", src = 'yahoo', 
-               from = format(input$dateRange[1]), 
-               to = format(input$dateRange[2]),
-               auto.assign = TRUE, 
-               warnings = FALSE) %>% 
-    map(~Cl(get(.))) %>% 
-    reduce(merge)
-
-})
 
 tqPrices <- eventReactive(input$go, {
   
@@ -135,31 +110,6 @@ tqPrices <- eventReactive(input$go, {
               to = format(input$dateRange[2])) 
 })
 
-
-xprices <- eventReactive(input$go, {
-  
-  symbols <- c(params$symbols, "^IRX")
-  
-  tq_get(symbols, 
-         get = "stock.prices",
-         from = input$dateRange[1],
-         to = input$dateRange[2])
-    
-})
-
-portfolio_returns_xts <- eventReactive(input$go, {
-  prices <- prices()
-  
-  w <- c("SPL.AX")
-
-  prices_monthly <- to.monthly(prices, indexAt = "last", OHLC = FALSE)
-  
-  asset_returns_xts <- na.omit(Return.calculate(prices_monthly, method = "log"))
-  
-  portfolio_returns_xts <- 
-    Return.portfolio(asset_returns_xts, weights = w) %>% 
-    `colnames<-`("returns")
-})  
 
 
 price <- reactive({tq_get("SPL.AX", from = format(input$dateRange[1]), to = format(input$dateRange[2])) %>%
@@ -252,21 +202,65 @@ renderHighchart({
     hc_add_series(xts_price, type = "candlestick")
 })
 
+```
 
+
+Page 2
+=====================================
+
+Input {.sidebar}
+-------------------------------------
+  
+```{r sidebarInput2}
+
+dateRangeInput("dateRange",
+               "Historical data",
+               start = params$dateStart,
+               end   = Sys.Date())
+
+actionButton("go", "Submit")
 
 ```
 
-Page 2
-=====================================     
+```{r sidebarGo2}
+# We will use this in the table after the submit button is activated
 
-Column {data-width=500}
+prices <- eventReactive(input$go, {
+
+  prices <- 
+    getSymbols("SPL.AX", src = 'yahoo'
+               ,from = format(input$dateRange[1])
+               ,to = format(input$dateRange[2])
+               ,auto.assign = TRUE
+               ,warnings = FALSE) %>% 
+    map(~Cl(get(.))) %>% 
+    reduce(merge)
+
+})
+```
+
+Column {data-width=500 .tabset .tabset-fade}
 -------------------------------------
 
 ### Stock Price Table
 
-```{r tablePrice2}
+```{r tablePortfolioReturns}
+renderTable({
+  
+  prices() %>%
+    gt(
+       rowname_col = "row"
+    )
+    
+})  
+```
+
+### Another Table
+
+```{r tablePriceB}
 DT::renderDataTable({
-  DT::datatable(price(), rownames = FALSE, options = list(order = list(list(0, 'desc')))) %>% 
+  DT::datatable(price(), rownames = FALSE, 
+    options = list(pageLength = 20, order = list(list(0, 'desc')))) %>% 
     formatCurrency(c('open', 'high', 'low', 'close', 'adjusted', 'change')) %>% 
     formatDate(c('date')) %>%
     formatStyle('volume', 
@@ -280,12 +274,32 @@ DT::renderDataTable({
 ```
 
 Page 3
-=====================================     
+=====================================
+
+Input {.sidebar}
+-------------------------------------
+  
+```{r sidebarInput3}
+
+dateRangeInput("dateRange3",
+               "Historical data",
+               start = params$dateStart,
+               end   = Sys.Date())
+
+```
 
 Column {}
 -------------------------------------
 
 ### Gauge 3.0
+    
+```{r}
+flexdashboard::renderGauge({
+    gauge(60, min = 0, max = 100, symbol = "%") 
+  })
+```
+
+### Gauge 3.a
     
 ```{r}
 flexdashboard::renderGauge({
@@ -305,17 +319,59 @@ flexdashboard::renderGauge({
   })
 ```
 
-Column {data-width=500}
------------------------------------------------------------------------
+Column {}
+-------------------------------------
+### Stock Price Table
 
-### Stock Volatility
-
-```{r eval=prices}
-renderHighchart({
-  
-  colnames(prices) <- paste0("SPL.AX",'.', colnames(prices))
-  highchart(type = "stock") %>% 
-    hc_add_series(prices, type = "candlestick")
+```{r tablePriceB3}
+DT::renderDataTable({
+  DT::datatable(price(), rownames = FALSE, 
+    options = list(pageLength = 20, order = list(list(0, 'desc')))) %>% 
+    formatCurrency(c('open', 'high', 'low', 'close', 'adjusted', 'change')) %>% 
+    formatDate(c('date')) %>%
+    formatStyle('volume', 
+      background = styleColorBar(price()$volume, 'steelblue')
+    ) %>% 
+    formatStyle(
+      'change', 
+      color = styleInterval(c(0), c('maroon', 'darkgreen'))
+    )  
 })
-  
 ```
+
+### Time Series 0
+```{r eval=price}
+
+renderHighchart({
+  xts_price <- tk_xts(price())
+  h <- hist(xts_price[,4], plot = FALSE)
+  hchart(h, color = "#B71C1C", breaks = .20, name = "Price Histogram")
+})
+
+```  
+
+
+Column {.tabset .tabset-fade}
+-------------------------------------
+### Time Series
+```{r eval=prices}
+  renderPlot({
+
+  xts_price <- tk_xts(price())
+
+  chartSeries(xts_price, theme = chartTheme("black"),TA="addCMF()")
+               
+})
+```  
+
+### Time Series 2
+```{r eval=prices}
+  renderPlot({
+
+  xts_price <- tk_xts(price())
+
+  chartSeries(xts_price, theme = chartTheme("white"),TA="addMACD()")
+               
+})
+```  
+
