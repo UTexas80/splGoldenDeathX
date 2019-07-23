@@ -94,7 +94,7 @@ monthly_stock_returns <- function(ticker, dateStart) {
 
 ```
 
-Page 1
+Summary
 =====================================  
 
 Input {.sidebar}
@@ -107,7 +107,7 @@ dateRangeInput("dateRange",
                start = params$dateStart,
                end   = Sys.Date())
 
-actionButton("go", "Submit")
+# actionButton("go", "Submit")
 
 ```
 
@@ -164,9 +164,10 @@ portfolio_returns_xts <- eventReactive(input$go, {
 
 price <- reactive({tq_get("SPL.AX", from = format(input$dateRange[1]), to = format(input$dateRange[2])) %>%
   mutate(change = close - open)})
+
 ```
 
-Row {data-height=75}
+Row {data-height=60}
 -------------------------------------
 
 ###
@@ -184,21 +185,6 @@ flexdashboard::renderValueBox({
       ,icon = "fa-calendar"
   )
 })
-
-# valueBoxOutput("approvalBox1")
-# 
-# output$approvalBox1<-renderValueBox({
-#   xts_price <- tk_xts(price())
-#   colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
-#   calendarDays <- end(xts_price)-start(xts_price)
-#   
-#   valueBox("",
-#       format(calendarDays, big.mark = ","),
-#       color = "teal"
-# #    icon = 'ion-cash'
-#   )
-# })
-
 
 ```
 
@@ -219,13 +205,9 @@ flexdashboard::renderValueBox({
 
 ```
 
-
 ###
 
 ```{r vbox-trade-days}
-#td <- readRDS("tradeDays.rds")
-#flexdashboard::valueBox(paste(format(td, big.mark = ","), "trading days"), caption = "# of Trade Days", icon="fa-pencil")
-#flexdashboard::valueBox(paste(td, "days", sep = " "), icon="fa-pencil")
 
 flexdashboard::renderValueBox({
   xts_price <- tk_xts(price())
@@ -238,22 +220,29 @@ flexdashboard::renderValueBox({
   )
 })
 
-
-# renderValueBox({
-#   xts_price <- tk_xts(price())
-#   colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
-#   tradeDays <- ndays(xts_price)
-#   
-#   valueBox("",
-#       paste(format(tradeDays, big.mark = ","), " days")
-#      icon = icon("credit-card")
-#    icon = 'ion-cash'
-#  )
-# })
 ```
 
 Row {data-height=500}
 -------------------------------------
+
+### Stock Price Table
+
+```{r tablePriceA}
+DT::renderDataTable({
+  DT::datatable(price(), rownames = FALSE, 
+    options = list(pageLength = 20, order = list(list(0, 'desc')))) %>% 
+    formatCurrency(c('open', 'high', 'low', 'close', 'adjusted', 'change')) %>% 
+    formatDate(c('date')) %>%
+    formatStyle('volume', 
+      background = styleColorBar(price()$volume, 'steelblue')
+    ) %>% 
+    formatStyle(
+      'change', 
+      color = styleInterval(c(0), c('maroon', 'darkgreen'))
+    )  
+})
+```
+
 ### Stock Price Over Time (Chart)
 ```{r chartPrice, eval=price}
 renderHighchart({
@@ -263,17 +252,19 @@ renderHighchart({
     hc_add_series(xts_price, type = "candlestick")
 })
 
+
+
 ```
 
 Page 2
 =====================================     
 
-Column {}
+Column {data-width=500}
 -------------------------------------
 
 ### Stock Price Table
 
-```{r tablePrice}
+```{r tablePrice2}
 DT::renderDataTable({
   DT::datatable(price(), rownames = FALSE, options = list(order = list(list(0, 'desc')))) %>% 
     formatCurrency(c('open', 'high', 'low', 'close', 'adjusted', 'change')) %>% 
