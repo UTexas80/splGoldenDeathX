@@ -111,10 +111,11 @@ tqPrices <- eventReactive(input$go, {
 })
 
 
-
-price <- reactive({tq_get("SPL.AX", from = format(input$dateRange[1]), to = format(input$dateRange[2])) %>%
-  mutate(change = close - open)})
-
+#  date        open  high   low close volume adjusted   change
+price <- reactive({
+  tq_get("SPL.AX", from = format(input$dateRange[1]), to = format(input$dateRange[2])) %>%
+  mutate(change = close - open)
+})
 ```
 
 Row {data-height=60}
@@ -195,11 +196,17 @@ DT::renderDataTable({
 
 ### Stock Price Over Time (Chart)
 ```{r chartPrice, eval=price}
+# y <- getSymbols("CSL.AX", auto.assign = FALSE)
+
+
 renderHighchart({
   xts_price <- tk_xts(price())
   colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
   highchart(type = "stock") %>% 
     hc_add_series(xts_price, type = "candlestick")
+#    hc_add_series(RSI.BuyLevel, color = hex_to_rgba("blue", 0.7),
+#                yAxis = 2, name = "Buy level") 
+#    hc_add_series(y, type = "ohlc")
 })
 
 ```
@@ -273,7 +280,7 @@ DT::renderDataTable({
 })
 ```
 
-Page 3
+TechnicalAnalysis
 =====================================
 
 Input {.sidebar}

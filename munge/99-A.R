@@ -205,3 +205,11 @@ spl_price_by_qtr<-SPL.AX[paste(starting.quarter,ending.quarter,sep="/")]
 ################################################################################
 # By using an index that is the logical AND of two vectors
 xts.obj[start.date <= index(xts.obj) & index(xts.obj) <= end.date]
+
+################################################################################ http://jkunst.com/highcharter/highstock.html#a-more-interesting-example
+xSPL <- adjustOHLC(SPL.AX)
+xSPL.SMA.10 <- SMA(Cl(xSPL), n = 5)
+xSPL.SMA.200 <- SMA(Cl(xSPL), n = 100)
+xSPL.RSI.14 <- RSI(Cl(xSPL))
+xSPL.RSI.SellLevel <- xts(rep(70, NROW(xSPL)), index(xSPL))
+xSPL.RSI.BuyLevel <- xts(rep(30, NROW(xSPL)), index(xSPL))
