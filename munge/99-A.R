@@ -214,3 +214,6 @@ xSPL.RSI.14 <- RSI(Cl(xSPL))
 xSPL.RSI.SellLevel <- xts(rep(70, NROW(xSPL)), index(xSPL))
 xSPL.RSI.BuyLevel <- xts(rep(30, NROW(xSPL)), index(xSPL))
 
+dailyRet<-periodReturn(SPL.AX[,6], period = 'daily') * 100  
+gret <- 1 + dailyRet
+fv <- cumprod(gret)

@@ -215,16 +215,21 @@ renderHighchart({
 ```
 
 
-### Monthly Returns
-```{r eval=price}
+### Performance Summary
 
-renderHighchart({
-  xts_price <- tk_xts(price())
-  monthlyRet<-periodReturn(xts_price[,6], period = 'monthly') * 100
-#  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
-  highchart(type = "stock") %>% 
-    hc_add_series(monthlyRet, type = "column")
-})
+```{r performance-summary, eval=price}
+
+renderPlot({
+    xts_price <- tk_xts(price())
+    xts_price_monthly <- xts_price[endpoints(xts_price, on ="months")]
+    charts.PerformanceSummary(
+      ROC(xts_price_monthly[,6], n = 1, type = "discrete")
+      ,wealth.index = TRUE
+      ,main = "SPL Performance Summary"
+      ,theme = chartTheme("black")
+    )
+})  
+
 ```
 
 Trends
@@ -411,13 +416,44 @@ Column
 ### Forecase Column2a
 
 
-
-
 WordCloud
 =====================================
 
+Column {data-width=500 .tabset .tabset-fade}
+-------------------------------------
+
+### Daily Returns
+
+```{r eval=price}
+
+renderHighchart({
+  xts_price <- tk_xts(price())
+  dailyRet<-periodReturn(xts_price[,6], period = 'daily') * 100
+#  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
+  highchart(type = "stock") %>% 
+    hc_add_series(dailyRet, type = "column")
+})
+
+``` 
+
+
+### Weekly Returns
+
+```{r eval=price}
+
+renderHighchart({
+  xts_price <- tk_xts(price())
+  weeklyRet<-periodReturn(xts_price[,6], period = 'weekly') * 100
+#  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
+  highchart(type = "stock") %>% 
+    hc_add_series(weeklyRet, type = "column")
+})
+
+``` 
+
 
 ### Monthly Returns
+
 ```{r eval=price}
 
 renderHighchart({
@@ -428,4 +464,48 @@ renderHighchart({
     hc_add_series(monthlyRet, type = "column")
 })
 
+``` 
+
+### Quarterly Returns
+
+```{r eval=price}
+
+renderHighchart({
+  xts_price <- tk_xts(price())
+  quarterlyRet<-periodReturn(xts_price[,6], period = 'quarterly') * 100
+#  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
+  highchart(type = "stock") %>% 
+    hc_add_series(quarterlyRet, type = "column")
+})
+
 ```  
+
+### Annual Returns
+
+```{r annual-return, eval=price}
+
+renderHighchart({
+  xts_price <- tk_xts(price())
+  annualRet<-periodReturn(xts_price[,6], period = 'yearly') * 100
+#  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
+  highchart(type = "stock") %>% 
+    hc_add_series(annualRet, type = "column")
+})
+
+```
+
+### Future Returns
+
+```{r future-return, eval=price}
+
+renderHighchart({
+  xts_price <- tk_xts(price())
+  dailyRet<- periodReturn(xts_price[,6], period = 'daily')
+  dailyRet[dailyRet==0]<- NA
+  dailyRet <- 1 + dailyRet
+  fv <- cumprod(na.omit(dailyRet))
+  highchart(type = "stock") %>% 
+  hc_add_series(fv, type = "line")
+})  
+
+```
