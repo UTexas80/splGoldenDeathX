@@ -213,3 +213,4 @@ xSPL.SMA.200 <- SMA(Cl(xSPL), n = 100)
 xSPL.RSI.14 <- RSI(Cl(xSPL))
 xSPL.RSI.SellLevel <- xts(rep(70, NROW(xSPL)), index(xSPL))
 xSPL.RSI.BuyLevel <- xts(rep(30, NROW(xSPL)), index(xSPL))
+

@@ -1,9 +1,9 @@
 ---
-title: "Performance Summary"
+title: "Summary"
 date: "`r params$reportdate`"
 output:
   flexdashboard::flex_dashboard:
-    orientation: rows
+    orientation: row
     source_code: embed
     vertical_layout: fill
 params:
@@ -83,7 +83,7 @@ xprices <- function() {
 
 ```
 
-Summary
+Performance
 =====================================  
 
 Input {.sidebar}
@@ -118,7 +118,7 @@ price <- reactive({
 })
 ```
 
-Row {data-height=60}
+Column {data-height=60}
 -------------------------------------
 
 ###
@@ -173,7 +173,7 @@ flexdashboard::renderValueBox({
 
 ```
 
-Row {data-height=500}
+Row {data-height=200}
 -------------------------------------
 
 ### Stock Price Table
@@ -194,6 +194,9 @@ DT::renderDataTable({
 })
 ```
 
+Row {data-height=200}
+-------------------------------------
+
 ### Stock Price Over Time (Chart)
 ```{r chartPrice, eval=price}
 # y <- getSymbols("CSL.AX", auto.assign = FALSE)
@@ -212,7 +215,19 @@ renderHighchart({
 ```
 
 
-Page 2
+### Monthly Returns
+```{r eval=price}
+
+renderHighchart({
+  xts_price <- tk_xts(price())
+  monthlyRet<-periodReturn(xts_price[,6], period = 'monthly') * 100
+#  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
+  highchart(type = "stock") %>% 
+    hc_add_series(monthlyRet, type = "column")
+})
+```
+
+Trends
 =====================================
 
 Input {.sidebar}
@@ -245,6 +260,11 @@ prices <- eventReactive(input$go, {
 
 })
 ```
+
+Column
+-------------------------------------
+
+### TEST COlumn
 
 Column {data-width=500 .tabset .tabset-fade}
 -------------------------------------
@@ -279,6 +299,9 @@ DT::renderDataTable({
     )  
 })
 ```
+
+
+### Stock Price Table444
 
 TechnicalAnalysis
 =====================================
@@ -346,16 +369,6 @@ DT::renderDataTable({
 })
 ```
 
-### Time Series 0
-```{r eval=price}
-
-renderHighchart({
-  xts_price <- tk_xts(price())
-  h <- hist(xts_price[,4], plot = FALSE)
-  hchart(h, color = "#B71C1C", breaks = .20, name = "Price Histogram")
-})
-
-```  
 
 
 Column {.tabset .tabset-fade}
@@ -382,3 +395,37 @@ Column {.tabset .tabset-fade}
 })
 ```  
 
+Forecast
+=====================================
+
+Column
+-------------------------------------
+
+### Forecase Column1a
+
+
+
+Column
+-------------------------------------
+
+### Forecase Column2a
+
+
+
+
+WordCloud
+=====================================
+
+
+### Monthly Returns
+```{r eval=price}
+
+renderHighchart({
+  xts_price <- tk_xts(price())
+  monthlyRet<-periodReturn(xts_price[,6], period = 'monthly') * 100
+#  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
+  highchart(type = "stock") %>% 
+    hc_add_series(monthlyRet, type = "column")
+})
+
+```  
