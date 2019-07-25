@@ -321,8 +321,16 @@ renderHighchart({
   dailyRet <- 1 + dailyRet
   fv <- cumprod(na.omit(dailyRet))
   highchart(type = "stock") %>% 
-  hc_add_series(fv, type = "line")
-})  
+  hc_add_series(fv, type = "line") %>%
+  hc_add_theme(hc_theme_darkunica()) %>%
+  hc_yAxis(title = list(text = "$1"),
+         opposite = TRUE,
+         plotLines = list(
+           list(label = list(text = "This is a plotLine"),
+                color = "blue",
+                width = 3,
+                value = 1.0)))
+})
 
 ```
 
@@ -569,4 +577,3 @@ Column {data-width=500 .tabset .tabset-fade}
 ```{r wordCloud02b}
 
 ```
-
