@@ -83,7 +83,7 @@ xprices <- function() {
 
 ```
 
-Performance
+Summary {data-navmenu="Performance"}
 =====================================  
 
 Input {.sidebar}
@@ -232,191 +232,7 @@ renderPlot({
 
 ```
 
-Trends
-=====================================
-
-Input {.sidebar}
--------------------------------------
-  
-```{r sidebarInput2}
-
-dateRangeInput("dateRange",
-               "Historical data",
-               start = params$dateStart,
-               end   = Sys.Date())
-
-actionButton("go", "Submit")
-
-```
-
-```{r sidebarGo2}
-# We will use this in the table after the submit button is activated
-
-prices <- eventReactive(input$go, {
-
-  prices <- 
-    getSymbols("SPL.AX", src = 'yahoo'
-               ,from = format(input$dateRange[1])
-               ,to = format(input$dateRange[2])
-               ,auto.assign = TRUE
-               ,warnings = FALSE) %>% 
-    map(~Cl(get(.))) %>% 
-    reduce(merge)
-
-})
-```
-
-Column
--------------------------------------
-
-### TEST COlumn
-
-Column {data-width=500 .tabset .tabset-fade}
--------------------------------------
-
-### Stock Price Table
-
-```{r tablePortfolioReturns}
-renderTable({
-  
-  prices() %>%
-    gt(
-       rowname_col = "row"
-    )
-    
-})  
-```
-
-### Another Table
-
-```{r tablePriceB}
-DT::renderDataTable({
-  DT::datatable(price(), rownames = FALSE, 
-    options = list(pageLength = 20, order = list(list(0, 'desc')))) %>% 
-    formatCurrency(c('open', 'high', 'low', 'close', 'adjusted', 'change')) %>% 
-    formatDate(c('date')) %>%
-    formatStyle('volume', 
-      background = styleColorBar(price()$volume, 'steelblue')
-    ) %>% 
-    formatStyle(
-      'change', 
-      color = styleInterval(c(0), c('maroon', 'darkgreen'))
-    )  
-})
-```
-
-
-### Stock Price Table444
-
-TechnicalAnalysis
-=====================================
-
-Input {.sidebar}
--------------------------------------
-  
-```{r sidebarInput3}
-
-dateRangeInput("dateRange3",
-               "Historical data",
-               start = params$dateStart,
-               end   = Sys.Date())
-
-```
-
-Column {}
--------------------------------------
-
-### Gauge 3.0
-    
-```{r}
-flexdashboard::renderGauge({
-    gauge(60, min = 0, max = 100, symbol = "%") 
-  })
-```
-
-### Gauge 3.a
-    
-```{r}
-flexdashboard::renderGauge({
-    gauge(60, min = 0, max = 100, symbol = "%") 
-  })
-```
-
-
-### Gauge 3.1
-    
-```{r}
-flexdashboard::renderGauge({
-  xts_price <- tk_xts(price())
-  cumReturn <- (as.numeric(last(xts_price[,4])) - as.numeric(first(xts_price[,4]))) / (as.numeric(first(xts_price[,4])))
-  
-    gauge(cumReturn, min = -100, max = 100, symbol = "%") 
-  })
-```
-
-Column {}
--------------------------------------
-### Stock Price Table
-
-```{r tablePriceB3}
-DT::renderDataTable({
-  DT::datatable(price(), rownames = FALSE, 
-    options = list(pageLength = 20, order = list(list(0, 'desc')))) %>% 
-    formatCurrency(c('open', 'high', 'low', 'close', 'adjusted', 'change')) %>% 
-    formatDate(c('date')) %>%
-    formatStyle('volume', 
-      background = styleColorBar(price()$volume, 'steelblue')
-    ) %>% 
-    formatStyle(
-      'change', 
-      color = styleInterval(c(0), c('maroon', 'darkgreen'))
-    )  
-})
-```
-
-
-
-Column {.tabset .tabset-fade}
--------------------------------------
-### Time Series
-```{r eval=prices}
-  renderPlot({
-
-  xts_price <- tk_xts(price())
-
-  chartSeries(xts_price, theme = chartTheme("black"),TA="addCMF()")
-               
-})
-```  
-
-### Time Series 2
-```{r eval=prices}
-  renderPlot({
-
-  xts_price <- tk_xts(price())
-
-  chartSeries(xts_price, theme = chartTheme("white"),TA="addMACD()")
-               
-})
-```  
-
-Forecast
-=====================================
-
-Column
--------------------------------------
-
-### Forecase Column1a
-
-
-
-Column
--------------------------------------
-
-### Forecase Column2a
-
-
-WordCloud
+Returns {data-navmenu="Performance"}
 =====================================
 
 Column {data-width=500 .tabset .tabset-fade}
@@ -509,3 +325,248 @@ renderHighchart({
 })  
 
 ```
+
+Golden Cross {data-navmenu="Trends"}
+=====================================
+
+Input {.sidebar}
+-------------------------------------
+  
+```{r sidebarInput2}
+
+dateRangeInput("dateRange",
+               "Historical data",
+               start = params$dateStart,
+               end   = Sys.Date())
+
+actionButton("go", "Submit")
+
+```
+
+```{r sidebarGo2}
+# We will use this in the table after the submit button is activated
+
+prices <- eventReactive(input$go, {
+
+  prices <- 
+    getSymbols("SPL.AX", src = 'yahoo'
+               ,from = format(input$dateRange[1])
+               ,to = format(input$dateRange[2])
+               ,auto.assign = TRUE
+               ,warnings = FALSE) %>% 
+    map(~Cl(get(.))) %>% 
+    reduce(merge)
+
+})
+```
+
+Column
+-------------------------------------
+
+### TEST COlumn
+
+Column {data-width=500 .tabset .tabset-fade}
+-------------------------------------
+
+### Stock Price Table
+
+```{r tablePortfolioReturns}
+renderTable({
+  
+  prices() %>%
+    gt(
+       rowname_col = "row"
+    )
+    
+})  
+```
+
+### Another Table
+
+```{r tablePriceB}
+DT::renderDataTable({
+  DT::datatable(price(), rownames = FALSE, 
+    options = list(pageLength = 20, order = list(list(0, 'desc')))) %>% 
+    formatCurrency(c('open', 'high', 'low', 'close', 'adjusted', 'change')) %>% 
+    formatDate(c('date')) %>%
+    formatStyle('volume', 
+      background = styleColorBar(price()$volume, 'steelblue')
+    ) %>% 
+    formatStyle(
+      'change', 
+      color = styleInterval(c(0), c('maroon', 'darkgreen'))
+    )  
+})
+```
+
+
+### Stock Price Table444
+
+Death Cross {data-navmenu="Trends"}
+=====================================
+
+No Cross {data-navmenu="Trends"}
+=====================================
+
+
+TechnicalAnalysis
+=====================================
+
+Input {.sidebar}
+-------------------------------------
+  
+```{r sidebarInput3}
+
+dateRangeInput("dateRange3",
+               "Historical data",
+               start = params$dateStart,
+               end   = Sys.Date())
+
+```
+
+Column {}
+-------------------------------------
+
+### Gauge 3.0
+    
+```{r}
+flexdashboard::renderGauge({
+    gauge(60, min = 0, max = 100, symbol = "%") 
+  })
+```
+
+### Gauge 3.a
+    
+```{r}
+flexdashboard::renderGauge({
+    gauge(60, min = 0, max = 100, symbol = "%") 
+  })
+```
+
+
+### Gauge 3.1
+    
+```{r}
+flexdashboard::renderGauge({
+  xts_price <- tk_xts(price())
+  cumReturn <- (as.numeric(last(xts_price[,4])) - as.numeric(first(xts_price[,4]))) / (as.numeric(first(xts_price[,4])))
+  
+    gauge(cumReturn, min = -100, max = 100, symbol = "%") 
+  })
+```
+
+Column {}
+-------------------------------------
+### Stock Price Table
+
+```{r tablePriceB3}
+DT::renderDataTable({
+  DT::datatable(price(), rownames = FALSE, 
+    options = list(pageLength = 20, order = list(list(0, 'desc')))) %>% 
+    formatCurrency(c('open', 'high', 'low', 'close', 'adjusted', 'change')) %>% 
+    formatDate(c('date')) %>%
+    formatStyle('volume', 
+      background = styleColorBar(price()$volume, 'steelblue')
+    ) %>% 
+    formatStyle(
+      'change', 
+      color = styleInterval(c(0), c('maroon', 'darkgreen'))
+    )  
+})
+```
+
+
+
+Column {.tabset .tabset-fade}
+-------------------------------------
+### Time Series
+```{r eval=prices}
+  renderPlot({
+
+  xts_price <- tk_xts(price())
+
+  chartSeries(xts_price, theme = chartTheme("black"),TA="addCMF()")
+               
+})
+```  
+
+### Time Series 2
+```{r eval=prices}
+  renderPlot({
+
+  xts_price <- tk_xts(price())
+
+  chartSeries(xts_price, theme = chartTheme("white"),TA="addMACD()")
+               
+})
+```
+
+Forecast
+=====================================
+
+Column {.tabset .tabset-fade}
+-------------------------------------
+
+### Forecase Column1a
+
+
+Column
+-------------------------------------
+
+### Forecase Column2a
+
+
+BackTesting01 {data-navmenu="BackTesting"}
+==========================================
+
+Column {data-width=500 .tabset .tabset-fade}
+-------------------------------------
+
+### BackTesting01a
+
+```{r BackTesting01a, eval=price}
+
+```
+
+BackTesting02 {data-navmenu="BackTesting"}
+==========================================
+
+Column {data-width=500 .tabset .tabset-fade}
+-------------------------------------
+
+### BackTesting02a
+
+```{r BackTesting02a, eval=price}
+
+```
+
+WordCloud01 {data-navmenu="WordCloud"}
+=====================================
+
+Column {data-width=500 .tabset .tabset-fade}
+-------------------------------------
+
+### WordCloud01a
+
+```{r wordCloud01a, eval=price}
+
+```
+
+WordCloud02 {data-navmenu="WordCloud"}
+=====================================
+
+Column {data-width=500 .tabset .tabset-fade}
+-------------------------------------
+
+### WordCloud02a
+
+```{r wordCloud02a, eval=price}
+
+```
+
+### WordCloud02b
+
+```{r wordCloud02b}
+
+```
+
