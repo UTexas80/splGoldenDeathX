@@ -147,15 +147,32 @@ flexdashboard::renderValueBox({
 
 ###
 
-```{r vbox-returns}
+```{r vbox-returns-roi}
 
 flexdashboard::renderValueBox({
   xts_price <- tk_xts(price())
   cumReturn <- percent((as.numeric(last(xts_price[,4])) - as.numeric(first(xts_price[,4]))) / (as.numeric(first(xts_price[,4]))))
 
   flexdashboard::valueBox(
-      paste(as.character(cumReturn), "", " Percent Return")
+      paste(as.character(cumReturn), "", " ROI")
       ,color = ifelse(cumReturn > 0, "teal", "red")
+      ,icon = 'ion-cash'
+  )
+})
+
+```
+
+###
+
+```{r vbox-returns-annualized}
+
+flexdashboard::renderValueBox({
+  xts_price <- tk_xts(price())
+  annReturn <- percent((as.numeric(last(xts_price[,4])) / as.numeric(first(xts_price[,4]))) ^ ((1/nyears(xts_price)))-1)
+
+  flexdashboard::valueBox(
+      paste(as.character(annReturn), "", " Annualized Return")
+      ,color = ifelse(annReturn > 0, "teal", "red")
       ,icon = 'ion-cash'
   )
 })
