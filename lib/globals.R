@@ -11,6 +11,7 @@ add.config(
 
 symbols <- c("CSL.AX", "SPL.AX")
 dateFrom <- "2002-01-01"
+
 # Add project specific configuration that can be overridden from load.project()
 add.config(
   apply.override = TRUE

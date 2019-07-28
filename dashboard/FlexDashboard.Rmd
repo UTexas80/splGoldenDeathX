@@ -85,7 +85,8 @@ xprices <- function() {
 ```
 
 ```{r rdsInput}
-library(here)
+dtEMA <- readRDS(here::here("rds","dtEMA.rds"))
+returnsByCategory <- readRDS(here::here("rds","returnsByCategory.rds"))
 trend <- readRDS(here::here("rds","trend.rds"))
 ```
 
@@ -579,8 +580,8 @@ Column {data-width=500 .tabset .tabset-fade}
 
 ### WordCloud01a
 
-```{r wordCloud01a, eval=price}
-
+```{r wordCloud01a}
+returnsByCategory
 ```
 
 WordCloud02 {data-navmenu="WordCloud"}
@@ -591,12 +592,12 @@ Column {data-width=500 .tabset .tabset-fade}
 
 ### WordCloud02a
 
-```{r wordCloud02a, eval=price}
-
+```{r wordCloud02a}
+dtEMA
 ```
 
 ### WordCloud02b
 
 ```{r wordCloud02b}
-
+trend
 ```

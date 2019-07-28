@@ -9,7 +9,7 @@ load_libraries: TRUE
 libraries: xts, zoo, billboarder, checkpoint, curl, dataMeta, datapasta,
         data.table, devtools, DT, dygraphs, ezknitr, FinancialInstrument,
         flexdashboard, flextable, forecast, foreach, formatR, formattable,
-        futile.logger, highcharter, hydroTSM, janitor, knitr, lubridate,
+        futile.logger, here, highcharter, hydroTSM, janitor, knitr, lubridate,
         openxlsx, orca, packagefinder, pacman, pdftools, PerformanceAnalytics,
         plotly, plyr, ProjectTemplate, quantmod, readxl, renv, reprex,
         reshape2, rio, rmarkdown, scales, shiny, shinydashboard,
