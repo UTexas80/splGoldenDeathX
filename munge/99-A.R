@@ -108,7 +108,10 @@ a<-t(data.table((as.single(lapply(lapply(xtsPrice,  na.omit, xtsPrice[1,]), tail
 colnames(a)<-dimnames(xtsPrice)[[2]]
 rownames(a)<-1
 
-# saveRDS(a, file="returnsByCategory.rds")
+################################################################################
+## Save a table of returns .rds file
+################################################################################
+saveRDS(a, file="./rds/returnsByCategory.rds")
 
 ################################################################################
 ## Start / End Date
@@ -148,7 +151,12 @@ aa<-cbind(aa, startDate,endDate, countDate)
 aa <- aa[, c(1,3:4,5,2)]                                                          
 ################################################################################
 ## Rename Columns
-names(aa)[1:5]<-c("catName", "startDate", "endDate", "count", "return")  
+names(aa)[1:5]<-c("catName", "startDate", "endDate", "count", "return")
+
+################################################################################
+## Save a table of returns .rds file
+################################################################################
+saveRDS(aa, file="./rds/trend.rds")
 
 ################################################################################
 ## dtEMA rename columns
@@ -167,7 +175,12 @@ chart.Boxplot(data.table(a) %>% select(starts_with("Golden"), -ends_with("17")))
 chart.Boxplot(data.table(a) %>% select(starts_with("Death")))
 viz.BoxplotN <- chart.Boxplot(data.table(a) %>% select(starts_with("n")))
 
-# saveRDS(viz.BoxplotN, file="viz.BoxplotN.rds")
+################################################################################
+## Save a boxplot .rds file
+################################################################################
+saveRDS(viz.BoxplotN, file="./rds/viz.BoxplotN.rds")
+
+
 
 retByMonth<-monthlyReturn(SPL.AX)                                               # https://tinyurl.com/yxs9km73
 spl.max <- rollapply(data=SPL.AX, width=5, FUN=max, fill=NA, partial= TRUE, align="center")

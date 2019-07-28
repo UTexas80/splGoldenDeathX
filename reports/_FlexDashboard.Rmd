@@ -26,6 +26,7 @@ library(dygraphs)
 library(flexdashboard)
 library(formattable)
 library(gt)
+library(here)
 library(highcharter)
 library(hydroTSM)
 library(PerformanceAnalytics)
@@ -50,12 +51,13 @@ library(zoo)
 ```{r functions}
 
 # A function to build an xts object to hold both ticker returns.
-
 # Function to calculate monthly returns on a stock
 monthly_stock_returns <- function(ticker, dateStart) {
+  
   # Download the data from Yahoo finance
   symbol <- getSymbols("SPL.AX", src = 'yahoo', from = "2019-07-02",
                        auto.assign = FALSE, warnings = FALSE)
+  
   # Tranform it to monthly returns using the periodReturn function from quantmod
   data <- periodReturn("SPL.AX", period = 'monthly', type = 'log')
 
@@ -74,13 +76,17 @@ xprices <- function() {
 
   symbols <- ("^IRX")
   
-  tq_get(symbols, 
+  tq_get(symbols,
          get = "stock.prices",
          from = input$dateRange[1],
          to = input$dateRange[2])
     
 }
+```
 
+```{r rdsInput}
+library(here)
+trend <- readRDS(here::here("rds","trend.rds"))
 ```
 
 Summary {data-navmenu="Performance"}
@@ -532,7 +538,7 @@ Column {data-width=500 .tabset .tabset-fade}
 
 ### BackTesting01a
 
-```{r BackTesting01a, eval=price}
+```{r BackTesting01a-trend, eval=price}
 
 ```
 
