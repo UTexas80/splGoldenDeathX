@@ -87,7 +87,8 @@ xprices <- function() {
 ```{r rdsInput}
 dtEMA <- readRDS(here::here("rds","dtEMA.rds"))
 returnsByCategory <- readRDS(here::here("rds","returnsByCategory.rds"))
-trend <- readRDS(here::here("rds","trend.rds"))
+trend <-  data.table(readRDS(here::here("rds","trend.rds")))
+xtsEMA <- readRDS(here::here("rds","xtsEMA.rds"))
 ```
 
 Summary {data-navmenu="Performance"}
@@ -358,6 +359,44 @@ renderHighchart({
 
 ```
 
+Summary {data-navmenu="Trends"}
+=====================================
+ 
+Row {data-height=200 .tabset .tabset-fade}
+-------------------------------------
+
+### Trend Summary Table A
+
+```{r 02A-tableTrend}
+
+DT::renderDataTable({
+  DT::datatable(trend, rownames = FALSE, 
+    options = list(pageLength = 10, order = list(list(0, 'desc')))) %>%
+    formatDate(c('startDate', 'endDate')) %>%
+    formatRound('count', 0) %>%
+    formatPercentage('return')  %>%
+    formatStyle('return', 
+      background = styleColorBar(range(trend$return), 'lime'))%>%
+    formatStyle('count', 
+      color = styleInterval(c(0), c('maroon', 'darkgreen'))
+    )  
+})
+
+```
+### Trend Summary Table B
+
+```{r 02b-tableTrend}
+trend
+```
+
+Row {data-height=200}
+-------------------------------------
+
+### Trend Over Time (Chart)
+```{r chartTrend, eval=xtsEMA}
+
+```
+
 Golden Cross {data-navmenu="Trends"}
 =====================================
 
@@ -514,9 +553,7 @@ Column {.tabset .tabset-fade}
 ### Time Series
 ```{r eval=prices}
   renderPlot({
-
   xts_price <- tk_xts(price())
-
   chartSeries(xts_price, theme = chartTheme("black"),TA="addCMF()")
                
 })
@@ -525,12 +562,25 @@ Column {.tabset .tabset-fade}
 ### Time Series 2
 ```{r eval=prices}
   renderPlot({
-
   xts_price <- tk_xts(price())
-
   chartSeries(xts_price, theme = chartTheme("white"),TA="addMACD()")
                
 })
+```
+
+### Time Series 3
+
+```{r chartTrend3, eval=xtsEMA}
+  renderPlot({
+  chartSeries(xtsEMA[,2]
+              ,theme = chartTheme("black")
+              ,TA=c(
+                addVo()
+                ,addBBands()
+                ,addEMA(n=10, col = "blue")
+                ))
+})
+
 ```
 
 Forecast
@@ -539,13 +589,13 @@ Forecast
 Column {.tabset .tabset-fade}
 -------------------------------------
 
-### Forecase Column1a
+### Forecast Column1a
 
 
 Column
 -------------------------------------
 
-### Forecase Column2a
+### Forecast Column2a
 
 
 BackTesting01 {data-navmenu="BackTesting"}
@@ -557,7 +607,8 @@ Column {data-width=500 .tabset .tabset-fade}
 ### BackTesting01a
 
 ```{r BackTesting01a-trend, eval=price}
-
+  xtsEMA<-tk_xts(xtsEMA)
+  xtsEMA
 ```
 
 BackTesting02 {data-navmenu="BackTesting"}

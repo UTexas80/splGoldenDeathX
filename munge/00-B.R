@@ -42,10 +42,15 @@ xtsEMA<-merge(merge(merge(merge(merge(ema005,ema010, join='inner'),ema020, join=
 ## rename columns ###                                                           https://tinyurl.com/y6fwyvwk
 ################################################################################
 names(xtsEMA) <- c("ema005", "ema010", "ema020", "ema050", "ema100", "ema200")  # Renaming the First n Columns Using Base R
+
+saveRDS(
+    xtsEMA[complete.cases(xtsEMA),]
+    ,file="./rds/xtsEMA.rds"
+    )
+
 xtsEMA_Months<- nmonths(xtsEMA)
 
 dtEMA<-as.data.table(xtsEMA)
-
 dtEMA  <- dtEMA %>%
     mutate(
         event = case_when(
@@ -143,3 +148,12 @@ dtSPL<-dtSPL[dtEMA][,c(1:2,18)]
 
 xtsPrice<-as.xts.data.table(dcast.data.table(dtSPL, formula = date~eventGroupNum, value.var = "SPL.AX.Open"))
 cumReturn<-apply(X = xtsPrice, 2, FUN = function(Z) Return.cumulative(as.numeric(Z), geometric = TRUE))                                     # https://tinyurl.com/y2d2ve83
+
+
+highchart(type = "stock") %>% 
+    hc_add_series(xtsEMA[,2], 
+                  type = "line",
+                  color = "green"),
+    hc_add_series(xtsEMA[,3], 
+                  type = "line",
+                  color = "lime")
