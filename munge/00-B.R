@@ -153,7 +153,7 @@ cumReturn<-apply(X = xtsPrice, 2, FUN = function(Z) Return.cumulative(as.numeric
 highchart(type = "stock") %>% 
     hc_add_series(xtsEMA[,2], 
                   type = "line",
-                  color = "green"),
+                  color = "green")
     hc_add_series(xtsEMA[,3], 
                   type = "line",
                   color = "lime")
