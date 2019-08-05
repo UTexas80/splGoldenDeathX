@@ -190,3 +190,7 @@ saveRDS(
     golden
     ,file="./rds/golden.rds"
     )
+saveRDS(
+    gSPL
+    ,file="./rds/gSPL.rds"
+    )    

@@ -123,8 +123,11 @@ tqPrices <- eventReactive(input$go, {
 #  date        open  high   low close volume adjusted   change
 price <- reactive({
   tq_get("SPL.AX", from = format(input$dateRange[1]), to = format(input$dateRange[2])) %>%
-  mutate(change = close - open)
+        mutate(change = close - open,
+               ma020 = SMA(na.omit(Close),20)
+              )
 })
+
 ```
 
 Column {data-height=60}
