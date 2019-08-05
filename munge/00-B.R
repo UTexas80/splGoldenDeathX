@@ -150,10 +150,43 @@ xtsPrice<-as.xts.data.table(dcast.data.table(dtSPL, formula = date~eventGroupNum
 cumReturn<-apply(X = xtsPrice, 2, FUN = function(Z) Return.cumulative(as.numeric(Z), geometric = TRUE))                                     # https://tinyurl.com/y2d2ve83
 
 
-highchart(type = "stock") %>% 
-    hc_add_series(xtsEMA[,2], 
-                  type = "line",
-                  color = "green")
-    hc_add_series(xtsEMA[,3], 
-                  type = "line",
-                  color = "lime")
+# highchart(type = "stock") %>% 
+#     hc_add_series(xtsEMA[,2], 
+#                   type = "line",
+#                   color = "green")
+#     hc_add_series(xtsEMA[,3], 
+#                   type = "line",
+#                   color = "lime")
+
+
+################################################################################
+## Golden Cross Trading Systme         ###                                      https://tinyurl.com/y3sq4ond
+################################################################################
+
+# 20 / 50 / 100/ 200 day . xts Simple Moving Averages
+gSPL <-SPL.AX
+gSPL$ma020<-SMA(na.omit(SPL.AX$SPL.AX.Close),20)
+gSPL$ma050<-SMA(na.omit(SPL.AX$SPL.AX.Close),50)
+gSPL$ma100<-SMA(na.omit(SPL.AX$SPL.AX.Close),100)
+gSPL$ma200<-SMA(na.omit(SPL.AX$SPL.AX.Close),200)
+
+# Baseline Return
+ret <- ROC(Cl(SPL.AX))
+
+# Baseline Signal & Return
+golden_ma_sig<-Lag(ifelse(gSPL$ma020 > gSPL$ma050 & gSPL$ma050 > gSPL$ma100 & gSPL$ma100 > gSPL$ma200, 1, 0))
+golden_ma_ret<- (ret * golden_ma_sig)
+
+# GOlden Cross Indicator
+golden<-cbind(golden_ma_ret,ret)
+colnames(golden) <- c('GoldenCross', 'Buy&Hold')
+
+# Max Drawdown & Performance Summary
+maxDrawdown(golden)
+table.AnnualizedReturns(golden,Rf=0.02/252)
+charts.PerformanceSummary(golden, Rf = 0.02, main='Golden Cross', geometric=FALSE)
+
+saveRDS(
+    golden
+    ,file="./rds/golden.rds"
+    )

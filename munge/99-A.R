@@ -54,7 +54,6 @@ names(aa)[1:5]<-c("catName", "startDate", "endDate", "count", "return")
 ## Save a table of returns .rds file
 ################################################################################
 saveRDS(aa, file="./rds/trend.rds")
-
 ################################################################################
 ## dtEMA rename columns
 names(dtEMA)[3] <- c("ema010")

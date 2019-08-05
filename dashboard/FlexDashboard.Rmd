@@ -86,6 +86,7 @@ xprices <- function() {
 
 ```{r rdsInput}
 dtEMA <- readRDS(here::here("rds","dtEMA.rds"))
+golden <- readRDS(here::here("rds","golden.rds"))
 returnsByCategory <- readRDS(here::here("rds","returnsByCategory.rds"))
 trend <-  data.table(readRDS(here::here("rds","trend.rds")))
 xtsEMA <- readRDS(here::here("rds","xtsEMA.rds"))
@@ -431,10 +432,36 @@ prices <- eventReactive(input$go, {
 })
 ```
 
-Column
+Row {data-height=260}
 -------------------------------------
 
-### TEST COlumn
+###
+
+```{r vbox-golden-drawdown}
+maxDrawdown(tk_xts(golden))
+```
+
+```{r vbox-golden-returns}
+table.AnnualizedReturns(tk_xts(golden),Rf=0.02/252)
+```
+
+Row
+-------------------------------------
+
+### Golden Cross Performanct Summary
+
+```{r chartSummaryReturns}
+
+renderPlot({
+    charts.PerformanceSummary(
+      tk_xts(golden)
+      ,Rf = 0.02
+      ,main = "Golden Cross Performance Summary"
+      ,geometric = FALSE
+      
+    )
+})  
+```
 
 Column {data-width=500 .tabset .tabset-fade}
 -------------------------------------
@@ -451,6 +478,26 @@ renderTable({
     
 })  
 ```
+
+
+### Golden Cross Performance Summary Table
+
+```{r tableGoldenSummaryA}
+DT::renderDataTable({
+  DT::datatable(price(), rownames = FALSE, 
+    options = list(pageLength = 20, order = list(list(0, 'desc')))) %>% 
+    formatCurrency(c('open', 'high', 'low', 'close', 'adjusted', 'change')) %>% 
+    formatDate(c('date')) %>%
+    formatStyle('volume', 
+      background = styleColorBar(price()$volume, 'steelblue')
+    ) %>% 
+    formatStyle(
+      'change', 
+      color = styleInterval(c(0), c('maroon', 'darkgreen'))
+    )  
+})
+```
+
 
 ### Another Table
 
