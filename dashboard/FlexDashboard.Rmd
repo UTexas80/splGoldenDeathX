@@ -124,8 +124,15 @@ tqPrices <- eventReactive(input$go, {
 price <- reactive({
   tq_get("SPL.AX", from = format(input$dateRange[1]), to = format(input$dateRange[2])) %>%
         mutate(change = close - open,
-               ma020 = SMA(na.omit(Close),20)
-              )
+          ema020 = EMA(na.fill0(close,0),20),
+          ema050 = EMA(na.fill0(close,0),50),
+          ema100 = EMA(na.fill0(close,0),100),
+          ema200 = EMA(na.fill0(close,0),200),
+          sma020 = SMA(na.fill0(close,0),20),
+          sma050 = SMA(na.fill0(close,0),50),
+          sma100 = SMA(na.fill0(close,0),100),
+          sma200 = SMA(na.fill0(close,0),200)
+          )
 })
 
 ```
@@ -447,11 +454,14 @@ maxDrawdown(tk_xts(golden))
 ```{r vbox-golden-returns}
 table.AnnualizedReturns(tk_xts(golden),Rf=0.02/252)
 ```
+```{r vbox-test}
+
+```
 
 Row
 -------------------------------------
 
-### Golden Cross Performanct Summary
+### Golden Cross Performance Summary
 
 ```{r chartSummaryReturns}
 
@@ -469,17 +479,30 @@ renderPlot({
 Column {data-width=500 .tabset .tabset-fade}
 -------------------------------------
 
+### Golden Cross Returns
+
+```{r tableGoldenReturns}
+  renderTable(price(), striped = TRUE, rownames = TRUE)
+
+```
+
+
 ### Stock Price Table
 
 ```{r tablePortfolioReturns}
-renderTable({
-  
-  prices() %>%
-    gt(
-       rowname_col = "row"
-    )
-    
-})  
+DT::renderDataTable({
+  DT::datatable(price(), rownames = FALSE, 
+    options = list(pageLength = 20, order = list(list(0, 'desc')))) %>% 
+    formatCurrency(c('open', 'high', 'low', 'close', 'adjusted', 'change')) %>% 
+    formatDate(c('date')) %>%
+    formatStyle('volume', 
+      background = styleColorBar(price()$volume, 'steelblue')
+    ) %>% 
+    formatStyle(
+      'change', 
+      color = styleInterval(c(0), c('maroon', 'darkgreen'))
+    )  
+})
 ```
 
 
