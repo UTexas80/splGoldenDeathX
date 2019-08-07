@@ -205,9 +205,9 @@ times = c(as.POSIXct("2012-11-03 09:45:00 IST"),
           as.POSIXct("2012-11-05 09:45:00 IST"))
 #create an xts object:
 xts.obj = xts(c(1,2),order.by = times)
-#filter with these dates:
-start.date = as.POSIXct("2012-11-03")
-end.date = as.POSIXct("2012-11-04")
+# filter with these dates:
+# start.date = as.POSIXct("2012-11-03")
+# end.date = as.POSIXct("2012-11-04")
 ################################################################################
 xts.obj[paste(start.date,end.date,sep="::")]
 xts.obj[seq(start.date,end.date,by=60)][,1]

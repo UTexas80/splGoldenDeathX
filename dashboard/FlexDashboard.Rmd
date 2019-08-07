@@ -8,6 +8,7 @@ output:
     vertical_layout: fill
 params:
   dateStart: "2002-01-02"
+  dateEnd:  !r Sys.Date()
   dynamictitle: "My report"
   reportdate: !r Sys.Date()
   symbols: "SPL.AX"

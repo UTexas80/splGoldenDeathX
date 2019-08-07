@@ -160,15 +160,17 @@ cumReturn<-apply(X = xtsPrice, 2, FUN = function(Z) Return.cumulative(as.numeric
 
 
 ################################################################################
-## Golden Cross Trading Systme         ###                                      https://tinyurl.com/y3sq4ond
+## Golden Cross Trading System         ###                                      https://tinyurl.com/y3sq4ond
 ################################################################################
 
 # 20 / 50 / 100/ 200 day . xts Simple Moving Averages
-gSPL <-SPL.AX
-gSPL$ma020<-SMA(na.omit(SPL.AX$SPL.AX.Close),20)
-gSPL$ma050<-SMA(na.omit(SPL.AX$SPL.AX.Close),50)
-gSPL$ma100<-SMA(na.omit(SPL.AX$SPL.AX.Close),100)
-gSPL$ma200<-SMA(na.omit(SPL.AX$SPL.AX.Close),200)
+ma_SPL <-SPL.AX
+ma_SPL$ma020<-SMA(na.omit(SPL.AX$SPL.AX.Close),20)
+ma_SPL$ma050<-SMA(na.omit(SPL.AX$SPL.AX.Close),50)
+ma_SPL$ma100<-SMA(na.omit(SPL.AX$SPL.AX.Close),100)
+ma_SPL$ma200<-SMA(na.omit(SPL.AX$SPL.AX.Close),200)
+
+ma_SPL <- ma_SPL[,7:10]
 
 # Baseline Return
 ret <- ROC(Cl(SPL.AX))

@@ -9,8 +9,14 @@ add.config(
   header = "SPL GoldenDeathX" # header in reports
 )
 
-symbols <- c("CSL.AX", "SPL.AX")
-dateFrom <- "2002-01-01"
+symbols<-c("CSL.AX", "SPL.AX")
+dateFrom<-"2002-01-01"
+
+################################################################################
+## Dates needed for .xts lookup        ###                                      https://tinyurl.com/y3h3jbt7
+################################################################################
+start.date<-"2002-01-01"
+end.date<-Sys.Date()
 
 # Add project specific configuration that can be overridden from load.project()
 add.config(
