@@ -28,9 +28,15 @@ Hash=47c6631d0f98c2582ad761e4993ba9b5
 
 [R/Package/DT]
 Package=DT
-Version=0.7
-Source=CRAN
-Hash=e3dfc723f4e2aebeff8ebb0077caa8eb
+Version=0.7.1
+Source=GitHub
+RemoteType=github
+RemoteHost=api.github.com
+RemoteRepo=DT
+RemoteUsername=rstudio
+RemoteRef=master
+RemoteSha=c6fd8641d551e6f130f5512f9334c8e329228c70
+Hash=b83a9f9fc3450695acbf9ef0f4462985
 
 [R/Package/FNN]
 Package=FNN
@@ -80,23 +86,35 @@ Version=1.1-2
 Source=CRAN
 Hash=c415f5010b2a1775dc6e3bd27f609666
 
+[R/Package/ROCR]
+Package=ROCR
+Version=1.0-7
+Source=CRAN
+Hash=19ccc913b786454226aadaef12ac4242
+
 [R/Package/Rcpp]
 Package=Rcpp
-Version=1.0.1
+Version=1.0.2
 Source=CRAN
-Hash=9c7023d9c0a2fb1fad5fc2e16283925e
+Hash=e9c01eba8e803454af999b9a0948ad48
 
 [R/Package/RcppArmadillo]
 Package=RcppArmadillo
-Version=0.9.600.4.0
+Version=0.9.500.2.0
 Source=CRAN
-Hash=2af53530373fdcfd6c2a490fd740a996
+Hash=1e247357c5db5057d01d6dc89dc97a67
 
 [R/Package/TTR]
 Package=TTR
 Version=0.23-4
-Source=CRAN
-Hash=2318c34d63aa8538b2ca97df34247458
+Source=GitHub
+RemoteType=github
+RemoteHost=api.github.com
+RemoteRepo=TTR
+RemoteUsername=joshuaulrich
+RemoteRef=master
+RemoteSha=d0a1ca544381560638750b3f46925cc4889652bc
+Hash=1a8382a34236f11d51d823cab814336c
 
 [R/Package/XML]
 Package=XML
@@ -151,6 +169,12 @@ Package=broom
 Version=0.5.2
 Source=CRAN
 Hash=4d3320654f6e0fe0b4b1c339c507f5ae
+
+[R/Package/caTools]
+Package=caTools
+Version=1.17.1.2
+Source=CRAN
+Hash=7934aafb5824a02cf9f2750fd1923627
 
 [R/Package/callr]
 Package=callr
@@ -270,7 +294,7 @@ RemoteRepo=dygraphs
 RemoteUsername=rstudio
 RemoteRef=master
 RemoteSha=75b3baa025119b038632eded5d7c34d5ae3c5028
-Hash=f8560f382bee1607da7ddc8b655115a5
+Hash=80072a44467aa82c6c824c8dbe827556
 
 [R/Package/e1071]
 Package=e1071
@@ -311,8 +335,14 @@ Hash=bca530c76aabd907fa2a83d21a02db81
 [R/Package/forecast]
 Package=forecast
 Version=8.7
-Source=CRAN
-Hash=503b16ac066d2448f062959b5ac208b6
+Source=GitHub
+RemoteType=github
+RemoteHost=api.github.com
+RemoteRepo=forecast
+RemoteUsername=robjhyndman
+RemoteRef=master
+RemoteSha=05330f4129ce13ec80e3ea216ec23eb89f20cbd7
+Hash=97ab9b47d001df58e5dd11d121937e34
 
 [R/Package/foreign]
 Package=foreign
@@ -372,7 +402,7 @@ RemoteRepo=glue
 RemoteUsername=tidyverse
 RemoteRef=master
 RemoteSha=423b7e55cfd7494185088da0b4746a7c73fba290
-Hash=3b4c81b1a07b9a88aee1be9ddd8514cc
+Hash=80994338890e2fafa44187b2c2bfbc3c
 
 [R/Package/gridBase]
 Package=gridBase
@@ -403,7 +433,7 @@ RemoteRepo=gt
 RemoteUsername=rstudio
 RemoteRef=master
 RemoteSha=742c7d855c276ac527970ba2e147eac6580a681e
-Hash=9e002ff3e48870cce58273a3c2fb63c4
+Hash=de11833b78f6f7e44602c583d11d95cc
 
 [R/Package/gtable]
 Package=gtable
@@ -481,7 +511,13 @@ Hash=ac878be52f9a4a40236b4a6102c473e6
 Package=hydroTSM
 Version=0.5-1
 Source=CRAN
-Hash=124c7106739627b89241ca74ae8a0adf
+RemoteType=github
+RemoteHost=api.github.com
+RemoteRepo=hydroTSM
+RemoteUsername=hzambran
+RemoteRef=master
+RemoteSha=0c4d153fdc6cb737a84a2100a18489bd673e0c6f
+Hash=54603e1e4469f9af8f4947f2ffbb7e3a
 
 [R/Package/igraph]
 Package=igraph
@@ -611,9 +647,9 @@ Hash=b5c5b7ecc881b4b4c3ac67ac359426bf
 
 [R/Package/openssl]
 Package=openssl
-Version=1.4.1
+Version=1.4
 Source=CRAN
-Hash=0fe29a202c1f856ad4ef0fe4cecf1ee1
+Hash=48cb784b7a1575c20103565139f20b17
 
 [R/Package/padr]
 Package=padr
@@ -623,9 +659,9 @@ Hash=05f801c7c227560d395a422f751db62f
 
 [R/Package/pillar]
 Package=pillar
-Version=1.4.2
+Version=1.4.1
 Source=CRAN
-Hash=80d354371127949c1b34cc8ec998ed06
+Hash=d2780725607ec9548a35aaf33291216e
 
 [R/Package/pkgbuild]
 Package=pkgbuild
@@ -779,9 +815,9 @@ Hash=dc6e5780cf99c7887cef7412f4cc5b26
 
 [R/Package/rmarkdown]
 Package=rmarkdown
-Version=1.14
+Version=1.13
 Source=CRAN
-Hash=ad36a41b359c444aac03dea3c80bd619
+Hash=7721b7c5664b10ead98225b08b7bc0a8
 
 [R/Package/roxygen2]
 Package=roxygen2
@@ -823,7 +859,7 @@ RemoteRepo=sass
 RemoteUsername=rstudio
 RemoteRef=master
 RemoteSha=57c6e5857bbea78340d9acb47fbf28d5eb8bbaa9
-Hash=bb5f3d021611f1ac931c372952b3db79
+Hash=b1ae6a4fef4e8b857077c153455c8aee
 
 [R/Package/scales]
 Package=scales
@@ -851,15 +887,9 @@ Hash=bcded080fc158802d604633be7e9d071
 
 [R/Package/shinyWidgets]
 Package=shinyWidgets
-Version=0.4.8.950
-Source=GitHub
-RemoteType=github
-RemoteHost=api.github.com
-RemoteRepo=shinyWidgets
-RemoteUsername=dreamRs
-RemoteRef=master
-RemoteSha=7d97beb174db6e7943f694724a7561b6e1e83526
-Hash=b6174fd682feced571fb9575e1361815
+Version=0.4.8
+Source=CRAN
+Hash=6dd6ba9ec87e4e5766b98dea1eb781f9
 
 [R/Package/shinybusy]
 Package=shinybusy
@@ -871,7 +901,7 @@ RemoteRepo=shinybusy
 RemoteUsername=dreamRs
 RemoteRef=master
 RemoteSha=f25504dde44e32ff6e7362b8ef974f4db6cf2a6f
-Hash=2b4024468db3e36323ff5b10e057d982
+Hash=8de1f6346c8325faba93764a01e0a128
 
 [R/Package/shinydashboard]
 Package=shinydashboard
