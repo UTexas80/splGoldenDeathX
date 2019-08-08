@@ -176,7 +176,7 @@ ma_SPL <- ma_SPL[,7:10]
 ret <- ROC(Cl(SPL.AX))
 
 # Baseline Signal & Return
-golden_ma_sig<-Lag(ifelse(gSPL$ma020 > gSPL$ma050 & gSPL$ma050 > gSPL$ma100 & gSPL$ma100 > gSPL$ma200, 1, 0))
+golden_ma_sig<-Lag(ifelse(ma_SPL$ma020 > ma_SPL$ma050 & ma_SPL$ma050 > ma_SPL$ma100 & ma_SPL$ma100 > ma_SPL$ma200, 1, 0))
 golden_ma_ret<- (ret * golden_ma_sig)
 
 # GOlden Cross Indicator
@@ -193,6 +193,6 @@ saveRDS(
     ,file="./rds/golden.rds"
     )
 saveRDS(
-    gSPL
-    ,file="./rds/gSPL.rds"
+    ma_SPL
+    ,file="./rds/ma_SPL.rds"
     )    

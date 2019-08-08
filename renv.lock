@@ -6,6 +6,14 @@ Version=3.6.1
 Repositories=
 	CRAN=https://cran.rstudio.com/
 
+[Bioconductor]
+Repositories=
+	BioCsoft=https://bioconductor.org/packages/3.9/bioc
+	BioCann=https://bioconductor.org/packages/3.9/data/annotation
+	BioCexp=https://bioconductor.org/packages/3.9/data/experiment
+	BioCworkflows=https://bioconductor.org/packages/3.9/workflows
+	CRAN=https://cran.rstudio.com/
+
 [R/Package/BH]
 Package=BH
 Version=1.69.0-1
@@ -146,9 +154,9 @@ Hash=4d3320654f6e0fe0b4b1c339c507f5ae
 
 [R/Package/callr]
 Package=callr
-Version=3.3.0
+Version=3.3.1
 Source=CRAN
-Hash=fbefbc726d8baeef1446631e281e9c18
+Hash=6d96e4d63e29bb82d9de5b6c313ec2f9
 
 [R/Package/cellranger]
 Package=cellranger
@@ -176,9 +184,9 @@ Hash=82644afba0ff56a08730bc4fc1e6448f
 
 [R/Package/clipr]
 Package=clipr
-Version=0.6.0
+Version=0.7.0
 Source=CRAN
-Hash=2d0cd4cc3da87e62fa17163096a19b4f
+Hash=25a0f4708d204469f7f2b7dd7ff147b4
 
 [R/Package/clisymbols]
 Package=clisymbols
@@ -603,9 +611,9 @@ Hash=b5c5b7ecc881b4b4c3ac67ac359426bf
 
 [R/Package/openssl]
 Package=openssl
-Version=1.4
+Version=1.4.1
 Source=CRAN
-Hash=48cb784b7a1575c20103565139f20b17
+Hash=0fe29a202c1f856ad4ef0fe4cecf1ee1
 
 [R/Package/padr]
 Package=padr

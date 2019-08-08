@@ -73,6 +73,12 @@ monthly_stock_returns <- function(ticker, dateStart) {
 }
 
 
+# xts_price <- tk_xts(price())
+# xts_ma <- tk_xts(ma_SPL)
+# merge(xts_price,xts_ma, join='inner')[,c(6:10)]
+# xts.obj[paste(start.date,end.date,sep="::")]
+# merge(xts_price, xts_ma, join = 'inner')[,c(6:10)][paste(format(input$dateRange[1]),format(input$dateRange[2]),sep="::")] 
+
 xprices <- function() {
 
   symbols <- ("^IRX")
@@ -88,6 +94,7 @@ xprices <- function() {
 ```{r rdsInput}
 dtEMA <- readRDS(here::here("rds","dtEMA.rds"))
 golden <- readRDS(here::here("rds","golden.rds"))
+ma_SPL <- readRDS(here::here("rds","ma_SPL.rds"))
 returnsByCategory <- readRDS(here::here("rds","returnsByCategory.rds"))
 trend <-  data.table(readRDS(here::here("rds","trend.rds")))
 xtsEMA <- readRDS(here::here("rds","xtsEMA.rds"))
@@ -455,6 +462,7 @@ maxDrawdown(tk_xts(golden))
 ```{r vbox-golden-returns}
 table.AnnualizedReturns(tk_xts(golden),Rf=0.02/252)
 ```
+
 ```{r vbox-test}
 
 ```
@@ -468,11 +476,11 @@ Row
 
 renderPlot({
     charts.PerformanceSummary(
-      tk_xts(golden)
+      tk_xts(golden)[paste(format(input$dateRange[1]),format(input$dateRange[2]),sep="::")]
       ,Rf = 0.02
       ,main = "Golden Cross Performance Summary"
       ,geometric = FALSE
-      
+      ,colorset=rainbow12equal
     )
 })  
 ```
