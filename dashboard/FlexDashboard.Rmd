@@ -26,7 +26,7 @@ library(DT)
 library(dygraphs)
 library(flexdashboard)
 library(formattable)
-library(gt)
+# library(gt)
 library(here)
 library(highcharter)
 library(hydroTSM)
@@ -36,10 +36,10 @@ library(quantmod)
 library(rmarkdown)
 library(scales)
 library(shiny)
-library(shinybusy)
+# library(shinybusy)
 library(shinydashboard)
 library(shinyWidgets)
-library(tidyquant)
+# library(tidyquant)
 library(tidyverse)
 library(timetk)
 library(treemap)
@@ -59,7 +59,7 @@ monthly_stock_returns <- function(ticker, dateStart) {
   symbol <- getSymbols("SPL.AX", src = 'yahoo', from = "2019-07-02",
                        auto.assign = FALSE, warnings = FALSE)
   
-  # Tranform it to monthly returns using the periodReturn function from quantmod
+  # Transform it to monthly returns using the periodReturn function from quantmod
   data <- periodReturn("SPL.AX", period = 'monthly', type = 'log')
 
   # Let's rename the column of returns to something intuitive because the column
