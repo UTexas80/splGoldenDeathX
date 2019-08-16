@@ -3,6 +3,18 @@ helper.function <- function()
   return(1)
 }
 
+
+################################################################################
+## Repo Package: data management to build centralized metadata repository       ### https://github.com/franapoli/repo
+## Check existence of directory and create if doesn't exist                     ### https://tinyurl.com/y3adrqwa
+################################################################################
+dirCheck <- function(mainDir, subDir) {
+    if (!dir.exists(file.path(mainDir, subDir))) {
+        dir.create(file.path(mainDir, subDir))
+        rp <- repo_open(rp_path, T)
+    }
+}
+
 # http://www.cookbook-r.com/Manipulating_data/Comparing_data_frames/
 dupsBetweenGroups <- function (df, idcol) {
     # df: the data frame

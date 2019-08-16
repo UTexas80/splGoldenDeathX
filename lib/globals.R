@@ -9,6 +9,14 @@ add.config(
   header = "SPL GoldenDeathX" # header in reports
 )
 
+################################################################################
+## Repo Package: data management to build centralized metadata repository       ### https://github.com/franapoli/repo
+## Check existence of directory and create if doesn't exist                     ### https://tinyurl.com/y3adrqwa
+################################################################################
+mainDir <- (".")
+subDir  <- ("repo")
+rp_path <- file.path(mainDir, subDir)
+
 symbols<-c("CSL.AX", "SPL.AX")
 dateFrom<-"2002-01-01"
 

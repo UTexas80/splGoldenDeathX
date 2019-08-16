@@ -26,13 +26,17 @@ library(DT)
 library(dygraphs)
 library(flexdashboard)
 library(formattable)
-# library(gt)
+library(ggplot2)
+library(gt)
 library(here)
 library(highcharter)
 library(hydroTSM)
+library(lubridate)
+library(magrittr)
 library(PerformanceAnalytics)
 library(plotly)
 library(quantmod)
+library(readr)
 library(rmarkdown)
 library(scales)
 library(shiny)
@@ -70,7 +74,7 @@ monthly_stock_returns <- function(ticker, dateStart) {
   # so let's explicitly put them to the global environment with an easy to use
   # name, the stock ticker
   assign("SPL_returns", data, .GlobalEnv)
-}
+} # monthly_stock_returns
 
 
 # xts_price <- tk_xts(price())

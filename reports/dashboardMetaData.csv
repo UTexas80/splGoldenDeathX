@@ -1,4 +1,4 @@
-FlexDashboard,,,,,,,
+FlexDashboard,Level 01,Level 02,Level 03,Level 04,Type,Description,Sub Description
 ,1.0,Performance,,,,,
 ,,1.0.A,Sidebar,,,,
 ,,,1.1.0,Summary,,,
@@ -60,5 +60,3 @@ FlexDashboard,,,,,,,
 ,,,6.2.0,WordCloud02,,,
 ,,,,6.2.1.a,table,dtEMA,
 ,,,,6.2.1.b,table,trend,
-,,,,,,,
-,,,,,,,

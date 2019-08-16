@@ -6,6 +6,8 @@
 # Processing Start Time
 start.time <- Sys.time()
 
+dirCheck(mainDir, subDir)
+
 # VERSION HISTORY
 a00.version = "1.0.0"
 a00.ModDate = as.Date("2019-06-09")
