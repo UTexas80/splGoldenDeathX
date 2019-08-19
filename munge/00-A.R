@@ -6,6 +6,7 @@
 # Processing Start Time
 start.time <- Sys.time()
 
+# Check existence of directory and create if doesn't exist                      https://tinyurl.com/y3adrqwa
 dirCheck(mainDir, subDir)
 
 # VERSION HISTORY
