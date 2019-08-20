@@ -20,6 +20,7 @@ theme: spacelab
 ```{r global, echo=FALSE, include=FALSE, message = FALSE}
 # load data in 'global' chunk so it can be shared by all users of the dashboard
 knitr::opts_knit$set(root.dir = "..", echo = FALSE)
+library(d3heatmap)
 library(data.table)
 library(dplyr)
 library(DT)
@@ -106,13 +107,13 @@ trend  <-  data.table(readRDS(here::here("rds","trend.rds")))
 xtsEMA <- readRDS(here::here("rds","xtsEMA.rds"))
 ```
 
-Summary {data-navmenu="Performance"}
+1.1 Summary {data-navmenu="1-Performance" data-icon="fa-list" data-orientation=rows}
 =====================================  
 
 Input {.sidebar}
 -------------------------------------
   
-```{r sidebarInput}
+```{r 1.0.1sidebarInput}
 
 dateRangeInput("dateRange",
                "Historical data",
@@ -282,7 +283,7 @@ renderPlot({
 
 ```
 
-Returns {data-navmenu="Performance"}
+1.2 Returns {data-navmenu="1-Performance" data-icon="ion-cash"}
 =====================================
 
 Column {data-width=500 .tabset .tabset-fade}
@@ -316,7 +317,6 @@ renderHighchart({
 })
 
 ``` 
-
 
 ### Monthly Returns
 
@@ -384,7 +384,7 @@ renderHighchart({
 
 ```
 
-Summary {data-navmenu="Trends"}
+2.1 Summary {data-navmenu="2-Trends" data-icon="fa-list" data-orientation=rows}
 =====================================
  
 Row {data-height=200 .tabset .tabset-fade}
@@ -422,7 +422,7 @@ Row {data-height=200}
 
 ```
 
-Golden Cross {data-navmenu="Trends"}
+2.2 Golden Cross {data-navmenu="2-Trends" data-icon="fa-list" data-orientation=rows}
 =====================================
 
 Input {.sidebar}
@@ -561,14 +561,13 @@ DT::renderDataTable({
 
 ### Stock Price Table444
 
-Death Cross {data-navmenu="Trends"}
+2.3 Death Cross {data-navmenu="2-Trends" data-icon="fa-list" data-orientation=rows}
 =====================================
 
-No Cross {data-navmenu="Trends"}
+2.4 No Cross {data-navmenu="2-Trends" data-icon="fa-list" data-orientation=rows}
 =====================================
 
-
-TechnicalAnalysis
+3.1 Summary {data-navmenu="3-TechnicalAnalysis" data-icon="fa-list" data-orientation=rows}
 =====================================
 
 Input {.sidebar}
@@ -671,7 +670,7 @@ Column {.tabset .tabset-fade}
 
 ```
 
-Forecast
+4.1 Summary {data-navmenu="4-Forecast" data-icon="fa-list" data-orientation=rows}
 =====================================
 
 Column {.tabset .tabset-fade}
@@ -685,8 +684,7 @@ Column
 
 ### Forecast Column2a
 
-
-BackTesting01 {data-navmenu="BackTesting"}
+5.1 Summary {data-navmenu="5-BackTesting" data-icon="fa-list" data-orientation=rows}
 ==========================================
 
 Column {data-width=500 .tabset .tabset-fade}
@@ -699,7 +697,7 @@ Column {data-width=500 .tabset .tabset-fade}
   xtsEMA
 ```
 
-BackTesting02 {data-navmenu="BackTesting"}
+5.2 Detail {data-navmenu="5-BackTesting" data-icon="fa-list" data-orientation=rows}
 ==========================================
 
 Column {data-width=500 .tabset .tabset-fade}
@@ -711,7 +709,7 @@ Column {data-width=500 .tabset .tabset-fade}
 
 ```
 
-WordCloud01 {data-navmenu="WordCloud"}
+6.1 Summary {data-navmenu="6-WordCloud" data-icon="fa-list" data-orientation=rows}
 =====================================
 
 Column {data-width=500 .tabset .tabset-fade}
@@ -723,7 +721,7 @@ Column {data-width=500 .tabset .tabset-fade}
 returnsByCategory
 ```
 
-WordCloud02 {data-navmenu="WordCloud"}
+6.2 Detail {data-navmenu="6-WordCloud" data-icon="fa-list" data-orientation=rows}
 =====================================
 
 Column {data-width=500 .tabset .tabset-fade}
