@@ -2,6 +2,38 @@
 z99.version = "1.0.0"
 z99.ModDate = as.Date("2019-06-09")
 
+################################################################################
+## Step 99.00 create object table                                            ###
+################################################################################
+dtObj <-setDT(lsos(), keep.rownames = T)[]
+names(dtObj)[1]<-"Name"                                                      ### rename data.table column
+lsObj<-list(dtObj[Type == 'data.table' & Length_Rows == 0][,1])
+# dtObj[Type=='data.table' & Length_Rows == 0]
+################################################################################
+df  <-  ls()[sapply(ls(), function(x) is.data.frame(get(x)) | is.xts(get(x)))]
+l   <-  ls()[sapply(ls(), function(x) is.data.frame(get(x)))]
+################################################################################
+## Step 99.02 create data dictionary                                         ### https://tinyurl.com/yyrgxxxp
+################################################################################
+dObj    <-  dtObj[Type %like% 'xts|data.']                                     # get the .xts and data(frames/tables) from the list of objects
+mlinker <- build_linker(dObj, names(dObj), c(0,0,0,0,0,0))                     # create link master of data objects
+mdict   <- build_dict(dObj, mlinker, option_description = NULL, 
+                                       prompt_varopts = FALSE)                 # create master dictionary of data objects
+
+df<-dObj[!Type=='xts' & (Name %like% '^dt') & Length_Rows >21]                 # create a dataframe containing a list of applicatble data.tables 
+for ( i in 1:nrow(df)) {                                                       # loop through dataframes and create an individual dataframe. 
+    assign(paste0("new_frame", i), df[i])                                      # https://tinyurl.com/yyjcaswv
+}
+paste(rep(0, new_frame3[,6]), collapse=",")                                    # create a list of zeros based on the number of columns       
+
+build_linker(my.data, variable_description, variable_type)
+lapply(df, 
+  function(i) 
+    {
+      build_linker(df, names(i), rep(0, ncol(i), collapse=","))      
+    }
+)
+################################################################################                
 # save RData image
 # save.image("splRData.RData")
 ################################################################################
@@ -87,5 +119,6 @@ while (last.diagnostic <= nrow(diagnostic)){
 finish.time = Sys.time()
 timeProcessing <- finish.time - start.time
 
+################################################################################
 # 2019.06.09 - v.1.0.0                                                          http://tinyurl.com/y54k8gsw
 #  1st release                                                                  http://tinyurl.com/yx9w8vje

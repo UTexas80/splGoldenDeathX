@@ -267,14 +267,25 @@ renderHighchart({
 ```
 
 
-### Performance Summary
+### Distribution
 
-```{r 1.1.3.2-viz-performance-summary, eval=price}
-renderHighchart({
-  xts_price <- tk_xts(price())
-  highchart(type = "chart") %>% 
-    hc_add_series(xts_price, type = "column") %>% hc_add_theme(hc_theme_chalk())
-})
+```{r 1.1.3.2-viz-histogram, eval=price}
+
+# draw a histogram
+renderPlot({
+
+    # generate bins based on input$bins from ui.R
+    x <- tk_xts(price())
+    hist(x[,6]
+         ,main="Closing Price"
+         ,xlab="price"
+         ,ylab="Count"
+         ,col="darkmagenta"
+         ,freq=TRUE
+         ,border='white'
+         ,xlim=c(0.0,2)
+         ,seq(0.1,2, by = 0.10))
+  })
 ```
 
 1.2 Returns {data-navmenu="1-Performance" data-icon="ion-cash"}
@@ -375,6 +386,7 @@ renderHighchart({
 })
 
 ```
+
 
 2.1 Summary {data-navmenu="2-Trends" data-icon="fa-list"}
 =====================================
@@ -716,26 +728,6 @@ Column {data-width=500 .tabset .tabset-fade}
 
 Column {data-width=500 .tabset .tabset-fade}
 -------------------------------------
-
-### Distribution
-
-```{r 5.2.1.1-xxx, eval=price}
-# draw a histogram
-renderPlot({
-
-    # generate bins based on input$bins from ui.R
-    x <- tk_xts(price())
-    hist(x[,6]
-         ,main="Closing Price"
-         ,ylab="Count"
-         ,col="darkmagenta"
-         ,freq=TRUE
-         ,border='white'
-         ,xlim=c(0,2)
-         ,seq(0.1,2, by = 0.10))
-
-  })
-```
 
 ### Distribution 2
 

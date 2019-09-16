@@ -6,12 +6,16 @@
 # Processing Start Time
 start.time <- Sys.time()
 
-# Check existence of directory and create if doesn't exist                      https://tinyurl.com/y3adrqwa
+################################################################################
+## Step 00.01 create object table                                            ###
+## Check existence of directory and create if doesn't exist                  ### https://tinyurl.com/y3adrqwa
 dirCheck(mainDir, subDir)
+################################################################################
 
-# VERSION HISTORY
+################################################################################
+## Step 00.99 VERSION HISTORY
 a00.version = "1.0.0"
 a00.ModDate = as.Date("2019-06-09")
-
+################################################################################
 # 2019.06.09 - v.1.0.0
 #  1st release
