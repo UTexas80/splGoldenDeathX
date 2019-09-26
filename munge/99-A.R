@@ -4,10 +4,12 @@
 a<-t(data.table((as.single(lapply(lapply(xtsPrice,  na.omit, xtsPrice[1,]), tail, 1))-as.single(lapply(lapply(xtsPrice,  na.omit, xtsPrice[1,]), head, 1))) / as.single(lapply(lapply(xtsPrice,  na.omit, xtsPrice[1,]), head, 1))))
 colnames(a)<-dimnames(xtsPrice)[[2]]
 rownames(a)<-1
+
 ################################################################################
 ## Save a table of returns .rds file
 ################################################################################
 saveRDS(a, file="./rds/returnsByCategory.rds")
+
 ################################################################################
 ## Start / End Date
 ################################################################################
@@ -43,11 +45,10 @@ aa<-data.table(aa, keep.rownames = TRUE)
 aa<-cbind(aa, startDate,endDate, countDate)
 ################################################################################
 ## Reorder Columns
-# aa <- aa[, c(1,3:4,5,2)]                                                          
+aa <- aa[, c(1,3:4,5,2)]                                                          
 ################################################################################
 ## Rename Columns
-# names(aa)[1:5]<-c("catName", "startDate", "endDate", "count", "return")
-names(aa)[1:5]<-c("catName", "return")
+names(aa)[1:5]<-c("catName", "startDate", "endDate", "count", "return")
 
 ################################################################################
 ## Save a table of returns .rds file
