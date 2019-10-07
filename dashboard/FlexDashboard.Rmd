@@ -98,16 +98,19 @@ xprices <- function() {
 ```
 
 ```{r rdsInput}
-calendarDays <- readRDS(here::here("rds","calendarDays.rds"))
-dtEMA  <- readRDS(here::here("rds","dtEMA.rds"))
-golden <- readRDS(here::here("rds","golden.rds"))
-ma_SPL <- readRDS(here::here("rds","ma_SPL.rds"))
+calendarDays      <- readRDS(here::here("rds","calendarDays.rds"))
+dtEMA             <- readRDS(here::here("rds","dtEMA.rds"))
+golden            <- readRDS(here::here("rds","golden.rds"))
+ma_SPL            <- readRDS(here::here("rds","ma_SPL.rds"))
 returnsByCategory <- readRDS(here::here("rds","returnsByCategory.rds"))
-tradeDays <- readRDS(here::here("rds","tradeDays.rds"))
-trend  <-  data.table(readRDS(here::here("rds","trend.rds")))
-xtsEMA <- readRDS(here::here("rds","xtsEMA.rds"))
+tradeDays         <- readRDS(here::here("rds","tradeDays.rds"))
+trend             <- data.table(readRDS(here::here("rds","trend.rds")))
+trendReturns      <- data.table(readRDS(here::here("rds","trendReturns.rds")))
+xtsEMA            <- readRDS(here::here("rds","xtsEMA.rds"))
+# catName        <-unique(substr(aa$catName,1,nchar(aa$catName)-3))
+trendname      <-str_sub(tail(aa[order(endDate)],1)[,1],end=-4)
+trendname1     <-substr(tail(trend[order(endDate)], 1)[, 1], 1, 1)
 
-names(trend)[4]<-"days"
 ```
 
 1.1 Summary {data-navmenu="1-Performance" data-icon="fa-list" data-orientation=rows}
@@ -163,7 +166,7 @@ Column {data-height=60}
 ```{r 1.1.1.1-vbox-calendar-days}
 
 flexdashboard::renderValueBox({
-  xts_price <- tk_xts(price())
+  xts_price    <- tk_xts(price())
   calendarDays <- format(end(xts_price)-start(xts_price), big.mark = ",")
   calendarDays <- substr(calendarDays, 1, nchar(calendarDays)-5)
 
@@ -303,7 +306,7 @@ Column {data-width=500 .tabset .tabset-fade}
 
 renderHighchart({
   xts_price <- tk_xts(price())
-  dailyRet<-periodReturn(xts_price[,6], period = 'daily') * 100
+  dailyRet  <-periodReturn(xts_price[,6], period = 'daily') * 100
 #  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
   highchart(type = "stock") %>%
     hc_add_series(dailyRet, type = "column")
@@ -316,7 +319,7 @@ renderHighchart({
 
 renderHighchart({
   xts_price <- tk_xts(price())
-  weeklyRet<-periodReturn(xts_price[,6], period = 'weekly') * 100
+  weeklyRet <-periodReturn(xts_price[,6], period = 'weekly') * 100
 #  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
   highchart(type = "stock") %>%
     hc_add_series(weeklyRet, type = "column")
@@ -343,7 +346,7 @@ renderHighchart({
 ```{r 1.2.1.d-viz-ret-quarterly, eval=price}
 
 renderHighchart({
-  xts_price <- tk_xts(price())
+  xts_price   <- tk_xts(price())
   quarterlyRet<-periodReturn(xts_price[,6], period = 'quarterly') * 100
 #  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
   highchart(type = "stock") %>%
@@ -358,7 +361,7 @@ renderHighchart({
 
 renderHighchart({
   xts_price <- tk_xts(price())
-  annualRet<-periodReturn(xts_price[,6], period = 'yearly') * 100
+  annualRet <-periodReturn(xts_price[,6], period = 'yearly') * 100
 #  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
   highchart(type = "stock") %>%
     hc_add_series(annualRet, type = "column")
@@ -371,10 +374,10 @@ renderHighchart({
 ```{r 1.2.1.f-viz-ret-future, eval=price}
 
 renderHighchart({
-  xts_price <- tk_xts(price())
-  dailyRet<- periodReturn(xts_price[,6], period = 'daily')
+  xts_price            <- tk_xts(price())
+  dailyRet             <- periodReturn(xts_price[,6], period = 'daily')
   dailyRet[dailyRet==0]<- NA
-  dailyRet <- 1 + dailyRet
+  dailyRet             <- 1 + dailyRet
   fv <- cumprod(na.omit(dailyRet))
   highchart(type = "stock") %>%
   hc_add_series(fv, type = "line") %>%
@@ -403,9 +406,6 @@ Column {data-height=15%}
 
 # https://is.gd/vb865W In flexdashboard, can a valueBox be clicked to update a text box like an actionButton?
 
-trendname1<-substr(tail(trend[order(endDate)], 1)[, 1], 1, 1)
-trendname <-str_sub(tail(aa[order(endDate)],1)[,1],end=-4)
-
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
       paste("Current Trend:", " ", trendname)
@@ -425,11 +425,10 @@ flexdashboard::renderValueBox({
 ###
 
 ```{r 2.1.1.2-vbox-days, eval=trend}
-substr(tail(aa[order(endDate)],1)[,1],1,1)
 
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
-      paste("Calendar Days:", " ", format(tail(trend[order(endDate)],1)[,4], big.mark = ","))
+      paste("Trade Days:", " ", format(tail(trend[order(endDate)],1)[,5], big.mark = ","))
       ,color = #0000ff
       ,icon = "fa-calendar"
   )
@@ -440,7 +439,7 @@ flexdashboard::renderValueBox({
 ###
 
 ```{r 2.1.1.3-vbox-returns-roi}
-trendROI <- percent(tail(trend[order(endDate)], 1)[, 5][[1]],
+trendROI <- percent(tail(trend[order(endDate)], 1)[, 6][[1]],
   scale = 100, prefix = "", suffix = "%", big.mark = " ", decimal.mark = ".",
   trim = TRUE)
 
@@ -469,17 +468,17 @@ DT::renderDataTable({
   DT::datatable(trend, rownames = FALSE,
     extensions = c('Scroller'),
     options = list(
-      order = list(list(2, 'desc')),
+      order = list(list(3, 'desc')),
                          pageLength = 10,
                          scrollX = TRUE,
                          scrollY = 280,
                          scroller = TRUE)) %>%
     formatDate(c('startDate', 'endDate')) %>%
-    formatRound('days', 0) %>%
+    formatRound('tradeDays', 0) %>%
     formatPercentage('return')  %>%
     formatStyle('return',
       background = styleColorBar(range(trend$return), 'lightblue'))%>%
-    formatStyle('days',
+    formatStyle('tradeDays',
       color = styleInterval(c(0), c('maroon', 'darkgreen'))
     )  
 })
@@ -500,17 +499,74 @@ renderHighchart({
 
 ```
 
+### Trend Summary Table C
+
+```{r 2.1.1.c-viz-ret-quarterly, eval=trend}
+  chart.Boxplot(data.table(returnsByCategory) %>% select(starts_with("D")))
+  chart.Boxplot(data.table(returnsByCategory) %>% select(starts_with("Golden")))
+  chart.Boxplot(data.table(returnsByCategory) %>% select(starts_with("n")))
+```
+
 Row {data-height=40%}
 -------------------------------------
-
 ### Trend boxplot
-```{r  2.1.2.1-viz-boxplot, eval=trend}
+```{r  2.1.2.1-viz-vboxplot, eval=trend}
+
 renderPlotly({
     ggplotly(
-      ggplot(aa, aes(x = substr(aa$catName,1,nchar(aa$catName)-3), y = return))
+      ggplot(trend, aes(x = substr(trend$catName,1,nchar(trend$catName)-3), y = return))
+      +     scale_y_continuous(labels=percent)      
       +     geom_boxplot(fill = "#0c4c8a")
-      +     theme_minimal())
+      +     theme_gray())
     })
+```
+
+### Trend Returns
+```{r  2.1.2.2-viz-hboxplot, eval=trend}
+renderHighchart({
+    hcboxplot(x = trend$return*100, 
+      var =  substr(trend$catName,1,nchar(trend$catName)-3), 
+      name = "returns", color ="#2980b9", outliers= TRUE) %>%
+      hc_yAxis(labels = list(format = "{value}%"), min=-30, max = 30) %>%
+      hc_add_theme(hc_theme_chalk())
+})
+```
+
+### Trend Returns
+```{r  2.1.2.3-viz-hboxplot, eval=trend}
+renderHighchart({
+  hcboxplot(x = trend$tradeDays, 
+            var =  trend$catName,
+            name = "returns", 
+            color ="#2980b9", 
+            outliers = TRUE) %>%
+    hc_chart(type = "column")  %>% # to put box vertical
+    hc_yAxis(labels = list(format = "{value}"), min=-0, max = 150) %>%
+    hc_add_theme(hc_theme_chalk())
+})
+```
+
+
+### Trend Returns
+```{r  2.1.2.4-viz-pie, eval=trend}
+
+trendStats <- trend[,
+   .(N = .N,
+     Mean = mean(tradeDays),
+     SDev = sd(tradeDays),
+     Median = median(tradeDays),
+     Min = min(tradeDays), 
+     Max = max(tradeDays), 
+     count = sum(tradeDays)),
+   by=.(catName)]
+
+renderHighchart({
+    highchart() %>% 
+      hc_chart(type = "column") %>% 
+        hc_add_series_labels_values(labels = trendStats$catName,
+                                    values = trendStats$N) %>%
+        hc_add_theme(hc_theme_darkunica())
+})
 ```
 
 2.2 Golden Cross {data-navmenu="2-Trends" data-icon="fa-list" data-orientation=rows}

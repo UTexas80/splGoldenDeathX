@@ -9,7 +9,6 @@ rownames(a)<-1
 ## Save a table of returns .rds file
 ################################################################################
 saveRDS(a, file="./rds/returnsByCategory.rds")
-
 ################################################################################
 ## Start / End Date
 ################################################################################
@@ -48,12 +47,14 @@ aa<-cbind(aa, startDate,endDate, countDate)
 aa <- aa[, c(1,3:4,5,2)]                                                          
 ################################################################################
 ## Rename Columns
-names(aa)[1:5]<-c("catName", "startDate", "endDate", "count", "return")
-
+names(aa)[1:5]<-c("subcatName", "startDate", "endDate", "tradeDays", "return")
+trend <- aa[, tradeDays:=as.integer(tradeDays)]                              ### rename dataframe and convert column from list to integer
+trend <- trend[, catName :=substr(aa$subcatName,1,nchar(aa$subcatName)-3)]   ### add category name sans number(s)
+trend <- select(trend, catName, everything())                                ### move last column to first                                      
 ################################################################################
 ## Save a table of returns .rds file
 ################################################################################
-saveRDS(aa, file="./rds/trend.rds")
+saveRDS(trend, file="./rds/trend.rds")
 ################################################################################
 ## dtEMA rename columns
 names(dtEMA)[3] <- c("ema010")
@@ -68,10 +69,10 @@ saveRDS(dtEMA, file="./rds/dtEMA.rds")
 ################################################################################
 ## Performance Analytics Boxplot(s)
 ################################################################################
-chart.Boxplot(data.table(a) %>% select(starts_with("Golden"), -ends_with("17")))
+chart.Boxplot(data.table(a) %>% select(starts_with("Golden")))
 chart.Boxplot(data.table(a) %>% select(starts_with("Death")))
+chart.Boxplot(data.table(a) %>% select(starts_with("n")))
 viz.BoxplotN <- chart.Boxplot(data.table(a) %>% select(starts_with("n")))
-
 ################################################################################
 ## Save a boxplot .rds file
 ################################################################################

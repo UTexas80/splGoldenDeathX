@@ -5,13 +5,13 @@ z99.ModDate = as.Date("2019-06-09")
 ################################################################################
 ## Step 99.00 create object table                                            ###
 ################################################################################
-# dtObj <-setDT(lsos(), keep.rownames = T)[]
-# names(dtObj)[1]<-"Name"                                                      ### rename data.table column
-# lsObj<-list(dtObj[Type == 'data.table' & Length_Rows == 0][,1])
+dtObj <-setDT(lsos(), keep.rownames = T)[]
+names(dtObj)[1]<-"Name"                                                      ### rename data.table column
+lsObj<-list(dtObj[Type == 'data.table' & Length_Rows == 0][,1])
 # dtObj[Type=='data.table' & Length_Rows == 0]
 ################################################################################
-# df  <-  ls()[sapply(ls(), function(x) is.data.frame(get(x)) | is.xts(get(x)))]
-# l   <-  ls()[sapply(ls(), function(x) is.data.frame(get(x)))]
+df  <-  ls()[sapply(ls(), function(x) is.data.frame(get(x)) | is.xts(get(x)))]
+l   <-  ls()[sapply(ls(), function(x) is.data.frame(get(x)))]
 ################################################################################
 ## Step 99.02 create data dictionary                                         ### https://tinyurl.com/yyrgxxxp
 ################################################################################
