@@ -52,7 +52,6 @@ library(treemap)
 library(utils)
 library(xts)
 library(zoo)
-
 ```
 
 ```{r functions}
@@ -62,11 +61,13 @@ library(zoo)
 monthly_stock_returns <- function(ticker, dateStart) {
 
   # Download the data from Yahoo finance
-  symbol <- getSymbols("SPL.AX", src = 'yahoo', from = "2019-07-02",
-                       auto.assign = FALSE, warnings = FALSE)
+  symbol <- getSymbols("SPL.AX",
+    src = "yahoo", from = "2019-07-02",
+    auto.assign = FALSE, warnings = FALSE
+  )
 
   # Transform it to monthly returns using the periodReturn function from quantmod
-  data <- periodReturn("SPL.AX", period = 'monthly', type = 'log')
+  data <- periodReturn("SPL.AX", period = "monthly", type = "log")
 
   # Let's rename the column of returns to something intuitive because the column
   # name is what will eventually be displayed on the time series graph
@@ -86,31 +87,35 @@ monthly_stock_returns <- function(ticker, dateStart) {
 # merge(xts_price, xts_ma, join = 'inner')[,c(6:10)][paste(format(input$dateRange[1]),format(input$dateRange[2]),sep="::")]
 
 xprices <- function() {
-
   symbols <- ("^IRX")
 
   tq_get(symbols,
-         get = "stock.prices",
-         from = input$dateRange[1],
-         to = input$dateRange[2])
-
+    get = "stock.prices",
+    from = input$dateRange[1],
+    to = input$dateRange[2]
+  )
 }
 ```
 
 ```{r rdsInput}
-calendarDays      <- readRDS(here::here("rds","calendarDays.rds"))
-dtEMA             <- readRDS(here::here("rds","dtEMA.rds"))
-golden            <- readRDS(here::here("rds","golden.rds"))
-ma_SPL            <- readRDS(here::here("rds","ma_SPL.rds"))
-returnsByCategory <- readRDS(here::here("rds","returnsByCategory.rds"))
-tradeDays         <- readRDS(here::here("rds","tradeDays.rds"))
-trend             <- data.table(readRDS(here::here("rds","trend.rds")))
-trendReturns      <- data.table(readRDS(here::here("rds","trendReturns.rds")))
-xtsEMA            <- readRDS(here::here("rds","xtsEMA.rds"))
-# catName        <-unique(substr(aa$catName,1,nchar(aa$catName)-3))
-trendname      <-str_sub(tail(aa[order(endDate)],1)[,1],end=-4)
-trendname1     <-substr(tail(trend[order(endDate)], 1)[, 1], 1, 1)
+calendarDays <- readRDS(here::here("rds", "calendarDays.rds"))
+dtEMA <- readRDS(here::here("rds", "dtEMA.rds"))
+golden <- readRDS(here::here("rds", "golden.rds"))
+ma_SPL <- readRDS(here::here("rds", "ma_SPL.rds"))
+returnsByCategory <- readRDS(here::here("rds", "returnsByCategory.rds"))
+tradeDays <- readRDS(here::here("rds", "tradeDays.rds"))
+trend <- data.table(readRDS(here::here("rds", "trend.rds")))
+trendReturns <- data.table(readRDS(here::here("rds", "trendReturns.rds")))
+xtsEMA <- readRDS(here::here("rds", "xtsEMA.rds"))
+```
 
+```{r processing}
+trendname <- str_sub(tail(trend[order(endDate)], 1)[, 2], end = -4)
+trendname1 <- substr(tail(trend[order(endDate)], 1)[, 1], 1, 1)
+# subset trend
+d <- trend[substr(trend$catName, 1, 1) %like% "D"]
+g <- trend[substr(trend$catName, 1, 1) %like% "G"]
+n <- trend[substr(trend$catName, 1, 1) %like% "n"]
 ```
 
 1.1 Summary {data-navmenu="1-Performance" data-icon="fa-list" data-orientation=rows}
@@ -122,40 +127,40 @@ Input {.sidebar}
 ```{r 1.0.0.1-sidebarInput}
 
 dateRangeInput("dateRange",
-               "Historical data",
-               start = params$dateStart,
-               end   = Sys.Date())
+  "Historical data",
+  start = params$dateStart,
+  end = Sys.Date()
+)
 
 # actionButton("go", "Submit")
-
 ```
 
 ```{r 1.0.0.1-sidebar-ActionGo}
 
 tqPrices <- eventReactive(input$go, {
-
   tqPrices <- tq_get("SPL.AX",
-              get = "stock.prices",
-              from = format(input$dateRange[1]),
-              to = format(input$dateRange[2]))
+    get = "stock.prices",
+    from = format(input$dateRange[1]),
+    to = format(input$dateRange[2])
+  )
 })
 
 
 #  date        open  high   low close volume adjusted   change
 price <- reactive({
   tq_get("SPL.AX", from = format(input$dateRange[1]), to = format(input$dateRange[2])) %>%
-        mutate(change = close - open,
-          ema020 = EMA(na.fill0(close,0),20),
-          ema050 = EMA(na.fill0(close,0),50),
-          ema100 = EMA(na.fill0(close,0),100),
-          ema200 = EMA(na.fill0(close,0),200),
-          sma020 = SMA(na.fill0(close,0),20),
-          sma050 = SMA(na.fill0(close,0),50),
-          sma100 = SMA(na.fill0(close,0),100),
-          sma200 = SMA(na.fill0(close,0),200)
-          )
+    mutate(
+      change = close - open,
+      ema020 = EMA(na.fill0(close, 0), 20),
+      ema050 = EMA(na.fill0(close, 0), 50),
+      ema100 = EMA(na.fill0(close, 0), 100),
+      ema200 = EMA(na.fill0(close, 0), 200),
+      sma020 = SMA(na.fill0(close, 0), 20),
+      sma050 = SMA(na.fill0(close, 0), 50),
+      sma100 = SMA(na.fill0(close, 0), 100),
+      sma200 = SMA(na.fill0(close, 0), 200)
+    )
 })
-
 ```
 
 Column {data-height=60}
@@ -166,17 +171,16 @@ Column {data-height=60}
 ```{r 1.1.1.1-vbox-calendar-days}
 
 flexdashboard::renderValueBox({
-  xts_price    <- tk_xts(price())
-  calendarDays <- format(end(xts_price)-start(xts_price), big.mark = ",")
-  calendarDays <- substr(calendarDays, 1, nchar(calendarDays)-5)
+  xts_price <- tk_xts(price())
+  calendarDays <- format(end(xts_price) - start(xts_price), big.mark = ",")
+  calendarDays <- substr(calendarDays, 1, nchar(calendarDays) - 5)
 
   flexdashboard::valueBox(
-      paste(calendarDays, "", " Calendar Days")
-      ,color = #0000ff
-      ,icon = "fa-calendar"
+    paste(calendarDays, "", " Calendar Days"),
+    color = # 0000ff
+    , icon = "fa-calendar"
   )
 })
-
 ```
 
 ###
@@ -185,15 +189,14 @@ flexdashboard::renderValueBox({
 
 flexdashboard::renderValueBox({
   xts_price <- tk_xts(price())
-  cumReturn <- percent((as.numeric(last(xts_price[,4])) - as.numeric(first(xts_price[,4]))) / (as.numeric(first(xts_price[,4]))))
+  cumReturn <- percent((as.numeric(last(xts_price[, 4])) - as.numeric(first(xts_price[, 4]))) / (as.numeric(first(xts_price[, 4]))))
 
   flexdashboard::valueBox(
-      paste(as.character(cumReturn), "", " ROI")
-      ,color = ifelse(cumReturn > 0, "teal", "red")
-      ,icon = 'ion-cash'
+    paste(as.character(cumReturn), "", " ROI"),
+    color = ifelse(cumReturn > 0, "teal", "red"),
+    icon = "ion-cash"
   )
 })
-
 ```
 
 ###
@@ -202,15 +205,14 @@ flexdashboard::renderValueBox({
 
 flexdashboard::renderValueBox({
   xts_price <- tk_xts(price())
-  annReturn <- percent((as.numeric(last(xts_price[,4])) / as.numeric(first(xts_price[,4]))) ^ ((1/nyears(xts_price)))-1)
+  annReturn <- percent((as.numeric(last(xts_price[, 4])) / as.numeric(first(xts_price[, 4])))^((1 / nyears(xts_price))) - 1)
 
   flexdashboard::valueBox(
-      paste(as.character(annReturn), "", " Annualized Return")
-      ,color = ifelse(annReturn > 0, "teal", "red")
-      ,icon = 'ion-cash'
+    paste(as.character(annReturn), "", " Annualized Return"),
+    color = ifelse(annReturn > 0, "teal", "red"),
+    icon = "ion-cash"
   )
 })
-
 ```
 
 ###
@@ -222,12 +224,11 @@ flexdashboard::renderValueBox({
   tradeDays <- format(ndays(xts_price), big.mark = ",")
 
   flexdashboard::valueBox(
-      paste(tradeDays, "", " Trade Days")
-      ,color = #0000ff
-      ,icon = "fa-calendar"
+    paste(tradeDays, "", " Trade Days"),
+    color = # 0000ff
+    , icon = "fa-calendar"
   )
 })
-
 ```
 
 Row {data-height=200}
@@ -237,18 +238,22 @@ Row {data-height=200}
 
 ```{r 1.1.2.1-table-Price}
 DT::renderDataTable({
-  DT::datatable(price(), rownames = FALSE,
-    options = list(pageLength = 20, order = list(list(0, 'desc')))) %>%
-    formatCurrency(c('open', 'high', 'low', 'close', 'adjusted', 'change',
-                     'ema020', 'ema050', 'ema100', 'ema200', 'sma020', 'sma050', 'sma100', 'sma200')) %>%
-    formatDate(c('date')) %>%
-    formatStyle('volume',
-      background = styleColorBar(price()$volume, 'steelblue')
+  DT::datatable(price(),
+    rownames = FALSE,
+    options = list(pageLength = 20, order = list(list(0, "desc")))
+  ) %>%
+    formatCurrency(c(
+      "open", "high", "low", "close", "adjusted", "change",
+      "ema020", "ema050", "ema100", "ema200", "sma020", "sma050", "sma100", "sma200"
+    )) %>%
+    formatDate(c("date")) %>%
+    formatStyle("volume",
+      background = styleColorBar(price()$volume, "steelblue")
     ) %>%
     formatStyle(
-      'change',
-      color = styleInterval(c(0), c('maroon', 'darkgreen'))
-    )  
+      "change",
+      color = styleInterval(c(0), c("maroon", "darkgreen"))
+    )
 })
 ```
 
@@ -262,14 +267,13 @@ Row {data-height=200}
 
 renderHighchart({
   xts_price <- tk_xts(price())
-  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
+  colnames(xts_price) <- paste0(input$ticker, ".", colnames(xts_price))
   highchart(type = "stock") %>%
     hc_add_series(xts_price, type = "candlestick")
-#    hc_add_series(RSI.BuyLevel, color = hex_to_rgba("blue", 0.7),
-#                yAxis = 2, name = "Buy level")
-#    hc_add_series(y, type = "ohlc")
+  #    hc_add_series(RSI.BuyLevel, color = hex_to_rgba("blue", 0.7),
+  #                yAxis = 2, name = "Buy level")
+  #    hc_add_series(y, type = "ohlc")
 })
-
 ```
 
 
@@ -280,18 +284,19 @@ renderHighchart({
 # draw a histogram
 renderPlot({
 
-    # generate bins based on input$bins from ui.R
-    x <- tk_xts(price())
-    hist(x[,6]
-         ,main="Closing Price"
-         ,xlab="price"
-         ,ylab="Count"
-         ,col="darkmagenta"
-         ,freq=TRUE
-         ,border='white'
-         ,xlim=c(0.0,2)
-         ,seq(0.1,2, by = 0.10))
-  })
+  # generate bins based on input$bins from ui.R
+  x <- tk_xts(price())
+  hist(x[, 6],
+    main = "Closing Price",
+    xlab = "price",
+    ylab = "Count",
+    col = "darkmagenta",
+    freq = TRUE,
+    border = "white",
+    xlim = c(0.0, 2),
+    seq(0.1, 2, by = 0.10)
+  )
+})
 ```
 
 1.2 Returns {data-navmenu="1-Performance" data-icon="ion-cash"}
@@ -306,8 +311,8 @@ Column {data-width=500 .tabset .tabset-fade}
 
 renderHighchart({
   xts_price <- tk_xts(price())
-  dailyRet  <-periodReturn(xts_price[,6], period = 'daily') * 100
-#  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
+  dailyRet <- periodReturn(xts_price[, 6], period = "daily") * 100
+  #  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
   highchart(type = "stock") %>%
     hc_add_series(dailyRet, type = "column")
 })
@@ -319,12 +324,11 @@ renderHighchart({
 
 renderHighchart({
   xts_price <- tk_xts(price())
-  weeklyRet <-periodReturn(xts_price[,6], period = 'weekly') * 100
-#  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
+  weeklyRet <- periodReturn(xts_price[, 6], period = "weekly") * 100
+  #  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
   highchart(type = "stock") %>%
     hc_add_series(weeklyRet, type = "column")
 })
-
 ```
 
 ### Monthly Returns
@@ -333,12 +337,11 @@ renderHighchart({
 
 renderHighchart({
   xts_price <- tk_xts(price())
-  monthlyRet<-periodReturn(xts_price[,6], period = 'monthly') * 100
-#  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
+  monthlyRet <- periodReturn(xts_price[, 6], period = "monthly") * 100
+  #  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
   highchart(type = "stock") %>%
     hc_add_series(monthlyRet, type = "column")
 })
-
 ```
 
 ### Quarterly Returns
@@ -346,13 +349,12 @@ renderHighchart({
 ```{r 1.2.1.d-viz-ret-quarterly, eval=price}
 
 renderHighchart({
-  xts_price   <- tk_xts(price())
-  quarterlyRet<-periodReturn(xts_price[,6], period = 'quarterly') * 100
-#  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
+  xts_price <- tk_xts(price())
+  quarterlyRet <- periodReturn(xts_price[, 6], period = "quarterly") * 100
+  #  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
   highchart(type = "stock") %>%
     hc_add_series(quarterlyRet, type = "column")
 })
-
 ```  
 
 ### Annual Returns
@@ -361,12 +363,11 @@ renderHighchart({
 
 renderHighchart({
   xts_price <- tk_xts(price())
-  annualRet <-periodReturn(xts_price[,6], period = 'yearly') * 100
-#  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
+  annualRet <- periodReturn(xts_price[, 6], period = "yearly") * 100
+  #  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
   highchart(type = "stock") %>%
     hc_add_series(annualRet, type = "column")
 })
-
 ```
 
 ### Future Returns
@@ -374,23 +375,27 @@ renderHighchart({
 ```{r 1.2.1.f-viz-ret-future, eval=price}
 
 renderHighchart({
-  xts_price            <- tk_xts(price())
-  dailyRet             <- periodReturn(xts_price[,6], period = 'daily')
-  dailyRet[dailyRet==0]<- NA
-  dailyRet             <- 1 + dailyRet
+  xts_price <- tk_xts(price())
+  dailyRet <- periodReturn(xts_price[, 6], period = "daily")
+  dailyRet[dailyRet == 0] <- NA
+  dailyRet <- 1 + dailyRet
   fv <- cumprod(na.omit(dailyRet))
   highchart(type = "stock") %>%
-  hc_add_series(fv, type = "line") %>%
-  hc_add_theme(hc_theme_darkunica()) %>%
-  hc_yAxis(title = list(text = "$1"),
-         opposite = TRUE,
-         plotLines = list(
-           list(label = list(text = "This is a plotLine"),
-                color = "blue",
-                width = 3,
-                value = 1.0)))
+    hc_add_series(fv, type = "line") %>%
+    hc_add_theme(hc_theme_darkunica()) %>%
+    hc_yAxis(
+      title = list(text = "$1"),
+      opposite = TRUE,
+      plotLines = list(
+        list(
+          label = list(text = "This is a plotLine"),
+          color = "blue",
+          width = 3,
+          value = 1.0
+        )
+      )
+    )
 })
-
 ```
 
 
@@ -408,18 +413,20 @@ Column {data-height=15%}
 
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
-      paste("Current Trend:", " ", trendname)
-      ,actionButton("button3", " ", style = "background-color:rgba(0, 0, 0, 0.0); border-color:rgba(0, 0, 0,           0.0); position: absolute; overflow: hidden; left: 0px; top: 0px; right: 0px; bottom: 0px;    
-          width:100%")
-      ,color = #0000ff
-      ,icon = ifelse(trendname1 == "D", "fa-thumbs-down",
-                ifelse(trendname1 == "G", "fa-thumbs-up",
-                  ifelse(trendname1 == "N" & return > 0,
-                    "fa-thumbs-up",
-                      "fa-thumbs-down")))
+    paste("Current Trend:", " ", trendname),
+    actionButton("button3", " ", style = "background-color:rgba(0, 0, 0, 0.0); border-color:rgba(0, 0, 0,           0.0); position: absolute; overflow: hidden; left: 0px; top: 0px; right: 0px; bottom: 0px;    
+          width:100%"),
+    color = # 0000ff
+    , icon = ifelse(trendname1 == "D", "fa-thumbs-down",
+      ifelse(trendname1 == "G", "fa-thumbs-up",
+        ifelse(trendname1 == "N" & return > 0,
+          "fa-thumbs-up",
+          "fa-thumbs-down"
+        )
+      )
+    )
   )
 })
-
 ```
 
 ###
@@ -428,12 +435,11 @@ flexdashboard::renderValueBox({
 
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
-      paste("Trade Days:", " ", format(tail(trend[order(endDate)],1)[,5], big.mark = ","))
-      ,color = #0000ff
-      ,icon = "fa-calendar"
+    paste("Trade Days:", " ", format(tail(trend[order(endDate)], 1)[, 5], big.mark = ",")),
+    color = # 0000ff
+    , icon = "fa-calendar"
   )
 })
-
 ```
 
 ###
@@ -441,20 +447,24 @@ flexdashboard::renderValueBox({
 ```{r 2.1.1.3-vbox-returns-roi}
 trendROI <- percent(tail(trend[order(endDate)], 1)[, 6][[1]],
   scale = 100, prefix = "", suffix = "%", big.mark = " ", decimal.mark = ".",
-  trim = TRUE)
+  trim = TRUE
+)
 
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
-      paste(as.character(trendROI), "", " ROI")
-      ,color = ifelse(trendROI > 0, "teal",
-                  ifelse(trendROI <0, "danger",
-                    "grey"))
-      ,icon =  ifelse(trendROI > 0, "fa-smile",
-                  ifelse(trendROI <0, "fa-frown",
-                    "fa-meh-rolling-eyes"))
+    paste(as.character(trendROI), "", " ROI"),
+    color = ifelse(trendROI > 0, "teal",
+      ifelse(trendROI < 0, "danger",
+        "grey"
+      )
+    ),
+    icon = ifelse(trendROI > 0, "fa-smile",
+      ifelse(trendROI < 0, "fa-frown",
+        "fa-meh-rolling-eyes"
+      )
+    )
   )
 })
-
 ```
 
 Column {data-height=50%, .tabset .tabset-fade}
@@ -463,85 +473,230 @@ Column {data-height=50%, .tabset .tabset-fade}
 ### Trend Summary Table A
 
 ```{r 2.1.1.a-table-Trend}
-
 DT::renderDataTable({
-  DT::datatable(trend, rownames = FALSE,
-    extensions = c('Scroller'),
+  DT::datatable(trend,
+    rownames = FALSE,
+    extensions = c("Scroller"),
     options = list(
-      order = list(list(3, 'desc')),
-                         pageLength = 10,
-                         scrollX = TRUE,
-                         scrollY = 280,
-                         scroller = TRUE)) %>%
-    formatDate(c('startDate', 'endDate')) %>%
-    formatRound('tradeDays', 0) %>%
-    formatPercentage('return')  %>%
-    formatStyle('return',
-      background = styleColorBar(range(trend$return), 'lightblue'))%>%
-    formatStyle('tradeDays',
-      color = styleInterval(c(0), c('maroon', 'darkgreen'))
-    )  
+      order = list(list(3, "desc")),
+      pageLength = 10,
+      scrollX = TRUE,
+      scrollY = 280,
+      scroller = TRUE
+    )
+  ) %>%
+    formatDate(c("startDate", "endDate")) %>%
+    formatRound("tradeDays", 0) %>%
+    formatPercentage("return") %>%
+    formatStyle("return",
+      background = styleColorBar(range(trend$return), "lightblue")
+    ) %>%
+    formatStyle("tradeDays",
+      color = styleInterval(c(0), c("maroon", "darkgreen"))
+    )
 })
-
 ```
 
 ### Trend Summary Table B
 
 ```{r 2.1.1.b-viz-ret-quarterly, eval=price}
-
 renderHighchart({
   xts_price <- tk_xts(price())
-  quarterlyRet<-periodReturn(xts_price[,6], period = 'quarterly') * 100
-#  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
+  quarterlyRet <- periodReturn(xts_price[, 6], period = "quarterly") * 100
+  #  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
   highchart(type = "stock") %>%
     hc_add_series(quarterlyRet, type = "column")
 })
-
 ```
 
-### Trend Summary Table C
+### Trend Return Distribution C
 
 ```{r 2.1.1.c-viz-ret-quarterly, eval=trend}
-  chart.Boxplot(data.table(returnsByCategory) %>% select(starts_with("D")))
-  chart.Boxplot(data.table(returnsByCategory) %>% select(starts_with("Golden")))
-  chart.Boxplot(data.table(returnsByCategory) %>% select(starts_with("n")))
+chart.Boxplot(data.table(returnsByCategory) %>% select(starts_with("D")))
+chart.Boxplot(data.table(returnsByCategory) %>% select(starts_with("Golden")))
+chart.Boxplot(data.table(returnsByCategory) %>% select(starts_with("n")))
+```
+
+### Trend Summary Table D
+```{r 2.1.1.d-box-returns, eval=trend}
+renderPlotly({
+  p <- plot_ly(type = "box") %>%
+    add_boxplot(
+      y = d$return, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
+      marker = list(color = "rgb(7,40,89)"),
+      line = list(color = "rgb(7,40,89)"),
+      name = "DeathX Returns"
+    ) %>%
+    add_boxplot(
+      y = g$return, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
+      marker = list(color = "rgb(7,40,89)"),
+      line = list(color = "rgb(7,40,89)"),
+      name = "GoldeX Returns"
+    ) %>%
+    add_boxplot(
+      y = n$return, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
+      marker = list(color = "rgb(7,40,89)"),
+      line = list(color = "rgb(7,40,89)"),
+      name = "n Returns"
+    ) %>%
+    add_boxplot(
+      y = d$return, name = "Death Suspected Outlier", boxpoints = "suspectedoutliers",
+      marker = list(
+        color = "rgb(8,81,156)",
+        outliercolor = "rgba(219, 64, 82, 0.6)",
+        line = list(
+          outliercolor = "rgba(219, 64, 82, 1.0)",
+          outlierwidth = 2
+        )
+      ),
+      line = list(color = "rgb(8,81,156)")
+    ) %>%
+    add_boxplot(
+      y = g$return, name = "Golden Suspected Outlier", boxpoints = "suspectedoutliers",
+      marker = list(
+        color = "rgb(8,81,156)",
+        outliercolor = "rgba(219, 64, 82, 0.6)",
+        line = list(
+          outliercolor = "rgba(219, 64, 82, 1.0)",
+          outlierwidth = 2
+        )
+      ),
+      line = list(color = "rgb(8,81,156)")
+    ) %>%
+    add_boxplot(
+      y = n$return, name = "N Suspected Outlier", boxpoints = "suspectedoutliers",
+      marker = list(
+        color = "rgb(8,81,156)",
+        outliercolor = "rgba(219, 64, 82, 0.6)",
+        line = list(
+          outliercolor = "rgba(219, 64, 82, 1.0)",
+          outlierwidth = 2
+        )
+      ),
+      line = list(color = "rgb(8,81,156)")
+    ) %>%
+    layout(title = "Box Plot Returns with Outliers")
+})
+```
+
+### Trend Summary Table E
+```{r 2.1.1.e-box-tradeDays, eval=trend}
+
+renderPlotly({
+  p <- plot_ly(type = "box") %>%
+    add_boxplot(
+      y = d$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
+      marker = list(color = "rgb(7,40,89)"),
+      line = list(color = "rgb(7,40,89)"),
+      name = "DeathX tradeDays"
+    ) %>%
+    add_boxplot(
+      y = g$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
+      marker = list(color = "rgb(7,40,89)"),
+      line = list(color = "rgb(7,40,89)"),
+      name = "GoldeX tradeDays"
+    ) %>%
+    add_boxplot(
+      y = n$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
+      marker = list(color = "rgb(7,40,89)"),
+      line = list(color = "rgb(7,40,89)"),
+      name = "n tradeDays"
+    ) %>%
+    add_boxplot(
+      y = d$tradeDays, name = "DeathX Suspected Outlier", boxpoints = "suspectedoutliers",
+      marker = list(
+        color = "rgb(8,81,156)",
+        outliercolor = "rgba(219, 64, 82, 0.6)",
+        line = list(
+          outliercolor = "rgba(219, 64, 82, 1.0)",
+          outlierwidth = 2
+        )
+      ),
+      line = list(color = "rgb(8,81,156)")
+    ) %>%
+    add_boxplot(
+      y = g$tradeDays, name = "GoldenX Suspected Outlier", boxpoints = "suspectedoutliers",
+      marker = list(
+        color = "rgb(8,81,156)",
+        outliercolor = "rgba(219, 64, 82, 0.6)",
+        line = list(
+          outliercolor = "rgba(219, 64, 82, 1.0)",
+          outlierwidth = 2
+        )
+      ),
+      line = list(color = "rgb(8,81,156)")
+    ) %>%
+    add_boxplot(
+      y = n$tradeDays, name = "N Suspected Outlier", boxpoints = "suspectedoutliers",
+      marker = list(
+        color = "rgb(8,81,156)",
+        outliercolor = "rgba(219, 64, 82, 0.6)",
+        line = list(
+          outliercolor = "rgba(219, 64, 82, 1.0)",
+          outlierwidth = 2
+        )
+      ),
+      line = list(color = "rgb(8,81,156)")
+    ) %>%
+    layout(title = "Box Plot # of Trade Days with Outliers")
+})
+```
+
+### Trend Summary Table G
+```{r 2.1.1.g-box-tradeDays, eval=trend}
+xhp <- list(title = d$catName,titlefont = f)
+yhp <- list(title = "Counts",titlefont  = f)
+ybp <- list(title = d$catName,titlefont = f)
+
+renderPlotly({
+  histogramD <- plot_ly(d, x = d$tradeDays, type = "histogram") %>%
+    layout(xaxis = xhp, yaxis = yhp)
+  
+  boxplotD <- plot_ly(d,x = d$tradeDays, type = "box", boxpoints = "all", jitter = 0.3) %>%
+    layout(yaxis = ybp)  
+ subplot(boxplotD,histogramD,nrows = 2, shareX = TRUE) %>%  layout(showlegend = FALSE)  
+})
 ```
 
 Row {data-height=40%}
 -------------------------------------
 ### Trend boxplot
 ```{r  2.1.2.1-viz-vboxplot, eval=trend}
-
 renderPlotly({
-    ggplotly(
-      ggplot(trend, aes(x = substr(trend$catName,1,nchar(trend$catName)-3), y = return))
-      +     scale_y_continuous(labels=percent)      
-      +     geom_boxplot(fill = "#0c4c8a")
-      +     theme_gray())
-    })
+  ggplotly(
+    ggplot(trend, aes(x = substr(trend$catName, 1, nchar(trend$catName) - 3), y = return))
+    + scale_y_continuous(labels = percent)
+      + geom_boxplot(fill = "#0c4c8a")
+      + theme_gray()
+  )
+})
 ```
 
 ### Trend Returns
 ```{r  2.1.2.2-viz-hboxplot, eval=trend}
 renderHighchart({
-    hcboxplot(x = trend$return*100, 
-      var =  substr(trend$catName,1,nchar(trend$catName)-3), 
-      name = "returns", color ="#2980b9", outliers= TRUE) %>%
-      hc_yAxis(labels = list(format = "{value}%"), min=-30, max = 30) %>%
-      hc_add_theme(hc_theme_chalk())
+  hcboxplot(
+    x = trend$return * 100,
+    var = substr(trend$catName, 1, nchar(trend$catName) - 3),
+    name = "returns", color = "#2980b9", outliers = TRUE
+  ) %>%
+    hc_yAxis(labels = list(format = "{value}%"), min = -30, max = 30) %>%
+    hc_add_theme(hc_theme_chalk())
 })
 ```
 
 ### Trend Returns
 ```{r  2.1.2.3-viz-hboxplot, eval=trend}
 renderHighchart({
-  hcboxplot(x = trend$tradeDays, 
-            var =  trend$catName,
-            name = "returns", 
-            color ="#2980b9", 
-            outliers = TRUE) %>%
-    hc_chart(type = "column")  %>% # to put box vertical
-    hc_yAxis(labels = list(format = "{value}"), min=-0, max = 150) %>%
+  hcboxplot(
+    x = trend$tradeDays,
+    var = trend$catName,
+    name = "returns",
+    color = "#2980b9",
+    outliers = TRUE
+  ) %>%
+    hc_chart(type = "column") %>% # to put box vertical
+    hc_yAxis(labels = list(format = "{value}"), min = 0, max = 150) %>%
     hc_add_theme(hc_theme_chalk())
 })
 ```
@@ -549,23 +704,27 @@ renderHighchart({
 
 ### Trend Returns
 ```{r  2.1.2.4-viz-pie, eval=trend}
-
 trendStats <- trend[,
-   .(N = .N,
-     Mean = mean(tradeDays),
-     SDev = sd(tradeDays),
-     Median = median(tradeDays),
-     Min = min(tradeDays), 
-     Max = max(tradeDays), 
-     count = sum(tradeDays)),
-   by=.(catName)]
+  .(
+    N = .N,
+    Mean = mean(tradeDays),
+    SDev = sd(tradeDays),
+    Median = median(tradeDays),
+    Min = min(tradeDays),
+    Max = max(tradeDays),
+    count = sum(tradeDays)
+  ),
+  by = .(catName)
+]
 
 renderHighchart({
-    highchart() %>% 
-      hc_chart(type = "column") %>% 
-        hc_add_series_labels_values(labels = trendStats$catName,
-                                    values = trendStats$N) %>%
-        hc_add_theme(hc_theme_darkunica())
+  highchart() %>%
+    hc_chart(type = "column") %>%
+    hc_add_series_labels_values(
+      labels = trendStats$catName,
+      values = trendStats$N
+    ) %>%
+    hc_add_theme(hc_theme_darkunica())
 })
 ```
 
@@ -576,30 +735,28 @@ Input {.sidebar}
 -------------------------------------
 
 ```{r 2.2.0.1-sidebar-Input-golden}
-
 dateRangeInput("dateRange",
-               "Historical data",
-               start = params$dateStart,
-               end   = Sys.Date())
+  "Historical data",
+  start = params$dateStart,
+  end = Sys.Date()
+)
 
 actionButton("go", "Submit")
-
 ```
 
 ```{r 2.2.0.1-sidebar-ActionGo-golden}
 # We will use this in the table after the submit button is activated
-
 prices <- eventReactive(input$go, {
-
   prices <-
-    getSymbols("SPL.AX", src = 'yahoo'
-               ,from = format(input$dateRange[1])
-               ,to = format(input$dateRange[2])
-               ,auto.assign = TRUE
-               ,warnings = FALSE) %>%
-    map(~Cl(get(.))) %>%
+    getSymbols("SPL.AX",
+      src = "yahoo",
+      from = format(input$dateRange[1]),
+      to = format(input$dateRange[2]),
+      auto.assign = TRUE,
+      warnings = FALSE
+    ) %>%
+    map(~ Cl(get(.))) %>%
     reduce(merge)
-
 })
 ```
 
@@ -613,7 +770,7 @@ maxDrawdown(tk_xts(golden))
 ```
 
 ```{r 2.2.2.1-table-golden-returns}
-table.AnnualizedReturns(tk_xts(golden),Rf=0.02/252)
+table.AnnualizedReturns(tk_xts(golden), Rf = 0.02 / 252)
 ```
 
 Row
@@ -622,16 +779,15 @@ Row
 ### Golden Cross Performance Summary
 
 ```{r r 2.2.3.1-viz-golden-performance}
-
 renderPlot({
-    charts.PerformanceSummary(
-      tk_xts(golden)[paste(format(input$dateRange[1]),format(input$dateRange[2]),sep="::")]
-      ,Rf = 0.02
-      ,main = "Golden Cross Performance Summary"
-      ,geometric = FALSE
-      ,colorset=rainbow12equal
-    )
-})  
+  charts.PerformanceSummary(
+    tk_xts(golden)[paste(format(input$dateRange[1]), format(input$dateRange[2]), sep = "::")],
+    Rf = 0.02,
+    main = "Golden Cross Performance Summary",
+    geometric = FALSE,
+    colorset = rainbow12equal
+  )
+})
 ```
 
 Column {data-width=500 .tabset .tabset-fade}
@@ -640,7 +796,7 @@ Column {data-width=500 .tabset .tabset-fade}
 ### Golden Cross Returns
 
 ```{r 2.2.4.a-table-golden-returns}
-  renderTable(price(), striped = TRUE, rownames = TRUE)
+renderTable(price(), striped = TRUE, rownames = TRUE)
 ```
 
 
@@ -648,17 +804,19 @@ Column {data-width=500 .tabset .tabset-fade}
 
 ```{r 2.2.4.b-table-golden-price}
 DT::renderDataTable({
-  DT::datatable(price(), rownames = FALSE,
-    options = list(pageLength = 20, order = list(list(0, 'desc')))) %>%
-    formatCurrency(c('open', 'high', 'low', 'close', 'adjusted', 'change')) %>%
-    formatDate(c('date')) %>%
-    formatStyle('volume',
-      background = styleColorBar(price()$volume, 'steelblue')
+  DT::datatable(price(),
+    rownames = FALSE,
+    options = list(pageLength = 20, order = list(list(0, "desc")))
+  ) %>%
+    formatCurrency(c("open", "high", "low", "close", "adjusted", "change")) %>%
+    formatDate(c("date")) %>%
+    formatStyle("volume",
+      background = styleColorBar(price()$volume, "steelblue")
     ) %>%
     formatStyle(
-      'change',
-      color = styleInterval(c(0), c('maroon', 'darkgreen'))
-    )  
+      "change",
+      color = styleInterval(c(0), c("maroon", "darkgreen"))
+    )
 })
 ```
 
@@ -667,17 +825,19 @@ DT::renderDataTable({
 
 ```{r 2.2.4.c-table-golden-performance}
 DT::renderDataTable({
-  DT::datatable(price(), rownames = FALSE,
-    options = list(pageLength = 20, order = list(list(0, 'desc')))) %>%
-    formatCurrency(c('open', 'high', 'low', 'close', 'adjusted', 'change')) %>%
-    formatDate(c('date')) %>%
-    formatStyle('volume',
-      background = styleColorBar(price()$volume, 'steelblue')
+  DT::datatable(price(),
+    rownames = FALSE,
+    options = list(pageLength = 20, order = list(list(0, "desc")))
+  ) %>%
+    formatCurrency(c("open", "high", "low", "close", "adjusted", "change")) %>%
+    formatDate(c("date")) %>%
+    formatStyle("volume",
+      background = styleColorBar(price()$volume, "steelblue")
     ) %>%
     formatStyle(
-      'change',
-      color = styleInterval(c(0), c('maroon', 'darkgreen'))
-    )  
+      "change",
+      color = styleInterval(c(0), c("maroon", "darkgreen"))
+    )
 })
 ```
 
@@ -686,17 +846,19 @@ DT::renderDataTable({
 
 ```{r 2.2.4.d-table-golden-misc}
 DT::renderDataTable({
-  DT::datatable(price(), rownames = FALSE,
-    options = list(pageLength = 20, order = list(list(0, 'desc')))) %>%
-    formatCurrency(c('open', 'high', 'low', 'close', 'adjusted', 'change')) %>%
-    formatDate(c('date')) %>%
-    formatStyle('volume',
-      background = styleColorBar(price()$volume, 'steelblue')
+  DT::datatable(price(),
+    rownames = FALSE,
+    options = list(pageLength = 20, order = list(list(0, "desc")))
+  ) %>%
+    formatCurrency(c("open", "high", "low", "close", "adjusted", "change")) %>%
+    formatDate(c("date")) %>%
+    formatStyle("volume",
+      background = styleColorBar(price()$volume, "steelblue")
     ) %>%
     formatStyle(
-      'change',
-      color = styleInterval(c(0), c('maroon', 'darkgreen'))
-    )  
+      "change",
+      color = styleInterval(c(0), c("maroon", "darkgreen"))
+    )
 })
 ```
 
@@ -710,8 +872,44 @@ DT::renderDataTable({
 2.3 Death Cross {data-navmenu="2-Trends" data-icon="fa-list" data-orientation=rows}
 =====================================
 
-```{r 2.3.1.1-xxx-death}
+Row {data-height=50%}
+-------------------------------------
 
+```{r 2.3.1.1-xxx-death}
+xhp <- list(title = d$catName,titlefont = f)
+yhp <- list(title = "Counts",titlefont  = f)
+ybp <- list(title = d$catName,titlefont = f)
+
+renderPlotly({
+  histogramD <- plot_ly(d, x = d$tradeDays, type = "histogram", marker = list(color = ~count)) %>%
+    layout(xaxis = xhp, yaxis = yhp)
+  
+  boxplotD <- plot_ly(d,x = d$tradeDays, type = "box", color = "black", boxpoints = "all", jitter = 0.3, marker = list(
+                    color = "black",
+                    outliercolor = "black",
+                    line = list(
+                      outliercolor = "black",
+                      outlierwidth = 5
+                    )
+                  )) %>%
+    layout(yaxis = ybp)  
+ subplot(boxplotD,histogramD,nrows = 2, shareX = TRUE) %>%  layout(showlegend = FALSE)   %>%
+    layout(title = "DeathX Box Plot & Histogram - # of Trade Days with Outliers", bargap = 0.1)
+})
+
+xhpG <- list(title = g$catName,titlefont = f)
+yhpG <- list(title = "Counts",titlefont  = f)
+ybpG <- list(title = g$catName,titlefont = f)
+
+renderPlotly({
+  histogramG <- plot_ly(g, x = g$tradeDays, type = "histogram", marker = list(color = 'lime')) %>%
+    layout(xaxis = xhpG, yaxis = yhpG)
+  
+  boxplotG <- plot_ly(g, x = g$tradeDays, type = "box", boxpoints = "all", jitter = 0.3) %>%
+    layout(yaxis = ybpG)  
+ subplot(boxplotG,histogramG,nrows = 2, shareX = TRUE) %>%  layout(showlegend = FALSE)  %>%
+    layout(title = "GoldenX Box Plot & Histogram - # of Trade Days with Outliers", bargap = 0.1)
+})
 ```
 
 2.4 No Cross {data-navmenu="2-Trends" data-icon="fa-list" data-orientation=rows}
@@ -728,12 +926,11 @@ Input {.sidebar}
 -------------------------------------
 
 ```{r 3.1.0.1-sidebar-ActionGo-TA}
-
 dateRangeInput("dateRange3",
-               "Historical data",
-               start = params$dateStart,
-               end   = Sys.Date())
-
+  "Historical data",
+  start = params$dateStart,
+  end = Sys.Date()
+)
 ```
 
 Column {}
@@ -743,16 +940,16 @@ Column {}
 
 ```{r 3.1.1.1-vbox-gauge}
 flexdashboard::renderGauge({
-    gauge(60, min = 0, max = 100, symbol = "%")
-  })
+  gauge(60, min = 0, max = 100, symbol = "%")
+})
 ```
 
 ### Gauge 3.1.1.2
 
 ```{r 3.1.1.2-vbox-gauge}
 flexdashboard::renderGauge({
-    gauge(60, min = 0, max = 100, symbol = "%")
-  })
+  gauge(60, min = 0, max = 100, symbol = "%")
+})
 ```
 
 
@@ -761,10 +958,10 @@ flexdashboard::renderGauge({
 ```{r 3.1.1.3-vbox-gauge}
 flexdashboard::renderGauge({
   xts_price <- tk_xts(price())
-  cumReturn <- (as.numeric(last(xts_price[,4])) - as.numeric(first(xts_price[,4]))) / (as.numeric(first(xts_price[,4])))
+  cumReturn <- (as.numeric(last(xts_price[, 4])) - as.numeric(first(xts_price[, 4]))) / (as.numeric(first(xts_price[, 4])))
 
-    gauge(cumReturn*100, min = -100, max = 100, symbol = "%")
-  })
+  gauge(cumReturn * 100, min = -100, max = 100, symbol = "%")
+})
 ```
 
 Column {}
@@ -773,17 +970,19 @@ Column {}
 
 ```{r 3.1.2.1-table-price}
 DT::renderDataTable({
-  DT::datatable(price(), rownames = FALSE,
-    options = list(pageLength = 20, order = list(list(0, 'desc')))) %>%
-    formatCurrency(c('open', 'high', 'low', 'close', 'adjusted', 'change')) %>%
-    formatDate(c('date')) %>%
-    formatStyle('volume',
-      background = styleColorBar(price()$volume, 'steelblue')
+  DT::datatable(price(),
+    rownames = FALSE,
+    options = list(pageLength = 20, order = list(list(0, "desc")))
+  ) %>%
+    formatCurrency(c("open", "high", "low", "close", "adjusted", "change")) %>%
+    formatDate(c("date")) %>%
+    formatStyle("volume",
+      background = styleColorBar(price()$volume, "steelblue")
     ) %>%
     formatStyle(
-      'change',
-      color = styleInterval(c(0), c('maroon', 'darkgreen'))
-    )  
+      "change",
+      color = styleInterval(c(0), c("maroon", "darkgreen"))
+    )
 })
 ```
 
@@ -791,35 +990,33 @@ Column {.tabset .tabset-fade}
 -------------------------------------
 ### Time Series
 ```{r 3.1.3.a-viz-time-series, eval=prices}
-  renderPlot({
+renderPlot({
   xts_price <- tk_xts(price())
-  chartSeries(xts_price, theme = chartTheme("black"),TA="addCMF()")
-
+  chartSeries(xts_price, theme = chartTheme("black"), TA = "addCMF()")
 })
 ```  
 
 ### Time Series 2
 ```{r 3.1.3.b-viz-time-series, eval=prices}
-  renderPlot({
+renderPlot({
   xts_price <- tk_xts(price())
-  chartSeries(xts_price, theme = chartTheme("white"),TA="addMACD()")
-
+  chartSeries(xts_price, theme = chartTheme("white"), TA = "addMACD()")
 })
 ```
 
 ### Time Series 3
 
 ```{r 3.1.3.c-viz-time-series, eval=xtsEMA}
-  renderPlot({
-  chartSeries(xtsEMA[,2]
-              ,theme = chartTheme("black")
-              ,TA=c(
-                addVo()
-                ,addBBands()
-                ,addEMA(n=10, col = "blue")
-                ))
+renderPlot({
+  chartSeries(xtsEMA[, 2],
+    theme = chartTheme("black"),
+    TA = c(
+      addVo(),
+      addBBands(),
+      addEMA(n = 10, col = "blue")
+    )
+  )
 })
-
 ```
 
 4.1 Summary {data-navmenu="4-Forecast" data-icon="fa-list" data-orientation=rows}
@@ -852,8 +1049,8 @@ Column {data-width=500 .tabset .tabset-fade}
 ### BackTesting01a
 
 ```{r  5.1.1.1-table-ema, eval=price}
-  xtsEMA<-tk_xts(xtsEMA)
-  xtsEMA
+xtsEMA <- tk_xts(xtsEMA)
+xtsEMA
 ```
 
 5.2 Detail {data-navmenu="5-BackTesting" data-icon="fa-list" data-orientation=rows}
@@ -867,11 +1064,10 @@ Column {data-width=500 .tabset .tabset-fade}
 ```{r 5.2.1.2-xxx, eval=price}
 renderHighchart({
 
-    # generate bins based on input$bins from ui.R
-    x <- tk_xts(price())
-    hist(x[,6],  col="darkmagenta", freq=FALSE, border='white', xlim=c(0,2))
-
-  })
+  # generate bins based on input$bins from ui.R
+  x <- tk_xts(price())
+  hist(x[, 6], col = "darkmagenta", freq = FALSE, border = "white", xlim = c(0, 2))
+})
 ```
 
 6.1 Summary {data-navmenu="6-WordCloud" data-icon="fa-list" data-orientation=rows}

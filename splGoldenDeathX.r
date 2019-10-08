@@ -1,2 +1,3 @@
-#Load the project
-library("ProjectTemplate"); load.project()
+# Load the project
+library("ProjectTemplate")
+load.project()
