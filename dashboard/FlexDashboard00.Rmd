@@ -644,17 +644,17 @@ renderPlotly({
 
 ### Trend Summary Table G
 ```{r 2.1.1.g-box-tradeDays, eval=trend}
-xhp <- list(title = d$catName, titlefont = f)
-yhp <- list(title = "Counts", titlefont = f)
-ybp <- list(title = d$catName, titlefont = f)
+xhp <- list(title = d$catName,titlefont = f)
+yhp <- list(title = "Counts",titlefont  = f)
+ybp <- list(title = d$catName,titlefont = f)
 
 renderPlotly({
   histogramD <- plot_ly(d, x = d$tradeDays, type = "histogram") %>%
     layout(xaxis = xhp, yaxis = yhp)
-
-  boxplotD <- plot_ly(d, x = d$tradeDays, type = "box", boxpoints = "all", jitter = 0.3) %>%
-    layout(yaxis = ybp)
-  subplot(boxplotD, histogramD, nrows = 2, shareX = TRUE) %>% layout(showlegend = FALSE)
+  
+  boxplotD <- plot_ly(d,x = d$tradeDays, type = "box", boxpoints = "all", jitter = 0.3) %>%
+    layout(yaxis = ybp)  
+ subplot(boxplotD,histogramD,nrows = 2, shareX = TRUE) %>%  layout(showlegend = FALSE)  
 })
 ```
 
@@ -876,33 +876,38 @@ Row {data-height=50%}
 -------------------------------------
 
 ```{r 2.3.1.1-xxx-death}
-xhp <- list(title = d$catName, titlefont = F)
-yhp <- list(title = "Counts", titlefont = F)
-ybp <- list(title = d$catName, titlefont = F)
+xhp <- list(title = d$catName,titlefont = f)
+yhp <- list(title = "Counts",titlefont  = f)
+ybp <- list(title = d$catName,titlefont = f)
 
 renderPlotly({
-  histogramD <- plot_ly(d, x = d$tradeDays, type = "histogram", marker = list(color = "#D0A92C")) %>%
+  histogramD <- plot_ly(d, x = d$tradeDays, type = "histogram", marker = list(color = ~count)) %>%
     layout(xaxis = xhp, yaxis = yhp)
-
-  boxplotD <- plot_ly(d, x = d$tradeDays, type = "box", boxpoints = "all", jitter = 0.3, marker = list(color = "red", outliercolor = "#D0A92C", line = list(outliercolor = "#D0A92C", outlierwidth = 5))) %>%
-    layout(yaxis = ybp)
-  subplot(boxplotD, histogramD, nrows = 2, shareX = TRUE) %>%
-    layout(showlegend = FALSE) %>%
+  
+  boxplotD <- plot_ly(d,x = d$tradeDays, type = "box", color = "black", boxpoints = "all", jitter = 0.3, marker = list(
+                    color = "black",
+                    outliercolor = "black",
+                    line = list(
+                      outliercolor = "black",
+                      outlierwidth = 5
+                    )
+                  )) %>%
+    layout(yaxis = ybp)  
+ subplot(boxplotD,histogramD,nrows = 2, shareX = TRUE) %>%  layout(showlegend = FALSE)   %>%
     layout(title = "DeathX Box Plot & Histogram - # of Trade Days with Outliers", bargap = 0.1)
 })
 
-xhpG <- list(title = g$catName, titlefont = F)
-yhpG <- list(title = "Counts", titlefont = F)
-ybpG <- list(title = g$catName, titlefont = F)
+xhpG <- list(title = g$catName,titlefont = f)
+yhpG <- list(title = "Counts",titlefont  = f)
+ybpG <- list(title = g$catName,titlefont = f)
 
 renderPlotly({
-  histogramG <- plot_ly(g, x = g$tradeDays, type = "histogram", marker = list(color = "lime")) %>%
+  histogramG <- plot_ly(g, x = g$tradeDays, type = "histogram", marker = list(color = 'lime')) %>%
     layout(xaxis = xhpG, yaxis = yhpG)
-
-  boxplotG <- plot_ly(g, x = g$tradeDays, type = "box", color = "blue", boxpoints = "all", jitter = 0.3, marker = list(color = "black", outliercolor = "blue")) %>%
-    layout(yaxis = ybpG)
-  subplot(boxplotG, histogramG, nrows = 2, shareX = TRUE) %>%
-    layout(showlegend = FALSE) %>%
+  
+  boxplotG <- plot_ly(g, x = g$tradeDays, type = "box", boxpoints = "all", jitter = 0.3) %>%
+    layout(yaxis = ybpG)  
+ subplot(boxplotG,histogramG,nrows = 2, shareX = TRUE) %>%  layout(showlegend = FALSE)  %>%
     layout(title = "GoldenX Box Plot & Histogram - # of Trade Days with Outliers", bargap = 0.1)
 })
 ```
@@ -911,43 +916,7 @@ renderPlotly({
 =====================================
 
 ```{r 2.4.1.1-xxx-neither}
-x   <- list(
-  title                  = "Trend Name",
-  titlefont              = F
-)
-y   <- list(
-  title                  = "% Return",
-  titlefont              = F
-)
 
-renderPlotly({
-  p <- plot_ly(type        = "box") %>%
-    add_boxplot(
-      y                    = trend$return, 
-      x                    = ~ trend$catName, 
-      color                = ~ trend$catName, 
-      jitter               = 0.3, 
-      boxpoints            = "all",
-      marker               = list(color = "rgb(7,40,89)"),
-      line                 = list(color = "rgb(7,40,89)"),
-      name                 = trend$catName) %>%          
-      layout(
-          title            = "GoldenX Box Plot & Histogram - # of Trade Days with Outliers"
-            ,titlefont     = list(size = 15, color = 'white')
-          ,xaxis           = list(
-            color          = 'lime',
-            tickangle      = -0,
-            titlefont      = list(size = 20, color = 'white'),
-            title          = "Trend Name", color = '#ffffff')
-          ,yaxis           = list(
-            titlefont      = list(size = 15, color = 'white'), 
-            title          = "% Return", color = '#ffffff')
-          ,margin          = list(l = 100)
-          ,plot_bgcolor    = '#5875D5'
-          ,paper_bgcolor   = '#5875D5') %>%
-    layout(yaxis           = list(tickformat = "%")
-    )
-})  
 ```
 
 3.1 Summary {data-navmenu="3-TechnicalAnalysis" data-icon="fa-list" data-orientation=rows}
