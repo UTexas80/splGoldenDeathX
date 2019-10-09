@@ -1,7 +1,6 @@
 # VERSION HISTORY
 z99.version <- "1.0.0"
 z99.ModDate <- as.Date("2019-06-09")
-
 ################################################################################
 ## Step 99.00 create object table                                            ###
 ################################################################################
@@ -15,12 +14,12 @@ l <- ls()[sapply(ls(), function(x) is.data.frame(get(x)))]
 ################################################################################
 ## Step 99.02 create data dictionary                                         ### https://tinyurl.com/yyrgxxxp
 ################################################################################
-# dObj    <- dtObj[Type %like% 'xts|data.']                                      # get the .xts and data(frames/tables) from the list of objects
-# mlinker <- build_linker(dObj, names(dObj), c(0,0,0,0,0,0))                     # create link master of data objects
-# mdict   <- build_dict(dObj, mlinker, option_description = NULL,
+# dObj               <- dtObj[Type %like% 'xts|data.']                                      # get the .xts and data(frames/tables) from the list of objects
+# mlinker            <- build_linker(dObj, names(dObj), c(0,0,0,0,0,0))                     # create link master of data objects
+# mdict              <- build_dict(dObj, mlinker, option_description = NULL,
 #                                        prompt_varopts = FALSE)                 # create master dictionary of data objects
 
-# df<-dObj[!Type=='xts' & (Name %like% '^dt') & Length_Rows >21]                 # create a dataframe containing a list of applicatble data.tables
+# df                 <-dObj[!Type=='xts' & (Name %like% '^dt') & Length_Rows >21]                 # create a dataframe containing a list of applicatble data.tables
 # for ( i in 1:nrow(df)) {                                                       # loop through dataframes and create an individual dataframe.
 #     assign(paste0("new_frame", i), df[i])                                      # https://tinyurl.com/yyjcaswv
 # }
@@ -45,9 +44,9 @@ l <- ls()[sapply(ls(), function(x) is.data.frame(get(x)))]
 
 
 # for (i in 1:nrow(df)) {
-#    p<-df$Name
+#    p               <-df$Name
 #      for(j in p)
-#    x<- {names(p)}
+#    x               <- {names(p)}
 # }
 
 # lapply(df, `[[`, 1)
@@ -148,8 +147,12 @@ while (last.diagnostic <= nrow(diagnostic)) {
 
 finish.time <- Sys.time()
 timeProcessing <- finish.time - start.time
-
 ################################################################################
-# 2019.06.09 - v.1.0.0                                                          http://tinyurl.com/y54k8gsw
-#  1st release                                                                  http://tinyurl.com/yx9w8vje
+## Step 99.99: VERSION HISTORY                                               ###
+## http://tinyurl.com/y54k8gsw                                               ###
+## http://tinyurl.com/yx9w8vje                                               ###
 ################################################################################
+a00.version <- "1.0.0"
+a00.ModDate <- as.Date("2019-06-19")
+# 2019.06.09 - v.1.0.0
+#  1st release

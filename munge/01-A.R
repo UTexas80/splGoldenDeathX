@@ -54,10 +54,11 @@ saveRDS(calendarDays, file = "./rds/calendarDays.rds")
 
 tradeDays <- ndays(SPL.AX)
 saveRDS(tradeDays, file = "./rds/tradeDays.rds")
-
-# VERSION HISTORY
-a01.version <- "1.0.0"
-a01.ModDate <- as.Date("2019-06-09")
+################################################################################
+## Step 00.99: VERSION HISTORY                                               ###
+################################################################################
+a00.version <- "1.0.0"
+a00.ModDate <- as.Date("2019-01-01")
 
 # 2019.06.19 - v.1.0.0
 #  1st release

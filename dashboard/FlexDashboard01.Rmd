@@ -863,31 +863,10 @@ DT::renderDataTable({
 ```
 
 
-### Golden Crossing Table
+### Table 5
 
 ```{r 2.2.4.e-table-golden-five}
-DT::renderDataTable({
-  DT::datatable(trend[catName == "GoldenX", ],
-    rownames = FALSE,
-    extensions = c("Scroller"),
-    options = list(
-      order = list(list(3, "desc")),
-      pageLength = 10,
-      scrollX = TRUE,
-      scrollY = 280,
-      scroller = TRUE
-    )
-  ) %>%
-    formatDate(c("startDate", "endDate")) %>%
-    formatRound("tradeDays", 0) %>%
-    formatPercentage("return") %>%
-    formatStyle("return",
-      background = styleColorBar(range(trend$return), "lightblue")
-    ) %>%
-    formatStyle("tradeDays",
-      color = styleInterval(c(0), c("maroon", "darkgreen"))
-    )
-})
+
 ```
 
 2.3 Death Cross {data-navmenu="2-Trends" data-icon="fa-list" data-orientation=rows}

@@ -208,9 +208,9 @@ Hash=b3cd6106dd84e002933f471850fdb107
 
 [R/Package/curl]
 Package=curl
-Version=4.0
+Version=4.2
 Source=CRAN
-Hash=596cf2332339d15d052376b237625b87
+Hash=c5a52bb9831004b8c05695ca7ce53564
 
 [R/Package/d3heatmap]
 Package=d3heatmap
@@ -419,15 +419,15 @@ Hash=d3cc62d48bdacabc1053e15b5240ff3c
 
 [R/Package/htmltools]
 Package=htmltools
-Version=0.3.6
+Version=0.4.0
 Source=CRAN
-Hash=acbf3a50732562af0ff1fbf1050da7ee
+Hash=5b656ec6ad3ddeafc9bbdeaabdd35232
 
 [R/Package/htmlwidgets]
 Package=htmlwidgets
-Version=1.3
+Version=1.5.1
 Source=CRAN
-Hash=b192d556875bab99bc3286e88c44e017
+Hash=e4f493ce591973141c6a111feca42ca6
 
 [R/Package/httpuv]
 Package=httpuv
@@ -518,6 +518,12 @@ Package=magrittr
 Version=1.5
 Source=CRAN
 Hash=c079d05aaae9556f4dbeea615a764871
+
+[R/Package/maps]
+Package=maps
+Version=3.3.0
+Source=CRAN
+Hash=a01c0c98959e56b80bd1d07d86be6942
 
 [R/Package/maptools]
 Package=maptools
@@ -641,9 +647,9 @@ Hash=6dacbcc51f507005382b63c9dcaffed1
 
 [R/Package/promises]
 Package=promises
-Version=1.0.1
+Version=1.1.0
 Source=CRAN
-Hash=fe0029f2ba52818c41d1990a814f34fa
+Hash=a36099211e4340418aac89218ffbb4ed
 
 [R/Package/ps]
 Package=ps
@@ -731,15 +737,15 @@ Hash=c7ae364c2def3efe51c32516d6077097
 
 [R/Package/rstudioapi]
 Package=rstudioapi
-Version=0.10.0-9001
+Version=0.10.0-9002
 Source=GitHub
 RemoteType=github
 RemoteHost=api.github.com
 RemoteRepo=rstudioapi
 RemoteUsername=rstudio
 RemoteRef=master
-RemoteSha=af40e20d22398da355ea0725d9ee0ac9067fc23c
-Hash=9f436b9828c4bc11fef2b01caf9086cb
+RemoteSha=6e340b4aee92a061ac837f6af3d5fb7d445e0e58
+Hash=57f5e00d1bd7921b9a616385de7a36c5
 
 [R/Package/rvest]
 Package=rvest

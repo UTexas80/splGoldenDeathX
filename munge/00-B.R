@@ -16,10 +16,10 @@ xtsPrices <-
   map(~ Ad(get(.))) %>%
   reduce(merge) %>%
   `colnames<-`(symbols)
+
 SPL.AX <-
   SPL.AX %>%
   na.omit() # Replace missing values (NA)                               https://tinyurl.com/y5etxh8x
-
 ################################################################################
 ## Step 0.03: xts EMA / SMA                                                  ### https://tinyurl.com/yy8ozaa2
 ################################################################################
@@ -37,7 +37,44 @@ sma050 <- SMA(Cl(SPL.AX), 50)
 sma100 <- SMA(Cl(SPL.AX), 100)
 sma200 <- SMA(Cl(SPL.AX), 200)
 
-xtsEMA <- merge(merge(merge(merge(merge(ema005, ema010, join = "inner"), ema020, join = "inner"), ema050, join = "inner"), ema100, join = "inner"), ema200, join = "inner")
+# xtsEMA              <- merge(merge(merge(merge(merge(ema005, ema010, join = "inner"), ema020, join = "inner"), ema050, join = "inner"), ema100, join = "inner"), ema200, join = "inner")
+xtsEMA <- merge(
+  merge(
+    merge(
+      merge(
+        merge(ema005,
+          ema010,
+          join = "inner"
+        ),
+        ema020,
+        join = "inner"
+      ),
+      ema050,
+      join = "inner"
+    ),
+    ema100,
+    join = "inner"
+  ),
+  ema200,
+  join = "inner"
+)
+xtsSMA <- merge(
+  merge(
+    merge(
+      merge(
+        merge(sma005, sma010, join = "inner"),
+        sma020,
+        join = "inner"
+      ),
+      sma050,
+      join = "inner"
+    ),
+    sma100,
+    join = "inner"
+  ),
+  sma200,
+  join = "inner"
+)
 ################################################################################
 ## Step 0.04: rename columns                                                 ### https://tinyurl.com/y6fwyvwk
 ################################################################################
@@ -99,21 +136,35 @@ sma.100 <- SMA(SPL$close, 100)
 ema.200 <- EMA(SPL$close, 200)
 sma.200 <- SMA(SPL$close, 200)
 ################################################################################
-## Step 0.09 T/F: determine if a day meets the golden/death X criteria       ###
+## Step 0.09: save xts sma to data.table                                     ###
+## add variable to indicate trend                                            ###
+################################################################################
+dtSMA <- as.data.table(xtsSMA)
+dtSMA <- dtSMA %>%
+  mutate(
+    event = case_when(
+      sma020 > sma050 & sma050 > sma100 & sma100 > sma200 ~ "GoldenX",
+      ema200 > sma100 & sma100 > sma050 & sma050 > sma020 ~ "DeathX",
+      TRUE ~ "Neither"
+    )
+  )
+dtSMA <- data.table(dtSMA)
+################################################################################
+## Step 0.10 T/F: determine if a day meets the golden/death X criteria       ###
 ################################################################################
 goldenX <- ema020 > ema050 & ema050 > ema100 & ema100 > ema200
 deathX <- ema200 > ema100 & ema100 > ema050 & ema050 > ema020
 dtGoldenX <- as.data.table(goldenX)
 dtGoldenX <- dtGoldenX[EMA == TRUE]
 ################################################################################
-## Step 0.10 rename column names by index                                    ### https://tinyurl.com/y6fwyvwk
+## Step 0.11 rename column names by index                                    ### https://tinyurl.com/y6fwyvwk
 ## create data.table index                                                   ###
 ################################################################################
 names(dtEMA)[1] <- "date" # rename column name by index
 names(dtGoldenX)[1] <- "date" # rename column name by index
 setkey(dtGoldenX, "date") # create data.table index
 ################################################################################
-## Step 0.11 convert column from logical to character; xts doesn't recognize ### https://tinyurl.com/y6fwyvwk
+## Step 0.12 convert column from logical to character; xts doesn't recognize ### https://tinyurl.com/y6fwyvwk
 ## TRUE/FALSE                                                                ###
 ## convert data table to xts & visa-versa                                    ###
 ################################################################################
@@ -123,14 +174,14 @@ priceGoldenX.xts <- SPL.AX[index(goldenX.xts)]
 dtGoldenX <- data.table(dtGoldenX)
 dtGoldenX[EMA == "TRUE", EMA := "goldenX"]
 ################################################################################
-## Step 0.12 xtsMonthly Returns in the xts World                             ### https://tinyurl.com/yyyf4qqw
+## Step 0.13 xtsMonthly Returns in the xts World                             ### https://tinyurl.com/yyyf4qqw
 ################################################################################
 prices_monthly <- to.monthly(xtsPrices, indexAt = "lastof", OHLC = FALSE)
 asset_returns_xts <- na.omit(Return.calculate(prices_monthly, method = "log"))
 ################################################################################
-## Step 0.13 AUD                                                             ###
+## Step 0.14 AUD                                                             ###
 ################################################################################
-aud_usd <- getSymbols("AUD=X", src = "yahoo", auto.assign = FALSE)
+aud_usd <- na.omit(getSymbols("AUD=X", src = "yahoo", auto.assign = FALSE))
 aud_usd <- aud_usd[complete.cases(aud_usd), ]
 usd_aud <- 1 / aud_usd
 
@@ -142,9 +193,8 @@ dtSPL <- dtSPL[dtEMA][, c(1:2, 18)]
 
 xtsPrice <- as.xts.data.table(dcast.data.table(dtSPL, formula = date ~ eventGroupNum, value.var = "SPL.AX.Open"))
 cumReturn <- apply(X = xtsPrice, 2, FUN = function(Z) Return.cumulative(as.numeric(Z), geometric = TRUE)) # https://tinyurl.com/y2d2ve83
-
 ################################################################################
-## Step 0.14 Golden Cross Trading System                                     ### https://tinyurl.com/y3sq4ond
+## Step 0.15 Golden Cross Trading System                                     ### https://tinyurl.com/y3sq4ond
 ################################################################################
 # 0.14.a   20 / 50 / 100/ 200 day . xts Simple Moving Averages
 ma_SPL <- SPL.AX
@@ -154,13 +204,20 @@ ma_SPL$ma100 <- SMA(na.omit(SPL.AX$SPL.AX.Close), 100)
 ma_SPL$ma200 <- SMA(na.omit(SPL.AX$SPL.AX.Close), 200)
 
 ma_SPL <- ma_SPL[, 7:10]
-
-# 0.14.b Baseline Return
+################################################################################
+## Step 0.16.Baseline Return
 ret <- ROC(Cl(SPL.AX))
-
-# 0.14.c Baseline Signal & Return
-golden_ma_sig <- Lag(ifelse(ma_SPL$ma020 > ma_SPL$ma050 & ma_SPL$ma050 > ma_SPL$ma100 & ma_SPL$ma100 > ma_SPL$ma200, 1, 0))
-golden_ma_ret <- (ret * golden_ma_sig)
+## %######################################################%##
+#                                                          #
+####              0.14.c Baseline Signal &              ####
+####        Return Seems counterintuitive but to        ####
+####          create a leading .xts indicator           ####
+####        use lag(x, -1)  https://is.gd/swRbXV        ####
+#                                                          #
+## %######################################################%##
+golden_ma_sig <- lag(ifelse(ma_SPL$ma020 > ma_SPL$ma050 & ma_SPL$ma050 >
+  ma_SPL$ma100 & ma_SPL$ma100 > ma_SPL$ma200, 1, 0), -1)
+golden_ma_ret <- (ret * golden_ma_sig[golden_ma_sig$ma020 == 1])
 
 # 0.14.d GOlden Cross Indicator
 golden <- cbind(golden_ma_ret, ret)
@@ -180,3 +237,12 @@ saveRDS(
   ma_SPL,
   file = "./rds/ma_SPL.rds"
 )
+
+################################################################################
+## Step 00.99: VERSION HISTORY                                               ###
+################################################################################
+a00.version <- "1.0.0"
+a00.ModDate <- as.Date("2019-01-01")
+
+# 2019.06.09 - v.1.0.0
+#  1st release
