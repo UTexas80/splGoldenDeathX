@@ -102,8 +102,10 @@ calendarDays <- readRDS(here::here("rds", "calendarDays.rds"))
 dtEMA        <- readRDS(here::here("rds", "dtEMA.rds"))
 golden       <- readRDS(here::here("rds", "golden.rds"))
 tradeDays    <- readRDS(here::here("rds", "tradeDays.rds"))
-trend        <- data.table(readRDS(here::here("rds", "trend.rds")))
+  trend        <- data.table(readRDS(here::here("rds", "trend.rds")))
+trendDraw    <- data.table(readRDS(here::here("rds", "trendDraw.rds")))
 trendReturns <- data.table(readRDS(here::here("rds", "trendReturns.rds")))
+trendSummary <- data.table(readRDS(here::here("rds", "trendSummary.rds")))
 xtsEMA       <- readRDS(here::here("rds", "xtsEMA.rds"))
 ```
 
@@ -430,7 +432,6 @@ flexdashboard::renderValueBox({
 ###
 
 ```{r 2.1.1.2-vbox-days, eval=trend}
-
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
     paste("Trade Days:", " ", format(tail(trend[order(endDate)], 1)[, 5], big.mark = ",")),
@@ -732,14 +733,15 @@ renderHighchart({
 Input {.sidebar}
 -------------------------------------
 
-```{r 2.2.0.1-sidebar-Input-golden}
-dateRangeInput("dateRange",
-  "Historical data",
+```{r 2.2.0.1-sidebarInput}
+
+dateRangeInput("dateRange2.2",
+  "Golden data",
   start = params$dateStart,
   end = Sys.Date()
 )
 
-actionButton("go", "Submit")
+# actionButton("go", "Submit")
 ```
 
 ```{r 2.2.0.1-sidebar-ActionGo-golden}
@@ -748,8 +750,8 @@ prices <- eventReactive(input$go, {
   prices <-
     getSymbols("SPL.AX",
       src = "yahoo",
-      from = format(input$dateRange[1]),
-      to = format(input$dateRange[2]),
+      from = format(input$dateRange2.2[1]),
+      to = format(input$dateRange2.2[2]),
       auto.assign = TRUE,
       warnings = FALSE
     ) %>%
@@ -758,32 +760,43 @@ prices <- eventReactive(input$go, {
 })
 ```
 
-Row {data-height=260}
+Column {data-height=55%}
 -------------------------------------
 
 ###
 
-```{r  2.2.1.1-table-golden-drawdown}
-maxDrawdown(tk_xts(golden))
+```{r 2.2.1.1-vbox-trendName}
+flexdashboard::renderValueBox({
+  flexdashboard::valueBox(
+    paste("Golden Cross", ""),
+    color = 'teal',
+    icon = 'fa-cross'
+  )
+})
 ```
 
-```{r 2.2.2.1-table-golden-returns}
-table.AnnualizedReturns(tk_xts(golden), Rf = 0.02 / 252)
+###
+
+```{r 2.2.1.2-vbox-trendAnnReturn}
+annReturn <- percent(as.numeric(trendSummary[1,2]))
+flexdashboard::renderValueBox({
+  flexdashboard::valueBox(
+    paste(as.character(annReturn), "", " Annualized Return"),
+    color = ifelse(annReturn > 0, "teal", "red"),
+    icon = "ion-cash"
+  )
+})
 ```
 
-Row
--------------------------------------
+###
 
-### Golden Cross Performance Summary
-
-```{r r 2.2.3.1-viz-golden-performance}
-renderPlot({
-  charts.PerformanceSummary(
-    tk_xts(golden)[paste(format(input$dateRange[1]), format(input$dateRange[2]), sep = "::")],
-    Rf = 0.02,
-    main = "Golden Cross Performance Summary",
-    geometric = FALSE,
-    colorset = rainbow12equal
+```{r 2.2.1.3-vbox-trendTradeDays, eval=trend}
+flexdashboard::renderValueBox({
+  tradeDays <- format(trend[catName == "GoldenX", sum(tradeDays), by = catName][,2], big.mark = ",")
+  flexdashboard::valueBox(
+    paste("Trade Days: ", "", tradeDays),
+    color = # 0000ff
+    , icon = "fa-calendar"
   )
 })
 ```
@@ -796,7 +809,6 @@ Column {data-width=500 .tabset .tabset-fade}
 ```{r 2.2.4.a-table-golden-returns}
 renderTable(price(), striped = TRUE, rownames = TRUE)
 ```
-
 
 ### Stock Price Table
 
@@ -817,7 +829,6 @@ DT::renderDataTable({
     )
 })
 ```
-
 
 ### Golden Cross Performance Summary Table
 
@@ -865,7 +876,7 @@ DT::renderDataTable({
 
 ```{r 2.2.4.e-table-golden-five}
 DT::renderDataTable({
-  DT::datatable(trend[catName == "GoldenX", ],
+  DT::datatable(trend[catName == "GoldenX"],
     rownames = FALSE,
     extensions = c("Scroller"),
     options = list(
