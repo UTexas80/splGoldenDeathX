@@ -99,19 +99,17 @@ xprices <- function() {
 
 ```{r rdsInput}
 calendarDays <- readRDS(here::here("rds", "calendarDays.rds"))
-dtEMA <- readRDS(here::here("rds", "dtEMA.rds"))
-golden <- readRDS(here::here("rds", "golden.rds"))
-ma_SPL <- readRDS(here::here("rds", "ma_SPL.rds"))
-returnsByCategory <- readRDS(here::here("rds", "returnsByCategory.rds"))
-tradeDays <- readRDS(here::here("rds", "tradeDays.rds"))
-trend <- data.table(readRDS(here::here("rds", "trend.rds")))
+dtEMA        <- readRDS(here::here("rds", "dtEMA.rds"))
+golden       <- readRDS(here::here("rds", "golden.rds"))
+tradeDays    <- readRDS(here::here("rds", "tradeDays.rds"))
+trend        <- data.table(readRDS(here::here("rds", "trend.rds")))
 trendReturns <- data.table(readRDS(here::here("rds", "trendReturns.rds")))
-xtsEMA <- readRDS(here::here("rds", "xtsEMA.rds"))
+xtsEMA       <- readRDS(here::here("rds", "xtsEMA.rds"))
 ```
 
 ```{r processing}
-trendname <- str_sub(tail(trend[order(endDate)], 1)[, 2], end = -4)
-trendname1 <- substr(tail(trend[order(endDate)], 1)[, 1], 1, 1)
+trendname    <- str_sub(tail(trend[order(endDate)], 1)[, 2], end = -4)
+trendname1   <- substr(tail(trend[order(endDate)], 1)[, 1], 1, 1)
 # subset trend
 d <- trend[substr(trend$catName, 1, 1) %like% "D"]
 g <- trend[substr(trend$catName, 1, 1) %like% "G"]
@@ -512,9 +510,9 @@ renderHighchart({
 ### Trend Return Distribution C
 
 ```{r 2.1.1.c-viz-ret-quarterly, eval=trend}
-chart.Boxplot(data.table(returnsByCategory) %>% select(starts_with("D")))
-chart.Boxplot(data.table(returnsByCategory) %>% select(starts_with("Golden")))
-chart.Boxplot(data.table(returnsByCategory) %>% select(starts_with("n")))
+chart.Boxplot(data.table(trendReturns) %>% select(starts_with("D")))
+chart.Boxplot(data.table(trendReturns) %>% select(starts_with("Golden")))
+chart.Boxplot(data.table(trendReturns) %>% select(starts_with("n")))
 ```
 
 ### Trend Summary Table D
@@ -944,10 +942,10 @@ y   <- list(
 renderPlotly({
   p <- plot_ly(type        = "box") %>%
     add_boxplot(
-      y                    = trend$return, 
-      x                    = ~ trend$catName, 
-      color                = ~ trend$catName, 
-      jitter               = 0.3, 
+      y                    = trend$return,
+      x                    = ~ trend$catName,
+      color                = ~ trend$catName,
+      jitter               = 0.3,
       boxpoints            = "all",
       marker               = list(color = "rgb(7,40,89)"),
       line                 = list(color = "rgb(7,40,89)"),
@@ -961,7 +959,7 @@ renderPlotly({
             titlefont      = list(size = 20, color = 'white'),
             title          = "Trend Name", color = '#ffffff')
           ,yaxis           = list(
-            titlefont      = list(size = 15, color = 'white'), 
+            titlefont      = list(size = 15, color = 'white'),
             title          = "% Return", color = '#ffffff')
           ,margin          = list(l = 100)
           ,plot_bgcolor    = '#5875D5'
@@ -1131,7 +1129,7 @@ Column {data-width=500 .tabset .tabset-fade}
 ### WordCloud01a
 
 ```{r 6.1.1.1-table-ret-category wordCloud01a}
-returnsByCategory
+trendReturns
 ```
 
 6.2 Detail {data-navmenu="6-WordCloud" data-icon="fa-list" data-orientation=rows}

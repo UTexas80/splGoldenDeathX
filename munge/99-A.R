@@ -4,11 +4,6 @@
 a <- t(data.table((as.single(lapply(lapply(xtsPrice, na.omit, xtsPrice[1, ]), tail, 1)) - as.single(lapply(lapply(xtsPrice, na.omit, xtsPrice[1, ]), head, 1))) / as.single(lapply(lapply(xtsPrice, na.omit, xtsPrice[1, ]), head, 1))))
 colnames(a) <- dimnames(xtsPrice)[[2]]
 rownames(a) <- 1
-
-################################################################################
-## Save a table of returns .rds file
-################################################################################
-saveRDS(a, file = "./rds/returnsByCategory.rds")
 ################################################################################
 ## Start / End Date
 ################################################################################
@@ -55,21 +50,7 @@ names(aa)[1:5] <- c("subcatName", "startDate", "endDate", "tradeDays", "return")
 trend <- aa[, tradeDays := as.integer(tradeDays)] ### rename dataframe and convert column from list to integer
 trend <- trend[, catName := substr(aa$subcatName, 1, nchar(aa$subcatName) - 3)] ### add category name sans number(s)
 trend <- select(trend, catName, everything()) ### move last column to first
-################################################################################
-## Save a table of returns .rds file
-################################################################################
-saveRDS(trend, file = "./rds/trend.rds")
-################################################################################
-## dtEMA rename columns
-names(dtEMA)[3] <- c("ema010")
-names(dtEMA)[8:12] <- c("catName", "sequence", "catNum", "subCatNum", "catKey") # didn't like the column names and didn't want to go through lots of code to modify.
-# dtEMA[,key :=paste0(sequence,paste0(sprintf("%02d",catNum)))]                  # Concatenate and zero fill two columns                     https://tinyurl.com/yxmv734u
-################################################################################
-## Concatenate and zero fill three columns                                      https://tinyurl.com/yxmv734u
-## Convert Category Number to letters                                           https://stackoverflow.com/questions/37239715/convert-letters-to-numbers
-################################################################################
-dtEMA <- dtEMA[, key := paste0(sprintf("%03d", sequence), paste0(LETTERS[catNum]), paste0(sprintf("%03d", subCatNum)))]
-saveRDS(dtEMA, file = "./rds/dtEMA.rds")
+
 ################################################################################
 ## Performance Analytics Boxplot(s)
 ################################################################################
@@ -78,11 +59,9 @@ chart.Boxplot(data.table(a) %>% select(starts_with("Death")))
 chart.Boxplot(data.table(a) %>% select(starts_with("n")))
 viz.BoxplotN <- chart.Boxplot(data.table(a) %>% select(starts_with("n")))
 ################################################################################
-## Save a boxplot .rds file
+## Quantmod: Calculate Returns                                               ### https://tinyurl.com/yxs9km73
 ################################################################################
-saveRDS(viz.BoxplotN, file = "./rds/viz.BoxplotN.rds")
-
-retByMonth <- monthlyReturn(SPL.AX) # https://tinyurl.com/yxs9km73
+retByMonth <- monthlyReturn(SPL.AX) 
 spl.max <- rollapply(data = SPL.AX, width = 5, FUN = max, fill = NA, partial = TRUE, align = "center")
 (spl.max.month <- as.xts(hydroTSM::daily2monthly(SPL.AX, FUN = max)))
 spl.max.annual <- as.xts((daily2annual(spl.max, FUN = max, na.rm = TRUE)))
@@ -93,10 +72,8 @@ monthlyMean <- monthlyfunction(retByMonth, mean, na.rm = TRUE)
 monthlyMedian <- monthlyfunction(retByMonth, median, na.rm = TRUE)
 monthlyMin <- monthlyfunction(retByMonth, min, na.rm = TRUE)
 monthlyMax <- monthlyfunction(retByMonth, max, na.rm = TRUE)
-
 x.subset <- index(SPL.AX [1:20])
 SPL.AX[x.subset]
-
 ################################################################################
 ## .xts Dynamic Time-Series using a parameter                                   #https://tinyurl.com/y3h3jbt7
 ################################################################################
@@ -119,7 +96,6 @@ spl_price_by_qtr <- SPL.AX[paste(starting.quarter, ending.quarter, sep = "/")]
 ################################################################################
 # By using an index that is the logical AND of two vectors
 xts.obj[start.date <= index(xts.obj) & index(xts.obj) <= end.date]
-
 ################################################################################ http://jkunst.com/highcharter/highstock.html#a-more-interesting-example
 xSPL <- adjustOHLC(SPL.AX)
 xSPL.SMA.10 <- SMA(Cl(xSPL), n = 5)
@@ -131,7 +107,6 @@ xSPL.RSI.BuyLevel <- xts(rep(30, NROW(xSPL)), index(xSPL))
 dailyRet <- periodReturn(SPL.AX[, 6], period = "daily") * 100
 gret <- 1 + dailyRet
 fv <- cumprod(gret)
-
 ar <- annualReturn(SPL.AX)
 
 ################################################################################
@@ -139,6 +114,6 @@ ar <- annualReturn(SPL.AX)
 ################################################################################
 a00.version <- "1.0.0"
 a00.ModDate <- as.Date("2019-06-19")
-
+# ------------------------------------------------------------------------------
 # 2019.06.09 - v.1.0.0
 #  1st release

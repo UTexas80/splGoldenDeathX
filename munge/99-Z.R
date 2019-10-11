@@ -12,90 +12,38 @@ lsObj <- list(dtObj[Type == "data.table" & Length_Rows == 0][, 1])
 df <- ls()[sapply(ls(), function(x) is.data.frame(get(x)) | is.xts(get(x)))]
 l <- ls()[sapply(ls(), function(x) is.data.frame(get(x)))]
 ################################################################################
-## Step 99.02 create data dictionary                                         ### https://tinyurl.com/yyrgxxxp
+## Step 99.01 remove unwanted data.frames; e.g. 'metadata' in its name       ###
 ################################################################################
-# dObj               <- dtObj[Type %like% 'xts|data.']                                      # get the .xts and data(frames/tables) from the list of objects
-# mlinker            <- build_linker(dObj, names(dObj), c(0,0,0,0,0,0))                     # create link master of data objects
-# mdict              <- build_dict(dObj, mlinker, option_description = NULL,
-#                                        prompt_varopts = FALSE)                 # create master dictionary of data objects
-
-# df                 <-dObj[!Type=='xts' & (Name %like% '^dt') & Length_Rows >21]                 # create a dataframe containing a list of applicatble data.tables
-# for ( i in 1:nrow(df)) {                                                       # loop through dataframes and create an individual dataframe.
-#     assign(paste0("new_frame", i), df[i])                                      # https://tinyurl.com/yyjcaswv
-# }
-# paste(rep(0, new_frame3[,6]), collapse=",")                                    # create a list of zeros based on the number of columns
-
-# build_linker(my.data, variable_description, variable_type)                     # build_linker base formula
-# lapply(df,                                                                     # lapply build_linker formula over multiple dataframes
-#   function(i)
-#     {
-#       build_linker(i[,1], names(i), rep(0, ncol(i), collapse=","))
-#     }
-# )
-
-#  sapply(df[,1], function(x) {x})
-# mapply(names, df$Name)
-
-
-# df %>%
-#   imap(~data.frame(value = df[[.y]][cbind(seq_along(.x), .x)]
-#                   , ColName = colnames(df[[.y]])[.x]
-#                   , ColIndex = .x))
-
-
-# for (i in 1:nrow(df)) {
-#    p               <-df$Name
-#      for(j in p)
-#    x               <- {names(p)}
-# }
-
-# lapply(df, `[[`, 1)
-
+rm(list = ls()[grepl("(SQL|metadata)", ls())])
 ################################################################################
-##                                                                           ### https://statistics.berkeley.edu/node/4343
+## Step 99.02: Processing                                                    ###
 ################################################################################
-# df[["Name"]]
-# df[,1]
-# df[,"Name"]
-
-################################################################################
-# save RData image
-# save.image("splRData.RData")
-################################################################################
-## Step 99.01: Processing                                                    ###
-################################################################################
+rmarkdown::run("./dashboard/Flexdashboard.Rmd")
 # rmarkdown::render(input="./reports/dashboard.Rmd")
 # rmarkdown::render(input="./dashboard/Flexdashboard.Rmd")
-
 ################################################################################
 ## Call rmarkdown::run() instead of render() because it is a shiny document  ### https://tinyurl.com/y2y2azny
 ## (http://rmarkdown.rstudio.com/authoring_shiny.html).                      ###
 ################################################################################
 # rmarkdown::run("./reports/Flexdashboard.Rmd")
 # rmarkdown::run("./reports/_Flexdashboard.Rmd")
-
-# The Real Deal
-rmarkdown::run("./dashboard/Flexdashboard.Rmd")
-
 # xaringan::infinite_moon_reader("./reports/dashboard.Rmd")
-
-## DIAGNOSTIC PAGE
+################################################################################
+## Step 99.02: Diagnostics                                                   ###
+################################################################################
 s.info <- sessionInfo()
 diagnostic <- data.frame("Version", "Date")
 diagnostic[, 1] <- as.character(diagnostic[, 1])
 diagnostic[, 2] <- as.character(diagnostic[, 2])
 diagnostic.names <- NULL
-
-## MAGIC NUMBER ## Strings have not member names - Depends on sessionInfo()
+# MAGIC NUMBER ## Strings have not member names - Depends on sessionInfo() -----
 ver <- strsplit(s.info[["R.version"]][["version.string"]][1], " ")[[1]][3]
 dat <- as.character(substr(strsplit(s.info[["R.version"]][["version.string"]][1], " ")[[1]][4], 2, 11))
 diagnostic <- rbind(diagnostic, c(ver, dat))
-
 ver <- s.info[["platform"]][1]
 dat <- ""
 diagnostic <- rbind(diagnostic, c(ver, dat))
 diagnostic.names <- c(diagnostic.names, "R Version", "platform")
-
 
 if (length(s.info[["otherPkgs"]]) > 0) {
   for (i in 1:length(s.info[["otherPkgs"]])) {
@@ -128,11 +76,9 @@ diagnostic <- rbind(diagnostic, c(a00.version, as.character(a00.ModDate)))
 diagnostic <- rbind(diagnostic, c(a01.version, as.character(a01.ModDate)))
 diagnostic <- rbind(diagnostic, c(z99.version, as.character(z99.ModDate)))
 diagnostic.names <- c(diagnostic.names, "00-A", "01-A", "99-Z")
-
 diagnostic <- diagnostic[-1, ]
 colnames(diagnostic) <- c("Version", "Date")
 rownames(diagnostic) <- diagnostic.names
-
 last.diagnostic <- 1
 diagnostic.rows <- 19 # MAGIC NUMBER - TRIAL & ERROR
 
@@ -140,7 +86,6 @@ while (last.diagnostic <= nrow(diagnostic)) {
   tmp.diagnostic <- diagnostic[last.diagnostic:min(nrow(diagnostic), last.diagnostic + diagnostic.rows), ]
   # layout(c(1,1))
   # textplot(cbind(tmp.diagnostic),valign="top")
-
 
   last.diagnostic <- last.diagnostic + diagnostic.rows + 1
 }
@@ -154,5 +99,6 @@ timeProcessing <- finish.time - start.time
 ################################################################################
 a00.version <- "1.0.0"
 a00.ModDate <- as.Date("2019-06-19")
+# ------------------------------------------------------------------------------
 # 2019.06.09 - v.1.0.0
 #  1st release
