@@ -98,15 +98,19 @@ xprices <- function() {
 ```
 
 ```{r rdsInput}
-calendarDays <- readRDS(here::here("rds", "calendarDays.rds"))
-dtEMA        <- readRDS(here::here("rds", "dtEMA.rds"))
-golden       <- readRDS(here::here("rds", "golden.rds"))
-tradeDays    <- readRDS(here::here("rds", "tradeDays.rds"))
-  trend        <- data.table(readRDS(here::here("rds", "trend.rds")))
-trendDraw    <- data.table(readRDS(here::here("rds", "trendDraw.rds")))
-trendReturns <- data.table(readRDS(here::here("rds", "trendReturns.rds")))
-trendSummary <- data.table(readRDS(here::here("rds", "trendSummary.rds")))
-xtsEMA       <- readRDS(here::here("rds", "xtsEMA.rds"))
+calendarDays              <- readRDS(here::here("rds", "calendarDays.rds"))
+dtEMA                     <- readRDS(here::here("rds", "dtEMA.rds"))
+golden                    <- readRDS(here::here("rds", "golden.rds"))
+tradeDays                 <- readRDS(here::here("rds", "tradeDays.rds"))
+trend                     <- data.table(readRDS(here::here("rds", "trend.rds")))
+trendClose                <- readRDS(here::here("rds", "trendClose.rds"))
+trendDraw                 <- data.table(readRDS(here::here("rds", "trendDraw.rds")))
+trendReturns              <- data.table(readRDS(here::here("rds", "trendReturns.rds")))
+trendReturnsAnnualized    <- data.table(readRDS(here::here("rds", "trendReturnsAnnualized.rds")))
+trendReturnsDaily         <- readRDS(here::here("rds", "trendReturnsDaily.rds"))
+trendSummary              <- data.table(readRDS(here::here("rds", "trendSummary.rds")))
+trendSummaryEMA           <- data.table(readRDS(here::here("rds", "trendSummaryEMA.rds")))
+xtsEMA                    <- readRDS(here::here("rds", "xtsEMA.rds"))
 ```
 
 ```{r processing}
@@ -185,7 +189,23 @@ flexdashboard::renderValueBox({
 
 ###
 
-```{r 1.1.1.2-vbox-returns-roi}
+```{r 1.1.1.2-vbox-returns-annualized}
+
+flexdashboard::renderValueBox({
+  xts_price <- tk_xts(price())
+  annReturn <- percent((as.numeric(last(xts_price[, 4])) / as.numeric(first(xts_price[, 4])))^((1 / nyears(xts_price))) - 1)
+
+  flexdashboard::valueBox(
+    paste(as.character(annReturn), "", " Annualized Return"),
+    color = ifelse(annReturn > 0, "teal", "red"),
+    icon = "ion-cash"
+  )
+})
+```
+
+###
+
+```{r 1.1.1.3-vbox-returns-roi}
 
 flexdashboard::renderValueBox({
   xts_price <- tk_xts(price())
@@ -199,21 +219,6 @@ flexdashboard::renderValueBox({
 })
 ```
 
-###
-
-```{r 1.1.1.3-vbox-returns-annualized}
-
-flexdashboard::renderValueBox({
-  xts_price <- tk_xts(price())
-  annReturn <- percent((as.numeric(last(xts_price[, 4])) / as.numeric(first(xts_price[, 4])))^((1 / nyears(xts_price))) - 1)
-
-  flexdashboard::valueBox(
-    paste(as.character(annReturn), "", " Annualized Return"),
-    color = ifelse(annReturn > 0, "teal", "red"),
-    icon = "ion-cash"
-  )
-})
-```
 
 ###
 
@@ -398,7 +403,6 @@ renderHighchart({
 })
 ```
 
-
 2.1 Summary {data-navmenu="2-Trends" data-icon="fa-list"}
 =====================================
 
@@ -416,8 +420,12 @@ flexdashboard::renderValueBox({
     paste("Current Trend:", " ", trendname),
     actionButton("button3", " ", style = "background-color:rgba(0, 0, 0, 0.0); border-color:rgba(0, 0, 0,           0.0); position: absolute; overflow: hidden; left: 0px; top: 0px; right: 0px; bottom: 0px;    
           width:100%"),
-    color = # 0000ff
-    , icon = ifelse(trendname1 == "D", "fa-thumbs-down",
+    color = ifelse(trendname1 == "D", "black",
+      ifelse(trendname1 == "G", "teal",
+        "purple"
+      )
+    ),
+    icon = ifelse(trendname1 == "D", "fa-thumbs-down",
       ifelse(trendname1 == "G", "fa-thumbs-up",
         ifelse(trendname1 == "N" & return > 0,
           "fa-thumbs-up",
@@ -740,24 +748,6 @@ dateRangeInput("dateRange2.2",
   start = params$dateStart,
   end = Sys.Date()
 )
-
-# actionButton("go", "Submit")
-```
-
-```{r 2.2.0.1-sidebar-ActionGo-golden}
-# We will use this in the table after the submit button is activated
-prices <- eventReactive(input$go, {
-  prices <-
-    getSymbols("SPL.AX",
-      src = "yahoo",
-      from = format(input$dateRange2.2[1]),
-      to = format(input$dateRange2.2[2]),
-      auto.assign = TRUE,
-      warnings = FALSE
-    ) %>%
-    map(~ Cl(get(.))) %>%
-    reduce(merge)
-})
 ```
 
 Column {data-height=55%}
@@ -778,11 +768,10 @@ flexdashboard::renderValueBox({
 ###
 
 ```{r 2.2.1.2-vbox-trendAnnReturn}
-annReturn <- percent(as.numeric(trendSummary[1,2]))
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
-    paste(as.character(annReturn), "", " Annual Return"),
-    color = ifelse(annReturn > 0, "teal", "red"),
+    paste(as.character(percent(as.numeric(Return.annualized(trendReturnsDaily)[,3]))), "", " Annual Return"),
+    color = ifelse(as.numeric(Return.annualized(trendReturnsDaily)[,3]) > 0, "teal", "red"),    
     icon = "ion-cash"
   )
 })
@@ -791,11 +780,10 @@ flexdashboard::renderValueBox({
 ###
 
 ```{r 2.2.1.3-vbox-returns-cumulative}
-cumReturn <-percent(as.numeric(Return.cumulative(trend[,6])))
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
-    paste(as.character(cumReturn), "", " Total Return"),
-    color = ifelse(annReturn > 0, "teal", "red"),
+    paste(as.character(percent(as.numeric(Return.cumulative(trendReturnsDaily)[,3]))), "", " Total Return"),
+    color = ifelse(as.numeric(Return.cumulative(trendReturnsDaily)[,3]) > 0, "teal", "red"),    
     icon = "ion-cash"
   )
 })
@@ -820,7 +808,9 @@ Column {data-width=500 .tabset .tabset-fade}
 ### Golden Cross Returns
 
 ```{r 2.2.4.a-table-golden-returns}
-renderTable(price(), striped = TRUE, rownames = TRUE)
+renderTable(
+Return.cumulative(na.omit(trendClose[,c(4)]))[paste(format(input$dateRange2.2[1]),format(input$dateRange2.2[2]),sep = "::")]
+)
 ```
 
 ### Stock Price Table
@@ -944,11 +934,10 @@ flexdashboard::renderValueBox({
 ###
 
 ```{r 2.3.1.2-vbox-trendAnnReturn}
-annReturn <- percent(as.numeric(trendSummary[1,2]))
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
-    paste(as.character(annReturn), "", " Annual Return"),
-    color = ifelse(annReturn > 0, "teal", "red"),
+    paste(as.character(percent(as.numeric(Return.annualized(trendReturnsDaily)[,1]))), "", " Annual Return"),
+    color = ifelse(as.numeric(Return.annualized(trendReturnsDaily)[,1]) > 0, "teal", "red"),
     icon = "ion-cash"
   )
 })
@@ -957,11 +946,11 @@ flexdashboard::renderValueBox({
 ###
 
 ```{r 2.3.1.3-vbox-returns-cumulative}
-cumReturn <-percent(as.numeric(Return.cumulative(trend[,6])))
+cumReturn <- percent(as.numeric(Return.cumulative(trend[,6])))
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
-    paste(as.character(cumReturn), "", " Total Return"),
-    color = ifelse(annReturn > 0, "teal", "red"),
+    paste(as.character(percent(as.numeric(Return.cumulative(trendReturnsDaily)[,1]))), "", " Total Return"),
+    color = ifelse(as.numeric(Return.cumulative(trendReturnsDaily)[,1]) > 0, "teal", "red"),
     icon = "ion-cash"
   )
 })
@@ -983,7 +972,7 @@ flexdashboard::renderValueBox({
 Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 -------------------------------------
 
-### Golden Crossing Table
+### DeathX Crossing Table
 
 ```{r 2.3.2.a-table-golden-five}
 DT::renderDataTable({
@@ -1013,7 +1002,7 @@ DT::renderDataTable({
 Row {data-height=35%}
 -------------------------------------
 
-### Golden Cross Returns
+### DeathX Cross Returns
 
 ```{r 2.3.1.1-xxx-death}
 xhp <- list(title = d$catName, titlefont = F)
@@ -1047,8 +1036,106 @@ renderPlotly({
 })
 ```
 
-
 2.4 No Cross {data-navmenu="2-Trends" data-icon="fa-list" data-orientation=rows}
+=====================================
+
+Input {.sidebar}
+-------------------------------------
+
+```{r 2.4.0.1-sidebarInput}
+
+dateRangeInput("dateRange2.4",
+  "No Cross data",
+  start = params$dateStart,
+  end = Sys.Date()
+)
+```
+
+Row {data-height=15%}
+-------------------------------------
+
+###
+
+```{r 2.4.1.1-vbox-trendName}
+flexdashboard::renderValueBox({
+  flexdashboard::valueBox(
+    paste("No Cross", ""),
+    color = 'purple',
+    icon = 'fa-cross'
+  )
+})
+```
+
+###
+
+```{r 2.4.1.2-vbox-trendAnnReturn}
+flexdashboard::renderValueBox({
+  flexdashboard::valueBox(
+    paste(as.character(percent(as.numeric(Return.annualized(trendReturnsDaily)[,5]))), "", " Annual Return"),
+    color = ifelse(as.numeric(Return.annualized(trendReturnsDaily)[,5]) > 0, "teal", "red"),
+    icon = "ion-cash"
+  )
+})
+```
+
+###
+
+```{r 2.4.1.3-vbox-returns-cumulative}
+cumReturn <- percent(as.numeric(Return.cumulative(trend[,6])))
+flexdashboard::renderValueBox({
+  flexdashboard::valueBox(
+    paste(as.character(percent(as.numeric(Return.cumulative(trendReturnsDaily)[,5]))), "", " Total Return"),
+    color = ifelse(as.numeric(Return.cumulative(trendReturnsDaily)[,5]) > 0, "teal", "red"),
+    icon = "ion-cash"
+  )
+})
+```
+
+###
+
+```{r 2.4.1.4-vbox-trendTradeDays, eval=trend}
+flexdashboard::renderValueBox({
+  tradeDays <- format(trend[catName == "n", sum(tradeDays), by = catName][,2], big.mark = ",")
+  flexdashboard::valueBox(
+    paste("Trade Days: ", "", tradeDays),
+    color = # 0000ff
+    , icon = "fa-calendar"
+  )
+})
+```
+
+
+Column {data-height=85%, data-width=500 .tabset .tabset-fade}
+-------------------------------------
+
+### NoX Crossing Table
+
+```{r 2.4.2.a-table-golden-five}
+DT::renderDataTable({
+  DT::datatable(trend[catName == "n"],
+    rownames = FALSE,
+    extensions = c("Scroller"),
+    options = list(
+      order = list(list(3, "desc")),
+      pageLength = 10,
+      scrollX = TRUE,
+      scrollY = 280,
+      scroller = TRUE
+    )
+  ) %>%
+    formatDate(c("startDate", "endDate")) %>%
+    formatRound("tradeDays", 0) %>%
+    formatPercentage("return") %>%
+    formatStyle("return",
+      background = styleColorBar(range(trend$return), "lightblue")
+    ) %>%
+    formatStyle("tradeDays",
+      color = styleInterval(c(0), c("maroon", "darkgreen"))
+    )
+})
+```
+
+2.5 Box Plot {data-navmenu="2-Trends" data-icon="fa-list" data-orientation=rows}
 =====================================
 
 ```{r 2.4.1.1-xxx-neither}
@@ -1161,7 +1248,7 @@ DT::renderDataTable({
 Column {.tabset .tabset-fade}
 -------------------------------------
 ### Time Series
-```{r 3.1.3.a-viz-time-series, eval=prices}
+```{r 3.1.3.a-viz-time-series, eval=price}
 renderPlot({
   xts_price <- tk_xts(price())
   chartSeries(xts_price, theme = chartTheme("black"), TA = "addCMF()")
@@ -1169,7 +1256,7 @@ renderPlot({
 ```  
 
 ### Time Series 2
-```{r 3.1.3.b-viz-time-series, eval=prices}
+```{r 3.1.3.b-viz-time-series, eval=price}
 renderPlot({
   xts_price <- tk_xts(price())
   chartSeries(xts_price, theme = chartTheme("white"), TA = "addMACD()")

@@ -104,7 +104,6 @@ dupsBetweenGroups <- function (df, idcol) {
     # Return the vector of which entries are duplicated across groups
     return(dupBetween)
 }
-
 ################################################################################
 ## Clean, Consistent Column Names                                               https://tinyurl.com/yy3wo8rq                          
 ################################################################################
