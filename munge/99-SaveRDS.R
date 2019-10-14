@@ -4,15 +4,15 @@
 saveRDS(a, file                                = "./rds/trendReturns.rds")
 saveRDS(calendarDays, file                     = "./rds/calendarDays.rds")
 saveRDS(dtEMA, file                            = "./rds/dtEMA.rds")
-saveRDS(golden,file                            = "./rds/golden.rds")
+saveRDS(goldenEMA,file                         = "./rds/golden.rds")
 # ------------------------------------------------------------------------------
 saveRDS(spl_month_close, file                  = "./rds/spl_month_close.rds")
 saveRDS(SPL.AX.yearly, file                    = "./rds/spl_yearly.rds")
 saveRDS(tradeDays, file                        = "./rds/tradeDays.rds")
 saveRDS(trend, file                            = "./rds/trend.rds")
-saveRDS(trendDraw, file                        = "./rds/trendDraw.rds")
+saveRDS(trendDrawEMA, file                     = "./rds/trendDraw.rds")
 saveRDS(trendReturns, file                     = "./rds/trendReturns.rds")
-saveRDS(trendSummary, file                     = "./rds/trendSummary.rds")
+saveRDS(trendSummaryEMA, file                  = "./rds/trendSummary.rds")
 saveRDS(viz.BoxplotN, file                     = "./rds/viz.BoxplotN.rds")
 saveRDS(xtsEMA[complete.cases(xtsEMA), ], file = "./rds/xtsEMA.rds")
 ################################################################################

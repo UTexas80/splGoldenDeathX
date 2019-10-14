@@ -127,7 +127,6 @@ setkey(dtSMA, "date")
 ## Step 00.08 T/F: determine if a day meets the golden/death X criteria      ###
 ################################################################################
 goldenX <- ema020 > ema050 & ema050 > ema100 & ema100 > ema200
-deathX <- ema200 > ema100 & ema100 > ema050 & ema050 > ema020
 dtGoldenX <- as.data.table(goldenX)
 dtGoldenX <- dtGoldenX[EMA == TRUE]
 ################################################################################
@@ -146,6 +145,12 @@ goldenX.xts <- xts(dtGoldenX[, -1], order.by = dtGoldenX[, 1])
 priceGoldenX.xts <- SPL.AX[index(goldenX.xts)]
 dtGoldenX <- data.table(dtGoldenX)
 dtGoldenX[EMA == "TRUE", EMA := "goldenX"]
+
+################################################################################
+## Step 00.11 T/F: determine if a day meets the golden/death X criteria      ###
+################################################################################
+deathX <- ema200 > ema100 & ema100 > ema050 & ema050 > ema020
+
 ################################################################################
 ## Step 00.99: VERSION HISTORY                                               ###
 ################################################################################

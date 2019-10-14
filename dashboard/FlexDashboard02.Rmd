@@ -781,7 +781,7 @@ flexdashboard::renderValueBox({
 annReturn <- percent(as.numeric(trendSummary[1,2]))
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
-    paste(as.character(annReturn), "", " Annual Return"),
+    paste(as.character(annReturn), "", " Annualized Return"),
     color = ifelse(annReturn > 0, "teal", "red"),
     icon = "ion-cash"
   )
@@ -790,20 +790,7 @@ flexdashboard::renderValueBox({
 
 ###
 
-```{r 2.2.1.3-vbox-returns-cumulative}
-cumReturn <-percent(as.numeric(Return.cumulative(trend[,6])))
-flexdashboard::renderValueBox({
-  flexdashboard::valueBox(
-    paste(as.character(cumReturn), "", " Total Return"),
-    color = ifelse(annReturn > 0, "teal", "red"),
-    icon = "ion-cash"
-  )
-})
-```
-
-###
-
-```{r 2.2.1.4-vbox-trendTradeDays, eval=trend}
+```{r 2.2.1.3-vbox-trendTradeDays, eval=trend}
 flexdashboard::renderValueBox({
   tradeDays <- format(trend[catName == "GoldenX", sum(tradeDays), by = catName][,2], big.mark = ",")
   flexdashboard::valueBox(
@@ -863,6 +850,7 @@ DT::renderDataTable({
 })
 ```
 
+
 ### Miscellaneous Table
 
 ```{r 2.2.4.d-table-golden-misc}
@@ -914,106 +902,8 @@ DT::renderDataTable({
 2.3 Death Cross {data-navmenu="2-Trends" data-icon="fa-list" data-orientation=rows}
 =====================================
 
-Input {.sidebar}
+Row {data-height=50%}
 -------------------------------------
-
-```{r 2.3.0.1-sidebarInput}
-
-dateRangeInput("dateRange2.3",
-  "DeathX data",
-  start = params$dateStart,
-  end = Sys.Date()
-)
-```
-
-Row {data-height=15%}
--------------------------------------
-
-###
-
-```{r 2.3.1.1-vbox-trendName}
-flexdashboard::renderValueBox({
-  flexdashboard::valueBox(
-    paste("Death Cross", ""),
-    color = 'black',
-    icon = 'fa-cross'
-  )
-})
-```
-
-###
-
-```{r 2.3.1.2-vbox-trendAnnReturn}
-annReturn <- percent(as.numeric(trendSummary[1,2]))
-flexdashboard::renderValueBox({
-  flexdashboard::valueBox(
-    paste(as.character(annReturn), "", " Annual Return"),
-    color = ifelse(annReturn > 0, "teal", "red"),
-    icon = "ion-cash"
-  )
-})
-```
-
-###
-
-```{r 2.3.1.3-vbox-returns-cumulative}
-cumReturn <-percent(as.numeric(Return.cumulative(trend[,6])))
-flexdashboard::renderValueBox({
-  flexdashboard::valueBox(
-    paste(as.character(cumReturn), "", " Total Return"),
-    color = ifelse(annReturn > 0, "teal", "red"),
-    icon = "ion-cash"
-  )
-})
-```
-
-###
-
-```{r 2.3.1.4-vbox-trendTradeDays, eval=trend}
-flexdashboard::renderValueBox({
-  tradeDays <- format(trend[catName == "DeathX", sum(tradeDays), by = catName][,2], big.mark = ",")
-  flexdashboard::valueBox(
-    paste("Trade Days: ", "", tradeDays),
-    color = # 0000ff
-    , icon = "fa-calendar"
-  )
-})
-```
-
-Column {data-height=50%, data-width=500 .tabset .tabset-fade}
--------------------------------------
-
-### Golden Crossing Table
-
-```{r 2.3.2.a-table-golden-five}
-DT::renderDataTable({
-  DT::datatable(trend[catName == "DeathX"],
-    rownames = FALSE,
-    extensions = c("Scroller"),
-    options = list(
-      order = list(list(3, "desc")),
-      pageLength = 10,
-      scrollX = TRUE,
-      scrollY = 280,
-      scroller = TRUE
-    )
-  ) %>%
-    formatDate(c("startDate", "endDate")) %>%
-    formatRound("tradeDays", 0) %>%
-    formatPercentage("return") %>%
-    formatStyle("return",
-      background = styleColorBar(range(trend$return), "lightblue")
-    ) %>%
-    formatStyle("tradeDays",
-      color = styleInterval(c(0), c("maroon", "darkgreen"))
-    )
-})
-```
-
-Row {data-height=35%}
--------------------------------------
-
-### Golden Cross Returns
 
 ```{r 2.3.1.1-xxx-death}
 xhp <- list(title = d$catName, titlefont = F)
@@ -1046,7 +936,6 @@ renderPlotly({
     layout(title = "GoldenX Box Plot & Histogram - # of Trade Days with Outliers", bargap = 0.1)
 })
 ```
-
 
 2.4 No Cross {data-navmenu="2-Trends" data-icon="fa-list" data-orientation=rows}
 =====================================
