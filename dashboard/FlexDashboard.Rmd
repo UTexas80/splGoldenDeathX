@@ -750,6 +750,14 @@ dateRangeInput("dateRange2.2",
 )
 ```
 
+
+```{r 2.2.0.2-sidebarRadio}
+radioButtons("radioMA", "Moving Avg:",
+               c("Exponential" = "EMA",
+                 "Simple" = "SMA")
+             )
+```
+
 Column {data-height=55%}
 -------------------------------------
 
