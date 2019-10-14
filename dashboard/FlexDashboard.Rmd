@@ -752,11 +752,12 @@ dateRangeInput("dateRange2.2",
 
 
 ```{r 2.2.0.2-sidebarRadio}
-radioButtons("radioMA", "Moving Avg:",
-               c("Exponential" = "EMA",
-                 "Simple" = "SMA")
-             )
+radioButtons("radio2.2", "Moving Avg:",
+               c("Exponential" = 3,
+                 "Simple" = 4)
+)
 ```
+
 
 Column {data-height=55%}
 -------------------------------------
@@ -778,7 +779,17 @@ flexdashboard::renderValueBox({
 ```{r 2.2.1.2-vbox-trendAnnReturn}
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
-    paste(as.character(percent(as.numeric(Return.annualized(trendReturnsDaily)[,3]))), "", " Annual Return"),
+    paste(
+      as.character(
+        percent(
+          Return.annualized(
+            na.omit(trendReturnsDaily[,as.numeric(input$radio2.2)])[paste(format(input$dateRange2.2[1]),
+              format(input$dateRange2.2[2]),sep = "::")]
+          )
+        )
+      ), 
+    "", " Annual Return"
+    ),
     color = ifelse(as.numeric(Return.annualized(trendReturnsDaily)[,3]) > 0, "teal", "red"),    
     icon = "ion-cash"
   )
@@ -812,6 +823,34 @@ flexdashboard::renderValueBox({
 
 Column {data-width=500 .tabset .tabset-fade}
 -------------------------------------
+
+### RadioAnnual
+```{r 2.2.4.X-table-golden-returns}
+renderTable(
+  as.character(
+    percent(
+      Return.annualized(
+        na.omit(trendReturnsDaily[,as.numeric(input$radio2.2)])[paste(format(input$dateRange2.2[1]),
+          format(input$dateRange2.2[2]),sep = "::")]
+      )
+    )
+  )
+)
+```
+
+### RadioROI
+```{r 2.2.4.0-table-golden-returns}
+renderTable(
+  as.character(
+    percent(
+      Return.cumulative(
+        na.omit(trendReturnsDaily[,as.numeric(input$radio2.2)])[paste(format(input$dateRange2.2[1]),
+          format(input$dateRange2.2[2]),sep = "::")]
+      )
+    )
+  )
+)
+```
 
 ### Golden Cross Returns
 
