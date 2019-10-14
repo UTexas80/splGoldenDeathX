@@ -35,6 +35,9 @@ cumPctRet <- percent(1 + (as.numeric(xts::last(SPL.AX[, 4])) -
   as.numeric(xts::first(SPL.AX[, 4])))/as.numeric(xts::first(SPL.AX[, 
   4])))
 yrRet <- na.omit(allReturns(SPL.AX[, 4])[, 5])
+
+
+dtTrend <- dtSPL[dtGoldenX, nomatch = 0]
 ################################################################################
 ## Step 1.04: Falkulate calendar & trade days                                ###
 ## save .rds
