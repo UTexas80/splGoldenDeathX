@@ -369,7 +369,6 @@ renderHighchart({
 renderHighchart({
   xts_price <- tk_xts(price())
   annualRet <- periodReturn(xts_price[, 6], period = "yearly") * 100
-  #  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
   highchart(type = "stock") %>%
     hc_add_series(annualRet, type = "column")
 })
@@ -510,7 +509,6 @@ DT::renderDataTable({
 renderHighchart({
   xts_price <- tk_xts(price())
   quarterlyRet <- periodReturn(xts_price[, 6], period = "quarterly") * 100
-  #  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
   highchart(type = "stock") %>%
     hc_add_series(quarterlyRet, type = "column")
 })
@@ -847,9 +845,11 @@ Column {data-width=500 .tabset .tabset-fade}
 -------------------------------------
 ### Golden Crossing Table
 
-```{r 2.2.4.a-table-golden}
+```{r 2.2.2.1-table-golden}
 DT::renderDataTable({
-  DT::datatable(trend[catName == "GoldenX"],
+  DT::datatable(trend[catName == "GoldenX" & 
+                        (startDate >= input$dateRange2.2[1] & 
+                           endDate <= input$dateRange2.2[2])],
     rownames = FALSE,
     extensions = c("Scroller"),
     options = list(
