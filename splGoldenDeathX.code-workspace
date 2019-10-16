@@ -9,5 +9,10 @@
 		{
 			"path": "D:\\GitHub\\ProjectTemplate"
 		}
-	]
+	],
+	"settings": {
+		"workbench.colorCustomizations": {
+			"tab.unfocusedActiveBorder": "#fff0"
+		}
+	}
 }

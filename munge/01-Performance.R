@@ -18,8 +18,12 @@ names(dtSPL)[1]   <- "date"
 setkey(dtSPL, "date")
 # dtSPL             <- dtSPL[dtEMA][, c(1:5, 18)]
 # ------------------------------------------------------------------------------
-xtsPrice          <- as.xts.data.table(dcast.data.table(dtSPL[dtEMA][, c(1:5, 18)], formula = date ~ 
+xtsPrice     <- as.xts.data.table(dcast.data.table(dtSPL[dtEMA][, c(1:5, 18)], formula = date ~ 
   eventGroupNum, value.var = "SPL.AX.Close"))
+
+xtsPriceSMA  <- as.xts.data.table(dcast.data.table(dtSPL[dtSMA][, c(1:5, 18)], formula = date ~ 
+  catNum, value.var = "SPL.AX.Close"))
+
 cumReturn         <- apply(X = xtsPrice, 2, FUN = function(Z) Return.cumulative(as.numeric(Z), 
   geometric = TRUE))  # https://tinyurl.com/y2d2ve83
 ################################################################################
