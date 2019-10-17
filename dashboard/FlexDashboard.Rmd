@@ -110,6 +110,7 @@ trendReturnsAnnualized    <- data.table(readRDS(here::here("rds", "trendReturnsA
 trendReturnsDaily         <- readRDS(here::here("rds", "trendReturnsDaily.rds"))
 trendSummary              <- data.table(readRDS(here::here("rds", "trendSummary.rds")))
 trendSummaryEMA           <- data.table(readRDS(here::here("rds", "trendSummaryEMA.rds")))
+trendTest                 <- data.table(readRDS(here::here("rds", "trendTest.rds")))               
 xtsEMA                    <- readRDS(here::here("rds", "xtsEMA.rds"))
 ```
 
@@ -706,7 +707,6 @@ renderHighchart({
 })
 ```
 
-
 ### Trend Returns
 ```{r  2.1.2.4-viz-pie, eval=trend}
 trendStats <- trend[,
@@ -748,14 +748,12 @@ dateRangeInput("dateRange2.2",
 )
 ```
 
-
 ```{r 2.2.0.2-sidebarRadio}
 radioButtons("radio2.2", "Moving Avg:",
                c("Exponential" = 3,
                  "Simple" = 4)
 )
 ```
-
 
 Column {data-height=55%}
 -------------------------------------
@@ -843,13 +841,45 @@ flexdashboard::renderValueBox({
 
 Column {data-width=500 .tabset .tabset-fade}
 -------------------------------------
+### Test Crossing Table
+
+```{r 2.2.2.0-table-golden}
+DT::renderDataTable({
+    ind <-unique(trendTest[,7])[(as.numeric(input$radio2.2) - 2),]
+    trendTable <- trendTest[indicator == ind]
+    trendTable <- trendTable[catName == "GoldenX" & 
+                        (startDate >= input$dateRange2.2[1] & 
+                         endDate <= input$dateRange2.2[2])][,-7]
+    DT::datatable(trendTable,
+    rownames = FALSE,
+    extensions = c("Scroller"),
+    options = list(
+      order = list(list(3, "desc")),
+      pageLength = 10,
+      scrollX = TRUE,
+      scrollY = 280,
+      scroller = TRUE
+    )
+  ) %>%
+    formatDate(c("startDate", "endDate")) %>%
+    formatRound("tradeDays", 0) %>%
+    formatPercentage("return") %>%
+    formatStyle("return",
+      background = styleColorBar(range(trend$return), "lightblue")
+    ) %>%
+    formatStyle("tradeDays",
+      color = styleInterval(c(0), c("maroon", "darkgreen"))
+    )
+})
+```
+
 ### Golden Crossing Table
 
 ```{r 2.2.2.1-table-golden}
 DT::renderDataTable({
   DT::datatable(trend[catName == "GoldenX" & 
                         (startDate >= input$dateRange2.2[1] & 
-                           endDate <= input$dateRange2.2[2])],
+                           endDate <= input$dateRange2.2[2])][,-7],
     rownames = FALSE,
     extensions = c("Scroller"),
     options = list(

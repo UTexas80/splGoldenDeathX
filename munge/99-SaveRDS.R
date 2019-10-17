@@ -17,6 +17,7 @@ saveRDS(trendReturns, file                     = "./rds/trendReturns.rds")
 saveRDS(trendReturnsAnnualized, file           = "./rds/trendReturnsAnnualized.rds")
 saveRDS(trendReturnsDaily, file                = "./rds/trendReturnsDaily.rds")
 saveRDS(trendSummaryEMA, file                  = "./rds/trendSummaryEMA.rds")
+saveRDS(trendTest, file                        = "./rds/trendTest.rds")
 # ------------------------------------------------------------------------------
 saveRDS(viz.BoxplotN, file                     = "./rds/viz.BoxplotN.rds")
 saveRDS(xtsEMA[complete.cases(xtsEMA), ], file = "./rds/xtsEMA.rds")

@@ -106,6 +106,9 @@ trendSMA <- trendSMA[, catName := substr(trendSMA$subcatName, 1,
     nchar(trendSMA$subcatName) - 3)]                                         ### add category name sans number(s)
 trendSMA[, indicator := "SMA"]
 trendSMA <- select(trendSMA, catName, everything())                          ### move last column to first
+
+# Trend Test -------------------------------------------------------------------
+trendTest <- rbind.data.frame(trend, trendSMA)
 ################################################################################
 ## Step 99.05  Performance Analytics Boxplot(s)
 ################################################################################
