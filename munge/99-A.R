@@ -87,7 +87,7 @@ names(aa)[1:5] <- c("subcatName", "startDate", "endDate", "tradeDays", "return")
 trend <- aa[, tradeDays := as.integer(tradeDays)] ### rename dataframe and convert column from list to integer
 trend <- trend[, catName := substr(aa$subcatName, 1, nchar(aa$subcatName) - 3)] ### add category name sans number(s)
 trend[, indicator := "EMA"]
-trend <- select(trend, catName, everything()) ### move last column to first
+trendEMA <- select(trend, catName, everything()) ### move last column to first
 ################################################################################
 ## Step 99.04 transpose SMA 
 ################################################################################
@@ -108,7 +108,7 @@ trendSMA[, indicator := "SMA"]
 trendSMA <- select(trendSMA, catName, everything())                          ### move last column to first
 
 # Trend Test -------------------------------------------------------------------
-trendTest <- rbind.data.frame(trend, trendSMA)
+trend <- rbind.data.frame(trend, trendSMA)
 ################################################################################
 ## Step 99.05  Performance Analytics Boxplot(s)
 ################################################################################

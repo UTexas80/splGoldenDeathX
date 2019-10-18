@@ -105,17 +105,18 @@ tradeDays                 <- readRDS(here::here("rds", "tradeDays.rds"))
 trend                     <- data.table(readRDS(here::here("rds", "trend.rds")))
 trendClose                <- readRDS(here::here("rds", "trendClose.rds"))
 trendDraw                 <- data.table(readRDS(here::here("rds", "trendDraw.rds")))
+trendEMA                  <- data.table(readRDS(here::here("rds", "trendEMA.rds")))
 trendReturns              <- data.table(readRDS(here::here("rds", "trendReturns.rds")))
 trendReturnsAnnualized    <- data.table(readRDS(here::here("rds", "trendReturnsAnnualized.rds")))
 trendReturnsDaily         <- readRDS(here::here("rds", "trendReturnsDaily.rds"))
+trendSMA                  <- data.table(readRDS(here::here("rds", "trendSMA.rds")))
 trendSummary              <- data.table(readRDS(here::here("rds", "trendSummary.rds")))
-trendSummaryEMA           <- data.table(readRDS(here::here("rds", "trendSummaryEMA.rds")))
-trendTest                 <- data.table(readRDS(here::here("rds", "trendTest.rds")))               
+trendSummaryEMA           <- data.table(readRDS(here::here("rds", "trendSummaryEMA.rds")))       
 xtsEMA                    <- readRDS(here::here("rds", "xtsEMA.rds"))
 ```
 
 ```{r processing}
-trendname    <- str_sub(tail(trend[order(endDate)], 1)[, 2], end = -4)
+trendname    <- str_sub(tail(trend[order(endDate)], 1)[, 1], end = -4)
 trendname1   <- substr(tail(trend[order(endDate)], 1)[, 1], 1, 1)
 # subset trend
 d <- trend[substr(trend$catName, 1, 1) %like% "D"]
@@ -442,7 +443,7 @@ flexdashboard::renderValueBox({
 ```{r 2.1.1.2-vbox-days, eval=trend}
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
-    paste("Trade Days:", " ", format(tail(trend[order(endDate)], 1)[, 5], big.mark = ",")),
+    paste("Trade Days:", " ", format(tail(trend[order(endDate)], 1)[, 4], big.mark = ",")),
     color = # 0000ff
     , icon = "fa-calendar"
   )
@@ -452,7 +453,7 @@ flexdashboard::renderValueBox({
 ###
 
 ```{r 2.1.1.3-vbox-returns-roi}
-trendROI <- percent(tail(trend[order(endDate)], 1)[, 6][[1]],
+trendROI <- percent(tail(trend[order(endDate)], 1)[, 5][[1]],
   scale = 100, prefix = "", suffix = "%", big.mark = " ", decimal.mark = ".",
   trim = TRUE
 )
@@ -845,8 +846,8 @@ Column {data-width=500 .tabset .tabset-fade}
 
 ```{r 2.2.2.0-table-golden}
 DT::renderDataTable({
-    ind <-unique(trendTest[,7])[(as.numeric(input$radio2.2) - 2),]
-    trendTable <- trendTest[indicator == ind]
+    ind <-unique(trend[,7])[(as.numeric(input$radio2.2) - 2),]
+    trendTable <- trend[indicator == ind]
     trendTable <- trendTable[catName == "GoldenX" & 
                         (startDate >= input$dateRange2.2[1] & 
                          endDate <= input$dateRange2.2[2])][,-7]
@@ -947,7 +948,7 @@ flexdashboard::renderValueBox({
 ###
 
 ```{r 2.3.1.3-vbox-returns-cumulative}
-cumReturn <- percent(as.numeric(Return.cumulative(trend[,6])))
+cumReturn <- percent(as.numeric(Return.cumulative(trend[,5])))
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
     paste(as.character(percent(as.numeric(Return.cumulative(trendReturnsDaily)[,1]))), "", " Total Return"),
@@ -1082,7 +1083,7 @@ flexdashboard::renderValueBox({
 ###
 
 ```{r 2.4.1.3-vbox-returns-cumulative}
-cumReturn <- percent(as.numeric(Return.cumulative(trend[,6])))
+cumReturn <- percent(as.numeric(Return.cumulative(trend[,5])))
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
     paste(as.character(percent(as.numeric(Return.cumulative(trendReturnsDaily)[,5]))), "", " Total Return"),
