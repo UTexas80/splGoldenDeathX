@@ -407,9 +407,8 @@ renderHighchart({
 2.1 Summary {data-navmenu="2-Trends" data-icon="fa-list"}
 =====================================
 
-Column {data-height=15%}
+Column {data-height=17%}
 -------------------------------------
-
 ###
 
 ```{r 2.1.1.1-vbox-trend, eval=trend}
@@ -440,19 +439,7 @@ flexdashboard::renderValueBox({
 
 ###
 
-```{r 2.1.1.2-vbox-days, eval=trend}
-flexdashboard::renderValueBox({
-  flexdashboard::valueBox(
-    paste("Trade Days:", " ", format(tail(trend[order(endDate)], 1)[, 4], big.mark = ",")),
-    color = # 0000ff
-    , icon = "fa-calendar"
-  )
-})
-```
-
-###
-
-```{r 2.1.1.3-vbox-returns-roi}
+```{r 2.1.1.2-vbox-returns-roi}
 trendROI <- percent(tail(trend[order(endDate)], 1)[, 5][[1]],
   scale = 100, prefix = "", suffix = "%", big.mark = " ", decimal.mark = ".",
   trim = TRUE
@@ -471,6 +458,18 @@ flexdashboard::renderValueBox({
         "fa-meh-rolling-eyes"
       )
     )
+  )
+})
+```
+
+###
+
+```{r 2.1.1.3-vbox-trade-days, eval=trend}
+flexdashboard::renderValueBox({
+  flexdashboard::valueBox(
+    paste("Trade Days:", " ", format(tail(trend[order(endDate)], 1)[, 4], big.mark = ",")),
+    color = # 0000ff
+    , icon = "fa-calendar"
   )
 })
 ```
