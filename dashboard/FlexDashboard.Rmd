@@ -755,7 +755,7 @@ radioButtons("radio2.2", "Moving Avg:",
 )
 ```
 
-Column {data-height=55%}
+Column {data-height=17%}
 -------------------------------------
 
 ###
@@ -840,7 +840,7 @@ flexdashboard::renderValueBox({
 })
 ```
 
-Column {data-width=500 .tabset .tabset-fade}
+Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 -------------------------------------
 ### Golden Crossing Table
 
@@ -900,6 +900,32 @@ DT::renderDataTable({
     formatStyle("tradeDays",
       color = styleInterval(c(0), c("maroon", "darkgreen"))
     )
+})
+```
+
+Row {data-height=35%}
+-------------------------------------
+### GoldenX Trade Days
+
+```{r 2.2.3.1-goldenx-trade-days}
+xhpG <- list(title = g$catName, titlefont = F)
+yhpG <- list(title = "Counts", titlefont = F)
+ybpG <- list(title = g$catName, titlefont = F)
+
+renderPlotly({
+  ind <- unique(trend[,7])[(as.numeric(input$radio2.2) - 2),]
+  g <- g[indicator == ind]
+  g <- g[(startDate >= input$dateRange2.2[1] & 
+          endDate   <= input$dateRange2.2[2])]
+
+  histogramG <- plot_ly(g, x = g$tradeDays, type = "histogram", marker = list(color = "teal")) %>%
+    layout(xaxis = xhpG, yaxis = yhpG)
+
+  boxplotG <- plot_ly(g, x = g$tradeDays, type = "box", boxpoints = "all", jitter = 0.3, marker = list(color = "teal", outliercolor = "blue")) %>%
+    layout(yaxis = ybpG)
+  subplot(boxplotG, histogramG, nrows = 2, shareX = TRUE) %>%
+    layout(showlegend = FALSE) %>%
+    layout(title = "GoldenX Box Plot & Histogram - # of Trade Days with Outliers", bargap = 0.1)
 })
 ```
 
@@ -1050,37 +1076,27 @@ DT::renderDataTable({
 
 Row {data-height=35%}
 -------------------------------------
-### DeathX Cross Returns
+### DeathX Trade Days
 
-```{r 2.3.1.1-xxx-death}
+```{r 2.3.3.1-deathx-trade-days}
 xhp <- list(title = d$catName, titlefont = F)
 yhp <- list(title = "Counts", titlefont = F)
 ybp <- list(title = d$catName, titlefont = F)
 
 renderPlotly({
-  histogramD <- plot_ly(d, x = d$tradeDays, type = "histogram", marker = list(color = "#D0A92C")) %>%
+  ind <- unique(trend[,7])[(as.numeric(input$radio2.3) - 0),]
+  d <- d[indicator == ind]
+  d <- d[(startDate >= input$dateRange2.3[1] & 
+          endDate   <= input$dateRange2.3[2])]
+  
+  histogramD <- plot_ly(d, x = d$tradeDays, type = "histogram", marker = list(color = "Black")) %>%
     layout(xaxis = xhp, yaxis = yhp)
 
-  boxplotD <- plot_ly(d, x = d$tradeDays, type = "box", boxpoints = "all", jitter = 0.3, marker = list(color = "red", outliercolor = "#D0A92C", line = list(outliercolor = "#D0A92C", outlierwidth = 5))) %>%
+  boxplotD <- plot_ly(d, x = d$tradeDays, type = "box", boxpoints = "all", jitter = 0.3, marker = list(color = "black", outliercolor = "#D0A92C", line = list(outliercolor = "#D0A92C", outlierwidth = 5))) %>%
     layout(yaxis = ybp)
   subplot(boxplotD, histogramD, nrows = 2, shareX = TRUE) %>%
     layout(showlegend = FALSE) %>%
     layout(title = "DeathX Box Plot & Histogram - # of Trade Days with Outliers", bargap = 0.1)
-})
-
-xhpG <- list(title = g$catName, titlefont = F)
-yhpG <- list(title = "Counts", titlefont = F)
-ybpG <- list(title = g$catName, titlefont = F)
-
-renderPlotly({
-  histogramG <- plot_ly(g, x = g$tradeDays, type = "histogram", marker = list(color = "lime")) %>%
-    layout(xaxis = xhpG, yaxis = yhpG)
-
-  boxplotG <- plot_ly(g, x = g$tradeDays, type = "box", color = "blue", boxpoints = "all", jitter = 0.3, marker = list(color = "black", outliercolor = "blue")) %>%
-    layout(yaxis = ybpG)
-  subplot(boxplotG, histogramG, nrows = 2, shareX = TRUE) %>%
-    layout(showlegend = FALSE) %>%
-    layout(title = "GoldenX Box Plot & Histogram - # of Trade Days with Outliers", bargap = 0.1)
 })
 ```
 
@@ -1195,7 +1211,7 @@ flexdashboard::renderValueBox({
 })
 ```
 
-Column {data-height=85%, data-width=500 .tabset .tabset-fade}
+Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 -------------------------------------
 ### NoX Crossing Table
 
@@ -1229,10 +1245,36 @@ DT::renderDataTable({
 })
 ```
 
+Row {data-height=35%}
+-------------------------------------
+### No X Trade Days
+
+```{r 2.4.3.1-no-x-trade-days}
+xhp <- list(title = n$catName, titlefont = F)
+yhp <- list(title = "Counts", titlefont = F)
+ybp <- list(title = n$catName, titlefont = F)
+
+renderPlotly({
+  ind <- unique(trend[,7])[(as.numeric(input$radio2.4) - 4),]
+  n <- n[indicator == ind]
+  n <- n[(startDate >= input$dateRange2.4[1] & 
+          endDate   <= input$dateRange2.4[2])]
+  
+  histogramN <- plot_ly(n, x = n$tradeDays, type = "histogram", marker = list(color = "purple")) %>%
+    layout(xaxis = xhp, yaxis = yhp)
+
+  boxplotN <- plot_ly(n, x = n$tradeDays, type = "box", boxpoints = "all", jitter = 0.3, marker = list(color = "purple", outliercolor = "#D0A92C", line = list(outliercolor = "#D0A92C", outlierwidth = 5))) %>%
+    layout(yaxis = ybp)
+  subplot(boxplotN, histogramN, nrows = 2, shareX = TRUE) %>%
+    layout(showlegend = FALSE) %>%
+    layout(title = "No X Box Plot & Histogram - # of Trade Days with Outliers", bargap = 0.1)
+})
+```
+
 2.5 Box Plot {data-navmenu="2-Trends" data-icon="fa-list" data-orientation=rows}
 =====================================
 
-```{r 2.4.1.1-xxx-neither}
+```{r 2.5.1.1-xxx-neither}
 x   <- list(
   title                  = "Trend Name",
   titlefont              = F
