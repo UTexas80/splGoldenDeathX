@@ -428,7 +428,7 @@ flexdashboard::renderValueBox({
     ),
     icon = ifelse(trendname1 == "D", "fa-thumbs-down",
       ifelse(trendname1 == "G", "fa-thumbs-up",
-        ifelse(trendname1 == "N" & return > 0,
+        ifelse(trendname1 == "n" & trend$return > 0,
           "fa-thumbs-up",
           "fa-thumbs-down"
         )
@@ -495,7 +495,7 @@ DT::renderDataTable({
   ) %>%
     formatDate(c("startDate", "endDate")) %>%
     formatRound("tradeDays", 0) %>%
-    formatPercentage("return") %>%
+    formatPercentage("return",2) %>%
     formatStyle("return",
       background = styleColorBar(range(trend$return), "lightblue")
     ) %>%
@@ -780,8 +780,9 @@ flexdashboard::renderValueBox({
       as.character(
         percent(
           Return.annualized(
-            na.omit(trendReturnsDaily[,as.numeric(input$radio2.2)])[paste(format(input$dateRange2.2[1]),
-              format(input$dateRange2.2[2]),sep = "::")]
+            na.omit(
+              trendReturnsDaily[,as.numeric(input$radio2.2)])[paste(format(input$dateRange2.2[1]),
+                format(input$dateRange2.2[2]),sep = "::")]
           )
         )
       ), "", " Annual Return"
@@ -842,11 +843,11 @@ flexdashboard::renderValueBox({
 
 Column {data-width=500 .tabset .tabset-fade}
 -------------------------------------
-### Test Crossing Table
+### Golden Crossing Table
 
 ```{r 2.2.2.0-table-golden}
 DT::renderDataTable({
-    ind <-unique(trend[,7])[(as.numeric(input$radio2.2) - 2),]
+    ind <- unique(trend[,7])[(as.numeric(input$radio2.2) - 2),]
     trendTable <- trend[indicator == ind]
     trendTable <- trendTable[catName == "GoldenX" & 
                         (startDate >= input$dateRange2.2[1] & 
@@ -864,7 +865,7 @@ DT::renderDataTable({
   ) %>%
     formatDate(c("startDate", "endDate")) %>%
     formatRound("tradeDays", 0) %>%
-    formatPercentage("return") %>%
+    formatPercentage("return", 1) %>%
     formatStyle("return",
       background = styleColorBar(range(trend$return), "lightblue")
     ) %>%
@@ -918,6 +919,13 @@ dateRangeInput("dateRange2.3",
 )
 ```
 
+```{r 2.3.0.2-sidebarRadio}
+radioButtons("radio2.3", "Moving Avg:",
+               c("Exponential" = 1,
+                 "Simple" = 2)
+)
+```
+
 Row {data-height=15%}
 -------------------------------------
 
@@ -926,7 +934,7 @@ Row {data-height=15%}
 ```{r 2.3.1.1-vbox-trendName}
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
-    paste("Death Cross", ""),
+    paste("Death Cross", str_sub(colnames(trendReturnsDaily[,as.numeric(input$radio2.3)]),-3, -1)),
     color = 'black',
     icon = 'fa-cross'
   )
@@ -938,8 +946,22 @@ flexdashboard::renderValueBox({
 ```{r 2.3.1.2-vbox-trendAnnReturn}
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
-    paste(as.character(percent(as.numeric(Return.annualized(trendReturnsDaily)[,1]))), "", " Annual Return"),
-    color = ifelse(as.numeric(Return.annualized(trendReturnsDaily)[,1]) > 0, "teal", "red"),
+    paste(
+      as.character(
+        percent(
+          Return.annualized(
+            na.omit(
+              trendReturnsDaily[,as.numeric(input$radio2.3)])[paste(format(input$dateRange2.3[1]),
+                format(input$dateRange2.3[2]),sep = "::")]
+          )
+        )
+      ), "", " Annual Return"
+    ),
+    color = ifelse(Return.annualized(
+        na.omit(
+          trendReturnsDaily[,as.numeric(input$radio2.3)])[paste(format(input$dateRange2.3[1]),
+            format(input$dateRange2.3[2]),sep = "::")]) > 0, 
+              "teal", "red"),    
     icon = "ion-cash"
   )
 })
@@ -951,8 +973,24 @@ flexdashboard::renderValueBox({
 cumReturn <- percent(as.numeric(Return.cumulative(trend[,5])))
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
-    paste(as.character(percent(as.numeric(Return.cumulative(trendReturnsDaily)[,1]))), "", " Total Return"),
-    color = ifelse(as.numeric(Return.cumulative(trendReturnsDaily)[,1]) > 0, "teal", "red"),
+    paste(
+      as.character(
+        percent(
+          as.numeric(
+            Return.cumulative(
+              na.omit(trendReturnsDaily[,as.numeric(input$radio2.3)])[paste(format(input$dateRange2.3[1]),
+                format(input$dateRange2.3[2]),sep = "::")]
+            )
+          )
+        )
+      ), "", " ROI"
+    ),
+    color = ifelse(
+      Return.cumulative(
+        na.omit(
+          trendReturnsDaily[,as.numeric(input$radio2.3)])[paste(format(input$dateRange2.3[1]),
+            format(input$dateRange2.3[2]),sep = "::")]) > 0, 
+              "teal", "red"),    
     icon = "ion-cash"
   )
 })
@@ -962,7 +1000,13 @@ flexdashboard::renderValueBox({
 
 ```{r 2.3.1.4-vbox-trendTradeDays, eval=trend}
 flexdashboard::renderValueBox({
-  tradeDays <- format(trend[catName == "DeathX", sum(tradeDays), by = catName][,2], big.mark = ",")
+  tradeDays <-   as.character(
+    ndays(
+      na.omit(
+        trendReturnsDaily[,as.numeric(input$radio2.3)])[paste(format(input$dateRange2.3[1]),
+          format(input$dateRange2.3[2]),sep = "::")]
+    )
+  )
   flexdashboard::valueBox(
     paste("Trade Days: ", "", tradeDays),
     color = # 0000ff
@@ -973,12 +1017,16 @@ flexdashboard::renderValueBox({
 
 Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 -------------------------------------
-
 ### DeathX Crossing Table
 
-```{r 2.3.2.a-table-golden-five}
+```{r 2.3.2.1-table-death}
 DT::renderDataTable({
-  DT::datatable(trend[catName == "DeathX"],
+    ind <- unique(trend[,7])[(as.numeric(input$radio2.3)),]
+    trendTable <- trend[indicator == ind]
+    trendTable <- trendTable[catName == "DeathX" & 
+                        (startDate >= input$dateRange2.3[1] & 
+                         endDate <= input$dateRange2.3[2])][,-7]
+    DT::datatable(trendTable,
     rownames = FALSE,
     extensions = c("Scroller"),
     options = list(
@@ -991,7 +1039,7 @@ DT::renderDataTable({
   ) %>%
     formatDate(c("startDate", "endDate")) %>%
     formatRound("tradeDays", 0) %>%
-    formatPercentage("return") %>%
+    formatPercentage("return", 1) %>%
     formatStyle("return",
       background = styleColorBar(range(trend$return), "lightblue")
     ) %>%
@@ -1003,7 +1051,6 @@ DT::renderDataTable({
 
 Row {data-height=35%}
 -------------------------------------
-
 ### DeathX Cross Returns
 
 ```{r 2.3.1.1-xxx-death}
@@ -1053,6 +1100,13 @@ dateRangeInput("dateRange2.4",
 )
 ```
 
+```{r 2.4.0.2-sidebarRadio}
+radioButtons("radio2.4", "Moving Avg:",
+               c("Exponential" = 5,
+                 "Simple" = 6)
+)
+```
+
 Row {data-height=15%}
 -------------------------------------
 
@@ -1061,9 +1115,9 @@ Row {data-height=15%}
 ```{r 2.4.1.1-vbox-trendName}
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
-    paste("No Cross", ""),
-    color = 'purple',
-    icon = 'fa-cross'
+        paste("No Cross", str_sub(colnames(trendReturnsDaily[,as.numeric(input$radio2.4)]),-3, -1)),
+          color = 'purple',
+          icon = 'fa-cross'
   )
 })
 ```
@@ -1073,8 +1127,22 @@ flexdashboard::renderValueBox({
 ```{r 2.4.1.2-vbox-trendAnnReturn}
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
-    paste(as.character(percent(as.numeric(Return.annualized(trendReturnsDaily)[,5]))), "", " Annual Return"),
-    color = ifelse(as.numeric(Return.annualized(trendReturnsDaily)[,5]) > 0, "teal", "red"),
+    paste(
+      as.character(
+        percent(
+          Return.annualized(
+            na.omit(
+              trendReturnsDaily[,as.numeric(input$radio2.4)])[paste(format(input$dateRange2.4[1]),
+                format(input$dateRange2.4[2]),sep = "::")]
+          )
+        )
+      ), "", " Annual Return"
+    ),
+    color = ifelse(Return.annualized(
+        na.omit(
+          trendReturnsDaily[,as.numeric(input$radio2.4)])[paste(format(input$dateRange2.4[1]),
+            format(input$dateRange2.4[2]),sep = "::")]) > 0, 
+              "teal", "red"),    
     icon = "ion-cash"
   )
 })
@@ -1086,8 +1154,24 @@ flexdashboard::renderValueBox({
 cumReturn <- percent(as.numeric(Return.cumulative(trend[,5])))
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
-    paste(as.character(percent(as.numeric(Return.cumulative(trendReturnsDaily)[,5]))), "", " Total Return"),
-    color = ifelse(as.numeric(Return.cumulative(trendReturnsDaily)[,5]) > 0, "teal", "red"),
+    paste(
+      as.character(
+        percent(
+          as.numeric(
+            Return.cumulative(
+              na.omit(trendReturnsDaily[,as.numeric(input$radio2.4)])[paste(format(input$dateRange2.4[1]),
+                format(input$dateRange2.4[2]),sep = "::")]
+            )
+          )
+        )
+      ), "", " ROI"
+    ),
+    color = ifelse(
+      Return.cumulative(
+        na.omit(
+          trendReturnsDaily[,as.numeric(input$radio2.4)])[paste(format(input$dateRange2.4[1]),
+            format(input$dateRange2.4[2]),sep = "::")]) > 0, 
+              "teal", "red"),    
     icon = "ion-cash"
   )
 })
@@ -1097,7 +1181,13 @@ flexdashboard::renderValueBox({
 
 ```{r 2.4.1.4-vbox-trendTradeDays, eval=trend}
 flexdashboard::renderValueBox({
-  tradeDays <- format(trend[catName == "n", sum(tradeDays), by = catName][,2], big.mark = ",")
+  tradeDays <-   as.character(
+    ndays(
+      na.omit(
+        trendReturnsDaily[,as.numeric(input$radio2.4)])[paste(format(input$dateRange2.4[1]),
+          format(input$dateRange2.4[2]),sep = "::")]
+    )
+  )
   flexdashboard::valueBox(
     paste("Trade Days: ", "", tradeDays),
     color = # 0000ff
@@ -1106,15 +1196,18 @@ flexdashboard::renderValueBox({
 })
 ```
 
-
 Column {data-height=85%, data-width=500 .tabset .tabset-fade}
 -------------------------------------
-
 ### NoX Crossing Table
 
 ```{r 2.4.2.a-table-golden-five}
 DT::renderDataTable({
-  DT::datatable(trend[catName == "n"],
+    ind <- unique(trend[,7])[(as.numeric(input$radio2.4) - 4),]
+    trendTable <- trend[indicator == ind]
+    trendTable <- trendTable[catName == "n" & 
+                        (startDate >= input$dateRange2.4[1] & 
+                         endDate <= input$dateRange2.4[2])][,-7]
+    DT::datatable(trendTable,
     rownames = FALSE,
     extensions = c("Scroller"),
     options = list(
@@ -1127,7 +1220,7 @@ DT::renderDataTable({
   ) %>%
     formatDate(c("startDate", "endDate")) %>%
     formatRound("tradeDays", 0) %>%
-    formatPercentage("return") %>%
+    formatPercentage("return", 1) %>%
     formatStyle("return",
       background = styleColorBar(range(trend$return), "lightblue")
     ) %>%

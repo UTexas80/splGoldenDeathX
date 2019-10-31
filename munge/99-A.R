@@ -5,8 +5,8 @@ a <- t(data.table((as.single(lapply(lapply(xtsPrice, na.omit, xtsPrice[1, ]), ta
 colnames(a) <- dimnames(xtsPrice)[[2]]
 rownames(a) <- 1
 
-smaReturns <- t(data.table((as.single(lapply(lapply(xtsPriceSMA, na.omit, xtsPrice[1, ]), tail, 1)) - as.single(lapply(lapply(xtsPrice, na.omit, xtsPrice[1, ]), head, 1))) / 
-                            as.single(lapply(lapply(xtsPrice, na.omit, xtsPrice[1, ]), head, 1))))
+smaReturns <- t(data.table((as.single(lapply(lapply(xtsPriceSMA, na.omit, xtsPrice[1, ]), tail, 1)) - as.single(lapply(lapply(xtsPriceSMA, na.omit, xtsPrice[1, ]), head, 1))) / 
+                            as.single(lapply(lapply(xtsPriceSMA, na.omit, xtsPrice[1, ]), head, 1))))
 colnames(smaReturns) <- dimnames(xtsPriceSMA)[[2]]
 rownames(smaReturns) <- 1
 ################################################################################
@@ -94,7 +94,7 @@ trendEMA <- select(trend, catName, everything()) ### move last column to first
 trendSMA <- t(smaReturns)
 ################################################################################
 trendSMA <- data.table(trendSMA, keep.rownames = TRUE)
-trendSMA <- cbind(trendSMA, startDate, endDate, countDate)
+trendSMA <- cbind(trendSMA, startDateSMA, endDateSMA, countDateSMA)
 ################################################################################
 ## Reorder Columns -------------------------------------------------------------
 trendSMA <- trendSMA[, c(1, 3:4, 5, 2)]
@@ -106,7 +106,6 @@ trendSMA <- trendSMA[, catName := substr(trendSMA$subcatName, 1,
     nchar(trendSMA$subcatName) - 3)]                                         ### add category name sans number(s)
 trendSMA[, indicator := "SMA"]
 trendSMA <- select(trendSMA, catName, everything())                          ### move last column to first
-
 # Trend Test -------------------------------------------------------------------
 trend <- rbind.data.frame(trend, trendSMA)
 ################################################################################
