@@ -755,7 +755,7 @@ radioButtons("radio2.2", "Moving Avg:",
 )
 ```
 
-Column {data-height=17%}
+Column {data-height=15%}
 -------------------------------------
 
 ###
@@ -840,11 +840,11 @@ flexdashboard::renderValueBox({
 })
 ```
 
-Column {data-height=50%, data-width=500 .tabset .tabset-fade}
+Column {data-height=40%, data-width=500 .tabset .tabset-fade}
 -------------------------------------
 ### Golden Crossing Table
 
-```{r 2.2.2.0-table-golden}
+```{r 2.2.2.1-table-golden}
 DT::renderDataTable({
     ind <- unique(trend[,7])[(as.numeric(input$radio2.2) - 2),]
     trendTable <- trend[indicator == ind]
@@ -876,7 +876,7 @@ DT::renderDataTable({
 
 ### Golden Crossing Table
 
-```{r 2.2.2.1-table-golden}
+```{r 2.2.2.2-table-golden}
 DT::renderDataTable({
   DT::datatable(trend[catName == "GoldenX" & 
                         (startDate >= input$dateRange2.2[1] & 
@@ -903,11 +903,35 @@ DT::renderDataTable({
 })
 ```
 
-Row {data-height=35%}
+Column {data-height=45%, .tabset .tabset-fade}
 -------------------------------------
-### GoldenX Trade Days
+### GoldenX Return
 
 ```{r 2.2.3.1-goldenx-trade-days}
+xhpG <- list(title = g$catName, titlefont = F)
+yhpG <- list(title = "Counts", titlefont = F)
+ybpG <- list(title = g$catName, titlefont = F)
+
+renderPlotly({
+  ind <- unique(trend[,7])[(as.numeric(input$radio2.2) - 2),]
+  g <- g[indicator == ind]
+  g <- g[(startDate >= input$dateRange2.2[1] & 
+          endDate   <= input$dateRange2.2[2])]
+
+  histogramG <- plot_ly(g, x = g$return, type = "histogram", marker = list(color = "teal")) %>%
+    layout(xaxis = xhpG, yaxis = yhpG)
+
+  boxplotG <- plot_ly(g, x = g$return, type = "box", boxpoints = "all", jitter = 0.3, marker = list(color = "teal", outliercolor = "blue")) %>%
+    layout(yaxis = ybpG)
+  subplot(boxplotG, histogramG, nrows = 2, shareX = TRUE) %>%
+    layout(showlegend = FALSE) %>%
+    layout(title = "GoldenX Box Plot & Histogram - ROI with Outliers", bargap = 0.1)
+})
+```
+
+### GoldenX Trade Days
+
+```{r 2.2.3.2-goldenx-trade-days}
 xhpG <- list(title = g$catName, titlefont = F)
 yhpG <- list(title = "Counts", titlefont = F)
 ybpG <- list(title = g$catName, titlefont = F)
@@ -951,7 +975,7 @@ radioButtons("radio2.3", "Moving Avg:",
 )
 ```
 
-Row {data-height=15%}
+Row {data-height=17%}
 -------------------------------------
 
 ###
@@ -1122,7 +1146,7 @@ radioButtons("radio2.4", "Moving Avg:",
 )
 ```
 
-Row {data-height=15%}
+Row {data-height=17%}
 -------------------------------------
 
 ###
