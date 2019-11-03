@@ -666,11 +666,11 @@ renderPlotly({
 
 Row {data-height=40%}
 -------------------------------------
-### Trend boxplot
+### Trend Return Distribution
 ```{r  2.1.2.1-viz-vboxplot, eval=trend}
 renderPlotly({
   ggplotly(
-    ggplot(trend, aes(x = substr(trend$catName, 1, nchar(trend$catName) - 3), y = return))
+    ggplot(trend, aes(x = paste(trend$catName, "-", trend$indicator), y = return))
     + scale_y_continuous(labels = percent)
       + geom_boxplot(fill = "#0c4c8a")
       + theme_gray()
@@ -678,31 +678,18 @@ renderPlotly({
 })
 ```
 
-### Trend Returns
-```{r  2.1.2.2-viz-hboxplot, eval=trend}
-renderHighchart({
-  hcboxplot(
-    x = trend$return * 100,
-    var = substr(trend$catName, 1, nchar(trend$catName) - 3),
-    name = "returns", color = "#2980b9", outliers = TRUE
-  ) %>%
-    hc_yAxis(labels = list(format = "{value}%"), min = -30, max = 30) %>%
-    hc_add_theme(hc_theme_chalk())
-})
-```
-
-### Trend Returns
+### Trend Trade Day Distribution
 ```{r  2.1.2.3-viz-hboxplot, eval=trend}
 renderHighchart({
   hcboxplot(
-    x = trend$tradeDays,
-    var = trend$catName,
-    name = "returns",
+    x = trend$return,
+    var = paste(trend$catName, "-", trend$indicator),
+    name = "roi",
     color = "#2980b9",
     outliers = TRUE
   ) %>%
     hc_chart(type = "column") %>% # to put box vertical
-    hc_yAxis(labels = list(format = "{value}"), min = 0, max = 150) %>%
+    hc_yAxis(labels = list(format = "{value}"), min = -0.5, max = 2) %>%
     hc_add_theme(hc_theme_chalk())
 })
 ```
@@ -755,7 +742,7 @@ radioButtons("radio2.2", "Moving Avg:",
 )
 ```
 
-Column {data-height=15%}
+Column {data-height=17%}
 -------------------------------------
 
 ###
@@ -840,7 +827,7 @@ flexdashboard::renderValueBox({
 })
 ```
 
-Column {data-height=40%, data-width=500 .tabset .tabset-fade}
+Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 -------------------------------------
 ### Golden Crossing Table
 
@@ -903,7 +890,7 @@ DT::renderDataTable({
 })
 ```
 
-Column {data-height=45%, .tabset .tabset-fade}
+Column {data-height=33%}
 -------------------------------------
 ### GoldenX Return
 
@@ -925,13 +912,13 @@ renderPlotly({
     layout(yaxis = ybpG)
   subplot(boxplotG, histogramG, nrows = 2, shareX = TRUE) %>%
     layout(showlegend = FALSE) %>%
-    layout(title = "GoldenX Box Plot & Histogram - ROI with Outliers", bargap = 0.1)
+    layout(title = "ROI with Outliers", bargap = 0.1)
 })
 ```
 
-### GoldenX Trade Days
+### GoldenX Duration
 
-```{r 2.2.3.2-goldenx-trade-days}
+```{r 2.2.3.2-goldenx-roi}
 xhpG <- list(title = g$catName, titlefont = F)
 yhpG <- list(title = "Counts", titlefont = F)
 ybpG <- list(title = g$catName, titlefont = F)
@@ -949,7 +936,7 @@ renderPlotly({
     layout(yaxis = ybpG)
   subplot(boxplotG, histogramG, nrows = 2, shareX = TRUE) %>%
     layout(showlegend = FALSE) %>%
-    layout(title = "GoldenX Box Plot & Histogram - # of Trade Days with Outliers", bargap = 0.1)
+    layout(title = "# of Trade Days with Outliers", bargap = 0.1)
 })
 ```
 
@@ -1098,11 +1085,34 @@ DT::renderDataTable({
 })
 ```
 
-Row {data-height=35%}
+Row {data-height=33%}
 -------------------------------------
-### DeathX Trade Days
+### DeathX Return
 
-```{r 2.3.3.1-deathx-trade-days}
+```{r 2.3.3.1-deathx-roi}
+xhpD <- list(title = d$catName, titlefont = F)
+yhpD <- list(title = "Counts", titlefont = F)
+ybpD <- list(title = d$catName, titlefont = F)
+
+renderPlotly({
+  ind <- unique(trend[,7])[(as.numeric(input$radio2.3) - 0),]
+  d   <- d[indicator == ind]
+  d   <- d[(startDate >= input$dateRange2.3[1] & endDate <= input$dateRange2.3[2])]
+
+  histogramD <- plot_ly(d, x = d$return, type = "histogram", marker = list(color = "black")) %>%
+    layout(xaxis = xhpD, yaxis = yhpD)
+  boxplotD <- plot_ly(d, x = d$return, type = "box", boxpoints = "all", jitter = 0.3, marker =   
+    list(color = "black", outliercolor = "blue")) %>%
+    layout(yaxis = ybpD)
+  subplot(boxplotD, histogramD, nrows = 2, shareX = TRUE) %>%
+    layout(showlegend = FALSE) %>%
+    layout(title = "ROI with Outliers", bargap = 0.1)
+})
+```
+
+### DeathX Duration
+
+```{r 2.3.3.2-deathx-trade-days}
 xhp <- list(title = d$catName, titlefont = F)
 yhp <- list(title = "Counts", titlefont = F)
 ybp <- list(title = d$catName, titlefont = F)
@@ -1120,7 +1130,7 @@ renderPlotly({
     layout(yaxis = ybp)
   subplot(boxplotD, histogramD, nrows = 2, shareX = TRUE) %>%
     layout(showlegend = FALSE) %>%
-    layout(title = "DeathX Box Plot & Histogram - # of Trade Days with Outliers", bargap = 0.1)
+    layout(title = "# of Trade Days with Outliers", bargap = 0.1)
 })
 ```
 
@@ -1269,11 +1279,34 @@ DT::renderDataTable({
 })
 ```
 
-Row {data-height=35%}
+Row {data-height=33%}
 -------------------------------------
+### No X Return
+
+```{r 2.4.3.1-no-x-roi}
+xhp <- list(title = n$catName, titlefont = F)
+yhp <- list(title = "Counts", titlefont = F)
+ybp <- list(title = n$catName, titlefont = F)
+
+renderPlotly({
+  ind <- unique(trend[,7])[(as.numeric(input$radio2.4) - 4),]
+  n   <- n[indicator == ind]
+  n   <- n[(startDate >= input$dateRange2.4[1] & endDate <= input$dateRange2.4[2])]
+
+  histogram <- plot_ly(n, x = n$return, type = "histogram", marker = list(color = "purple")) %>%
+    layout(xaxis = xhp, yaxis = yhp)
+  boxplot <- plot_ly(n, x = n$return, type = "box", boxpoints = "all", jitter = 0.3, marker =   
+    list(color = "purple", outliercolor = "blue")) %>%
+    layout(yaxis = ybp)
+  subplot(boxplot, histogram, nrows = 2, shareX = TRUE) %>%
+    layout(showlegend = FALSE) %>%
+    layout(title = "ROI with Outliers", bargap = 0.1)
+})
+```
+
 ### No X Trade Days
 
-```{r 2.4.3.1-no-x-trade-days}
+```{r 2.4.3.2-no-x-trade-days}
 xhp <- list(title = n$catName, titlefont = F)
 yhp <- list(title = "Counts", titlefont = F)
 ybp <- list(title = n$catName, titlefont = F)
@@ -1291,7 +1324,7 @@ renderPlotly({
     layout(yaxis = ybp)
   subplot(boxplotN, histogramN, nrows = 2, shareX = TRUE) %>%
     layout(showlegend = FALSE) %>%
-    layout(title = "No X Box Plot & Histogram - # of Trade Days with Outliers", bargap = 0.1)
+    layout(title = "# of Trade Days with Outliers", bargap = 0.1)
 })
 ```
 
