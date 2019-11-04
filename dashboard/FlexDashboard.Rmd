@@ -664,6 +664,38 @@ renderPlotly({
 })
 ```
 
+
+
+### Trend Summary Test H
+```{r 2.1.1.h-box-tradeDays, eval=trend}
+
+renderPlotly({
+  p <- plot_ly(type = "box") %>%
+    add_boxplot(
+#      x = d[indicator == 'EMA'],
+      y = d$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
+      marker = list(color = "rgb(7,40,89)"),
+      line = list(color = "rgb(7,40,89)"),
+      name = "DeathX"
+    ) %>%
+    add_boxplot(
+      x = g[indicator == 'SMA'],
+      y = g$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
+      marker = list(color = "rgb(7,40,89)"),
+      line = list(color = "rgb(7,40,89)"),
+      name = "GoldenX"
+    ) %>%
+    add_boxplot(
+#      x = g[indicator == 'SMA'],
+      y = n$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
+      marker = list(color = "rgb(7,40,89)"),
+      line = list(color = "rgb(7,40,89)"),
+      name = "No X"
+    ) %>%    
+      layout(title = "Box Plot Trade Days")
+})
+```
+    
 Row {data-height=40%}
 -------------------------------------
 ### Trend Return Distribution
