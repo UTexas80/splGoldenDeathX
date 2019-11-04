@@ -120,6 +120,8 @@ trendname    <- str_sub(tail(trend[order(endDate)], 1)[, 1], end = -4)
 trendname1   <- substr(tail(trend[order(endDate)], 1)[, 1], 1, 1)
 # subset trend
 d <- trend[substr(trend$catName, 1, 1) %like% "D"]
+dEMA <- d[indicator == 'EMA']
+dSMA <- d[indicator == 'SMA']
 g <- trend[substr(trend$catName, 1, 1) %like% "G"]
 n <- trend[substr(trend$catName, 1, 1) %like% "n"]
 ```
@@ -673,17 +675,17 @@ renderPlotly({
   p <- plot_ly(type = "box") %>%
     add_boxplot(
 #      x = d[indicator == 'EMA'],
-      y = d$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
+      y = dEMA$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
       marker = list(color = "rgb(7,40,89)"),
       line = list(color = "rgb(7,40,89)"),
-      name = "DeathX"
+      name = "DeathX-EMA"
     ) %>%
     add_boxplot(
-      x = g[indicator == 'SMA'],
-      y = g$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
+#      x = g[indicator == 'SMA'],
+      y = dSMA$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
       marker = list(color = "rgb(7,40,89)"),
       line = list(color = "rgb(7,40,89)"),
-      name = "GoldenX"
+      name = "DeathX-SMA"
     ) %>%
     add_boxplot(
 #      x = g[indicator == 'SMA'],
