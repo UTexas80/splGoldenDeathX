@@ -17,6 +17,7 @@ saveRDS(trendReturns, file                     = "./rds/trendReturns.rds")
 saveRDS(trendReturnsAnnualized, file           = "./rds/trendReturnsAnnualized.rds")
 saveRDS(trendReturnsDaily, file                = "./rds/trendReturnsDaily.rds")
 saveRDS(trendSummaryEMA, file                  = "./rds/trendSummaryEMA.rds")
+saveRDS(trendSummaryGroup, file                = "./rds/trendSummaryGroup.rds")
 saveRDS(trendEMA, file                         = "./rds/trendEMA.rds")
 saveRDS(trendSMA, file                         = "./rds/trendSMA.rds")
 # ------------------------------------------------------------------------------

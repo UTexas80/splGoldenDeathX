@@ -112,6 +112,7 @@ trendReturnsDaily         <- readRDS(here::here("rds", "trendReturnsDaily.rds"))
 trendSMA                  <- data.table(readRDS(here::here("rds", "trendSMA.rds")))
 trendSummary              <- data.table(readRDS(here::here("rds", "trendSummary.rds")))
 trendSummaryEMA           <- data.table(readRDS(here::here("rds", "trendSummaryEMA.rds")))       
+trendSummaryGroup         <- data.table(readRDS(here::here("rds", "trendSummaryGroup.rds")))
 xtsEMA                    <- readRDS(here::here("rds", "xtsEMA.rds"))
 ```
 
@@ -413,7 +414,7 @@ Column {data-height=17%}
 -------------------------------------
 ###
 
-```{r 2.1.1.1-vbox-trend, eval=trend}
+```{r 2.1.0.1-vbox-trend, eval=trend}
 
 # https://is.gd/vb865W In flexdashboard, can a valueBox be clicked to update a text box like an actionButton?
 
@@ -441,7 +442,7 @@ flexdashboard::renderValueBox({
 
 ###
 
-```{r 2.1.1.2-vbox-returns-roi}
+```{r 2.1.0.2-vbox-returns-roi}
 trendROI <- percent(tail(trend[order(endDate)], 1)[, 5][[1]],
   scale = 100, prefix = "", suffix = "%", big.mark = " ", decimal.mark = ".",
   trim = TRUE
@@ -466,7 +467,7 @@ flexdashboard::renderValueBox({
 
 ###
 
-```{r 2.1.1.3-vbox-trade-days, eval=trend}
+```{r 2.1.0.3-vbox-trade-days, eval=trend}
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
     paste("Trade Days:", " ", format(tail(trend[order(endDate)], 1)[, 4], big.mark = ",")),
@@ -665,8 +666,6 @@ renderPlotly({
   subplot(boxplotD, histogramD, nrows = 2, shareX = TRUE) %>% layout(showlegend = FALSE)
 })
 ```
-
-
 
 ### Trend Summary Test H
 ```{r 2.1.1.h-box-tradeDays, eval=trend}
