@@ -109,6 +109,14 @@ trendSMA <- select(trendSMA, catName, everything())                          ###
 # Trend Test -------------------------------------------------------------------
 trend <- rbind.data.frame(trend, trendSMA)
 ################################################################################
+## Step 02.1a Grouping Set aggregation for data tables                       ###
+## https://is.gd/ZeSKLS                                                      ###
+################################################################################
+trendSummaryGroup <- head(groupingsets(trend[, c(4:7)], j = c(list(count = .N), 
+  lapply(.SD, sum)), by = c("catName", "indicator"), sets = list(c("catName", 
+  "indicator"), "indicator", character()), id = TRUE), -1)
+
+################################################################################
 ## Step 99.05  Performance Analytics Boxplot(s)
 ################################################################################
 chart.Boxplot(data.table(a) %>% select(starts_with("Golden")))

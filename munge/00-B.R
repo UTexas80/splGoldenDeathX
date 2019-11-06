@@ -1,10 +1,10 @@
 ################################################################################
-## Step 00.01: Get Prices                                                    ###
+## Step 00.00: Get Prices                                                    ###
 ################################################################################
 SPL <- tq_get("SPL.AX")                           ### Get TidyQuant Stock Prices
 SPL <- SPL[complete.cases(SPL), ]                 ### Delete NA
 ################################################################################
-## Step 00.02: xts Prices                      https://tinyurl.com/yy2mkklj  ###
+## Step 00.01: xts Prices                      https://tinyurl.com/yy2mkklj  ###
 ##                                             https://tinyurl.com/yyyf4qqw  ###
 ################################################################################
 xtsPrices <-
@@ -21,6 +21,12 @@ xtsPrices <-
 SPL.AX <-
   SPL.AX %>%
   na.omit() # Replace missing values (NA)       https://tinyurl.com/y5etxh8x ###
+################################################################################
+## Step 00.02 death Cross Trading System       https://tinyurl.com/y3sq4ond  ###
+## Baseline Return                                                           ###
+################################################################################
+close                     <- Cl(SPL.AX)
+ret                       <- ROC(Cl(SPL.AX))  
 ################################################################################
 ## Step 00.03: xts EMA / SMA                    https://tinyurl.com/yy8ozaa2 ### 
 ## Exponential Moving Average - EMA calculates an exponentially-weighted     ###

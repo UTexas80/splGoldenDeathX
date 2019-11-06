@@ -56,7 +56,7 @@ trendClose <- merge(deathCloseEMA, deathCloseSMA,
                     neitherCloseEMA, neitherCloseSMA)
 colnames(trendClose) <- c("deathEMA", "deathSMA", 
                           "goldenEMA", "goldenSMA",
-                          "neitherEMA", "neitherSMA")
+                          "neitherEMA", "neitherSMA")                          
 ################################################################################
 ## Step 00.99: VERSION HISTORY                                               ###
 ################################################################################
