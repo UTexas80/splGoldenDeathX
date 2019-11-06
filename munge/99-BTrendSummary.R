@@ -2,9 +2,9 @@
 ## Step 02.1a Grouping Set aggregation for data tables                       ###
 ## https://is.gd/ZeSKLS                                                      ###
 ################################################################################
-trendSummaryGroup <- groupingsets(trend[, c(4:7)], j = c(list(count = .N), 
+trendSummaryGroup <- head(groupingsets(trend[, c(4:7)], j = c(list(count = .N), 
   lapply(.SD, sum)), by = c("catName", "indicator"), sets = list(c("catName", 
-  "indicator"), "indicator", character()), id = TRUE)
+  "indicator"), "indicator", character()), id = TRUE), -1)
 ################################################################################
 ## Step 00.99: VERSION HISTORY                                               ###
 ################################################################################

@@ -6,12 +6,15 @@ data_loading: TRUE
 data_loading_header: TRUE
 data_ignore:
 load_libraries: TRUE
-libraries: xts, zoo, billboarder, checkpoint, curl, d3heatmap, dataMeta, datapasta, dataspice, data.table, devtools, DT, dygraphs, ezknitr, 
-        FinancialInstrument, flexdashboard, flextable, forecast, foreach, formatR, formattable, futile.logger, gt, here, highcharter, hydroTSM,
-        janitor, knitr, lintr, lubridate, naniar, openxlsx, orca, packagefinder, pacman, parallel, parallelMap, pbapply, pdftools, PerformanceAnalytics, 
-        plotly, plyr, PortfolioEffectHFT, ProjectTemplate, quantmod, readxl, repurrrsive, renv, reprex, repo, reshape2, rio, rmarkdown, 
-        RVerbalExpressions, rvest, scales, shiny, shinydashboard, shinydashboardPlus, shinyEffects, shinyjqui, SIT, statar, stringr, styler, 
-        tibble, tibbletime, tidyquant, tidyverse, timetk, timeSeries, treemap, tryCatchLog, TSstudio, TTR, xaringan, xlsx, xtable
+libraries: xts, zoo, billboarder, checkpoint, curl, d3heatmap, dataMeta, datapasta, dataspice,
+           data.table, devtools, DT, dygraphs, ezknitr, FinancialInstrument, flexdashboard, flextable,
+           forecast, foreach, formatR, formattable, futile.logger, gt, here, highcharter, hydroTSM,
+           janitor, knitr, lintr, lubridate, naniar, openxlsx, orca, packagefinder, pacman, parallel,
+           parallelMap, pbapply, pdftools, PerformanceAnalytics, plotly, plyr, PortfolioEffectHFT,
+           ProjectTemplate, quantmod, readxl, repurrrsive, renv, reprex, repo, reshape2, rio,
+           rmarkdown, RVerbalExpressions, rvest, scales, shiny, shinydashboard, shinydashboardPlus,
+           shinyEffects, shinyjqui, SIT, statar, stringr, styler, tibble, tibbletime, tidyquant,
+           tidyverse, timetk, timeSeries, treemap, tryCatchLog, TSstudio, TTR, xaringan, xlsx, xtable
 logging: TRUE
 logging_level: INFO
 munging: TRUE

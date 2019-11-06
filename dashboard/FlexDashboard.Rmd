@@ -110,7 +110,7 @@ trendReturns              <- data.table(readRDS(here::here("rds", "trendReturns.
 trendReturnsAnnualized    <- data.table(readRDS(here::here("rds", "trendReturnsAnnualized.rds")))
 trendReturnsDaily         <- readRDS(here::here("rds", "trendReturnsDaily.rds"))
 trendSMA                  <- data.table(readRDS(here::here("rds", "trendSMA.rds")))
-trendSummary              <- data.table(readRDS(here::here("rds", "trendSummary.rds")))
+# trendSummary              <- data.table(readRDS(here::here("rds", "trendSummary.rds")))
 trendSummaryEMA           <- data.table(readRDS(here::here("rds", "trendSummaryEMA.rds")))       
 trendSummaryGroup         <- data.table(readRDS(here::here("rds", "trendSummaryGroup.rds")))
 xtsEMA                    <- readRDS(here::here("rds", "xtsEMA.rds"))
