@@ -13,6 +13,8 @@
 	"settings": {
 		"workbench.colorCustomizations": {
 			"tab.unfocusedActiveBorder": "#fff0"
-		}
+		},
+		"terminal.integrated.cursorStyle": "underline",
+		"editor.suggest.localityBonus": true
 	}
 }
