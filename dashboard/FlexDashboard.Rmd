@@ -109,6 +109,7 @@ trendEMA                  <- data.table(readRDS(here::here("rds", "trendEMA.rds"
 trendReturns              <- data.table(readRDS(here::here("rds", "trendReturns.rds")))
 trendReturnsAnnualized    <- data.table(readRDS(here::here("rds", "trendReturnsAnnualized.rds")))
 trendReturnsDaily         <- readRDS(here::here("rds", "trendReturnsDaily.rds"))
+trendReturnsSMA           <- data.table(readRDS(here::here("rds", "trendReturnsSMA.rds")))
 trendSMA                  <- data.table(readRDS(here::here("rds", "trendSMA.rds")))
 # trendSummary              <- data.table(readRDS(here::here("rds", "trendSummary.rds")))
 trendSummaryEMA           <- data.table(readRDS(here::here("rds", "trendSummaryEMA.rds")))       
@@ -507,23 +508,20 @@ DT::renderDataTable({
 })
 ```
 
-### Trend Summary Table B
+### Trend Return Distribution EMA
 
-```{r 2.1.1.b-viz-ret-quarterly, eval=price}
-renderHighchart({
-  xts_price <- tk_xts(price())
-  quarterlyRet <- periodReturn(xts_price[, 6], period = "quarterly") * 100
-  highchart(type = "stock") %>%
-    hc_add_series(quarterlyRet, type = "column")
-})
-```
-
-### Trend Return Distribution C
-
-```{r 2.1.1.c-viz-ret-quarterly, eval=trend}
+```{r 2.1.1.b-viz-box-returns, eval=trendReturns}
 chart.Boxplot(data.table(trendReturns) %>% select(starts_with("D")))
 chart.Boxplot(data.table(trendReturns) %>% select(starts_with("Golden")))
 chart.Boxplot(data.table(trendReturns) %>% select(starts_with("n")))
+```
+
+### Trend Return Distribution SMA
+
+```{r 2.1.1.c-viz-box-returns, eval=trendReturnsSMA}
+chart.Boxplot(data.table(trendReturnsSMA) %>% select(starts_with("D")))
+chart.Boxplot(data.table(trendReturnsSMA) %>% select(starts_with("Golden")))
+chart.Boxplot(data.table(trendReturnsSMA) %>% select(starts_with("n")))
 ```
 
 ### Trend Summary Table D
@@ -711,46 +709,64 @@ renderPlotly({
 })
 ```
 
-### Trend Trade Day Distribution
-```{r  2.1.2.3-viz-hboxplot, eval=trend}
-renderHighchart({
-  hcboxplot(
-    x = trend$return,
-    var = paste(trend$catName, "-", trend$indicator),
-    name = "roi",
-    color = "#2980b9",
-    outliers = TRUE
-  ) %>%
-    hc_chart(type = "column") %>% # to put box vertical
-    hc_yAxis(labels = list(format = "{value}"), min = -0.5, max = 2) %>%
-    hc_add_theme(hc_theme_chalk())
-})
+### Trend Returns Annualized
+```{r  2.1.2.2-viz-pie, eval=trendReturnsAnnualized}
+m <- melt(trendReturnsAnnualized[1,], id.vars = c("rn"))[,-1]
+names(m) <- c("trend", "return")
+m <- m[-7, `:=`(trend=str_sub(trend, end = -4), indicator= str_sub(trend, -3, -1))]
+
+mEMA <- m[indicator=='EMA']
+mSMA <- m[indicator=='SMA']
+
+renderPlotly({
+    p <- plot_ly(type = "bar") %>%
+      add_bars(mEMA, x = ~mEMA$trend, y = ~mEMA$return, text = ~mEMA$indicator, textposition = 'auto',
+                marker = list(color = 
+                    c('black'
+                    ,'teal'
+                    ,'purple'))) %>%
+      add_bars(mSMA, x = ~mSMA$trend, y = ~mSMA$return, text = ~mSMA$indicator, textposition = 'auto',
+                marker = list(color = 
+                    c('black'
+                    ,'teal'
+                    ,'purple'
+                    ))) %>%
+      layout(
+        xaxis = list(title = ""),
+        yaxis = list(
+          title = 'Percent',
+          tickformat = "%"),
+        barmode = 'group', bargap = 0.15, bargroupgap = 0.1,
+        showlegend = FALSE)
+     
+})  
 ```
 
-### Trend Returns
-```{r  2.1.2.4-viz-pie, eval=trend}
-trendStats <- trend[,
-  .(
-    N = .N,
-    Mean = mean(tradeDays),
-    SDev = sd(tradeDays),
-    Median = median(tradeDays),
-    Min = min(tradeDays),
-    Max = max(tradeDays),
-    count = sum(tradeDays)
-  ),
-  by = .(catName)
-]
+### Trend Trade Days Distribution
+```{r  2.1.2.3-viz-barchart, eval=trendSummaryGroup}
+emaPct <- trendSummaryGroup[1:3, occurrencePct := count/sum(count)][1:3, tradeDaysPct := tradeDays/sum(tradeDays)][1:3, c(2:5,8,7)]
+smaPct <- trendSummaryGroup[4:6, occurrencePct := count/sum(count)][4:6, tradeDaysPct := tradeDays/sum(tradeDays)][4:6, c(2:5,8,7)]
+renderPlotly({
+    p <- plot_ly(type = "bar") %>%
+      add_bars( x = emaPct$catName, y = emaPct$tradeDaysPct, text = ~emaPct$indicator, textposition = 'auto',
+                marker = list(color = 
+                  c('rgba(0,0,0,1)'
+                    ,'teal'
+                    ,'purple'))) %>%
+      add_bars( x = smaPct$catName, y = smaPct$tradeDaysPct, text = ~smaPct$indicator, textposition = 'auto',
+                marker = list(color = 
+                  c('rgba(0,0,0,1)'
+                    ,'teal'
+                    ,'purple'))) %>%
 
-renderHighchart({
-  highchart() %>%
-    hc_chart(type = "column") %>%
-    hc_add_series_labels_values(
-      labels = trendStats$catName,
-      values = trendStats$N
-    ) %>%
-    hc_add_theme(hc_theme_darkunica())
-})
+      layout(
+          yaxis = list(
+          title = 'Percent',
+          tickformat = "%"),
+        barmode = 'group', bargap = 0.15, bargroupgap = 0.1,
+        showlegend = F)
+
+})  
 ```
 
 2.2 Golden Cross {data-navmenu="2-Trends" data-icon="fa-list" data-orientation=rows}
@@ -944,8 +960,9 @@ renderPlotly({
   boxplotG <- plot_ly(g, x = g$return, type = "box", boxpoints = "all", jitter = 0.3, marker = list(color = "teal", outliercolor = "blue")) %>%
     layout(yaxis = ybpG)
   subplot(boxplotG, histogramG, nrows = 2, shareX = TRUE) %>%
-    layout(showlegend = FALSE) %>%
-    layout(title = "ROI with Outliers", bargap = 0.1)
+    layout(xaxis = list(
+           tickformat = "%"),
+      title = "ROI with Outliers", bargap = 0.1, showlegend = FALSE)
 })
 ```
 
