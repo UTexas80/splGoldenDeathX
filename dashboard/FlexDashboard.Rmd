@@ -158,7 +158,7 @@ This purpose of this dashboard is twofold.
 
 This site is developed using a reactive framework thereby allowing a dynamic interaction with any of the input variables. Therefore, whenever the date is updated the corrresponding entries will be dynamically updated as well. As a sidenote, to formulate the Crossing trading systems, the data is based upon 20, 50, 100 and 200 day moving averages. Hence any dates selected with a start date greater than 200 days prior to today will currently generate an error.
 
-If you have any questions, or would like to provide feedback please: [email me](mailto:serverid@yahoo.com")
+If you have any questions, or would like to provide feedback please: [email me](mailto:serverid@yahoo.com)
 
 Thank you for your time and consideration. I hope that you enjoy the site.
 
