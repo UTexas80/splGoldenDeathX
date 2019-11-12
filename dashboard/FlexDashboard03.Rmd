@@ -1,29 +1,20 @@
 ---
 title: "SPL Dashboard"
+date: "`r params$reportdate`"
 output:
   flexdashboard::flex_dashboard:
     orientation: row
     source_code: embed
     vertical_layout: fill
-date: "`r params$reportdate`"
-resource_files:
-- rds/calendarDays.rds
-- rds/dtEMA.rds
-- rds/golden.rds
-- rds/tradeDays.rds
-- rds/trend.rds
-- rds/trendSummaryGroup.rds
-- rds/trendReturns.rds
-- rds/trendReturnsSMA.rds
+params:
+  dateStart: "2002-01-02"
+  dateEnd:  !r Sys.Date()
+  dynamictitle: "My report"
+  reportdate: !r Sys.Date()
+  symbols: "SPL.AX"
+  ticker: "SPL.AX"
 runtime: shiny
 theme: spacelab
-params:
-  dateEnd: !r Sys.Date()
-  dateStart: '2002-01-02'
-  dynamictitle: My report
-  reportdate: !r Sys.Date()
-  symbols: SPL.AX
-  ticker: SPL.AX
 ---
 
 ```{r global, echo=FALSE, include=FALSE, message = FALSE}
@@ -98,7 +89,7 @@ monthly_stock_returns <- function(ticker, dateStart) {
 xprices <- function() {
   symbols <- ("^IRX")
 
-  tidyquant::tq_get(symbols,
+  tq_get(symbols,
     get = "stock.prices",
     from = input$dateRange[1],
     to = input$dateRange[2]
@@ -144,37 +135,30 @@ Input {.sidebar}
 -------------------------------------
 
 ```{r 1.0.0.1-sidebarInput}
+
 dateRangeInput("dateRange",
   "Historical data",
   start = params$dateStart,
   end = Sys.Date()
 )
+
+# actionButton("go", "Submit")
 ```
-
-This purpose of this dashboard is twofold. 
-
-1. To provide a glimpse of Starpharma's performance circa 2002-01-02.
-2. To examine the Golden Crossing, Death Crossing and No Crossing Trading Strategies to discern their viability.
-
-This site is developed using a reactive framework thereby allowing a dynamic interaction with any of the input variables. Therefore, whenever the date is updated the corrresponding entries will be dynamically updated as well. As a sidenote, to formulate the Crossing trading systems, the data is based upon 20, 50, 100 and 200 day moving averages. Hence any dates selected with a start date greater than 200 days prior to today will currently generate an error.
-
-If you have any questions, or would like to provide feedback please: [email me](mailto:serverid@yahoo.com")
-
-Thank you for your time and consideration. I hope that you enjoy the site.
 
 ```{r 1.0.0.1-sidebar-ActionGo}
 
 tqPrices <- eventReactive(input$go, {
-  tqPrices <- tidyquant::tq_get("SPL.AX",
+  tqPrices <- tq_get("SPL.AX",
     get = "stock.prices",
     from = format(input$dateRange[1]),
     to = format(input$dateRange[2])
   )
 })
 
+
 #  date        open  high   low close volume adjusted   change
 price <- reactive({
-  tidyquant::tq_get("SPL.AX", from = format(input$dateRange[1]), to = format(input$dateRange[2])) %>%
+  tq_get("SPL.AX", from = format(input$dateRange[1]), to = format(input$dateRange[2])) %>%
     mutate(
       change = close - open,
       ema020 = EMA(na.fill0(close, 0), 20),
@@ -241,6 +225,7 @@ flexdashboard::renderValueBox({
 })
 ```
 
+
 ###
 
 ```{r 1.1.1.4-vbox-trade-days}
@@ -289,6 +274,7 @@ Row {data-height=200}
 ### Stock Price Over Time (Chart)
 ```{r  1.1.3.1-viz-Price, eval=price}
 # y <- getSymbols("CSL.AX", auto.assign = FALSE)
+
 
 renderHighchart({
   xts_price <- tk_xts(price())
@@ -555,7 +541,7 @@ flexdashboard::renderValueBox({
 Column {data-height=50%, .tabset .tabset-fade}
 -------------------------------------
 
-### Trend Summary Table
+### Trend Summary Table A
 
 ```{r 2.1.1.a-table-Trend}
 DT::renderDataTable({
@@ -598,7 +584,7 @@ chart.Boxplot(data.table(trendReturnsSMA) %>% select(starts_with("Golden")))
 chart.Boxplot(data.table(trendReturnsSMA) %>% select(starts_with("n")))
 ```
 
-### Composite Returns
+### Trend Summary Table D
 ```{r 2.1.1.d-box-returns, eval=trend}
 renderPlotly({
   p <- plot_ly(type = "box") %>%
@@ -620,71 +606,48 @@ renderPlotly({
       line = list(color = "rgb(7,40,89)"),
       name = "n Returns"
     ) %>%
-    layout(title = "Composite Returns - EMA + SMA",
-          yaxis = list(
-          title = 'Return Percentage ',
-          tickformat = "%")
-    )
+    add_boxplot(
+      y = d$return, name = "Death Suspected Outlier", boxpoints = "suspectedoutliers",
+      marker = list(
+        color = "rgb(8,81,156)",
+        outliercolor = "rgba(219, 64, 82, 0.6)",
+        line = list(
+          outliercolor = "rgba(219, 64, 82, 1.0)",
+          outlierwidth = 2
+        )
+      ),
+      line = list(color = "rgb(8,81,156)")
+    ) %>%
+    add_boxplot(
+      y = g$return, name = "Golden Suspected Outlier", boxpoints = "suspectedoutliers",
+      marker = list(
+        color = "rgb(8,81,156)",
+        outliercolor = "rgba(219, 64, 82, 0.6)",
+        line = list(
+          outliercolor = "rgba(219, 64, 82, 1.0)",
+          outlierwidth = 2
+        )
+      ),
+      line = list(color = "rgb(8,81,156)")
+    ) %>%
+    add_boxplot(
+      y = n$return, name = "N Suspected Outlier", boxpoints = "suspectedoutliers",
+      marker = list(
+        color = "rgb(8,81,156)",
+        outliercolor = "rgba(219, 64, 82, 0.6)",
+        line = list(
+          outliercolor = "rgba(219, 64, 82, 1.0)",
+          outlierwidth = 2
+        )
+      ),
+      line = list(color = "rgb(8,81,156)")
+    ) %>%
+    layout(title = "Box Plot Returns with Outliers")
 })
 ```
 
-### Returns by MA Type
-```{r 2.1.1.e-box-returns, eval=trend}
-gSMA = g[indicator == 'SMA']
-nSMA = n[indicator == 'SMA']
-
-renderPlotly({
-  p <- plot_ly(type = "box") %>%
-    add_boxplot(
-#      x = d[indicator == 'EMA'],
-      y = dEMA$return, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
-      marker = list(color = "rgb(7,40,89)"),
-      line = list(color = "rgb(7,40,89)"),
-      name = "DeathX-EMA"
-    ) %>%
-    add_boxplot(
-      d = d[indicator == 'SMA'],
-      y = d$return, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
-      marker = list(color = "rgb(7,40,89)"),
-      line = list(color = "rgb(7,40,89)"),
-      name = "DeathX-SMA"
-    ) %>%    
-    add_boxplot(
-      g = g[indicator == 'EMA'],
-      y = g$return, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
-      marker = list(color = "rgb(7,40,89)"),
-      line = list(color = "rgb(7,40,89)"),
-      name = "GoldenX-EMA"
-    ) %>%
-    add_boxplot(
-      y = gSMA$return, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
-      marker = list(color = "rgb(7,40,89)"),
-      line = list(color = "rgb(7,40,89)"),
-      name = "GoldenX-SMA"
-    ) %>%
-    add_boxplot(
-      n = n[indicator == 'EMA'],
-      y = n$return, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
-      marker = list(color = "rgb(7,40,89)"),
-      line = list(color = "rgb(7,40,89)"),
-      name = "No X-EMA"
-    ) %>%
-    add_boxplot(
-      y = nSMA$return, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
-      marker = list(color = "rgb(7,40,89)"),
-      line = list(color = "rgb(7,40,89)"),
-      name = "No X-SMA"
-    ) %>% 
-      layout(title = "Returns by Moving Average Type",
-          yaxis = list(
-          title = 'Return Percentage ',
-          tickformat = "%")
-    )
-})
-```
-
-### Composite Trade Days
-```{r 2.1.1.f-box-tradeDays, eval=trend}
+### Trend Summary Table E
+```{r 2.1.1.e-box-tradeDays, eval=trend}
 
 renderPlotly({
   p <- plot_ly(type = "box") %>%
@@ -706,17 +669,64 @@ renderPlotly({
       line = list(color = "rgb(7,40,89)"),
       name = "n tradeDays"
     ) %>%
-      layout(title = "Composite Trade Days - EMA + SMA",
-          yaxis = list(
-          title = 'Trade Days')
-    )
+    add_boxplot(
+      y = d$tradeDays, name = "DeathX Suspected Outlier", boxpoints = "suspectedoutliers",
+      marker = list(
+        color = "rgb(8,81,156)",
+        outliercolor = "rgba(219, 64, 82, 0.6)",
+        line = list(
+          outliercolor = "rgba(219, 64, 82, 1.0)",
+          outlierwidth = 2
+        )
+      ),
+      line = list(color = "rgb(8,81,156)")
+    ) %>%
+    add_boxplot(
+      y = g$tradeDays, name = "GoldenX Suspected Outlier", boxpoints = "suspectedoutliers",
+      marker = list(
+        color = "rgb(8,81,156)",
+        outliercolor = "rgba(219, 64, 82, 0.6)",
+        line = list(
+          outliercolor = "rgba(219, 64, 82, 1.0)",
+          outlierwidth = 2
+        )
+      ),
+      line = list(color = "rgb(8,81,156)")
+    ) %>%
+    add_boxplot(
+      y = n$tradeDays, name = "N Suspected Outlier", boxpoints = "suspectedoutliers",
+      marker = list(
+        color = "rgb(8,81,156)",
+        outliercolor = "rgba(219, 64, 82, 0.6)",
+        line = list(
+          outliercolor = "rgba(219, 64, 82, 1.0)",
+          outlierwidth = 2
+        )
+      ),
+      line = list(color = "rgb(8,81,156)")
+    ) %>%
+    layout(title = "Box Plot # of Trade Days with Outliers")
 })
 ```
 
-### Trade Days by MA Type
+### Trend Summary Table G
 ```{r 2.1.1.g-box-tradeDays, eval=trend}
-gSMA = g[indicator == 'SMA']
-nSMA = n[indicator == 'SMA']
+xhp <- list(title = d$catName, titlefont = f)
+yhp <- list(title = "Counts", titlefont = f)
+ybp <- list(title = d$catName, titlefont = f)
+
+renderPlotly({
+  histogramD <- plot_ly(d, x = d$tradeDays, type = "histogram") %>%
+    layout(xaxis = xhp, yaxis = yhp)
+
+  boxplotD <- plot_ly(d, x = d$tradeDays, type = "box", boxpoints = "all", jitter = 0.3) %>%
+    layout(yaxis = ybp)
+  subplot(boxplotD, histogramD, nrows = 2, shareX = TRUE) %>% layout(showlegend = FALSE)
+})
+```
+
+### Trend Summary Test H
+```{r 2.1.1.h-box-tradeDays, eval=trend}
 
 renderPlotly({
   p <- plot_ly(type = "box") %>%
@@ -728,45 +738,23 @@ renderPlotly({
       name = "DeathX-EMA"
     ) %>%
     add_boxplot(
-      d = d[indicator == 'SMA'],
-      y = d$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
+#      x = g[indicator == 'SMA'],
+      y = dSMA$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
       marker = list(color = "rgb(7,40,89)"),
       line = list(color = "rgb(7,40,89)"),
       name = "DeathX-SMA"
-    ) %>%    
-    add_boxplot(
-      g = g[indicator == 'EMA'],
-      y = g$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
-      marker = list(color = "rgb(7,40,89)"),
-      line = list(color = "rgb(7,40,89)"),
-      name = "GoldenX-EMA"
     ) %>%
     add_boxplot(
-      y = gSMA$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
-      marker = list(color = "rgb(7,40,89)"),
-      line = list(color = "rgb(7,40,89)"),
-      name = "GoldenX-SMA"
-    ) %>%
-    add_boxplot(
-      n = n[indicator == 'EMA'],
+#      x = g[indicator == 'SMA'],
       y = n$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
       marker = list(color = "rgb(7,40,89)"),
       line = list(color = "rgb(7,40,89)"),
-      name = "No X-EMA"
-    ) %>%
-    add_boxplot(
-      y = nSMA$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
-      marker = list(color = "rgb(7,40,89)"),
-      line = list(color = "rgb(7,40,89)"),
-      name = "No X-SMA"
-    ) %>%        
-      layout(title = "Trade Days by Moving Average Type",
-          yaxis = list(
-          title = 'Trade Days')
-    )  
+      name = "No X"
+    ) %>%    
+      layout(title = "Box Plot Trade Days")
 })
 ```
-
+    
 Row {data-height=33%}
 -------------------------------------
 ### Trend Return Distribution
@@ -982,6 +970,35 @@ DT::renderDataTable({
 })
 ```
 
+### Golden Crossing Table
+
+```{r 2.2.2.2-table-golden}
+DT::renderDataTable({
+  DT::datatable(trend[catName == "GoldenX" & 
+                        (startDate >= input$dateRange2.2[1] & 
+                           endDate <= input$dateRange2.2[2])][,-7],
+    rownames = FALSE,
+    extensions = c("Scroller"),
+    options = list(
+      order = list(list(3, "desc")),
+      pageLength = 10,
+      scrollX = TRUE,
+      scrollY = 280,
+      scroller = TRUE
+    )
+  ) %>%
+    formatDate(c("startDate", "endDate")) %>%
+    formatRound("tradeDays", 0) %>%
+    formatPercentage("return") %>%
+    formatStyle("return",
+      background = styleColorBar(range(trend$return), "lightblue")
+    ) %>%
+    formatStyle("tradeDays",
+      color = styleInterval(c(0), c("maroon", "darkgreen"))
+    )
+})
+```
+
 Column {data-height=33%}
 -------------------------------------
 ### GoldenX Return
@@ -1003,11 +1020,9 @@ renderPlotly({
   boxplotG <- plot_ly(g, x = g$return, type = "box", boxpoints = "all", jitter = 0.3, marker = list(color = "teal", outliercolor = "blue")) %>%
     layout(yaxis = ybpG)
   subplot(boxplotG, histogramG, nrows = 2, shareX = TRUE) %>%
-    layout(
-      xaxis = list(tickformat = "%")
-      ,title = "ROI with Outliers"
-      ,bargap = 0.1
-      ,showlegend = FALSE)
+    layout(xaxis = list(
+           tickformat = "%"),
+      title = "ROI with Outliers", bargap = 0.1, showlegend = FALSE)
 })
 ```
 
@@ -1200,11 +1215,8 @@ renderPlotly({
     list(color = "black", outliercolor = "blue")) %>%
     layout(yaxis = ybpD)
   subplot(boxplotD, histogramD, nrows = 2, shareX = TRUE) %>%
-    layout(
-      xaxis = list(tickformat = "%")
-      ,title = "ROI with Outliers"
-      ,bargap = 0.1
-      ,showlegend = FALSE)
+    layout(showlegend = FALSE) %>%
+    layout(title = "ROI with Outliers", bargap = 0.1)
 })
 ```
 
@@ -1397,11 +1409,8 @@ renderPlotly({
     list(color = "purple", outliercolor = "blue")) %>%
     layout(yaxis = ybp)
   subplot(boxplot, histogram, nrows = 2, shareX = TRUE) %>%
-    layout(
-      xaxis = list(tickformat = "%")
-      ,title = "ROI with Outliers"
-      ,bargap = 0.1
-      ,showlegend = FALSE)
+    layout(showlegend = FALSE) %>%
+    layout(title = "ROI with Outliers", bargap = 0.1)
 })
 ```
 
@@ -1427,4 +1436,228 @@ renderPlotly({
     layout(showlegend = FALSE) %>%
     layout(title = "# of Trade Days with Outliers", bargap = 0.1)
 })
+```
+
+2.5 Box Plot {data-navmenu="2-Trends" data-icon="fa-list" data-orientation=rows}
+=====================================
+
+```{r 2.5.1.1-xxx-neither}
+x   <- list(
+  title                  = "Trend Name",
+  titlefont              = F
+)
+y   <- list(
+  title                  = "% Return",
+  titlefont              = F
+)
+
+renderPlotly({
+  p <- plot_ly(type        = "box") %>%
+    add_boxplot(
+      y                    = trend$return,
+      x                    = ~ trend$catName,
+      color                = ~ trend$catName,
+      jitter               = 0.3,
+      boxpoints            = "all",
+      marker               = list(color = "rgb(7,40,89)"),
+      line                 = list(color = "rgb(7,40,89)"),
+      name                 = trend$catName) %>%          
+      layout(
+          title            = "GoldenX Box Plot & Histogram - # of Trade Days with Outliers"
+            ,titlefont     = list(size = 15, color = 'white')
+          ,xaxis           = list(
+            color          = 'lime',
+            tickangle      = -0,
+            titlefont      = list(size = 20, color = 'white'),
+            title          = "Trend Name", color = '#ffffff')
+          ,yaxis           = list(
+            titlefont      = list(size = 15, color = 'white'),
+            title          = "% Return", color = '#ffffff')
+          ,margin          = list(l = 100)
+          ,plot_bgcolor    = '#5875D5'
+          ,paper_bgcolor   = '#5875D5') %>%
+    layout(yaxis           = list(tickformat = "%")
+    )
+})  
+```
+
+3.1 Summary {data-navmenu="3-TechnicalAnalysis" data-icon="fa-list" data-orientation=rows}
+=====================================
+
+Input {.sidebar}
+-------------------------------------
+
+```{r 3.1.0.1-sidebar-ActionGo-TA}
+dateRangeInput("dateRange3",
+  "Historical data",
+  start = params$dateStart,
+  end = Sys.Date()
+)
+```
+
+Column {}
+-------------------------------------
+
+### Gauge 3.1.1.1
+
+```{r 3.1.1.1-vbox-gauge}
+flexdashboard::renderGauge({
+  gauge(60, min = 0, max = 100, symbol = "%")
+})
+```
+
+### Gauge 3.1.1.2
+
+```{r 3.1.1.2-vbox-gauge}
+flexdashboard::renderGauge({
+  gauge(60, min = 0, max = 100, symbol = "%")
+})
+```
+
+
+### Gauge 3.1.1.3
+
+```{r 3.1.1.3-vbox-gauge}
+flexdashboard::renderGauge({
+  xts_price <- tk_xts(price())
+  cumReturn <- (as.numeric(last(xts_price[, 4])) - as.numeric(first(xts_price[, 4]))) / (as.numeric(first(xts_price[, 4])))
+
+  gauge(cumReturn * 100, min = -100, max = 100, symbol = "%")
+})
+```
+
+Column {}
+-------------------------------------
+### Stock Price Table
+
+```{r 3.1.2.1-table-price}
+DT::renderDataTable({
+  DT::datatable(price(),
+    rownames = FALSE,
+    options = list(pageLength = 20, order = list(list(0, "desc")))
+  ) %>%
+    formatCurrency(c("open", "high", "low", "close", "adjusted", "change")) %>%
+    formatDate(c("date")) %>%
+    formatStyle("volume",
+      background = styleColorBar(price()$volume, "steelblue")
+    ) %>%
+    formatStyle(
+      "change",
+      color = styleInterval(c(0), c("maroon", "darkgreen"))
+    )
+})
+```
+
+Column {.tabset .tabset-fade}
+-------------------------------------
+### Time Series
+```{r 3.1.3.a-viz-time-series, eval=price}
+renderPlot({
+  xts_price <- tk_xts(price())
+  chartSeries(xts_price, theme = chartTheme("black"), TA = "addCMF()")
+})
+```  
+
+### Time Series 2
+```{r 3.1.3.b-viz-time-series, eval=price}
+renderPlot({
+  xts_price <- tk_xts(price())
+  chartSeries(xts_price, theme = chartTheme("white"), TA = "addMACD()")
+})
+```
+
+### Time Series 3
+
+```{r 3.1.3.c-viz-time-series, eval=xtsEMA}
+renderPlot({
+  chartSeries(xtsEMA[, 2],
+    theme = chartTheme("black"),
+    TA = c(
+      addVo(),
+      addBBands(),
+      addEMA(n = 10, col = "blue")
+    )
+  )
+})
+```
+
+4.1 Summary {data-navmenu="4-Forecast" data-icon="fa-list" data-orientation=rows}
+=====================================
+
+Column {.tabset .tabset-fade}
+-------------------------------------
+
+### Forecast Column1a
+
+```{r 4.1.1.1-xxx}
+
+```
+
+Column
+-------------------------------------
+
+### Forecast Column2a
+
+```{r 4.1.2.1-xxx}
+
+```
+
+5.1 Summary {data-navmenu="5-BackTesting" data-icon="fa-list" data-orientation=rows}
+==========================================
+
+Column {data-width=500 .tabset .tabset-fade}
+-------------------------------------
+
+### BackTesting01a
+
+```{r  5.1.1.1-table-ema, eval=price}
+xtsEMA <- tk_xts(xtsEMA)
+xtsEMA
+```
+
+5.2 Detail {data-navmenu="5-BackTesting" data-icon="fa-list" data-orientation=rows}
+==========================================
+
+Column {data-width=500 .tabset .tabset-fade}
+-------------------------------------
+
+### Distribution 2
+
+```{r 5.2.1.2-xxx, eval=price}
+renderHighchart({
+
+  # generate bins based on input$bins from ui.R
+  x <- tk_xts(price())
+  hist(x[, 6], col = "darkmagenta", freq = FALSE, border = "white", xlim = c(0, 2))
+})
+```
+
+6.1 Summary {data-navmenu="6-WordCloud" data-icon="fa-list" data-orientation=rows}
+=====================================
+
+Column {data-width=500 .tabset .tabset-fade}
+-------------------------------------
+
+### WordCloud01a
+
+```{r 6.1.1.1-table-ret-category wordCloud01a}
+trendReturns
+```
+
+6.2 Detail {data-navmenu="6-WordCloud" data-icon="fa-list" data-orientation=rows}
+=====================================
+
+Column {data-width=500 .tabset .tabset-fade}
+-------------------------------------
+
+### WordCloud02a
+
+```{r 6.2.1.a-table-dtEMA, eval=dtEMA}
+dtEMA
+```
+
+### WordCloud02b
+
+```{r 6.2.1.b-table-dtEMA, eval=trend}
+trend
 ```
