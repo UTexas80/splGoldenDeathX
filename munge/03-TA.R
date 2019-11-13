@@ -9,7 +9,10 @@ trendReturns <- t(data.table((as.single(lapply(lapply(xtsPrice, na.omit,
 # ------------------------------------------------------------------------------  
 colnames(trendReturns) <- dimnames(xtsPrice)[[2]]
 rownames(trendReturns) <- 1
-
+# ------------------------------------------------------------------------------  
+trendReturnsEMAlong <- data.table(melt(trendReturns)[,-1])
+names(trendReturnsEMAlong)[c(1:2)] <- c("trend", "returns")
+# ------------------------------------------------------------------------------  
 trendReturnsSMA <- t(data.table((as.single(lapply(lapply(xtsPriceSMA, na.omit, 
   xtsPriceSMA[1, ]), tail, 1)) - as.single(lapply(lapply(xtsPriceSMA, 
   na.omit, xtsPriceSMA[1, ]), head, 1)))/as.single(lapply(lapply(xtsPriceSMA, 
@@ -17,6 +20,9 @@ trendReturnsSMA <- t(data.table((as.single(lapply(lapply(xtsPriceSMA, na.omit,
 # ------------------------------------------------------------------------------  
 colnames(trendReturnsSMA) <- dimnames(xtsPriceSMA)[[2]]
 rownames(trendReturnsSMA) <- 1
+# ------------------------------------------------------------------------------  
+trendReturnsSMAlong <- data.table(melt(trendReturnsSMA)[,-1])
+names(trendReturnsSMAlong)[c(1:2)] <- c("trend", "returns")
 ################################################################################
 ## Step 1.01: Monthly Returns                                                ###
 ################################################################################

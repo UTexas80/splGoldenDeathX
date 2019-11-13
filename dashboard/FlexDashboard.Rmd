@@ -118,7 +118,9 @@ trendEMA                  <- data.table(readRDS(here::here("rds", "trendEMA.rds"
 trendReturns              <- data.table(readRDS(here::here("rds", "trendReturns.rds")))
 trendReturnsAnnualized    <- data.table(readRDS(here::here("rds", "trendReturnsAnnualized.rds")))
 trendReturnsDaily         <- readRDS(here::here("rds", "trendReturnsDaily.rds"))
+trendReturnsEMAlong       <- data.table(readRDS(here::here("rds", "trendReturnsEMAlong.rds")))
 trendReturnsSMA           <- data.table(readRDS(here::here("rds", "trendReturnsSMA.rds")))
+trendReturnsSMAlong       <- data.table(readRDS(here::here("rds", "trendReturnsSMAlong.rds")))
 trendSMA                  <- data.table(readRDS(here::here("rds", "trendSMA.rds")))
 # trendSummary              <- data.table(readRDS(here::here("rds", "trendSummary.rds")))
 trendSummaryEMA           <- data.table(readRDS(here::here("rds", "trendSummaryEMA.rds")))       
@@ -580,6 +582,58 @@ DT::renderDataTable({
       color = styleInterval(c(0), c("maroon", "darkgreen"))
     )
 })
+```
+
+### EMA Lollipop
+
+```{r 2.1.1.b0-viz-box-returns, eval=trendReturns}
+dRetEMA <- trendReturnsEMAlong[trend %like% "^D"][order(-returns)]
+gRetEMA <- trendReturnsEMAlong[trend %like% "^G"][order(-returns)]
+nRetEMA <- trendReturnsEMAlong[trend %like% "^n"][order(-returns)]
+
+dRetEMA[,`:=`(N = .N,
+  Mean = mean(returns),
+  SDev = sd(returns),
+  Median = median(returns),
+  Min = min(returns),
+  Max = max(returns),
+  AboveAvg = ifelse(returns - mean(returns) > 0, TRUE, FALSE))]
+gRetEMA[,`:=`(N = .N,
+  Mean = mean(returns),
+  SDev = sd(returns),
+  Median = median(returns),
+  Min = min(returns),
+  Max = max(returns),
+  AboveAvg = ifelse(returns - mean(returns) > 0, TRUE, FALSE))]
+nRetEMA[,`:=`(N = .N,
+  Mean = mean(returns),
+  SDev = sd(returns),
+  Median = median(returns),
+  Min = min(returns),
+  Max = max(returns),
+  AboveAvg = ifelse(returns - mean(returns) > 0, TRUE, FALSE))]
+renderPlotly({
+  ggplotly( 
+     ggplot(dRetEMA, aes(returns, trend, color = AboveAvg))
+    + scale_x_continuous(labels = percent)
+    + geom_segment(aes(x = Mean, y = trend, xend = returns, yend = trend), color = "grey50")
+    + guides(fill=FALSE, color=FALSE)
+    + theme(legend.position = "none")
+    + geom_point())  %>%
+  subplot(ggplot(gRetEMA, aes(returns, trend, color = AboveAvg))
+    + scale_x_continuous(labels = percent)
+    + geom_segment(aes(x = Mean, y = trend, xend = returns, yend = trend), color = "grey50")
+    + guides(fill=FALSE, color=FALSE)
+    + theme(legend.position = "none")    
+    + geom_point()
+    )   %>%
+  subplot(ggplot(nRetEMA, aes(returns, trend, color = AboveAvg))
+    + scale_x_continuous(labels = percent)
+    + geom_segment(aes(x = Mean, y = trend, xend = returns, yend = trend), color = "grey50")
+    + geom_point()
+    )
+})
+
 ```
 
 ### EMA Trend Return Distribution

@@ -79,7 +79,7 @@ aa <- t(a)
 aa <- data.table(aa, keep.rownames = TRUE)
 aa <- cbind(aa, startDate, endDate, countDate)
 ################################################################################
-## Reorder Columns
+## Reorder Columns by reference
 aa <- aa[, c(1, 3:4, 5, 2)]
 ################################################################################
 # Rename Columns ---------------------------------------------------------------
