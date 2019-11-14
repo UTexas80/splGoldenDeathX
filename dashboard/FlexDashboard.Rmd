@@ -773,14 +773,23 @@ renderPlotly({
 
 Row {data-height=33%}
 -------------------------------------
-### Trend Return Distribution
+### Composite Trend Return Distribution
 ```{r  2.1.2.1-viz-vboxplot, eval=trend}
+
 renderPlotly({
   ggplotly(
-    ggplot(trend, aes(x = paste(trend$catName, "-", trend$indicator), y = return))
+    ggplot(trend, aes(x = paste0(trend$catName, "-", trend$indicator), y = return))
     + scale_y_continuous(labels = percent)
-      + geom_boxplot(fill = "#0c4c8a")
-      + theme_gray()
+    + geom_boxplot(fill = "#0c4c8a")
+    + theme_gray()
+    + theme(axis.title.x=element_blank()
+          ,axis.text.x = element_text(
+            angle = 0
+            , vjust = 0
+            , size = 8
+            , hjust = 1
+            , face = "bold")
+          ) 
   )
 })
 ```
@@ -1002,10 +1011,27 @@ renderPlotly({
           endDate   <= input$dateRange2.2[2])]
 
   histogramG <- plot_ly(g, x = g$return, type = "histogram", marker = list(color = "teal")) %>%
-    layout(xaxis = xhpG, yaxis = yhpG)
+    layout(
+      xaxis = xhpG
+      ,yaxis = yhpG
+      )
 
-  boxplotG <- plot_ly(g, x = g$return, type = "box", boxpoints = "all", jitter = 0.3, marker = list(color = "teal", outliercolor = "blue")) %>%
-    layout(yaxis = ybpG)
+  boxplotG <- plot_ly(
+              g
+              ,x = g$return
+              ,type = "box"
+              ,boxpoints = "all"
+              ,jitter = 0.3
+              ,marker = list(
+                color = "teal"
+                ,outliercolor = "blue")
+              ) %>%
+              layout(
+                yaxis = ybpG
+              )
+  boxplotG$data[[1]]$name <- 'Group A'
+
+  # boxplotG$x$data[[1]]$name <- 'Group A'       https://is.gd/qChas5
   subplot(boxplotG, histogramG, nrows = 2, shareX = TRUE) %>%
     layout(
       xaxis = list(tickformat = "%")
