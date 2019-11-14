@@ -586,121 +586,13 @@ DT::renderDataTable({
 })
 ```
 
-### EMA Lollipop
-
-```{r 2.1.1.b0-viz-box-returns, eval=trendReturns}
-dRetEMA <- trendReturnsEMAlong[trend %like% "^D"][order(-returns)]
-gRetEMA <- trendReturnsEMAlong[trend %like% "^G"][order(-returns)]
-nRetEMA <- trendReturnsEMAlong[trend %like% "^n"][order(-returns)]
-
-
-dRetEMA[,`:=`(
-  key = substr(trend, 1, 1),
-  N = .N,
-  Mean = mean(returns),
-  SDev = sd(returns),
-  Median = median(returns),
-  Min = min(returns),
-  Max = max(returns),
-  AboveAvg = ifelse(returns - mean(returns) > 0, TRUE, FALSE))]
-gRetEMA[,`:=`(
-  key = substr(trend, 1, 1),
-  N = .N,
-  Mean = mean(returns),
-  SDev = sd(returns),
-  Median = median(returns),
-  Min = min(returns),
-  Max = max(returns),
-  AboveAvg = ifelse(returns - mean(returns) > 0, TRUE, FALSE))]
-nRetEMA[,`:=`(
-  key = substr(trend, 1, 1),
-  N = .N,
-  Mean = mean(returns),
-  SDev = sd(returns),
-  Median = median(returns),
-  Min = min(returns),
-  Max = max(returns),
-  AboveAvg = ifelse(returns - mean(returns) > 0, TRUE, FALSE))]
-
-retEMA <- rbind(dRetEMA,gRetEMA, nRetEMA)
-renderPlotly({
-  ggplotly( 
-     ggplot(dRetEMA, aes(returns, trend, color = AboveAvg))
-    + scale_x_continuous(labels = percent)
-    + geom_segment(aes(x = Mean, y = trend, xend = returns, yend = trend), color = "grey50")
-    + geom_point())  %>%
-  subplot(ggplot(gRetEMA, aes(returns, trend, color = AboveAvg))
-    + scale_x_continuous(labels = percent)
-    + geom_segment(aes(x = Mean, y = trend, xend = returns, yend = trend), color = "grey50")
-    + geom_point()
-    )   %>%
-  subplot(ggplot(nRetEMA, aes(returns, trend, color = AboveAvg))
-    + scale_x_continuous(labels = percent)
-    + geom_segment(aes(x = Mean, y = trend, xend = returns, yend = trend), color = "grey50")
-    + geom_point()
-    + guides(fill = FALSE, color = FALSE)
-    + theme(legend.position = "none")
-    )
-})
-```
-
-
-### EMA Lollipop 2
-
-```{r 2.1.1.b2-viz-box-returns, eval=trendReturns}
-dRetEMA <- trendReturnsEMAlong[trend %like% "^D"][order(-returns)]
-gRetEMA <- trendReturnsEMAlong[trend %like% "^G"][order(-returns)]
-nRetEMA <- trendReturnsEMAlong[trend %like% "^n"][order(-returns)]
-
-
-dRetEMA[,`:=`(
-  key = substr(trend, 1, 1),
-  N = .N,
-  Mean = mean(returns),
-  SDev = sd(returns),
-  Median = median(returns),
-  Min = min(returns),
-  Max = max(returns),
-  AboveAvg = ifelse(returns - mean(returns) > 0, TRUE, FALSE))]
-gRetEMA[,`:=`(
-  key = substr(trend, 1, 1),
-  N = .N,
-  Mean = mean(returns),
-  SDev = sd(returns),
-  Median = median(returns),
-  Min = min(returns),
-  Max = max(returns),
-  AboveAvg = ifelse(returns - mean(returns) > 0, TRUE, FALSE))]
-nRetEMA[,`:=`(
-  key = substr(trend, 1, 1),
-  N = .N,
-  Mean = mean(returns),
-  SDev = sd(returns),
-  Median = median(returns),
-  Min = min(returns),
-  Max = max(returns),
-  AboveAvg = ifelse(returns - mean(returns) > 0, TRUE, FALSE))]
-
-retEMA <- rbind(dRetEMA,gRetEMA, nRetEMA)
-renderPlotly({
-  ggplotly( 
-     ggplot(retEMA, aes(returns, trend, color = AboveAvg))
-    + scale_x_continuous(labels = percent)
-    + geom_segment(aes(x = Mean, y = trend, xend = returns, yend = trend), color = "grey50")
-    + geom_point()
-    + facet_wrap(~ key, scales = "free_y")
-    )
-})
-
-```
-
 ### EMA Trend Return Distribution
 ```{r 2.1.1.b-viz-box-returns, eval=trendReturns}
-chart.Boxplot(data.table(trendReturns) %>% select(starts_with("D")))
+chart.Boxplot(data.table(trendReturns, colorset = bluemono, main = "Trailing 36-Month Returns")
+    %>% select(starts_with("D")))
 chart.Boxplot(data.table(trendReturns) %>% select(starts_with("G")))
 chart.Boxplot(data.table(trendReturns) %>% select(starts_with("n")))
 ```
-
 
 ### SMA Trend Return Distribution
 
