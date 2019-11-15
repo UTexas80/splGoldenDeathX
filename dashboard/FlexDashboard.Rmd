@@ -172,7 +172,7 @@ This purpose of this dashboard is twofold.
 
 This site is developed using a reactive framework thereby allowing a dynamic interaction with any of the input variables. Therefore, whenever the date is updated the corrresponding entries will be dynamically updated as well. 
 
-As a sidenote, to formulate the Crossing Trading Systems, the annualized return and ROI formula's are based upon the 20, 50, 100 and 200 day moving averages. Hence any dates selected with a start date less than 200 days prior to today, i.e., in the range from  `` `r head(tail(index(xtsEMA),200),1)` `` to `` `r Sys.Date()` `` will currently generate an error. I am currently working on a fix to this issue.
+As a sidenote, to formulate the Crossing Trading Systems, the annualized return and ROI formula's are based upon the 20, 50, 100 and 200 day moving averages. Hence any dates selected with a start date less than 200 trading days prior to today, i.e., in the range from  `` `r head(tail(index(xtsEMA),200),1)` `` to `` `r Sys.Date()` `` will currently generate an error. I am currently working on a fix to this issue.
 
 If you have any questions, or would like to provide feedback please: [email me](mailto:serverid@yahoo.com)
 
