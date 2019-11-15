@@ -127,7 +127,7 @@ trendSMA                  <- data.table(readRDS(here::here("rds", "trendSMA.rds"
 # trendSummary              <- data.table(readRDS(here::here("rds", "trendSummary.rds")))
 trendSummaryEMA           <- data.table(readRDS(here::here("rds", "trendSummaryEMA.rds")))       
 trendSummaryGroup         <- data.table(readRDS(here::here("rds", "trendSummaryGroup.rds")))
-xtsEMA                    <- readRDS(here::here("rds", "xtsEMA.rds"))
+xtsEMA                    <- as.xts(readRDS(here::here("rds", "xtsEMA.rds")))
 ```
 
 ```{r processing}
@@ -141,6 +141,14 @@ g <- trend[substr(trend$catName, 1, 1) %like% "G"]
 n <- trend[substr(trend$catName, 1, 1) %like% "n"]
 ```
 
+```{R daydiff functions, include=FALSE, warning=FALSE, cache=FALSE}
+ 
+dayDifff <- function(X)
+{
+    as.numeric(as.Date(index(X))) - c(NA, as.numeric(as.Date(index(X[-nrow(X)]))))
+}
+```
+
 1.1 Summary {data-navmenu="1-Performance" data-icon="fa-list" data-orientation=rows}
 =====================================  
 
@@ -151,7 +159,9 @@ Input {.sidebar}
 dateRangeInput("dateRange",
   "Historical data",
   start = params$dateStart,
-  end = Sys.Date()
+  end = Sys.Date(),
+  min = params$dateStart,
+  max = Sys.Date()
 )
 ```
 
@@ -160,7 +170,9 @@ This purpose of this dashboard is twofold.
 1. To provide a glimpse of Starpharma's performance circa 2002-01-02.
 2. To examine the Golden Crossing, Death Crossing and No Crossing Trading Strategies to discern their viability.
 
-This site is developed using a reactive framework thereby allowing a dynamic interaction with any of the input variables. Therefore, whenever the date is updated the corrresponding entries will be dynamically updated as well. As a sidenote, to formulate the Crossing trading systems, the data is based upon 20, 50, 100 and 200 day moving averages. Hence any dates selected with a start date greater than 200 days prior to today will currently generate an error.
+This site is developed using a reactive framework thereby allowing a dynamic interaction with any of the input variables. Therefore, whenever the date is updated the corrresponding entries will be dynamically updated as well. 
+
+As a sidenote, to formulate the Crossing Trading Systems, the annualized return and ROI formula's are based upon the 20, 50, 100 and 200 day moving averages. Hence any dates selected with a start date less than 200 days prior to today, i.e., in the range from  `` `r head(tail(index(xtsEMA),200),1)` `` to `` `r Sys.Date()` `` will currently generate an error. I am currently working on a fix to this issue.
 
 If you have any questions, or would like to provide feedback please: [email me](mailto:serverid@yahoo.com)
 
@@ -202,6 +214,7 @@ Column {data-height=60}
 
 flexdashboard::renderValueBox({
   xts_price <- tk_xts(price())
+
   calendarDays <- format(end(xts_price) - start(xts_price), big.mark = ",")
   calendarDays <- substr(calendarDays, 1, nchar(calendarDays) - 5)
 
@@ -270,8 +283,14 @@ Row {data-height=200}
 DT::renderDataTable({
   DT::datatable(price(),
     rownames = FALSE,
-    options = list(pageLength = 20, order = list(list(0, "desc")))
-  ) %>%
+    extensions = c("Scroller"),
+    options = list(
+      pageLength = 20
+      ,order = list(list(0, "desc"))
+      ,scrollX = TRUE
+      ,scrollY = 280
+      ,scroller = TRUE)
+    ) %>%
     formatCurrency(c(
       "open", "high", "low", "close", "adjusted", "change",
       "ema020", "ema050", "ema100", "ema200", "sma020", "sma050", "sma100", "sma200"

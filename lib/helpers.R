@@ -4,6 +4,16 @@ helper.function <- function()
 }
 
 ################################################################################
+## How to lag date-index in a time-series in R?                              ### https://is.gd/HbAJqH
+## Where X is an xts object. I've converted the native POSIXct times into
+## dates, and added an NA to the head and taken off the final date with
+##  X[-nrow(X)]
+################################################################################       
+dayDifff <- function(X)
+{
+    as.numeric(as.Date(index(X))) - c(NA, as.numeric(as.Date(index(X[-nrow(X)]))))
+}
+################################################################################
 ## Tricks to manage the available memory in an R session                     ### https://tinyurl.com/yxcttpsa
 ################################################################################
 
