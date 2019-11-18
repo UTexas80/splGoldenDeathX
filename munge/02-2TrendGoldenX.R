@@ -20,8 +20,10 @@ sma100 & sma100 > sma200, 1, 0)
 goldenCloseEMA             <- (close * golden_ma_sigEMA[golden_ma_sigEMA$EMA == 1])
 goldenCloseSMA             <- (close * golden_ma_sigSMA[golden_ma_sigSMA$SMA == 1])
 # ------------------------------------------------------------------------------
-golden_ma_retEMA           <- (ret * golden_ma_sigEMA[golden_ma_sigEMA$EMA == 1])
-golden_ma_retSMA           <- (ret * golden_ma_sigSMA[golden_ma_sigSMA$SMA == 1])
+# golden_ma_retEMA           <- (ret * golden_ma_sigEMA[golden_ma_sigEMA$EMA == 1])
+# golden_ma_retSMA           <- (ret * golden_ma_sigSMA[golden_ma_sigSMA$SMA == 1])
+golden_ma_retEMA           <- dailyReturn(goldenCloseEMA)
+golden_ma_retSMA           <- dailyReturn(goldenCloseSMA)
 ################################################################################
 ## Step 00.04.GOlden Cross Indicator                                         ###
 ################################################################################

@@ -170,9 +170,9 @@ This purpose of this dashboard is twofold.
 1. To provide a glimpse of Starpharma's performance circa 2002-01-02.
 2. To examine the Golden Crossing, Death Crossing and No Crossing Trading Strategies to discern their viability.
 
-This site is developed using a reactive framework thereby allowing a dynamic interaction with any of the input variables. Therefore, whenever the date is updated the corrresponding entries will be dynamically updated as well. 
+This site is developed using a reactive framework thereby allowing a dynamic interaction with any of the input variables. Therefore, whenever the date is updated the corresponding entries will be dynamically updated as well.
 
-As a sidenote, to formulate the Crossing Trading Systems, the annualized return and ROI formula's are based upon the 20, 50, 100 and 200 day moving averages. Hence any dates selected with a start date less than 200 trading days prior to today, i.e., in the range from  `` `r head(tail(index(xtsEMA),200),1)` `` to `` `r Sys.Date()` `` will currently generate an error. I am currently working on a fix to this issue.
+As a side note, to formulate the Crossing Trading Systems, the annualized return and ROI formulas are based upon the 20, 50, 100- and 200-day moving averages. Hence any dates selected with a start date less than 200 trading days prior to today, i.e., in the range from  `` `r head(tail(index(xtsEMA),200),1)` `` to `` `r Sys.Date()` `` will generate an error. I am currently working on a solution.
 
 If you have any questions, or would like to provide feedback please: [email me](mailto:serverid@yahoo.com)
 
@@ -190,7 +190,9 @@ tqPrices <- eventReactive(input$go, {
 
 #  date        open  high   low close volume adjusted   change
 price <- reactive({
-  tidyquant::tq_get("SPL.AX", from = format(input$dateRange[1]), to = format(input$dateRange[2])) %>%
+  tidyquant::tq_get("SPL.AX", 
+    from = format(input$dateRange[1]), 
+    to = format(input$dateRange[2])) %>%
     mutate(
       change = close - open,
       ema020 = EMA(na.fill0(close, 0), 20),
@@ -882,7 +884,7 @@ Input {.sidebar}
 ```{r 2.2.0.1-sidebarInput}
 
 dateRangeInput("dateRange2.2",
-  "Golden data",
+  "Golden Crosssing Date",
   start = params$dateStart,
   end = Sys.Date()
 )
@@ -920,17 +922,19 @@ flexdashboard::renderValueBox({
         percent(
           Return.annualized(
             na.omit(
-              trendReturnsDaily[,as.numeric(input$radio2.2)])[paste(format(input$dateRange2.2[1]),
-                format(input$dateRange2.2[2]),sep = "::")]
+              trendReturnsDaily[,as.numeric(
+                input$radio2.2)])[paste(format(input$dateRange2.2[1][+1]),
+                  format(input$dateRange2.2[2]),sep = "::")]
           )
         )
       ), "", " Annual Return"
     ),
     color = ifelse(Return.annualized(
         na.omit(
-          trendReturnsDaily[,as.numeric(input$radio2.2)])[paste(format(input$dateRange2.2[1]),
-            format(input$dateRange2.2[2]),sep = "::")]) > 0, 
-              "teal", "red"),    
+          trendReturnsDaily[,as.numeric(
+            input$radio2.2)])[paste(format(input$dateRange2.2[1]),
+              format(input$dateRange2.2[2]),sep = "::")]) > 0, 
+                "teal", "red"),    
     icon = "ion-cash"
   )
 })
@@ -945,9 +949,11 @@ flexdashboard::renderValueBox({
       as.character(
         percent(
           as.numeric(
-            Return.cumulative(
-              na.omit(trendReturnsDaily[,as.numeric(input$radio2.2)])[paste(format(input$dateRange2.2[1]),
-                format(input$dateRange2.2[2]),sep = "::")]
+            sum(
+              na.omit(trendReturnsDaily
+                [,as.numeric(input$radio2.2)])
+                [paste(format(input$dateRange2.2[1][+1]), format(input$dateRange2.2[2]),sep = "::")]
+                [-1,]
             )
           )
         )
@@ -968,7 +974,8 @@ flexdashboard::renderValueBox({
 ```{r 2.2.1.4-vbox-trendTradeDays, eval=trend}
 flexdashboard::renderValueBox({
   tradeDays <-   as.character(ndays(
-      na.omit(trendReturnsDaily[,as.numeric(input$radio2.2)])[paste(format(input$dateRange2.2[1]),
+      na.omit(trendReturnsDaily[,as.numeric(
+        input$radio2.2)])[paste(format(input$dateRange2.2[1]),
           format(input$dateRange2.2[2]),sep = "::")]
     )
   )
@@ -1131,17 +1138,19 @@ flexdashboard::renderValueBox({
         percent(
           Return.annualized(
             na.omit(
-              trendReturnsDaily[,as.numeric(input$radio2.3)])[paste(format(input$dateRange2.3[1]),
-                format(input$dateRange2.3[2]),sep = "::")]
+              trendReturnsDaily[,as.numeric(
+                input$radio2.3)])[paste(format(input$dateRange2.3[1]),
+                  format(input$dateRange2.3[2]),sep = "::")]
           )
         )
       ), "", " Annual Return"
     ),
     color = ifelse(Return.annualized(
         na.omit(
-          trendReturnsDaily[,as.numeric(input$radio2.3)])[paste(format(input$dateRange2.3[1]),
-            format(input$dateRange2.3[2]),sep = "::")]) > 0, 
-              "teal", "red"),    
+          trendReturnsDaily[,as.numeric(
+            input$radio2.3)])[paste(format(input$dateRange2.3[1]),
+              format(input$dateRange2.3[2]),sep = "::")]) > 0, 
+                "teal", "red"),    
     icon = "ion-cash"
   )
 })
@@ -1158,8 +1167,9 @@ flexdashboard::renderValueBox({
         percent(
           as.numeric(
             Return.cumulative(
-              na.omit(trendReturnsDaily[,as.numeric(input$radio2.3)])[paste(format(input$dateRange2.3[1]),
-                format(input$dateRange2.3[2]),sep = "::")]
+              na.omit(trendReturnsDaily[,as.numeric(
+                input$radio2.3)])[paste(format(input$dateRange2.3[1]),
+                  format(input$dateRange2.3[2]),sep = "::")]
             )
           )
         )
@@ -1168,9 +1178,10 @@ flexdashboard::renderValueBox({
     color = ifelse(
       Return.cumulative(
         na.omit(
-          trendReturnsDaily[,as.numeric(input$radio2.3)])[paste(format(input$dateRange2.3[1]),
-            format(input$dateRange2.3[2]),sep = "::")]) > 0, 
-              "teal", "red"),    
+          trendReturnsDaily[,as.numeric(
+            input$radio2.3)])[paste(format(input$dateRange2.3[1]),
+              format(input$dateRange2.3[2]),sep = "::")]) > 0, 
+                "teal", "red"),    
     icon = "ion-cash"
   )
 })
@@ -1183,8 +1194,9 @@ flexdashboard::renderValueBox({
   tradeDays <-   as.character(
     ndays(
       na.omit(
-        trendReturnsDaily[,as.numeric(input$radio2.3)])[paste(format(input$dateRange2.3[1]),
-          format(input$dateRange2.3[2]),sep = "::")]
+        trendReturnsDaily[,as.numeric(
+          input$radio2.3)])[paste(format(input$dateRange2.3[1]),
+            format(input$dateRange2.3[2]),sep = "::")]
     )
   )
   flexdashboard::valueBox(
