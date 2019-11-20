@@ -109,25 +109,25 @@ xprices <- function() {
 ```
 
 ```{r rdsInput}
-calendarDays              <- readRDS(here::here("rds", "calendarDays.rds"))
-dtEMA                     <- readRDS(here::here("rds", "dtEMA.rds"))
-golden                    <- readRDS(here::here("rds", "golden.rds"))
-tradeDays                 <- readRDS(here::here("rds", "tradeDays.rds"))
-trend                     <- data.table(readRDS(here::here("rds", "trend.rds")))
-trendClose                <- readRDS(here::here("rds", "trendClose.rds"))
-trendDraw                 <- data.table(readRDS(here::here("rds", "trendDraw.rds")))
-trendEMA                  <- data.table(readRDS(here::here("rds", "trendEMA.rds")))
-trendReturns              <- data.table(readRDS(here::here("rds", "trendReturns.rds")))
-trendReturnsAnnualized    <- data.table(readRDS(here::here("rds", "trendReturnsAnnualized.rds")))
-trendReturnsDaily         <- readRDS(here::here("rds", "trendReturnsDaily.rds"))
-trendReturnsEMAlong       <- data.table(readRDS(here::here("rds", "trendReturnsEMAlong.rds")))
-trendReturnsSMA           <- data.table(readRDS(here::here("rds", "trendReturnsSMA.rds")))
-trendReturnsSMAlong       <- data.table(readRDS(here::here("rds", "trendReturnsSMAlong.rds")))
-trendSMA                  <- data.table(readRDS(here::here("rds", "trendSMA.rds")))
-# trendSummary              <- data.table(readRDS(here::here("rds", "trendSummary.rds")))
-trendSummaryEMA           <- data.table(readRDS(here::here("rds", "trendSummaryEMA.rds")))       
-trendSummaryGroup         <- data.table(readRDS(here::here("rds", "trendSummaryGroup.rds")))
-xtsEMA                    <- as.xts(readRDS(here::here("rds", "xtsEMA.rds")))
+calendarDays              <- readRDS(here::here("dashboard/rds", "calendarDays.rds"))
+dtEMA                     <- readRDS(here::here("dashboard/rds", "dtEMA.rds"))
+golden                    <- readRDS(here::here("dashboard/rds", "golden.rds"))
+tradeDays                 <- readRDS(here::here("dashboard/rds", "tradeDays.rds"))
+trend                     <- data.table(readRDS(here::here("dashboard/rds", "trend.rds")))
+trendClose                <- readRDS(here::here("dashboard/rds", "trendClose.rds"))
+trendDraw                 <- data.table(readRDS(here::here("dashboard/rds", "trendDraw.rds")))
+trendEMA                  <- data.table(readRDS(here::here("dashboard/rds", "trendEMA.rds")))
+trendReturns              <- data.table(readRDS(here::here("dashboard/rds", "trendReturns.rds")))
+trendReturnsAnnualized    <- data.table(readRDS(here::here("dashboard/rds", "trendReturnsAnnualized.rds")))
+trendReturnsDaily         <- readRDS(here::here("dashboard/rds", "trendReturnsDaily.rds"))
+trendReturnsEMAlong       <- data.table(readRDS(here::here("dashboard/rds", "trendReturnsEMAlong.rds")))
+trendReturnsSMA           <- data.table(readRDS(here::here("dashboard/rds", "trendReturnsSMA.rds")))
+trendReturnsSMAlong       <- data.table(readRDS(here::here("dashboard/rds", "trendReturnsSMAlong.rds")))
+trendSMA                  <- data.table(readRDS(here::here("dashboard/rds", "trendSMA.rds")))
+# trendSummary              <- data.table(readRDS(here::here("dashboard/rds", "trendSummary.rds")))
+trendSummaryEMA           <- data.table(readRDS(here::here("dashboard/rds", "trendSummaryEMA.rds")))       
+trendSummaryGroup         <- data.table(readRDS(here::here("dashboard/rds", "trendSummaryGroup.rds")))
+xtsEMA                    <- as.xts(readRDS(here::here("dashboard/rds", "xtsEMA.rds")))
 ```
 
 ```{r processing}
@@ -566,7 +566,6 @@ flexdashboard::renderValueBox({
 })
 ```
 
-
 ```{r 2.1.0.3b-vbox-trade-days, eval=trend}
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
@@ -902,7 +901,7 @@ Column {data-height=17%}
 
 ###
 
-```{r 2.2.1.1-vbox-trendName}
+```{r 2.2.1.1a-vbox-trendName}
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
     paste("Golden Cross", str_sub(colnames(trendReturnsDaily[,as.numeric(input$radio2.2)]),-3, -1)),
@@ -912,9 +911,21 @@ flexdashboard::renderValueBox({
 })
 ```
 
+```{r 2.2.1.1b-vbox-golden-CalendarDays, eval=trend}
+flexdashboard::renderValueBox({
+
+  calendarDays <- format(input$dateRange2.2[2] - input$dateRange2.2[1], big.mark = ",")
+  calendarDays <- substr(calendarDays, 1, nchar(calendarDays) - 5)
+    
+  flexdashboard::valueBox(
+    paste(calendarDays, " ", "Calendar Days"),
+  )
+})
+```
+
 ###
 
-```{r 2.2.1.2-vbox-trendAnnReturn}
+```{r 2.2.1.2-vbox-return-annual-golden}
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
     paste(
@@ -922,19 +933,19 @@ flexdashboard::renderValueBox({
         percent(
           Return.annualized(
             na.omit(
-              trendReturnsDaily[,as.numeric(
-                input$radio2.2)])[paste(format(input$dateRange2.2[1][+1]),
-                  format(input$dateRange2.2[2]),sep = "::")]
+              trendReturnsDaily
+                [,as.numeric(input$radio2.2)])
+                [paste(format(input$dateRange2.2[1]),format(input$dateRange2.2[2]),sep = "::")]
           )
         )
       ), "", " Annual Return"
     ),
     color = ifelse(Return.annualized(
         na.omit(
-          trendReturnsDaily[,as.numeric(
-            input$radio2.2)])[paste(format(input$dateRange2.2[1]),
-              format(input$dateRange2.2[2]),sep = "::")]) > 0, 
-                "teal", "red"),    
+          trendReturnsDaily
+            [,as.numeric(input$radio2.2)])
+            [paste(format(input$dateRange2.2[1]),format(input$dateRange2.2[2]),sep = "::")]) > 0, 
+           "teal", "red"),    
     icon = "ion-cash"
   )
 })
@@ -942,14 +953,14 @@ flexdashboard::renderValueBox({
 
 ###
 
-```{r 2.2.1.3-vbox-returns-cumulative}
+```{r 2.2.1.3-vbox-returns-cumulative-golden}
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
     paste(
       as.character(
         percent(
           as.numeric(
-            sum(
+            Return.cumulative(
               na.omit(trendReturnsDaily
                 [,as.numeric(input$radio2.2)])
                 [paste(format(input$dateRange2.2[1][+1]), format(input$dateRange2.2[2]),sep = "::")]
@@ -961,9 +972,10 @@ flexdashboard::renderValueBox({
     ),
     color = ifelse(Return.cumulative(
         na.omit(
-          trendReturnsDaily[,as.numeric(input$radio2.2)])[paste(format(input$dateRange2.2[1]),
-            format(input$dateRange2.2[2]),sep = "::")]) > 0, 
-              "teal", "red"),    
+          trendReturnsDaily
+            [,as.numeric(input$radio2.2)])
+            [paste(format(input$dateRange2.2[1][+1]), format(input$dateRange2.2[2]),sep = "::")]) > 0, 
+      "teal", "red"),    
     icon = "ion-cash"
   )
 })
@@ -974,11 +986,13 @@ flexdashboard::renderValueBox({
 ```{r 2.2.1.4-vbox-trendTradeDays, eval=trend}
 flexdashboard::renderValueBox({
   tradeDays <-   as.character(ndays(
-      na.omit(trendReturnsDaily[,as.numeric(
-        input$radio2.2)])[paste(format(input$dateRange2.2[1]),
-          format(input$dateRange2.2[2]),sep = "::")]
+      na.omit(
+        trendReturnsDaily
+          [,as.numeric(input$radio2.2)])
+          [paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::")]
     )
   )
+ 
   flexdashboard::valueBox(
     paste("Trade Days: ", "", tradeDays),
     color = # 0000ff
@@ -1118,7 +1132,7 @@ Row {data-height=17%}
 
 ###
 
-```{r 2.3.1.1-vbox-trendName}
+```{r 2.3.1.1a-vbox-trendName}
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
     paste("Death Cross", str_sub(colnames(trendReturnsDaily[,as.numeric(input$radio2.3)]),-3, -1)),
@@ -1128,9 +1142,21 @@ flexdashboard::renderValueBox({
 })
 ```
 
+```{r 2.3.1.1b-vbox-death-CalendarDays, eval=trend}
+flexdashboard::renderValueBox({
+
+  calendarDays <- format(input$dateRange2.3[2] - input$dateRange2.3[1], big.mark = ",")
+  calendarDays <- substr(calendarDays, 1, nchar(calendarDays) - 5)
+    
+  flexdashboard::valueBox(
+    paste(calendarDays, " ", "Calendar Days"),
+  )
+})
+```
+
 ###
 
-```{r 2.3.1.2-vbox-trendAnnReturn}
+```{r 2.3.1.2-vbox-return-annual-death}
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
     paste(
@@ -1158,8 +1184,7 @@ flexdashboard::renderValueBox({
 
 ###
 
-```{r 2.3.1.3-vbox-returns-cumulative}
-cumReturn <- percent(as.numeric(Return.cumulative(trend[,5])))
+```{r 2.3.1.3-vbox-returns-cumulative-death}
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
     paste(
@@ -1167,21 +1192,21 @@ flexdashboard::renderValueBox({
         percent(
           as.numeric(
             Return.cumulative(
-              na.omit(trendReturnsDaily[,as.numeric(
-                input$radio2.3)])[paste(format(input$dateRange2.3[1]),
-                  format(input$dateRange2.3[2]),sep = "::")]
+              na.omit(trendReturnsDaily
+                [,as.numeric(input$radio2.3)])
+                [paste(format(input$dateRange2.3[1][+1]), format(input$dateRange2.3[2]),sep = "::")]
+                [-1,]
             )
           )
         )
       ), "", " ROI"
     ),
-    color = ifelse(
-      Return.cumulative(
+    color = ifelse(Return.cumulative(
         na.omit(
-          trendReturnsDaily[,as.numeric(
-            input$radio2.3)])[paste(format(input$dateRange2.3[1]),
-              format(input$dateRange2.3[2]),sep = "::")]) > 0, 
-                "teal", "red"),    
+          trendReturnsDaily
+            [,as.numeric(input$radio2.3)])
+            [paste(format(input$dateRange2.3[1][+1]), format(input$dateRange2.3[2]),sep = "::")]) > 0, 
+      "teal", "red"),
     icon = "ion-cash"
   )
 })

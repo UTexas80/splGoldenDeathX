@@ -1,31 +1,31 @@
 ################################################################################
 ## Step 99.00 Save .rds files                                                ###
 ################################################################################
-saveRDS(a, file                                = "./rds/trendReturns.rds")
-saveRDS(calendarDays, file                     = "./rds/calendarDays.rds")
-saveRDS(dtEMA, file                            = "./rds/dtEMA.rds")
-saveRDS(goldenEMA,file                         = "./rds/golden.rds")
+saveRDS(a, file                                = here::here("dashboard/rds/", "trendReturns.rds"))
+saveRDS(calendarDays, file                     = here::here("dashboard/rds/", "calendarDays.rds"))
+saveRDS(dtEMA, file                            = here::here("dashboard/rds/", "dtEMA.rds"))
+saveRDS(goldenEMA,file                         = here::here("dashboard/rds/", "golden.rds"))
 # ------------------------------------------------------------------------------
-saveRDS(spl_month_close, file                  = "./rds/spl_month_close.rds")
-saveRDS(SPL.AX.yearly, file                    = "./rds/spl_yearly.rds")
-saveRDS(tradeDays, file                        = "./rds/tradeDays.rds")
+saveRDS(spl_month_close, file                  = here::here("dashboard/rds/", "spl_month_close.rds"))
+saveRDS(SPL.AX.yearly, file                    = here::here("dashboard/rds/", "spl_yearly.rds"))
+saveRDS(tradeDays, file                        = here::here("dashboard/rds/", "tradeDays.rds"))
 # ------------------------------------------------------------------------------
-saveRDS(trend, file                            = "./rds/trend.rds")
-saveRDS(trendClose, file                       = "./rds/trendClose.rds")
-saveRDS(trendDrawEMA, file                     = "./rds/trendDraw.rds")
-saveRDS(trendReturns, file                     = "./rds/trendReturns.rds")
-saveRDS(trendReturnsAnnualized, file           = "./rds/trendReturnsAnnualized.rds")
-saveRDS(trendReturnsDaily, file                = "./rds/trendReturnsDaily.rds")
-saveRDS(trendReturnsEMAlong, file              = "./rds/trendReturnsEMAlong.rds")
-saveRDS(trendReturnsSMA, file                  = "./rds/trendReturnsSMA.rds")
-saveRDS(trendReturnsSMAlong, file              = "./rds/trendReturnsSMAlong.rds")
-saveRDS(trendSummaryEMA, file                  = "./rds/trendSummaryEMA.rds")
-saveRDS(trendSummaryGroup, file                = "./rds/trendSummaryGroup.rds")
-saveRDS(trendEMA, file                         = "./rds/trendEMA.rds")
-saveRDS(trendSMA, file                         = "./rds/trendSMA.rds")
+saveRDS(trend, file                            = here::here("dashboard/rds/", "trend.rds"))
+saveRDS(trendClose, file                       = here::here("dashboard/rds/", "trendClose.rds"))
+saveRDS(trendDrawEMA, file                     = here::here("dashboard/rds/", "trendDraw.rds"))
+saveRDS(trendReturns, file                     = here::here("dashboard/rds/", "trendReturns.rds"))
+saveRDS(trendReturnsAnnualized, file           = here::here("dashboard/rds/", "trendReturnsAnnualized.rds"))
+saveRDS(trendReturnsDaily, file                = here::here("dashboard/rds/", "trendReturnsDaily.rds"))
+saveRDS(trendReturnsEMAlong, file              = here::here("dashboard/rds/", "trendReturnsEMAlong.rds"))
+saveRDS(trendReturnsSMA, file                  = here::here("dashboard/rds/", "trendReturnsSMA.rds"))
+saveRDS(trendReturnsSMAlong, file              = here::here("dashboard/rds/", "trendReturnsSMAlong.rds"))
+saveRDS(trendSummaryEMA, file                  = here::here("dashboard/rds/", "trendSummaryEMA.rds"))
+saveRDS(trendSummaryGroup, file                = here::here("dashboard/rds/", "trendSummaryGroup.rds"))
+saveRDS(trendEMA, file                         = here::here("dashboard/rds/", "trendEMA.rds"))
+saveRDS(trendSMA, file                         = here::here("dashboard/rds/", "trendSMA.rds"))
 # ------------------------------------------------------------------------------
-saveRDS(viz.BoxplotN, file                     = "./rds/viz.BoxplotN.rds")
-saveRDS(xtsEMA[complete.cases(xtsEMA), ], file = "./rds/xtsEMA.rds")
+saveRDS(viz.BoxplotN, file                     = here::here("dashboard/rds/", "viz.BoxplotN.rds"))
+saveRDS(xtsEMA[complete.cases(xtsEMA), ], file = here::here("dashboard/rds/", "xtsEMA.rds"))
 ################################################################################
 ## Step 00.99: VERSION HISTORY                                               ###
 ################################################################################

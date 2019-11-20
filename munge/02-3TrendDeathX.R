@@ -15,8 +15,10 @@ sma100 & sma100 < sma200, 1, 0)
 deathCloseEMA             <- (close * death_ma_sigEMA[death_ma_sigEMA$EMA == 1])
 deathCloseSMA             <- (close * death_ma_sigSMA[death_ma_sigSMA$SMA == 1])
 # ------------------------------------------------------------------------------
-death_ma_retEMA           <- (ret * death_ma_sigEMA[death_ma_sigEMA$EMA == 1])
-death_ma_retSMA           <- (ret * death_ma_sigSMA[death_ma_sigSMA$SMA == 1])
+# death_ma_retEMA         <- (ret * death_ma_sigEMA[death_ma_sigEMA$EMA == 1])
+# death_ma_retSMA         <- (ret * death_ma_sigSMA[death_ma_sigSMA$SMA == 1])
+death_ma_retEMA           <- dailyReturn(deathCloseEMA, type = 'arithmetic')
+death_ma_retSMA           <- dailyReturn(deathCloseSMA)
 ################################################################################
 ## Step 00.02.death Cross Indicator                                          ###
 ################################################################################
