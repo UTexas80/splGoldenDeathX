@@ -20,9 +20,7 @@ SPL.AX <-
   SPL.AX %>%
   na.omit()
 ## -- use FinancialInstrument::stock() to define the meta-data for the symbols.-
-stock(symbols,
-      currency = "USD",
-      multiplier = 1)
+# stock(symbols, currency = "USD", multiplier = 1)
 ################################################################################
 ## Step 00.02: Portfolio, Account, Strategy Setup                            ###
 ################################################################################
@@ -47,30 +45,30 @@ initOrders(portfolio="GoldenX",                # Order Initialization        ###
            symbols = symbols,
            initDate=init_date)
 # ------------------------------------------------------------------------------
-stratGoldenX <- strategy("GoldenX")            # Strategy Initialization     ###
+goldenX_EMA_strategy <- strategy("GoldenX")            # Strategy Initialization     ###
 ################################################################################
 ## Step 00.03: Add Indicators to the Strategy                                ###
 ################################################################################
 
 ####INDICATORS####---------------------------------------https://is.gd/SBHCcH---
 # Add the 20-day SMA indicator
-stratGoldenX <- add.indicator(strategy=stratGoldenX, name="EMA", arguments =
+goldenX_EMA_strategy <- add.indicator(strategy=goldenX_EMA_strategy, name="EMA", arguments =
 list(x=quote(mktdata[,4]), n=20), label="020")
 
 # Add the 50-day SMA indicator
-stratGoldenX <- add.indicator(strategy=stratGoldenX, name="EMA", arguments =
+goldenX_EMA_strategy <- add.indicator(strategy=goldenX_EMA_strategy, name="EMA", arguments =
 list(x=quote(mktdata[,4]), n=50), label="050")
 
 # Add the 100-day SMA indicator
-stratGoldenX <- add.indicator(strategy=stratGoldenX, name="EMA", arguments =
+goldenX_EMA_strategy <- add.indicator(strategy=goldenX_EMA_strategy, name="EMA", arguments =
 list(x=quote(mktdata[,4]), n=100), label="100")
 
 # Add the 200-day SMA indicator
-stratGoldenX <- add.indicator(strategy=stratGoldenX, name="EMA", arguments =
+goldenX_EMA_strategy <- add.indicator(strategy=goldenX_EMA_strategy, name="EMA", arguments =
 list(x=quote(mktdata[,4]), n=200), label="200")
 # ------------------------------------------------------------------------------
 # Add the RSI indicator
-# stratGoldenX <- add.indicator(strategy=stratGoldenX, name="RSI", arguments =
+# goldenX_EMA_strategy <- add.indicator(strategy=goldenX_EMA_strategy, name="RSI", arguments =
 # list(price = quote(getPrice(mktdata)), n=4), label="RSI")
 ################################################################################
 ## Step 00.04: Pass Signals to the Strategy                                  ###
@@ -79,7 +77,7 @@ list(x=quote(mktdata[,4]), n=200), label="200")
 ####SIGNALS####------------------------------------------https://is.gd/SBHCcH---
 # The first is when a Golden Cross occurs, i.e.,
 # EMA020 > EMA050 & EMA050 > EMA100 & EMA100 > EMA200
-stratGoldenX <- add.signal(stratGoldenX,
+goldenX_EMA_strategy <- add.signal(goldenX_EMA_strategy,
                 name="sigFormula",
                 arguments = list
                     (columns=c("EMA.020","EMA.050","EMA.100", "EMA.200"),
@@ -89,7 +87,7 @@ stratGoldenX <- add.signal(stratGoldenX,
                 label="goldenX_EMA_open")
 
 # The second is when a Golden Cross criteria is no longer met
-stratGoldenX <- add.signal(stratGoldenX,
+goldenX_EMA_strategy <- add.signal(goldenX_EMA_strategy,
                 name="sigFormula",
                 arguments = list
                   (columns=c("EMA.020","EMA.050","EMA.100", "EMA.200"),
@@ -98,7 +96,7 @@ stratGoldenX <- add.signal(stratGoldenX,
                 cross=TRUE),
                 label="goldenX_EMA_close")
 # ------------------------------------------------------------------------------
-# stratRSI4 <- add.signal(stratGoldenX,
+# stratRSI4 <- add.signal(goldenX_EMA_strategy,
 #                 name="sigThreshold",
 #                 arguments=list(
 #                   threshold=55,
@@ -119,7 +117,7 @@ stratGoldenX <- add.signal(stratGoldenX,
 ####RULES####--------------------------------------------https://is.gd/SBHCcH---
 # The first is to buy when the Golden Crossing criteria is met
 # (the first signal)
-stratGoldenX <- add.rule(stratGoldenX,           # Open Long Position        ###
+goldenX_EMA_strategy <- add.rule(goldenX_EMA_strategy,           # Open Long Position        ###
                 name="ruleSignal",
                 arguments=list(sigcol="goldenX_EMA_open",
                                sigval=TRUE,
@@ -133,7 +131,7 @@ stratGoldenX <- add.rule(stratGoldenX,           # Open Long Position        ###
                                path.dep=TRUE)
 ####RULES####--------------------------------------------https://is.gd/SBHCcH---
 # The second is to sell when the Golden Crossing criteria is breached
-stratGoldenX <- add.rule(stratGoldenX,
+goldenX_EMA_strategy <- add.rule(goldenX_EMA_strategy,
                 name="ruleSignal",
                 arguments=list(sigcol="goldenX_EMA_close",
                                sigval=TRUE,
@@ -152,17 +150,20 @@ addPosLimit("GoldenX", "SPL.AX", timestamp=initDate, maxpos=1000, minpos=0)
 ## Step 00.07: Apply and Save Strategy                                       ###
 ################################################################################
 # ------------------------------------------------------------------------------
-goldenX_EMA <- here::here("dashboard/rds/", "goldenX_EMA.RData")
+cwd          <- getwd()
+goldenX_EMA  <- here::here("dashboard/rds/", "goldenX_EMA_results.RData")
 if( file.exists(goldenX_EMA)) {
   load(goldenX_EMA)
 } else {
-  results  <- applyStrategy(stratGoldenX, portfolios = "GoldenX")
+  results   <- applyStrategy(goldenX_EMA_strategy, portfolios = "GoldenX")
   updatePortf("GoldenX")
   updateAcct("GoldenX")
   updateEndEq("GoldenX")
   if(checkBlotterUpdate("GoldenX", "GoldenX", verbose = TRUE)) {
-    save(list = "results", file = here::here("dashboard/rds/", "goldenX_EMA"))
-    save.strategy(stratGoldenX)
+    save(list = "results", file = here::here("dashboard/rds/", "goldenX_EMA_results"))
+    setwd("./dashboard/rds/")
+    save.strategy("goldenX_EMA_strategy")
+    setwd(cwd)
   }
 }
 ################################################################################

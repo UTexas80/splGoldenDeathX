@@ -12,40 +12,40 @@ add.config(
 # Repo Package: data management to build centralized metadata repository ------- https://github.com/franapoli/repo
 ## Check existence of directory and create if doesn't exist                     ### https://tinyurl.com/y3adrqwa
 ################################################################################
-mainDir <- (".")
-subDir  <- ("repo")
-rp_path <- file.path(mainDir, subDir)
+mainDir     <- (".")
+subDir      <- ("repo")
+rp_path     <- file.path(mainDir, subDir)
 
-symbols<-c("CSL.AX", "SPL.AX")
-dateFrom<-"2002-01-01"
+symbols     <-c("CSL.AX", "SPL.AX")
+dateFrom    <-"2002-01-01"
 ################################################################################
 ## Dates needed for .xts lookup                                              ### https://tinyurl.com/y3h3jbt7
 ################################################################################
-start.date<-"2002-01-01"
-end.date<-Sys.Date()
+start.date  <-"2002-01-01"
+end.date    <-Sys.Date()
 ################################################################################
 ## Quantstrat setup                                                          ###
 ################################################################################
 options(getSymbols.warning4.0 = FALSE)                 # Suppresses warnings ###
-## rm(list = ls(.blotter), envir = .blotter)              # Do some house cleaning#
+## rm(list = ls(.blotter), envir = .blotter)           # Do some house cleaning#
 Sys.setenv(TZ = "UTC")                                 # Set the timezone    ###
 currency("USD")                                        # Set the currency    ###
 currency("AUD")                                        # Set the currency    ###
 ################################################################################
 ## Date Parameters                                                           ###
 ################################################################################
-init_date <- "2002-01-01"
-start_date <- "2002-01-01"
-end_date <- "2019-11-25"
+init_date   <- "2002-01-01"
+start_date  <- "2002-01-01"
+end_date    <- Sys.Date()
 
-initDate = "2002-01-01"
-from = "2003-01-01"
-to = "2019-11-25"
+initDate    <- "2002-01-01"
+from        <- "2003-01-01"
+to          <- Sys.Date()
 ################################################################################
 ## Equity Values                                                             ###
 ################################################################################
 init_equity <- 1e4                        # $10,000                            #
-adjustment <- TRUE                        # Adjust for Dividends, Stock Splits #
+adjustment  <- TRUE                       # Adjust for Dividends, Stock Splits #
 ################################################################################
 # Add project specific configuration that can be overridden from load.project()
 add.config(

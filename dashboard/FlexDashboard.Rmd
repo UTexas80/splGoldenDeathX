@@ -10,6 +10,8 @@ resource_files:
 - rds/calendarDays.rds
 - rds/dtEMA.rds
 - rds/golden.rds
+- rds/goldenX_EMA.RData
+- rds/goldenX_EMA_strategy.RData
 - rds/tradeDays.rds
 - rds/trend.rds
 - rds/trendSummaryGroup.rds
@@ -34,6 +36,7 @@ library(data.table)
 library(dplyr)
 library(DT)
 library(dygraphs)
+library(FinancialInstrument)
 library(flexdashboard)
 library(formattable)
 library(ggplot2)
@@ -139,6 +142,10 @@ dEMA <- d[indicator == 'EMA']
 dSMA <- d[indicator == 'SMA']
 g <- trend[substr(trend$catName, 1, 1) %like% "G"]
 n <- trend[substr(trend$catName, 1, 1) %like% "n"]
+```
+
+```{r quantstratInput}
+load.strategy(here::here("dashboard/rds","goldenX_EMA_strategy"))
 ```
 
 ```{R daydiff functions, include=FALSE, warning=FALSE, cache=FALSE}
@@ -791,6 +798,47 @@ renderPlotly({
 })
 ```
 
+### Trade Stats
+```{r 2.1.1.h-table-tradestats}
+goldenX_EMA_tradestats <- blotter::tradeStats(
+  "GoldenX", 
+    Dates =     
+      paste(format(input$dateRange2.2[1]),format(input$dateRange2.2[2]),sep = "::"))
+
+DT::renderDataTable({
+  DT::datatable(goldenX_EMA_tradestats,
+    rownames = FALSE,
+    extensions = c("Scroller"),
+    options = list(
+      order = list(list(3, "desc")),
+      pageLength = 10,
+      scrollX = TRUE,
+      scrollY = 280,
+      scroller = TRUE
+    )
+  )
+})
+```
+
+### Daily Transaction P & L
+```{r 2.1.1.i-table-dailyTxnPL}
+goldenX_EMA_dailyTxnPL <- blotter::dailyTxnPL("GoldenX")
+
+DT::renderDataTable({
+  DT::datatable(goldenX_EMA_dailyTxnPL,
+    rownames = FALSE,
+    extensions = c("Scroller"),
+    options = list(
+      order = list(list(3, "desc")),
+      pageLength = 10,
+      scrollX = TRUE,
+      scrollY = 280,
+      scroller = TRUE
+    )
+  )
+})
+```
+
 Row {data-height=33%}
 -------------------------------------
 ### Composite Trend Return Distribution
@@ -1032,6 +1080,28 @@ DT::renderDataTable({
     formatStyle("tradeDays",
       color = styleInterval(c(0), c("maroon", "darkgreen"))
     )
+})
+```
+
+### Trade Stats
+```{r 2.2.2.2-table-goldenX-EMA-tradestats}
+goldenX_EMA_tradestats <- blotter::tradeStats(
+  "GoldenX", 
+    Dates = "2009-01-01::2019-12-02")
+      
+
+DT::renderDataTable({
+  DT::datatable(goldenX_EMA_tradestats,
+    rownames = FALSE,
+    extensions = c("Scroller"),
+    options = list(
+      order = list(list(3, "desc")),
+      pageLength = 10,
+      scrollX = TRUE,
+      scrollY = 280,
+      scroller = TRUE
+    )
+  )
 })
 ```
 
