@@ -28,20 +28,20 @@ SPL.AX <-
 suppressWarnings(rm("account.GoldenX","portfolio.GoldenX",pos=.blotter))
 suppressWarnings(rm("order_book.GoldenX",pos=.strategy))
 ## -- remove residuals from previous runs. ----------------------------------###
-rm.strat("GoldenX")
+rm.strat("goldenX_EMA_portfolio")
 rm.strat("GoldenX")
 # ------------------------------------------------------------------------------
 ## portfolio, account and orders initialization. ----------------------------###
-initPortf(name = "GoldenX",                    # Portfolio Initialization    ###
+initPortf(name = "goldenX_EMA_portfolio",     # Portfolio Initialization    ###
           symbols = symbols,
           initDate = init_date)
 # ------------------------------------------------------------------------------
 initAcct(name = "GoldenX",                     # Account Initialization      ###
-         portfolios="GoldenX",
+         portfolios="goldenX_EMA_portfolio",
          initDate=init_date,
          initEq=init_equity)
 # ------------------------------------------------------------------------------
-initOrders(portfolio="GoldenX",                # Order Initialization        ###
+initOrders(portfolio="goldenX_EMA_portfolio",                # Order Initialization        ###
            symbols = symbols,
            initDate=init_date)
 # ------------------------------------------------------------------------------
@@ -145,21 +145,20 @@ goldenX_EMA_strategy <- add.rule(goldenX_EMA_strategy,
 ################################################################################
 ## Step 00.06: Set Position Limits                                           ###
 ################################################################################
-addPosLimit("GoldenX", "SPL.AX", timestamp=initDate, maxpos=1000, minpos=0)
+addPosLimit("goldenX_EMA_portfolio", "SPL.AX", timestamp=initDate, maxpos=100, minpos=0)
 ################################################################################
 ## Step 00.07: Apply and Save Strategy                                       ###
 ################################################################################
-# ------------------------------------------------------------------------------
 cwd          <- getwd()
 goldenX_EMA  <- here::here("dashboard/rds/", "goldenX_EMA_results.RData")
 if( file.exists(goldenX_EMA)) {
   load(goldenX_EMA)
 } else {
-  results   <- applyStrategy(goldenX_EMA_strategy, portfolios = "GoldenX")
-  updatePortf("GoldenX")
+  results   <- applyStrategy(goldenX_EMA_strategy, portfolios = "goldenX_EMA_portfolio")
+  updatePortf("goldenX_EMA_portfolio")
   updateAcct("GoldenX")
   updateEndEq("GoldenX")
-  if(checkBlotterUpdate("GoldenX", "GoldenX", verbose = TRUE)) {
+  if(checkBlotterUpdate("goldenX_EMA_portfolio", "GoldenX", verbose = TRUE)) {
     save(list = "results", file = here::here("dashboard/rds/", "goldenX_EMA_results"))
     setwd("./dashboard/rds/")
     save.strategy("goldenX_EMA_strategy")
