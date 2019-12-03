@@ -1,11 +1,7 @@
 ################################################################################
 # How Do I in R?                                https://tinyurl.com/y9j67lfk ###
 ################################################################################
-## Step 00.00 Processing Start Time - start the timer                        ###
-################################################################################
-start.time = Sys.time()
-################################################################################
-## Step 00.01 get stock symbols                 https://tinyurl.com/y3adrqwa ###
+## Step 04.3.01 get stock symbols               https://tinyurl.com/y3adrqwa ###
 ## Check existence of directory and create if doesn't exist                  ###
 ################################################################################
 symbols      <- basic_symbols()
@@ -22,7 +18,7 @@ SPL.AX <-
 ## -- use FinancialInstrument::stock() to define the meta-data for the symbols.-
 # stock(symbols, currency = "USD", multiplier = 1)
 ################################################################################
-## Step 00.02: Portfolio, Account, Strategy Setup                            ###
+## Step 04.02: Portfolio, Account, Strategy Setup                            ###
 ################################################################################
 # Delete portfolio, account, and order book if they already exist------------###
 suppressWarnings(rm("account.GoldenX","portfolio.GoldenX",pos=.blotter))
@@ -31,8 +27,12 @@ suppressWarnings(rm("order_book.GoldenX",pos=.strategy))
 rm.strat("goldenX_EMA_portfolio")
 rm.strat("GoldenX")
 # ------------------------------------------------------------------------------
+# To start, we initialize account and portfolio where:                       ###
+# Porfolio: stores which stocks to be traded                                 ###
+# Account: stores which money transactions                                   ###
 ## portfolio, account and orders initialization. ----------------------------###
-initPortf(name = "goldenX_EMA_portfolio",     # Portfolio Initialization    ###
+# ------------------------------------------------------------------------------
+initPortf(name = "goldenX_EMA_portfolio",     # Portfolio Initialization     ###
           symbols = symbols,
           initDate = init_date)
 # ------------------------------------------------------------------------------
@@ -41,13 +41,13 @@ initAcct(name = "GoldenX",                     # Account Initialization      ###
          initDate=init_date,
          initEq=init_equity)
 # ------------------------------------------------------------------------------
-initOrders(portfolio="goldenX_EMA_portfolio",                # Order Initialization        ###
+initOrders(portfolio="goldenX_EMA_portfolio",  # Order Initialization        ###
            symbols = symbols,
            initDate=init_date)
 # ------------------------------------------------------------------------------
-goldenX_EMA_strategy <- strategy("GoldenX")            # Strategy Initialization     ###
+goldenX_EMA_strategy <- strategy("GoldenX")    # Strategy Initialization     ###
 ################################################################################
-## Step 00.03: Add Indicators to the Strategy                                ###
+## Step 04.03: Add Indicators to the Strategy                                ###
 ################################################################################
 
 ####INDICATORS####---------------------------------------https://is.gd/SBHCcH---
@@ -71,7 +71,7 @@ list(x=quote(mktdata[,4]), n=200), label="200")
 # goldenX_EMA_strategy <- add.indicator(strategy=goldenX_EMA_strategy, name="RSI", arguments =
 # list(price = quote(getPrice(mktdata)), n=4), label="RSI")
 ################################################################################
-## Step 00.04: Pass Signals to the Strategy                                  ###
+## Step 04.04: Pass Signals to the Strategy                                  ###
 ################################################################################
 
 ####SIGNALS####------------------------------------------https://is.gd/SBHCcH---
@@ -105,7 +105,7 @@ goldenX_EMA_strategy <- add.signal(goldenX_EMA_strategy,
 #                   cross=TRUE),
 #                 label="Cl.lt.RSI")
 ################################################################################
-## Step 00.05: Add Rules to the Strategy                                     ###
+## Step 04.05: Add Rules to the Strategy                                     ###
 ## Whenever our long variable (sigcol) is TRUE (sigval) we want to place a   ###
 ## stoplimit order (ordertype). Our preference is at the High (prefer) plus  ###
 ## threshold. We want to buy 100 shares (orderqty). A new variable EnterLONG ###
@@ -117,7 +117,7 @@ goldenX_EMA_strategy <- add.signal(goldenX_EMA_strategy,
 ####RULES####--------------------------------------------https://is.gd/SBHCcH---
 # The first is to buy when the Golden Crossing criteria is met
 # (the first signal)
-goldenX_EMA_strategy <- add.rule(goldenX_EMA_strategy,           # Open Long Position        ###
+goldenX_EMA_strategy <- add.rule(goldenX_EMA_strategy,  # Open Long Position ###
                 name="ruleSignal",
                 arguments=list(sigcol="goldenX_EMA_open",
                                sigval=TRUE,
@@ -143,11 +143,11 @@ goldenX_EMA_strategy <- add.rule(goldenX_EMA_strategy,
                                type="exit",
                                path.dep=TRUE)
 ################################################################################
-## Step 00.06: Set Position Limits                                           ###
+## Step 04.06: Set Position Limits                                           ###
 ################################################################################
 addPosLimit("goldenX_EMA_portfolio", "SPL.AX", timestamp=initDate, maxpos=100, minpos=0)
 ################################################################################
-## Step 00.07: Apply and Save Strategy                                       ###
+## Step 04.07: Apply and Save Strategy                                       ###
 ################################################################################
 cwd          <- getwd()
 goldenX_EMA  <- here::here("dashboard/rds/", "goldenX_EMA_results.RData")
@@ -166,10 +166,78 @@ if( file.exists(goldenX_EMA)) {
   }
 }
 ################################################################################
-## Step 00.99: VERSION HISTORY                                               ###
+## Step 04.08: Generate Performance Reports    https://tinyurl.com/us96c8p   ###
 ################################################################################
-a00.version = "1.0.0"
-a00.ModDate = as.Date("2019-12-01")
+## Compute Trade Statistics------------------------------https://is.gd/SBHCcH---
+pts <- perTradeStats("goldenX_EMA_portfolio", "SPL.AX")
+tstats <- tradeStats("goldenX_EMA_portfolio", "SPL.AX")
+# trade related 
+tab.trades <- cbind(
+          c(
+            "Trades",
+            "Win Percent",
+            "Loss Percent",
+            "W/L Ratio"), 
+          c(tstats[,"Num.Trades"],
+            tstats[,c("Percent.Positive","Percent.Negative")], 
+            tstats[,"Percent.Positive"]/
+            tstats[,"Percent.Negative"]))
+# profit related 
+tab.profit <- cbind(
+          c("Net Profit",
+            "Gross Profits",
+            "Gross Losses",
+            "Profit Factor"),
+          c(tstats[,c("Net.Trading.PL",
+                      "Gross.Profits",
+                      "Gross.Losses", 
+                      "Profit.Factor")]))
+# averages 
+tab.wins <- cbind(
+          c("Avg Trade",
+            "Avg Win",
+            "Avg Loss",
+            "Avg W/L Ratio"),
+          c(tstats[,c("Avg.Trade.PL",
+                      "Avg.Win.Trade",
+                      "Avg.Losing.Trade", 
+                      "Avg.WinLoss.Ratio")]))
+trade.stats.tab <- data.table(tab.trades,tab.profit,tab.wins)
+################################################################################
+## Step 04.09: Generate Performance Analytics  https://tinyurl.com/us96c8p   ###
+################################################################################
+rets <- PortfReturns(Account=goldenX_EMA_strategy)
+rownames(rets) <- NULL
+# Compute performance statistics -----------------------------------------------
+tab.perf <- table.Arbitrary(rets, 
+  metrics=c("Return.cumulative", 
+            "Return.annualized",
+            "SharpeRatio.annualized",
+            "CalmarRatio"),
+  metricsNames=c(
+            "Cumulative Return",
+            "Annualized Return",
+            "Annualized Sharpe Ratio",
+            "Calmar Ratio"))
+# Compute risk statistics ------------------------------------------------------
+tab.risk <- table.Arbitrary(rets,
+  metrics=c("StdDev.annualized", 
+            "maxDrawdown", 
+            "VaR", 
+            "ES"),
+  metricsNames=c(
+            "Annualized StdDev", 
+            "Max DrawDown", 
+            "Value-at-Risk", 
+            "Conditional VaR"))
+performance.stats.tab <- data.table(
+  rownames(tab.perf),tab.perf[,1], 
+  rownames(tab.risk),tab.risk[,1])            
+################################################################################
+## Step 04.99: VERSION HISTORY                                               ###
+################################################################################
+a04.version = "1.0.0"
+a04.ModDate = as.Date("2019-12-01")
 ################################################################################
 # 2019.12.01 - v.1.0.0
 #  1st release

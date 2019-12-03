@@ -2,7 +2,7 @@
 # How Do I in R?                                https://tinyurl.com/y9j67lfk ###
 ############################################### https://tinyurl.com/yddh54gn ###
 ## checkpoint ## or any date in YYYY-MM-DD format after 2014-09-17 
-# checkpoint("2015-01-15") 
+## checkpoint("2015-01-15") 
 ################################################################################
 ## Step 00.00 Processing Start Time - start the timer                        ###
 ################################################################################

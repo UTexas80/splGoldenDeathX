@@ -15,11 +15,11 @@ add.config(
 mainDir     <- (".")
 subDir      <- ("repo")
 rp_path     <- file.path(mainDir, subDir)
-
+# ------------------------------------------------------------------------------
 symbols     <-c("CSL.AX", "SPL.AX")
 dateFrom    <-"2002-01-01"
 ################################################################################
-## Dates needed for .xts lookup                                              ### https://tinyurl.com/y3h3jbt7
+## Dates needed for .xts lookup           https://tinyurl.com/y3h3jbt7       ### 
 ################################################################################
 start.date  <-"2002-01-01"
 end.date    <-Sys.Date()
@@ -29,15 +29,19 @@ end.date    <-Sys.Date()
 options(getSymbols.warning4.0 = FALSE)                 # Suppresses warnings ###
 ## rm(list = ls(.blotter), envir = .blotter)           # Do some house cleaning#
 Sys.setenv(TZ = "UTC")                                 # Set the timezone    ###
-currency("USD")                                        # Set the currency    ###
-currency("AUD")                                        # Set the currency    ###
+################################################################################
+## Financial Instruments Package setup                 # https://is.gd/3K7mRp ##
+################################################################################
+FinancialInstrument::currency(c("AUD","USD"))          # Set the currency    ###
+stock(c("SPL.AX"), currency="AUD")                     # Define the stocks   ###
+exchange_rate("AUDUSD")                                # define an exchange rate
 ################################################################################
 ## Date Parameters                                                           ###
 ################################################################################
 init_date   <- "2002-01-01"
 start_date  <- "2002-01-01"
 end_date    <- Sys.Date()
-
+# ------------------------------------------------------------------------------
 initDate    <- "2002-01-01"
 from        <- "2003-01-01"
 to          <- Sys.Date()
@@ -47,7 +51,15 @@ to          <- Sys.Date()
 init_equity <- 1e4                        # $10,000                            #
 adjustment  <- TRUE                       # Adjust for Dividends, Stock Splits #
 ################################################################################
+## Custom Theme                                                              ###
+################################################################################
+myTheme<-chart_theme()
+myTheme$col$dn.col    <- 'lightblue'
+myTheme$col$dn.border <- 'lightgray'
+myTheme$col$up.border <- 'lightgray'
+################################################################################
 # Add project specific configuration that can be overridden from load.project()
 add.config(
   apply.override = TRUE
 )
+################################################################################
