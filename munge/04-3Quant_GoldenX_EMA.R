@@ -125,7 +125,7 @@ goldenX_EMA_strategy <- add.rule(goldenX_EMA_strategy,  # Open Long Position ###
                                ordertype="market",
                                orderside="long",
                                pricemethod="market",
-                               TxnFees=-5,
+                               TxnFees=0,
                                osFUN=osMaxPos),
                                type="enter",
                                path.dep=TRUE)
@@ -139,7 +139,7 @@ goldenX_EMA_strategy <- add.rule(goldenX_EMA_strategy,
                                ordertype="market",
                                orderside="long",
                                pricemethod="market",
-                               TxnFees=-5),
+                               TxnFees=0),
                                type="exit",
                                path.dep=TRUE)
 ################################################################################
@@ -150,7 +150,7 @@ addPosLimit("goldenX_EMA_portfolio", "SPL.AX", timestamp=initDate, maxpos=100, m
 ## Step 04.07: Apply and Save Strategy                                       ###
 ################################################################################
 cwd          <- getwd()
-goldenX_EMA  <- here::here("dashboard/rds/", "goldenX_EMA_results.RData")
+goldenX_EMA  <- here::here("dashboard/rds/", "goldenX_EMA_results.RData.RData")
 if( file.exists(goldenX_EMA)) {
   load(goldenX_EMA)
 } else {
@@ -159,7 +159,7 @@ if( file.exists(goldenX_EMA)) {
   updateAcct("GoldenX")
   updateEndEq("GoldenX")
   if(checkBlotterUpdate("goldenX_EMA_portfolio", "GoldenX", verbose = TRUE)) {
-    save(list = "results", file = here::here("dashboard/rds/", "goldenX_EMA_results"))
+    save(list = "results", file = here::here("dashboard/rds/", "goldenX_EMA_results.RData"))
     setwd("./dashboard/rds/")
     save.strategy("goldenX_EMA_strategy")
     setwd(cwd)

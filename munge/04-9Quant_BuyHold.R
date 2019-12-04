@@ -182,12 +182,12 @@ buyHold  <- here::here("dashboard/rds", "buyHold_results.RData")
 if( file.exists(buyHold)) {
   load(buyHold)
 } else {
-  results   <- applyStrategy(buyHold_strategy, portfolios = "buyHold")
+  buyHold_results   <- applyStrategy(buyHold_strategy, portfolios = "buyHold")
   updatePortf("buyHold")
   updateAcct("buyHold")
   updateEndEq("buyHold")
 #  if(checkBlotterUpdate("buyHold", "buyHold", verbose = TRUE)) {
-    save(list = "results", file = here::here("dashboard/rds", "buyHold"))
+    save(list = "buyHold_results", file = here::here("dashboard/rds", "buyHold"))
     setwd("./dashboard/rds/")
     save.strategy("buyHold_strategy")
     setwd(cwd)
