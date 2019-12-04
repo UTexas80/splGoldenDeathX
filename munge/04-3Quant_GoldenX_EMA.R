@@ -206,7 +206,7 @@ trade.stats.tab <- data.table(tab.trades,tab.profit,tab.wins)
 ################################################################################
 ## Step 04.09: Generate Performance Analytics  https://tinyurl.com/us96c8p   ###
 ################################################################################
-rets <- PortfReturns(Account=goldenX_EMA_strategy)
+rets       <- PortfReturns(Account=goldenX_EMA_strategy)
 rownames(rets) <- NULL
 # Compute performance statistics -----------------------------------------------
 tab.perf <- table.Arbitrary(rets, 

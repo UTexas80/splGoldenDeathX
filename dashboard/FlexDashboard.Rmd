@@ -822,7 +822,7 @@ DT::renderDataTable({
 
 ### Daily Transaction P & L
 ```{r 2.1.1.i-table-dailyTxnPL}
-goldenX_EMA_dailyTxnPL <- blotter::dailyTxnPL("goldenX_EMA_portfolio")
+goldenX_EMA_dailyTxnPL <- t( blotter::dailyTxnPL("goldenX_EMA_portfolio") )
 
 DT::renderDataTable({
   DT::datatable(goldenX_EMA_dailyTxnPL,
@@ -836,6 +836,15 @@ DT::renderDataTable({
       scroller = TRUE
     )
   )
+})
+```
+
+### Daily Transaction P & L
+```{r 2.1.1.j-viz-dailyTxnPL}
+
+renderHighchart({
+  goldenX_EMA_dailyTxnPL <-  data.table(blotter::dailyTxnPL("goldenX_EMA_portfolio"), keep.rownames = TRUE)
+    hchart(goldenX_EMA_dailyTxnPL, "bar", hcaes( x = 'index',  y = 'SPL.AX.DailyTxnPL'))
 })
 ```
 

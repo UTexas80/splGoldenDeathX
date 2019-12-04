@@ -13,7 +13,7 @@ aud_usd           <- na.omit(getSymbols("AUD=X", src = "yahoo",
 aud_usd           <- aud_usd[complete.cases(aud_usd), ]
 usd_aud           <- 1 / aud_usd
 # ------------------------------------------------------------------------------
-dtSPL             <- as.data.table(SPL.AX, keep.rownames = TRUE)
+dtSPL             <- as.data.table(SPL.AX, keep.rownames = TRUE) # xts to data.table
 names(dtSPL)[1]   <- "date"
 setkey(dtSPL, "date")
 # dtSPL             <- dtSPL[dtEMA][, c(1:5, 18)]
