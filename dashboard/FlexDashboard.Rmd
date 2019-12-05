@@ -1117,6 +1117,18 @@ DT::renderDataTable({
 })
 ```
 
+### .xts Price & Transactions Chart
+```{r 2.2.2.3-viz-goldenX-EMA-chartstats}
+renderPlot({
+  
+    chart.Posn("goldenX_EMA_portfolio", 
+           Symbol = "SPL.AX",  
+           Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
+           TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
+  
+})
+```
+
 Column {data-height=33%}
 -------------------------------------
 ### GoldenX Return
