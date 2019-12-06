@@ -29,8 +29,7 @@ rm.strat("GoldenX")
 # ------------------------------------------------------------------------------
 # To start, we initialize account and portfolio where:                       ###
 # Porfolio: stores which stocks to be traded                                 ###
-# Account: stores which money transactions                                   ###
-## portfolio, account and orders initialization. ----------------------------###
+# Account: stores money transactions                                         ###
 # ------------------------------------------------------------------------------
 initPortf(name = "goldenX_EMA_portfolio",     # Portfolio Initialization     ###
           symbols = symbols,
