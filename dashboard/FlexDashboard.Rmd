@@ -113,11 +113,11 @@ xprices <- function() {
 ```
 
 ```{r rdsInput}
-buyHold_results           <- readRDS(here::here("dashboard/rds", "buyHold_results.rds"))
+# buyHold_results           <- readRDS(here::here("dashboard/rds", "buyHold_results.rds"))
 calendarDays              <- readRDS(here::here("dashboard/rds", "calendarDays.rds"))
 dtEMA                     <- readRDS(here::here("dashboard/rds", "dtEMA.rds"))
 golden                    <- readRDS(here::here("dashboard/rds", "golden.rds"))
-goldenX_EMA_results       <- readRDS(here::here("dashboard/rds", "goldenX_EMA_results.rds"))
+# goldenX_EMA_results       <- readRDS(here::here("dashboard/rds", "goldenX_EMA_results.rds"))
 tradeDays                 <- readRDS(here::here("dashboard/rds", "tradeDays.rds"))
 trend                     <- data.table(readRDS(here::here("dashboard/rds", "trend.rds")))
 trendClose                <- readRDS(here::here("dashboard/rds", "trendClose.rds"))

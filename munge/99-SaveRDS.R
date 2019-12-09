@@ -24,8 +24,8 @@ saveRDS(trendSummaryGroup,         file        = here::here("dashboard/rds/", "t
 saveRDS(trendEMA,                  file        = here::here("dashboard/rds/", "trendEMA.rds"))
 saveRDS(trendSMA,                  file        = here::here("dashboard/rds/", "trendSMA.rds"))
 # ------------------------------------------------------------------------------
-saveRDS(buyHold_results,           file        = here::here("dashboard/rds", "buyHold_results.rds"))
-saveRDS(results,                   file        = here::here("dashboard/rds", "goldenX_EMA_results.rds"))
+# saveRDS(buyHold_results,           file        = here::here("dashboard/rds", "buyHold_results.rds"))
+# saveRDS(results,                   file        = here::here("dashboard/rds", "goldenX_EMA_results.rds"))
 # ------------------------------------------------------------------------------
 saveRDS(viz.BoxplotN,              file        = here::here("dashboard/rds/", "viz.BoxplotN.rds"))
 saveRDS(xtsEMA[complete.cases(xtsEMA), ], file = here::here("dashboard/rds/", "xtsEMA.rds"))

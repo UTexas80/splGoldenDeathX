@@ -1,4 +1,16 @@
 ################################################################################
+## 1.01 Import Data
+################################################################################
+getSymbols(Symbols = symbols, 
+           src = "yahoo", 
+           from = start_date, 
+           to = end_date, 
+           adjust = adjustment)
+# ------------Replace missing values (NA)       https://tinyurl.com/y5etxh8x ###
+SPL.AX <-
+        SPL.AX %>%
+        na.omit()
+################################################################################
 ## Step 04.9.00 remove objects to allow re-runs                              ###
 ################################################################################
 suppressWarnings(try(rm(list=c("account.buyHold",
