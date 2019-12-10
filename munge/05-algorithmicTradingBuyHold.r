@@ -1,28 +1,27 @@
 ################################################################################
 # Introduction to R packages for Algorithmic trading    https://is.gd/KXB2qi ###
 ################################################################################
-
 ################################################################################
 ## 1.0 – Adding Indicators and Signals to a trading strategy                 ###
 ################################################################################
 
 ################################################################################
-## 1.01 Import Data
+## Step 1.01 Import Data                                                     ###
 ################################################################################
-getSymbols(Symbols = symbols, 
-           src     = "yahoo", 
-           from    = start_date, 
-           to      = end_date, 
-           adjust  = adjustment)
+# getSymbols(Symbols = symbols,
+#            src     = "yahoo",
+#            from    = start_date,
+#            to      = end_date,
+#            adjust  = adjustment)
 # ------------Replace missing values (NA)       https://tinyurl.com/y5etxh8x ###
-SPL.AX <-
-        SPL.AX %>%
-        na.omit()
-## -----------------------------------------------------------------------------
+# SPL.AX <-
+#         SPL.AX %>%
+#         na.omit()
+# ## -----------------------------------------------------------------------------
 ## -- use FinancialInstrument::stock() to define the meta-data for the symbols.-
-stock(symbols ,currency = "AUD",multiplier = 1)
+# stock(symbols ,currency = "AUD",multiplier = 1)
 ################################################################################
-##  1.02 Algorithmic Trading Strategy Setup
+##  Step 1.02 Algorithmic Trading Strategy Setup                             ###
 ## -----------------------------------------------------------------------------
 ## Assign names to the portfolio, account and strategy as follows:
 ## -----------------------------------------------------------------------------
@@ -36,8 +35,8 @@ account.st   <- "buyhold_account"
 # remove them using rm.strat function
 # ------------------------------------------------------------------------------
 rm.strat(strategy.st)
-rm.strat(portfolio.st)
 rm.strat(account.st)
+rm.strat(portfolio.st)
 # ------------------------------------------------------------------------------
 # To start, we initialize account and portfolio where:                       ###
 # Porfolio: stores which stocks to be traded                                 ###
@@ -45,39 +44,42 @@ rm.strat(account.st)
 # ------------------------------------------------------------------------------
 initPortf(name       = portfolio.st,            # Portfolio Initialization   ###
           symbols    = symbols,
-          initDate   = init_date)
+          initDate   = initDate,
+          currency   = 'AUD',
+          initEq     = initEq)
 # ------------------------------------------------------------------------------
 initAcct(name        = account.st,              # Account Initialization     ###
         portfolios   = portfolio.st,
-        initDate     = init_date,
-        initEq       = init_equity)
+        initDate     = initDate,
+        currency     = 'AUD',
+        initEq       = initEq)
 # ------------------------------------------------------------------------------
 initOrders(portfolio = portfolio.st,            # Order Initialization       ###
            symbols   = symbols,
-           initDate  = init_date)
+           initDate  = initDate)
 # ------------------------------------------------------------------------------
 strategy(strategy.st, store = TRUE)             # Strategy Initialization    ###
-addPosLimit(portfolio.st, "SPL.AX", timestamp=initDate, maxpos=100, minpos=0)
+# addPosLimit(portfolio.st, "SPL.AX", timestamp=start_date, maxpos=100, minpos=0)
 # stock(symbols ,currency = "AUD",multiplier = 1)
 ################################################################################
-## Step 04.9.02: place an entry order                                        ###
+## Step 01.03a: place an entry order                                         ###
 ################################################################################
-equity               <- getEndEq(account.st, start_date)
-TxnDate              <- start_date
+TxnDate              <- first(time(SPL.AX))
 TxnPrice             <- as.numeric(Cl(SPL.AX[1,4]))
+equity               <- getEndEq(account.st, TxnDate) 
 TxnQty               <- as.numeric(trunc(equity/TxnPrice))
 # ------------------------------------------------------------------------------
 addTxn(portfolio.st,
       Symbol         <- symbols,
       TxnDate        <- TxnDate,
       TxnPrice       <- TxnPrice,
-      TxnQty         <- TxnQty,,
+      TxnQty         <- TxnQty,
       TxnFees        <- TxnFees)
 ################################################################################
-## Step 04.9.03: place an exit order                                         ###
+## Step 01.03b place an exit order                                           ###
 ################################################################################
 TxnDate              <- last(time(SPL.AX))
-TxnPrice             <- as.numeric(Cl(SPL.AX[LastDate,]))
+TxnPrice             <- as.numeric(Cl(SPL.AX[TxnDate,]))
 # ------------------------------------------------------------------------------
 addTxn(portfolio.st, 
        Symbol        <- Symbol,
@@ -86,22 +88,36 @@ addTxn(portfolio.st,
        TxnQty        <- - TxnQty,
        TxnFees       <- TxnFees)
 ################################################################################
-## Step 04.9.04: update portfolio and account                                ###
+## Step 01.04: add position limits and apply strategy                        ###
 ################################################################################
 addPosLimit(portfolio.st, 
             Symbol, 
-            timestamp    <- start_Date,
+            timestamp    <- start_date,
             maxpos       <- 100,
             minpos       <- 0)
-applyStrategy(strategy = strategy.st,portfolios = portfolio.st)
-# ------------------------------------------------------------------------------
+################################################################################
+## Step 01.05: update portfolio and account                                  ###
+################################################################################
 updatePortf(portfolio.st)
 updateAcct(account.st)
 updateEndEq(account.st)
+addPosLimit(portfolio.st, "SPL.AX", timestamp=start_date, maxpos=100, minpos=0)
 ################################################################################
-## 04.05 Chart Trades
+## Step 01.06:  apply and save strategy                                      ###
+################################################################################
+applyStrategy(strategy = strategy.st,portfolios = portfolio.st)
+################################################################################
+## Step 01.07: Chart Trades                                                  ###
 ################################################################################
 chart.Posn(portfolio.st,"SPL.AX")
+# ------------------------------------------------------------------------------
+blotter::dailyEqPL(portfolio.st, "SPL.AX")
+blotter::dailyStats(portfolio.st)
+blotter::getPortfolio(portfolio.st)
+################################################################################
+## Step 04.08: Apply and Save Strategy                                       ###
+################################################################################
+
 ################################################################################
 ## Step 00.99: VERSION HISTORY                                               ###
 ################################################################################

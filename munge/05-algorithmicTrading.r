@@ -71,19 +71,19 @@ add.indicator(strategy = strategy.st,
 ## 1.03.2 add macd as indicator to the strategy,
 ## macd takes fastMA = 12, slowMA = 26, signalMA = 9
 # ------------------------------------------------------------------------------
-fastMA   = 12 
-slowMA   = 26 
+fastMA   = 12
+slowMA   = 26
 signalMA = 9
 maType   = "EMA"
 # ------------------------------------------------------------------------------
-add.indicator(strategy.st, 
-              name        = "MACD", 
+add.indicator(strategy.st,
+              name        = "MACD",
               arguments   = list(
                 x = quote(Cl(mktdata)),
-                nFast = fastMA, 
+                nFast = fastMA,
                 nSlow = slowMA,
                 histogram = TRUE),
-              label = 'MACD' 
+              label = 'MACD'
 )
 ##------------------------------------------------------------------------------
 ## 1.03.3.0 add GoldenX as indicators to the strategy
@@ -224,53 +224,53 @@ knitr::kable(tail(mktdata_sig))
 ## 1.07.1 Enter Long -----------------------------------------------------------
 ##------------------------------------------------------------------------------
 # add.rule(strategy       = strategy.st,
-        name            = "ruleSignal",
-        arguments       = list(
-            sigcol      = "Long",
-            sigval      = TRUE,
-            orderqty    = 100,
-            ordertype   = "market",
-            TxnFees     = -75,
-            orderside   = "long",
-            prefer      = "Open",
-            replace     = FALSE),
-        type            = "enter",
-        label           = 'enter long'
-        )
+#        name            = "ruleSignal",
+#        arguments       = list(
+#            sigcol      = "Long",
+#            sigval      = TRUE,
+#            orderqty    = 100,
+#            ordertype   = "market",
+#            TxnFees     = -75,
+#            orderside   = "long",
+#            prefer      = "Open",
+#            replace     = FALSE),
+#        type            = "enter",
+#        label           = 'enter long'
+#        )
 ##------------------------------------------------------------------------------
 ## 1.07.2 Exit Long ------------------------------------------------------------
 ##------------------------------------------------------------------------------
 # add.rule(strategy.st,
-        name            = 'ruleSignal',
-        arguments       = list(
-            sigcol      = "macd_lt_0",
-            sigval      = TRUE,
-            orderqty    = 'all',
-            ordertype   = 'market',
-            orderside   = 'long',
-            prefer      = "Open",
-            TxnFees     = -75,
-            replace     = TRUE),
-        type            = 'exit',
-        label           = 'long exit1'
-        )
+#        name            = 'ruleSignal',
+#        arguments       = list(
+#            sigcol      = "macd_lt_0",
+#            sigval      = TRUE,
+#            orderqty    = 'all',
+#            ordertype   = 'market',
+#            orderside   = 'long',
+#            prefer      = "Open",
+#            TxnFees     = -75,
+#            replace     = TRUE),
+#        type            = 'exit',
+#        label           = 'long exit1'
+#        )
 ##------------------------------------------------------------------------------
 ## 1.07.3 Exit Long 2-----------------------------------------------------------
 ##------------------------------------------------------------------------------
 # add.rule(strategy.st,
-        name            = 'ruleSignal', 
-        arguments       = list(
-            sigcol      = "RSI_lt_50",
-            sigval      = TRUE, 
-            orderqty    = 'all', 
-            ordertype   = 'market', 
-            orderside   = 'long', 
-            prefer      = "Open",
-            TxnFees     = -75,
-            orderset    = 'ocolong',
-            replace     = TRUE),
-            type        = 'exit',
-            label       = 'long exit2')
+#        name            = 'ruleSignal', 
+#        arguments       = list(
+#            sigcol      = "RSI_lt_50",
+#            sigval      = TRUE, 
+#            orderqty    = 'all', 
+#            ordertype   = 'market', 
+#            orderside   = 'long', 
+#            prefer      = "Open",
+#            TxnFees     = -75,
+#            orderset    = 'ocolong',
+#            replace     = TRUE),
+#            type        = 'exit',
+#            label       = 'long exit2')
 ##------------------------------------------------------------------------------
 ## 1.07.4 Open Long GoldenX-----------------------------------------------------
 ##------------------------------------------------------------------------------

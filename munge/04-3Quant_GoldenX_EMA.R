@@ -220,18 +220,18 @@ tab.perf <- table.Arbitrary(rets,
             "Calmar Ratio"))
 # Compute risk statistics ------------------------------------------------------
 tab.risk <- table.Arbitrary(rets,
-  metrics=c("StdDev.annualized", 
-            "maxDrawdown", 
-            "VaR", 
+  metrics=c("StdDev.annualized",
+            "maxDrawdown",
+            "VaR",
             "ES"),
   metricsNames=c(
-            "Annualized StdDev", 
-            "Max DrawDown", 
-            "Value-at-Risk", 
+            "Annualized StdDev",
+            "Max DrawDown",
+            "Value-at-Risk",
             "Conditional VaR"))
 performance.stats.tab <- data.table(
-  rownames(tab.perf),tab.perf[,1], 
-  rownames(tab.risk),tab.risk[,1])            
+  rownames(tab.perf),tab.perf[,1],
+  rownames(tab.risk),tab.risk[,1])
 ################################################################################
 ## Step 04.99: VERSION HISTORY                                               ###
 ################################################################################

@@ -340,7 +340,7 @@ updatePortf(portfolio.st)
 # the portfolio data and corresponding close prices.
 updateAcct(account.st)
 # 04.60 updateEndEq function is used to calculate End.Eq and Net.Performance.
-updateEndEq function is used to calculate End.Eq and Net.Performance.
+# updateEndEq function is used to calculate End.Eq and Net.Performance.
 # 04.70 Chart Trades
 chart.Posn(portfolio.st,"NSEI")
 

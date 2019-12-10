@@ -30,28 +30,34 @@ options(getSymbols.warning4.0 = FALSE)                 # Suppresses warnings ###
 ## rm(list = ls(.blotter), envir = .blotter)           # Do some house cleaning#
 Sys.setenv(TZ = "UTC")                                 # Set the timezone    ###
 ################################################################################
-## Financial Instruments Package setup                 # https://is.gd/3K7mRp ##
-################################################################################
-FinancialInstrument::currency(c("AUD","USD"))          # Set the currency    ###
-stock(c("SPL.AX"), currency="AUD")                     # Define the stocks   ###
-exchange_rate("AUDUSD")                                # define an exchange rate
-################################################################################
 ## Date Parameters                                                           ###
 ################################################################################
 init_date   <- "2002-01-01"
 start_date  <- "2002-01-02"
 end_date    <- Sys.Date()
 # ------------------------------------------------------------------------------
-initDate    <- "2002-01-02"
-from        <- "2003-01-01"
+initDate    <- "2002-01-01"
+from        <- "2002-01-01"
 to          <- Sys.Date()
 ################################################################################
 ## Equity Values                                                             ###
 ################################################################################
 adjustment  <- TRUE                       # Adjust for Dividends, Stock Splits #
 init_equity <- 1e4                        # $10,000                            #
+initEq      <- 100000
 Sys.setenv(TZ = 'America/New_York')
 TxnFees = 0                               # Transaction Fees
+################################################################################
+## Financial Instruments Package setup                 # https://is.gd/3K7mRp ##
+################################################################################
+FinancialInstrument::currency(c("AUD","USD"))          # Set the currency    ###
+stock(c("SPL.AX"), currency="AUD")                     # Define the stocks   ###
+# FinancialInstrument::exchange_rate('AUDUSD')           # define an exchange rate
+usd_aud <- Cl(getSymbols(
+              "AUD=X",
+              src="yahoo", 
+              from = init_date, 
+              auto.assign = FALSE))
 ################################################################################
 ## Custom Theme                                                              ###
 ################################################################################
