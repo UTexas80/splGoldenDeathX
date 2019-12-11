@@ -25,12 +25,10 @@
 ## -----------------------------------------------------------------------------
 ## Assign names to the portfolio, account and strategy as follows:
 ## -----------------------------------------------------------------------------
-################################################################################
 strategy.st  <- "buyhold_strat"
 portfolio.st <- "buyhold_portfolio"
 account.st   <- "buyhold_account"
 # ------------------------------------------------------------------------------
-################################################################################
 # If there are any other portfolios or account book with these names
 # remove them using rm.strat function
 # ------------------------------------------------------------------------------
@@ -44,14 +42,14 @@ rm.strat(portfolio.st)
 # ------------------------------------------------------------------------------
 initPortf(name       = portfolio.st,            # Portfolio Initialization   ###
           symbols    = symbols,
-          initDate   = initDate,
           currency   = 'AUD',
+          initDate   = initDate,
           initEq     = initEq)
 # ------------------------------------------------------------------------------
 initAcct(name        = account.st,              # Account Initialization     ###
         portfolios   = portfolio.st,
-        initDate     = initDate,
         currency     = 'AUD',
+        initDate     = initDate,
         initEq       = initEq)
 # ------------------------------------------------------------------------------
 initOrders(portfolio = portfolio.st,            # Order Initialization       ###
@@ -69,7 +67,7 @@ TxnPrice             <- as.numeric(Cl(SPL.AX[1,4]))
 equity               <- getEndEq(account.st, TxnDate) 
 TxnQty               <- as.numeric(trunc(equity/TxnPrice))
 # ------------------------------------------------------------------------------
-addTxn(portfolio.st,
+addTxn(portfolio.st,                            # buy transaction            ###
       Symbol         <- symbols,
       TxnDate        <- TxnDate,
       TxnPrice       <- TxnPrice,
@@ -81,7 +79,7 @@ addTxn(portfolio.st,
 TxnDate              <- last(time(SPL.AX))
 TxnPrice             <- as.numeric(Cl(SPL.AX[TxnDate,]))
 # ------------------------------------------------------------------------------
-addTxn(portfolio.st, 
+addTxn(portfolio.st,,                            # sell transaction          ### 
        Symbol        <- Symbol,
        TxnDate       <- TxnDate,
        TxnPrice      <- TxnPrice,
@@ -96,16 +94,16 @@ addPosLimit(portfolio.st,
             maxpos       <- 100,
             minpos       <- 0)
 ################################################################################
-## Step 01.05: update portfolio and account                                  ###
+## Step 01.05:  apply and save strategy                                      ###
+################################################################################
+applyStrategy(strategy = strategy.st,portfolios = portfolio.st)
+################################################################################
+## Step 01.06: update portfolio and account                                  ###
 ################################################################################
 updatePortf(portfolio.st)
 updateAcct(account.st)
 updateEndEq(account.st)
 addPosLimit(portfolio.st, "SPL.AX", timestamp=start_date, maxpos=100, minpos=0)
-################################################################################
-## Step 01.06:  apply and save strategy                                      ###
-################################################################################
-applyStrategy(strategy = strategy.st,portfolios = portfolio.st)
 ################################################################################
 ## Step 01.07: Chart Trades                                                  ###
 ################################################################################

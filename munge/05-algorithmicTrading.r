@@ -23,7 +23,6 @@ SPL.AX <-
 stock(symbols ,currency = "AUD",multiplier = 1)
 ################################################################################
 ##  1.02 Algorithmic Trading Strategy Setup
-################################################################################
 ## -----------------------------------------------------------------------------
 ## Assign names to the portfolio, account and strategy as follows:
 ## -----------------------------------------------------------------------------
@@ -34,25 +33,29 @@ account.st   <- "basic_account"
 # If there are any other portfolios or account book with these names
 # remove them using rm.strat function
 # ------------------------------------------------------------------------------
-rm.strat(portfolio.st)
+rm.strat(strategy.st)
 rm.strat(account.st)
+rm.strat(portfolio.st)
 # ------------------------------------------------------------------------------
 # To start, we initialize account and portfolio where:                       ###
 # Porfolio: stores which stocks to be traded                                 ###
 # Account: stores money transactions                                         ###
 # ------------------------------------------------------------------------------
-initPortf(name = portfolio.st,                  # Portfolio Initialization   ###
-          symbols = symbols,
-          initDate = init_date)
+initPortf(name       = portfolio.st,                  # Portfolio Initialization   ###
+          symbols    = symbols,
+          currency   = 'AUD',
+          initDate   = initDate
+          initEq     = initEq)
 # ------------------------------------------------------------------------------
-initAcct(name = account.st,                     # Account Initialization     ###
-        portfolios = portfolio.st,
-        initDate = init_date,
-        initEq = init_equity)
+initAcct(name        = account.st,                     # Account Initialization     ###
+        portfolios   = portfolio.st,
+        currency     = 'AUD',
+        initDate     = initDate,
+        initEq       = initEq)
 # ------------------------------------------------------------------------------
 initOrders(portfolio = portfolio.st,            # Order Initialization       ###
-           symbols = symbols,
-           initDate = init_date)
+           symbols   = symbols,
+           initDate  = initDate)
 # ------------------------------------------------------------------------------
 strategy(strategy.st, store = TRUE)             # Strategy Initialization    ###
 ################################################################################
@@ -307,28 +310,31 @@ add.rule(strategy.st,
 ################################################################################
 ## 1.08  set the position limits
 ################################################################################
-addPosLimit(portfolio.st, "SPL.AX", timestamp=initDate, maxpos=100, minpos=0)
+addPosLimit(portfolio.st,
+            Symbol, 
+            timestamp <- initDate, 
+            maxpos    <- 100,
+            minpos    <- 0)
 ################################################################################
-## 1.09  Apply Trading Strategy
+## 1.10  Apply Trading Strategy
 ################################################################################
 applyStrategy(strategy = strategy.st,portfolios = portfolio.st)
+save.strategy(here::here("dashboard/rds/", strategy.st))
 ################################################################################
-## 1.10 updatePortf function calculates the PL for each period prices that r available.
+## 1.09 update portfolio and account                                         ###
 ################################################################################
 updatePortf(portfolio.st)
-################################################################################
-## 1.11 updateAcct function is used to perform equity account calculations from
-# the portfolio data and corresponding close prices.
-################################################################################
 updateAcct(account.st)
-################################################################################
-## 1.12 updateEndEq function is used to calculate End.Eq and Net.Performance.
-################################################################################
 updateEndEq(account.st)
+chart.Posn(portfolio.st,"SPL.AX")
 ################################################################################
-## 1.13 Chart Trades
+## 1.11 Chart Trades
 ################################################################################
 chart.Posn(portfolio.st,"SPL.AX")
+# ------------------------------------------------------------------------------
+blotter::dailyEqPL(portfolio.st, "SPL.AX")
+blotter::dailyStats(portfolio.st)
+blotter::getPortfolio(portfolio.st)
 ################################################################################
 ## Step 00.99: VERSION HISTORY                                               ###
 ################################################################################

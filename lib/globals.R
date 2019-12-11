@@ -44,7 +44,7 @@ to          <- Sys.Date()
 ################################################################################
 adjustment  <- TRUE                       # Adjust for Dividends, Stock Splits #
 init_equity <- 1e4                        # $10,000                            #
-initEq      <- 100000
+initEq      <- 1e6                        # $1,000,000                         #
 Sys.setenv(TZ = 'America/New_York')
 TxnFees = 0                               # Transaction Fees
 ################################################################################
@@ -52,7 +52,7 @@ TxnFees = 0                               # Transaction Fees
 ################################################################################
 FinancialInstrument::currency(c("AUD","USD"))          # Set the currency    ###
 stock(c("SPL.AX"), currency="AUD")                     # Define the stocks   ###
-# FinancialInstrument::exchange_rate('AUDUSD')           # define an exchange rate
+# FinancialInstrument::exchange_rate('AUDUSD')         # define an exchange rate
 usd_aud <- Cl(getSymbols(
               "AUD=X",
               src="yahoo", 

@@ -12,6 +12,21 @@ rm.strat("buyHold")
 rm("account.buyHold",pos=.blotter)
 rm("portfolio.buyHold",pos=.blotter)
 ################################################################################
+##  Step 1.02 Algorithmic Trading Strategy Setup                             ###
+## -----------------------------------------------------------------------------
+## Assign names to the portfolio, account and strategy as follows:
+## -----------------------------------------------------------------------------
+strategy.st  <- "buyHold"
+portfolio.st <- "buyHold"
+account.st   <- "buyHold"
+# ------------------------------------------------------------------------------
+# If there are any other portfolios or account book with these names
+# remove them using rm.strat function
+# ------------------------------------------------------------------------------
+rm.strat(strategy.st)
+rm.strat(account.st)
+rm.strat(portfolio.st)
+################################################################################
 ## Step 04.9.01 Initialize Portfolio, Account and Orders                     ###
 ################################################################################
 ## -----------------------------------------------------------------------------
@@ -35,20 +50,18 @@ initOrders(portfolio="buyHold",                  # Order Initialization      ###
            symbols = symbols,
            initDate =  init_date)
 # ------------------------------------------------------------------------------
-buyHold_strategy <- strategy("buyHold")        # Strategy Initialization     ###           
+buyHold_strategy <- strategy("buyHold")        # Strategy Initialization     ###
 ################################################################################
 ## Step 04.9.02 get the price and timing data                                ###
 ################################################################################
-FirstDate <- first(time(SPL.AX))
-# Enter order on the first date
+FirstDate <- first(time(SPL.AX))                # Enter order on the first date#
 BuyDate <- FirstDate
 equity = getEndEq("buyHold", FirstDate)
 FirstPrice <- as.numeric(Cl(SPL.AX[BuyDate,4]))
 # ------------------------------------------------------------------------------
 UnitSize = as.numeric(trunc(equity/FirstPrice))
 # ------------------------------------------------------------------------------
-LastDate <- last(time(SPL.AX))
-# Exit order on the Last Date
+LastDate <- last(time(SPL.AX))                  # Exit order on the Last Date ##
 LastPrice <- as.numeric(Cl(SPL.AX[LastDate,4]))
 ################################################################################
 ## Step 04.9.03 add buy / sell transactions                                  ###
