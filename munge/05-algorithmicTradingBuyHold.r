@@ -79,7 +79,7 @@ addTxn(portfolio.st,                            # buy transaction            ###
 TxnDate              <- last(time(SPL.AX))
 TxnPrice             <- as.numeric(Cl(SPL.AX[TxnDate,]))
 # ------------------------------------------------------------------------------
-addTxn(portfolio.st,,                            # sell transaction          ### 
+addTxn(portfolio.st,                             # sell transaction          ### 
        Symbol        <- Symbol,
        TxnDate       <- TxnDate,
        TxnPrice      <- TxnPrice,

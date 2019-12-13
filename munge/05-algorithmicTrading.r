@@ -44,7 +44,7 @@ rm.strat(portfolio.st)
 initPortf(name       = portfolio.st,                  # Portfolio Initialization   ###
           symbols    = symbols,
           currency   = 'AUD',
-          initDate   = initDate
+          initDate   = initDate,
           initEq     = initEq)
 # ------------------------------------------------------------------------------
 initAcct(name        = account.st,                     # Account Initialization     ###
@@ -311,7 +311,7 @@ add.rule(strategy.st,
 ## 1.08  set the position limits
 ################################################################################
 addPosLimit(portfolio.st,
-            Symbol, 
+            symbols, 
             timestamp <- initDate, 
             maxpos    <- 100,
             minpos    <- 0)
@@ -319,7 +319,8 @@ addPosLimit(portfolio.st,
 ## 1.10  Apply Trading Strategy
 ################################################################################
 applyStrategy(strategy = strategy.st,portfolios = portfolio.st)
-save.strategy(here::here("dashboard/rds/", strategy.st))
+# save.strategy(here::here("dashboard/rds", strategy.st))
+save.strategy( strategy.st)
 ################################################################################
 ## 1.09 update portfolio and account                                         ###
 ################################################################################
