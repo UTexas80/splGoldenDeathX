@@ -319,13 +319,15 @@ addPosLimit(portfolio.st,
 ################################################################################
 applyStrategy(strategy = strategy.st,portfolios = portfolio.st)
 # save.strategy(here::here("dashboard/rds", strategy.st))
-save.strategy( strategy.st)
+checkBlotterUpdate(portfolio.st, account.st, verbose = TRUE)
+
 ################################################################################
 ## 1.10 update portfolio and account                                         ###
 ################################################################################
 updatePortf(portfolio.st)
 updateAcct(account.st)
 updateEndEq(account.st)
+save.strategy(strategy.st)
 chart.Posn(portfolio.st,"SPL.AX")
 ################################################################################
 ## 1.11 Chart Trades

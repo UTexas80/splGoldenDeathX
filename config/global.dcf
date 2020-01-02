@@ -6,10 +6,10 @@ data_loading: TRUE
 data_loading_header: TRUE
 data_ignore:
 load_libraries: TRUE
-libraries: xts, zoo, billboarder, checkpoint, curl, d3heatmap, dataMeta, datapasta, dataspice,
+libraries: xts, zoo, animation, billboarder, checkpoint, curl, d3heatmap, dataMeta, datapasta, dataspice,
            data.table, devtools, DT, dygraphs, ezknitr, FinancialInstrument, flexdashboard, flextable,
            forecast, foreach, formatR, formattable, futile.logger, gt, here, highcharter, hydroTSM,
-           janitor, knitr, lintr, lubridate, naniar, openxlsx, orca, packagefinder, pacman, parallel,
+           janitor, knitr, kableExtra, lintr, lubridate, naniar, openxlsx, orca, packagefinder, pacman, parallel,
            parallelMap, pbapply, pdftools, PerformanceAnalytics, plotly, plyr, PortfolioEffectHFT,
            ProjectTemplate, quantmod,  quantstrat, readxl, repurrrsive, renv, reprex, repo, reshape2, rio,
            rmarkdown, RVerbalExpressions, rvest, scales, shiny, shinydashboard, shinydashboardPlus,
