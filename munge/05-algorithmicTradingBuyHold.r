@@ -21,7 +21,7 @@
 ## -- use FinancialInstrument::stock() to define the meta-data for the symbols.-
 # stock(symbols ,currency = "AUD",multiplier = 1)
 ################################################################################
-##  Step 1.02 Algorithmic Trading Strategy Setup                             ###
+##  1.02 Algorithmic Trading Strategy Setup                             
 ## -----------------------------------------------------------------------------
 ## Assign names to the portfolio, account and strategy as follows:
 ## -----------------------------------------------------------------------------
@@ -57,7 +57,6 @@ initOrders(portfolio = portfolio.st,            # Order Initialization       ###
            initDate  = initDate)
 # ------------------------------------------------------------------------------
 strategy(strategy.st, store = TRUE)             # Strategy Initialization    ###
-# addPosLimit(portfolio.st, "SPL.AX", timestamp=start_date, maxpos=100, minpos=0)
 # stock(symbols ,currency = "AUD",multiplier = 1)
 ################################################################################
 ## Step 01.03a: place an entry order                                         ###
@@ -86,7 +85,7 @@ addTxn(portfolio.st,                             # sell transaction          ###
        TxnQty        <- - TxnQty,
        TxnFees       <- TxnFees)
 ################################################################################
-## Step 01.04: add position limits and apply strategy                        ###
+## Step 01.04: set the position limits                                       ###
 ################################################################################
 addPosLimit(portfolio.st, 
             Symbol, 
@@ -97,6 +96,7 @@ addPosLimit(portfolio.st,
 ## Step 01.05:  apply and save strategy                                      ###
 ################################################################################
 applyStrategy(strategy = strategy.st,portfolios = portfolio.st)
+save.strategy( strategy.st)
 ################################################################################
 ## Step 01.06: update portfolio and account                                  ###
 ################################################################################

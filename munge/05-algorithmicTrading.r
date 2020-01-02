@@ -1,7 +1,6 @@
 ################################################################################
 # Introduction to R packages for Algorithmic trading    https://is.gd/KXB2qi ###
 ################################################################################
-
 ################################################################################
 ## 1.0 – Adding Indicators and Signals to a trading strategy                 ###
 ################################################################################
@@ -41,13 +40,13 @@ rm.strat(portfolio.st)
 # Porfolio: stores which stocks to be traded                                 ###
 # Account: stores money transactions                                         ###
 # ------------------------------------------------------------------------------
-initPortf(name       = portfolio.st,                  # Portfolio Initialization   ###
+initPortf(name       = portfolio.st,            # Portfolio Initialization   ###
           symbols    = symbols,
           currency   = 'AUD',
           initDate   = initDate,
           initEq     = initEq)
 # ------------------------------------------------------------------------------
-initAcct(name        = account.st,                     # Account Initialization     ###
+initAcct(name        = account.st,              # Account Initialization     ###
         portfolios   = portfolio.st,
         currency     = 'AUD',
         initDate     = initDate,
@@ -308,7 +307,7 @@ add.rule(strategy.st,
 # Now all the rules are added to the strategy.
 # ------------------------------------------------------------------------------
 ################################################################################
-## 1.08  set the position limits
+## 1.08  set the position limits                                             ###
 ################################################################################
 addPosLimit(portfolio.st,
             symbols, 
@@ -316,13 +315,13 @@ addPosLimit(portfolio.st,
             maxpos    <- 100,
             minpos    <- 0)
 ################################################################################
-## 1.10  Apply Trading Strategy
+## 1.09  apply and save strategy                                             ###
 ################################################################################
 applyStrategy(strategy = strategy.st,portfolios = portfolio.st)
 # save.strategy(here::here("dashboard/rds", strategy.st))
 save.strategy( strategy.st)
 ################################################################################
-## 1.09 update portfolio and account                                         ###
+## 1.10 update portfolio and account                                         ###
 ################################################################################
 updatePortf(portfolio.st)
 updateAcct(account.st)
