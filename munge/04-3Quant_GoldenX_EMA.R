@@ -5,12 +5,15 @@
 ## Check existence of directory and create if doesn't exist                  ###
 ################################################################################
 symbols      <- basic_symbols()
-getSymbols(Symbols = symbols,
-           src = "yahoo",
-           index.class = "POSIXct",
-           from = start_date,
-           to = end_date,
-           adjust = adjustment)
+suppressMessages(
+  getSymbols(
+    Symbols = symbols,
+    src = "yahoo",
+    index.class = "POSIXct",
+    from = start_date,
+    to = end_date,
+    adjust = adjustment)
+           )
 # ------------Replace missing values (NA)       https://tinyurl.com/y5etxh8x ###
 SPL.AX <-
   SPL.AX %>%

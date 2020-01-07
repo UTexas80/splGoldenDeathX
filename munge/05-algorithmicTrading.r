@@ -8,11 +8,14 @@
 ################################################################################
 ## 1.01 Import Data
 ################################################################################
-getSymbols(Symbols = symbols, 
-           src = "yahoo", 
-           from = start_date, 
-           to = end_date, 
-           adjust = adjustment)
+suppressMessages(
+    getSymbols(
+      Symbols = symbols, 
+      src = "yahoo", 
+      from = start_date, 
+      to = end_date, 
+      adjust = adjustment)
+    )
 # ------------Replace missing values (NA)       https://tinyurl.com/y5etxh8x ###
 SPL.AX <-
         SPL.AX %>%
@@ -21,13 +24,17 @@ SPL.AX <-
 ## -- use FinancialInstrument::stock() to define the meta-data for the symbols.-
 stock(symbols ,currency = "AUD",multiplier = 1)
 ################################################################################
-##  1.02 Algorithmic Trading Strategy Setup
+##  1.02 Algorithmic Trading Strategy Setup                                  ###
 ## -----------------------------------------------------------------------------
-## Assign names to the portfolio, account and strategy as follows:
+## Assign names to the portfolio, account and strategy as follows:           ###
 ## -----------------------------------------------------------------------------
 strategy.st  <- "basic_strat"
 portfolio.st <- "basic_portfolio"
 account.st   <- "basic_account"
+# trade sizing and initial equity settings      ### https://wp.me/p4tAbQ-2p ###
+# tradeSize <- 100000
+# initEq <- tradeSize*length(symbols)
+# strategy.st <- portfolio.st <- account.st <- "gXema"
 # ------------------------------------------------------------------------------
 # If there are any other portfolios or account book with these names
 # remove them using rm.strat function
@@ -39,6 +46,10 @@ rm.strat(portfolio.st)
 # To start, we initialize account and portfolio where:                       ###
 # Porfolio: stores which stocks to be traded                                 ###
 # Account: stores money transactions                                         ###
+# ---------------------------------------------------------------------------###--
+# Due to the dependencies between the portfolio, account, and orders, the    ###
+# portfolio must be initialized before the account, and it also must be      ###
+# initialized before the orders.                                             ###
 # ------------------------------------------------------------------------------
 initPortf(name       = portfolio.st,            # Portfolio Initialization   ###
           symbols    = symbols,
@@ -56,7 +67,10 @@ initOrders(portfolio = portfolio.st,            # Order Initialization       ###
            symbols   = symbols,
            initDate  = initDate)
 # ------------------------------------------------------------------------------
-strategy(strategy.st, store = TRUE)             # Strategy Initialization    ###
+# Strategy Initialization                                                    ###
+# i.e., where to put all the indicators, signals and rules. Without it, none ###
+# of the  indicators, signals and rules will know what strategy to use       ###
+strategy(strategy.st, store = TRUE)
 ################################################################################
 ## Step 1.03: Add Indicators to the Strategy    # https://is.gd/SBHCc        ###
 ################################################################################
@@ -126,12 +140,15 @@ add.indicator(strategy.st,
                 n       = 200), 
               label     = "200")
 ################################################################################
-## 1.4 apply indicator
+## 1.4 apply indicator                                                       ###
+## This allows a user to see how the indicators will be appended to the      ###
+## mktdata object.                                                           ###
 ################################################################################
 mktdata_ind <- applyIndicators(strategy = strategy.st,mktdata = SPL.AX)
 mktdata_ind[is.na(mktdata_ind)] = 0
 ################################################################################
 ## 1.05: add signals to the strategy                                         ###
+## signals describe the interaction of indicators with each other            ###
 ################################################################################
 # ------------------------------------------------------------------------------
 # i. RSI_7 greater than 50
