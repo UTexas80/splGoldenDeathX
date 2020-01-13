@@ -16,7 +16,8 @@ mainDir     <- (".")
 subDir      <- ("repo")
 rp_path     <- file.path(mainDir, subDir)
 # ------------------------------------------------------------------------------
-symbols     <-c("CSL.AX", "SPL.AX","enph" )
+# Check this out ----- "enph"
+symbols     <-c("CSL.AX", "SPL.AX")
 dateFrom    <-"2002-01-01"
 ################################################################################
 ## Dates needed for .xts lookup           https://tinyurl.com/y3h3jbt7       ### 
