@@ -112,6 +112,7 @@ chart.Posn(portfolio.st,"SPL.AX")
 blotter::dailyEqPL(portfolio.st, "SPL.AX")
 blotter::dailyStats(portfolio.st)
 blotter::getPortfolio(portfolio.st)
+# le <- as.data.frame(mktdata["2008-02-25::2008-03-07", c(1:4, 7:10)])
 ################################################################################
 ## Step 04.08: Apply and Save Strategy                                       ###
 ################################################################################

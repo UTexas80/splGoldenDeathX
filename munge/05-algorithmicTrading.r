@@ -354,6 +354,7 @@ chart.Posn(portfolio.st,"SPL.AX")
 blotter::dailyEqPL(portfolio.st, "SPL.AX")
 blotter::dailyStats(portfolio.st)
 blotter::getPortfolio(portfolio.st)
+ptsGoldenXema <-blotter::perTradeStats(portfolio.st, symbol = symbols)
 ################################################################################
 ## Step 00.99: VERSION HISTORY                                               ###
 ################################################################################

@@ -118,7 +118,7 @@ chart.RelativePerformance(returns[,1],returns[,2],
 ## Step 04.06: Generate Performance Reports    https://tinyurl.com/us96c8p   ###
 ################################################################################
 ## Compute Trade Statistics------------------------------https://is.gd/SBHCcH---
-# pts <- perTradeStats("buyHold", "SPL.AX")
+ptsBuyHold <- perTradeStats(portfolio.st, symbol = symbols)
 tstats <- tradeStats("buyHold", "SPL.AX")
 # trade related 
 tab.trades <- cbind(

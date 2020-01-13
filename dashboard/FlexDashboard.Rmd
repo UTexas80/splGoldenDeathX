@@ -467,7 +467,7 @@ Column {data-height=17%}
 -------------------------------------
 ###
 
-```{r 2.1.0.1a-vbox-trend, eval=trend}
+```{r 2.1.0.1a-vbox-trendName, eval=trend}
 
 # https://is.gd/vb865W In flexdashboard, can a valueBox be clicked to update a text box like an actionButton?
 
@@ -522,7 +522,7 @@ flexdashboard::renderValueBox({
 
 ###
 
-```{r 2.1.0.2a-vbox-returns-roi}
+```{r 2.1.0.2a-vbox-returns-roi, eval=trend}
 trendROIema <- percent(tail(trend[indicator=='EMA'][order(endDate)], 1)[, 5][[1]],
   scale = 100, prefix = "", suffix = "%", big.mark = " ", decimal.mark = ".",
   trim = TRUE
@@ -544,7 +544,7 @@ flexdashboard::renderValueBox({
   )
 })
 ```
-```{r 2.1.0.2b-vbox-returns-roi}
+```{r 2.1.0.2b-vbox-returns-roi, eval=trend}
 trendROI <- percent(tail(trend[indicator=='SMA'][order(endDate)], 1)[, 5][[1]],
   scale = 100, prefix = "", suffix = "%", big.mark = " ", decimal.mark = ".",
   trim = TRUE
@@ -594,7 +594,7 @@ Column {data-height=50%, .tabset .tabset-fade}
 
 ### Trend Summary Table
 
-```{r 2.1.1.a-table-Trend}
+```{r 2.1.1.a-table-Trend, eval=trend}
 DT::renderDataTable({
   DT::datatable(trend,
     rownames = FALSE,
@@ -1046,7 +1046,7 @@ flexdashboard::renderValueBox({
 
 ###
 
-```{r 2.2.1.4-vbox-trendTradeDays, eval=trend}
+```{r 2.2.1.4-vbox-trendTradeDays}
 flexdashboard::renderValueBox({
   tradeDays <-   as.character(ndays(
       na.omit(
@@ -1068,7 +1068,7 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 -------------------------------------
 ### Golden Crossing Table
 
-```{r 2.2.2.1-table-golden}
+```{r 2.2.2.1-table-golden, eval=trend}
 DT::renderDataTable({
     ind <- unique(trend[,7])[(as.numeric(input$radio2.2) - 2),]
     trendTable <- trend[indicator == ind]
@@ -1136,7 +1136,7 @@ Column {data-height=33%}
 -------------------------------------
 ### GoldenX Return
 
-```{r 2.2.3.1-goldenx-trade-days}
+```{r 2.2.3.1-goldenx-return-outliers}
 xhpG <- list(title = g$catName, titlefont = F)
 yhpG <- list(title = "Counts", titlefont = F)
 ybpG <- list(title = g$catName, titlefont = F)
@@ -1311,7 +1311,7 @@ flexdashboard::renderValueBox({
 
 ###
 
-```{r 2.3.1.4-vbox-trendTradeDays, eval=trend}
+```{r 2.3.1.4-vbox-trendTradeDays}
 flexdashboard::renderValueBox({
   tradeDays <-   as.character(
     ndays(
