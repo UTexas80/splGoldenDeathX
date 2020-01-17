@@ -2,11 +2,11 @@
 # Introduction to R packages for Algorithmic trading    https://is.gd/KXB2qi ###
 ################################################################################
 ################################################################################
-## 1.0 – Adding Indicators and Signals to a trading strategy                 ###
+## 0.0.0 – Adding Indicators and Signals to a trading strategy                 ###
 ################################################################################
 
 ################################################################################
-## 1.01 Import Data
+## 0.1.0 Import Data
 ################################################################################
 suppressMessages(
     getSymbols(
@@ -46,7 +46,7 @@ rm.strat(portfolio.st)
 # To start, we initialize account and portfolio where:                       ###
 # Porfolio: stores which stocks to be traded                                 ###
 # Account: stores money transactions                                         ###
-# ---------------------------------------------------------------------------###--
+# ---------------------------------------------------------------------------###
 # Due to the dependencies between the portfolio, account, and orders, the    ###
 # portfolio must be initialized before the account, and it also must be      ###
 # initialized before the orders.                                             ###
@@ -334,10 +334,12 @@ addPosLimit(portfolio.st,
 ################################################################################
 ## 1.09  apply and save strategy                                             ###
 ################################################################################
+t1 <- Sys.time()
 applyStrategy(strategy = strategy.st,portfolios = portfolio.st)
 # save.strategy(here::here("dashboard/rds", strategy.st))
 checkBlotterUpdate(portfolio.st, account.st, verbose = TRUE)
-
+t2 <- Sys.time()
+print(t2-t1)
 ################################################################################
 ## 1.10 update portfolio and account                                         ###
 ################################################################################
@@ -345,7 +347,6 @@ updatePortf(portfolio.st)
 updateAcct(account.st)
 updateEndEq(account.st)
 save.strategy(strategy.st)
-chart.Posn(portfolio.st,"SPL.AX")
 ################################################################################
 ## 1.11 Chart Trades
 ################################################################################
@@ -355,6 +356,12 @@ blotter::dailyEqPL(portfolio.st, "SPL.AX")
 blotter::dailyStats(portfolio.st)
 blotter::getPortfolio(portfolio.st)
 ptsGoldenXema <-blotter::perTradeStats(portfolio.st, symbol = symbols)
+################################################################################
+## Step 1.12: Save portfolio strategy to .rds                                ###
+################################################################################
+saveRDS(portfolio.st, 
+  file = here::here("dashboard/rds/", 
+  paste0(portfolio.st, ".", "rds")))
 ################################################################################
 ## Step 00.99: VERSION HISTORY                                               ###
 ################################################################################

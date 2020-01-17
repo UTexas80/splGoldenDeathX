@@ -85,7 +85,7 @@ addTxn(portfolio.st,                             # sell transaction          ###
        TxnQty        <- - TxnQty,
        TxnFees       <- TxnFees)
 ################################################################################
-## Step 01.04: set the position limits                                       ###
+## Step 01.08: set the position limits                                       ###
 ################################################################################
 addPosLimit(portfolio.st, 
             Symbol, 
@@ -93,19 +93,19 @@ addPosLimit(portfolio.st,
             maxpos       <- 100,
             minpos       <- 0)
 ################################################################################
-## Step 01.05:  apply and save strategy                                      ###
+## Step 01.09:  apply and save strategy                                      ###
 ################################################################################
 applyStrategy(strategy = strategy.st,portfolios = portfolio.st)
 save.strategy( strategy.st)
 ################################################################################
-## Step 01.06: update portfolio and account                                  ###
+## Step 01.10: update portfolio and account                                  ###
 ################################################################################
 updatePortf(portfolio.st)
 updateAcct(account.st)
 updateEndEq(account.st)
 addPosLimit(portfolio.st, "SPL.AX", timestamp=start_date, maxpos=100, minpos=0)
 ################################################################################
-## Step 01.07: Chart Trades                                                  ###
+## Step 01.11: Chart Trades                                                  ###
 ################################################################################
 chart.Posn(portfolio.st,"SPL.AX")
 # ------------------------------------------------------------------------------
@@ -114,7 +114,7 @@ blotter::dailyStats(portfolio.st)
 blotter::getPortfolio(portfolio.st)
 # le <- as.data.frame(mktdata["2008-02-25::2008-03-07", c(1:4, 7:10)])
 ################################################################################
-## Step 04.08: Apply and Save Strategy                                       ###
+## Step 04.12: sSave portfolio strategy to .rds                              ###
 ################################################################################
 saveRDS(portfolio.st, 
   file = here::here("dashboard/rds/", 
