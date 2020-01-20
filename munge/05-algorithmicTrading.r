@@ -140,7 +140,7 @@ add.indicator(strategy.st,
                 n       = 200), 
               label     = "200")
 ################################################################################
-## 1.4 apply indicator                                                       ###
+## 1.04 apply indicator                                                       ###
 ## This allows a user to see how the indicators will be appended to the      ###
 ## mktdata object.                                                           ###
 ################################################################################
@@ -311,7 +311,8 @@ knitr::kable(tail(mktdata_sig))
 ##------------------------------------------------------------------------------
 add.rule(strategy.st,
          name           = "ruleSignal",
-         arguments      = list(sigcol = "goldenX_EMA_close",
+         arguments      = list(
+           sigcol       = "goldenX_EMA_close",
            sigval       = TRUE,
            orderqty     = "all",
            ordertype    = "market",
