@@ -16,7 +16,6 @@ Sys.setenv(TZ="UTC")
 symbols <- 'ENPH'
 suppressMessages(getSymbols(symbols, from=from, to=to, src="yahoo", adjust=TRUE))
 stock(symbols, currency="USD", multiplier=1)
-
 ## -----------------------------------------------------------------------------
 ## 1.02 Algorithmic Trading Strategy Setup                                   ###
 ## -----------------------------------------------------------------------------

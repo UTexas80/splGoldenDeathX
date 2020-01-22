@@ -342,7 +342,7 @@ checkBlotterUpdate(portfolio.st, account.st, verbose = TRUE)
 t2 <- Sys.time()
 print(t2-t1)
 ################################################################################
-## 1.10 update portfolio and account                                         ###
+## 1.10 update portfolio and account (Functions must be called in this order)###
 ################################################################################
 updatePortf(portfolio.st)
 updateAcct(account.st)
@@ -356,6 +356,8 @@ chart.Posn(portfolio.st,"SPL.AX")
 blotter::dailyEqPL(portfolio.st, "SPL.AX")
 blotter::dailyStats(portfolio.st)
 blotter::getPortfolio(portfolio.st)
+PerformanceAnalytics:::textplot(t(tradeStats(Portfolios = portfolio.st, use = "trades",
+                     inclZeroDays = FALSE)))
 ptsGoldenXema <-blotter::perTradeStats(portfolio.st, symbol = symbols)
 ################################################################################
 ## Step 1.12: Save portfolio strategy to .rds                                ###

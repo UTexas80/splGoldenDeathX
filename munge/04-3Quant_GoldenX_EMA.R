@@ -176,23 +176,22 @@ pts <- perTradeStats("goldenX_EMA_portfolio", "SPL.AX")
 dt_pts <- data.table(pts)
 dt_pts[, `:=`(tradeDays, lapply(paste0(pts[, 1], "/", pts[, 2]), 
   function(x) length(SPL.AX[, 6][x])+1))]
+dt_pts[, calendarDays := as.numeric(duration/86400)]
 
-dt_pts[, calendarDays := duration/86400]
 dt_pts[, c("catName","indicator"):=list("GoldenX", "EMA")]
 dt_pts[, grp := .GRP, by=Start] 
 dt_pts[, subcatName := paste0(catName, paste0(sprintf("%03d", grp)))]
 
-
 dt_pts[, `:=`(tradeDays, lapply(paste0(pts[, 1], "/", pts[, 2]), 
   function(x) length(SPL.AX[, 6][x])+1))][
-, calendarDays := duration/86400][
+, calendarDays := as.numeric(duration/86400)][
 , c("catName","indicator"):=list("GoldenX", "EMA")][
 , grp := .GRP, by=Start][ 
 , subcatName := paste0(catName, paste0(sprintf("%03d", grp)))]
 
 # unlist a column in a data.table                           https://is.gd/ZuntI3
 dt_pts[rep(dt_pts[,.I], lengths(tradeDays))][, tradeDays := unlist(dt_pts$tradeDays)][]
-
+dt_pts$tradeDays <- unlist(dt_pts$tradeDays)
 tstats <- tradeStats("goldenX_EMA_portfolio", "SPL.AX")
 # trade related 
 tab.trades <- cbind(

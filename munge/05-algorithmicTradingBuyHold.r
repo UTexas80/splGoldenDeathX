@@ -21,7 +21,7 @@
 ## -- use FinancialInstrument::stock() to define the meta-data for the symbols.-
 # stock(symbols ,currency = "AUD",multiplier = 1)
 ################################################################################
-##  1.02 Algorithmic Trading Strategy Setup                             
+##  1.02 Algorithmic Trading Strategy Setup
 ## -----------------------------------------------------------------------------
 ## Assign names to the portfolio, account and strategy as follows:
 ## -----------------------------------------------------------------------------

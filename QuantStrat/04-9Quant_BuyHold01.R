@@ -201,7 +201,7 @@ if( file.exists(buyHold)) {
   updateEndEq("buyHold")
 #  if(checkBlotterUpdate("buyHold", "buyHold", verbose = TRUE)) {
     save(list = "buyHold_results", file = here::here("dashboard/rds", "buyHold"))
-    setwd("./dashboard/rds/")
+    setwd("./dashboard/rdata/")
     save.strategy("buyHold_strategy")
     setwd(cwd)
 #  }
