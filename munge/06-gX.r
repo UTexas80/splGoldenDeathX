@@ -3,6 +3,8 @@
 ################################################################################
 strategy.st <- portfolio.st <- account.st <- gxSMA
 rm.strat(strategy.st)
+rm.strat(account.st)
+rm.strat(portfolio.st)
 ################################################################################
 # 2.0	Initialization
 ################################################################################
@@ -54,11 +56,11 @@ add.indicator(strategy.st,                          # 200-day SMA indicator
       n                     = 200), 
     label                   = "200")
 # ------------------------------------------------------------------------------
-mktdata_ind_gxSMA <- applyIndicators(               # apply indicators
+mktdata_ind_gxSMA <-  applyIndicators(               # apply indicators
     strategy                = strategy.st,
-    mktdata                 = symbols)
-mktdata_ind_gxSMA[is.na(
-    mktdata_ind_gxSMA)]     = 0
+    mktdata                 = SPL.AX)
+# mktdata_ind_gxSMA[is.na(
+#    mktdata_ind_gxSMA)]     = 0
 ################################################################################
 # 4.0	Signals
 ################################################################################
@@ -75,27 +77,32 @@ add.signal(strategy.st,
 # ------------------------------------------------------------------------------
 add.signal(strategy.st,
     name                    = "sigFormula",
-    arguments               = list(
+    arguments               = list
          (columns           = c("SMA.020","SMA.050","SMA.100", "SMA.200"),
-         formula            = "(SMA.020 <= SMA.050 | 
-                                SMA.050 <= SMA.100 | 
+         formula            = "(SMA.020 <= SMA.050 & 
+                                SMA.050 <= SMA.100 & 
                                 SMA.100 <= SMA.200)",
          label              = "trigger",
          cross              = TRUE),
     label                   = "goldenX_SMA_close")
 # ------------------------------------------------------------------------------
+# applySignals(strategy.st, mktdata)
+# applySignals(strategy.st, mktdata_ind_gxSMA)
+# applySignals(
+#    strategy                = strategy.st,
+#    mktdata                 = SPL.AX)
 mktdata_sig_gxSMA <- applySignals(
     strategy                = strategy.st,
-    mktdata                 = mktdata_ind)
-mktdata_sig_gxSMA[is.na(
-    mktdata_sig_gxSMA)]     = 0
+    mktdata                 = mktdata_ind_gxSMA)
+# mktdata_sig_gxSMA[is.na(
+#    mktdata_sig_gxSMA)]     = 0
 ################################################################################
 # 5.0	Rules
 ################################################################################
  add.rule(strategy.st,
     name                    = "ruleSignal",
     arguments               = list(
-        sigcol              = "goldenX_EMA_open",
+        sigcol              = "goldenX_SMA_open",
         sigval              = TRUE,
         orderqty            = 1000,
         ordertype           = "market",
@@ -109,7 +116,7 @@ mktdata_sig_gxSMA[is.na(
 add.rule(strategy.st,
     name                    = "ruleSignal",
     arguments               = list(
-        sigcol              = "goldenX_EMA_close",
+        sigcol              = "goldenX_SMA_close",
         sigval              = TRUE,
         orderqty            = "all",
         ordertype           = "market",
@@ -139,7 +146,8 @@ if(checkBlotterUpdate(portfolio.st, account.st, verbose = TRUE))  {
     save(
         list                = "strategy_gxSMA", 
         file                = here::here("dashboard/rds/", paste( gxSMA, ".", "RData"))
-    save.strategy(strategy.st)    
+    # save.strategy(strategy.st)
+    )
   }
 # 	7.2	updatePortf
 # 	7.3	updateAcct

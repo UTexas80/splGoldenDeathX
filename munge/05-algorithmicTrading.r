@@ -221,9 +221,9 @@ add.signal(strategy.st,
 # ------------------------------------------------------------------------------
 add.signal(strategy.st,
            name              = "sigFormula",
-           arguments         = list(
+           arguments         = list
                 (columns     = c("EMA.020","EMA.050","EMA.100", "EMA.200"),
-                formula      = "(EMA.020 <= EMA.050 | EMA.050 <= EMA.100 | EMA.100 <= EMA.200)",
+                formula      = "(EMA.020 <= EMA.050 & EMA.050 <= EMA.100 & EMA.100 <= EMA.200)",
                 label        = "trigger",
                 cross        = TRUE),
            label             = "goldenX_EMA_close")
