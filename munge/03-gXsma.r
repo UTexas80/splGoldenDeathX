@@ -1,7 +1,7 @@
 ################################################################################
 # 1.0 Setup
 ################################################################################
-strategy.st <- portfolio.st <- account.st <- gxSMA
+strategy.st <- portfolio.st <- account.st <- gXsma
 rm.strat(strategy.st)
 rm.strat(account.st)
 rm.strat(portfolio.st)
@@ -128,7 +128,6 @@ add.rule(strategy.st,
 ################################################################################
 # 6.0	Position Limits
 ################################################################################
-browser()
 addPosLimit(portfolio.st, symbols, 
     timestamp               <- initDate, 
     maxpos                  <- 100,
@@ -146,9 +145,10 @@ updateEndEq(account.st)
 # if(checkBlotterUpdate(portfolio.st, account.st, verbose = TRUE))  {
     save(
         list                = "strategy_gxSMA", 
-        file                = here::here("dashboard/rds/", paste( gxSMA, ".", "RData"))    
+        file                = here::here("dashboard/rds/", paste0(gxSMA, ".", "RData"))    
     )
-    strategy_gxSMA_save <- save.strategy(strategy.st)
+    save.strategy(strategy.st)
+#    strategy_gxSMA_save <- save.strategy(strategy.st)
 #  }
 # 	7.2	updatePortf
 # 	7.3	updateAcct

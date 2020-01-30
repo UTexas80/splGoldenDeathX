@@ -152,7 +152,7 @@ addPosLimit("goldenX_EMA_portfolio", "SPL.AX", timestamp=initDate, maxpos=100, m
 ## Step 04.07: Apply and Save Strategy                                       ###
 ################################################################################
 cwd          <- getwd()
-goldenX_EMA  <- here::here("dashboard/rds/", "goldenX_EMA_results.RData.RData")
+goldenX_EMA  <- here::here("dashboard/rds/", "goldenX_EMA_results.RData")
 if( file.exists(goldenX_EMA)) {
   load(goldenX_EMA)
 } else {
