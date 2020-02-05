@@ -45,6 +45,7 @@ to          <- Sys.Date()
 ## Equity Values                                                             ###
 ################################################################################
 adjustment  <- TRUE                       # Adjust for Dividends, Stock Splits #
+tradeSize   <- 10000
 init_equity <- 1e4                        # $10,000                            #
 initEq      <- 1e6                        # $1,000,000                         #
 Sys.setenv(TZ = 'America/New_York')

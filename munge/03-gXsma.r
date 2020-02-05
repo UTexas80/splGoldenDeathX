@@ -135,13 +135,14 @@ addPosLimit(portfolio.st, symbols,
 ################################################################################
 # 7.0	Strategy
 ################################################################################
+t1 <- Sys.time()
+
 strategy_gxSMA <- applyStrategy(
     strategy                = strategy.st,
     portfolios              = portfolio.st)
-updatePortf(portfolio.st)
-updateAcct(account.st)
-updateEndEq(account.st)
 
+t2 <- Sys.time()
+print(t2 - t1)
 # if(checkBlotterUpdate(portfolio.st, account.st, verbose = TRUE))  {
     save(
         list                = "strategy_gxSMA", 
@@ -150,11 +151,15 @@ updateEndEq(account.st)
     save.strategy(strategy.st)
 #    strategy_gxSMA_save <- save.strategy(strategy.st)
 #  }
-# 	7.2	updatePortf
-# 	7.3	updateAcct
-#   7.4	updateEndEq
-# 	7.5	checkBlotterUpdate
-# 	7.6	save.strategy
+browser()
 ################################################################################
-# 8.0	Evaluation	
+# 8.0	Evaluation - update P&L and generate transactional history
 ################################################################################
+updatePortf(portfolio.st)
+dateRange  <- time(getPortfolio(portfolio.st)$summary)[-1]
+updateAcct(account.st, dateRange)
+updateEndEq(account.st)
+
+gXsmaStats <- data.table(tradeStats(portfolio.st, use = "trades", inclZeroDays = FALSE))
+gXsmaStats[, 4:ncol(gXsmaStats)] <- round(gXsmaStats[, 4:ncol(gXsmaStats)], 2)
+gXsmaStats[, data.table(t(.SD), keep.rownames=TRUE)]
