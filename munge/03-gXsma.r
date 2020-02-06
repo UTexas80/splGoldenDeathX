@@ -135,23 +135,31 @@ addPosLimit(portfolio.st, symbols,
 ################################################################################
 # 7.0	Strategy
 ################################################################################
+# browser()
 t1 <- Sys.time()
 
-strategy_gxSMA <- applyStrategy(
-    strategy                = strategy.st,
-    portfolios              = portfolio.st)
+cwd          <- getwd()
+gxSMA_results  <- here::here("dashboard/rds/", "gxSMA_results.RData")
+if( file.exists(gxSMA_results)) {
+    load(gxSMA_results)
+} else {
+    gxSMA_strategy <- applyStrategy(
+            strategy = strategy.st, 
+            portfolios = portfolio.st)
+    if(checkBlotterUpdate(portfolio.st, account.st, verbose = TRUE)) {
+        save(
+            list = "gxSMA_strategy", 
+            file = here::here("dashboard/rds/", 
+#            "gxSMA_results.RData"                              
+            paste0(gxSMA, "_", "results.RData")))
+        setwd("./dashboard/rds")
+        save.strategy(strategy.st)
+        setwd(cwd)
+  }
+}      
 
 t2 <- Sys.time()
 print(t2 - t1)
-# if(checkBlotterUpdate(portfolio.st, account.st, verbose = TRUE))  {
-    save(
-        list                = "strategy_gxSMA", 
-        file                = here::here("dashboard/rds/", paste0(gxSMA, ".", "RData"))    
-    )
-    save.strategy(strategy.st)
-#    strategy_gxSMA_save <- save.strategy(strategy.st)
-#  }
-browser()
 ################################################################################
 # 8.0	Evaluation - update P&L and generate transactional history
 ################################################################################
@@ -160,6 +168,6 @@ dateRange  <- time(getPortfolio(portfolio.st)$summary)[-1]
 updateAcct(account.st, dateRange)
 updateEndEq(account.st)
 
-gXsmaStats <- data.table(tradeStats(portfolio.st, use = "trades", inclZeroDays = FALSE))
-gXsmaStats[, 4:ncol(gXsmaStats)] <- round(gXsmaStats[, 4:ncol(gXsmaStats)], 2)
-gXsmaStats[, data.table(t(.SD), keep.rownames=TRUE)]
+gxSMA_Stats <- data.table(tradeStats(portfolio.st, use = "trades", inclZeroDays = FALSE))
+gxSMA_Stats[, 4:ncol(gxSMA_Stats)] <- round(gxSMA_Stats[, 4:ncol(gxSMA_Stats)], 2)
+gxSMA_Stats[, data.table(t(.SD), keep.rownames = TRUE)]

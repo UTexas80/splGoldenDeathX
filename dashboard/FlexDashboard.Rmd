@@ -806,43 +806,45 @@ renderPlotly({
 
 ### Trade Stats
 ```{r 2.1.1.h-table-tradestats}
-goldenX_EMA_tradestats <- blotter::tradeStats(
-  "goldenX_EMA_portfolio", 
-    Dates =     
-      paste(format(input$dateRange2.2[1]),format(input$dateRange2.2[2]),sep = "::"))
-
-DT::renderDataTable({
-  DT::datatable(goldenX_EMA_tradestats,
-    rownames = FALSE,
-    extensions = c("Scroller"),
-    options = list(
-      order = list(list(3, "desc")),
-      pageLength = 10,
-      scrollX = TRUE,
-      scrollY = 280,
-      scroller = TRUE
-    )
-  )
-})
+# goldenX_EMA_tradestats <- blotter::tradeStats(
+#   "goldenX_EMA_portfolio", 
+#     Dates =     
+#       paste(format(input$dateRange2.2[1]),format(input$dateRange2.2[2]),sep = "::"))
+# 
+# DT::renderDataTable({
+#   DT::datatable(goldenX_EMA_tradestats,
+#     rownames = FALSE,
+#     extensions = c("Scroller"),
+#     options = list(
+#       order = list(list(3, "desc")),
+#       pageLength = 10,
+#       scrollX = TRUE,
+#       scrollY = 280,
+#       scroller = TRUE
+#     )
+#   )
+# })
 ```
 
 ### Daily Transaction P & L
 ```{r 2.1.1.i-table-dailyTxnPL}
-goldenX_EMA_dailyTxnPL <- t( blotter::dailyTxnPL("goldenX_EMA_portfolio") )
-
-DT::renderDataTable({
-  DT::datatable(goldenX_EMA_dailyTxnPL,
-    rownames = FALSE,
-    extensions = c("Scroller"),
-    options = list(
-      order = list(list(3, "desc")),
-      pageLength = 10,
-      scrollX = TRUE,
-      scrollY = 280,
-      scroller = TRUE
-    )
-  )
-})
+# goldenX_EMA_dailyTxnPL <-
+#   t(blotter::dailyTxnPL("goldenX_EMA_portfolio"))
+# 
+# DT::renderDataTable({
+#   DT::datatable(
+#     goldenX_EMA_dailyTxnPL,
+#     rownames = FALSE,
+#     extensions = c("Scroller"),
+#     options = list(
+#       order = list(list(3, "desc")),
+#       pageLength = 10,
+#       scrollX = TRUE,
+#       scrollY = 280,
+#       scroller = TRUE
+#     )
+#   )
+# })
 ```
 
 ### Daily Transaction P & L
@@ -1100,24 +1102,24 @@ DT::renderDataTable({
 
 ### Trade Stats
 ```{r 2.2.2.2-table-goldenX-EMA-tradestats}
-goldenX_EMA_tradestats <- blotter::tradeStats(
-  "goldenX_EMA_portfolio", 
-    Dates = "2009-01-01::2019-12-02")
-      
-
-DT::renderDataTable({
-  DT::datatable(goldenX_EMA_tradestats,
-    rownames = FALSE,
-    extensions = c("Scroller"),
-    options = list(
-      order = list(list(3, "desc")),
-      pageLength = 10,
-      scrollX = TRUE,
-      scrollY = 280,
-      scroller = TRUE
-    )
-  )
-})
+# goldenX_EMA_tradestats <- blotter::tradeStats(
+#   "goldenX_EMA_portfolio", 
+#     Dates = "2009-01-01::2019-12-02")
+#       
+# 
+# DT::renderDataTable({
+#   DT::datatable(goldenX_EMA_tradestats,
+#     rownames = FALSE,
+#     extensions = c("Scroller"),
+#     options = list(
+#       order = list(list(3, "desc")),
+#       pageLength = 10,
+#       scrollX = TRUE,
+#       scrollY = 280,
+#       scroller = TRUE
+#     )
+#   )
+# })
 ```
 
 ### .xts Price & Transactions Chart

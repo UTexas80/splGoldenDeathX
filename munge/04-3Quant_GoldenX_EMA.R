@@ -149,7 +149,7 @@ goldenX_EMA_strategy <- add.rule(goldenX_EMA_strategy,
 ################################################################################
 addPosLimit("goldenX_EMA_portfolio", "SPL.AX", timestamp=initDate, maxpos=100, minpos=0)
 ################################################################################
-## Step 04.07: Apply and Save Strategy                                       ###
+## Step 04.07: Apply and Save Strategy and results                           ###
 ################################################################################
 cwd          <- getwd()
 goldenX_EMA  <- here::here("dashboard/rds/", "goldenX_EMA_results.RData")
@@ -162,7 +162,7 @@ if( file.exists(goldenX_EMA)) {
   updateEndEq("GoldenX")
   if(checkBlotterUpdate("goldenX_EMA_portfolio", "GoldenX", verbose = TRUE)) {
     save(list = "results", file = here::here("dashboard/rds/", "goldenX_EMA_results.RData"))
-    setwd("./dashboard/rds/")
+    setwd("./dashboard/rds")
     save.strategy("goldenX_EMA_strategy")
     setwd(cwd)
   }
