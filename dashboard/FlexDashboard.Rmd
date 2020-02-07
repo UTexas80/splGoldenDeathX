@@ -150,8 +150,8 @@ n <- trend[substr(trend$catName, 1, 1) %like% "n"]
 ```
 
 ```{r quantstratInput}
-load.strategy(here::here("dashboard/rds","buyHold_strategy"))
-load.strategy(here::here("dashboard/rds","goldenX_EMA_strategy"))
+# load.strategy(here::here("dashboard/rds","buyHold_strategy"))
+load.strategy(here::here("dashboard/rds","gXsma"))
 ```
 
 ```{R daydiff functions, include=FALSE, warning=FALSE, cache=FALSE}

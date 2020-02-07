@@ -1,7 +1,7 @@
 ################################################################################
 # 1.0 Setup
 ################################################################################
-strategy.st <- portfolio.st <- account.st <- gXsma
+strategy.st <- portfolio.st <- account.st <- gxSMA
 rm.strat(strategy.st)
 rm.strat(account.st)
 rm.strat(portfolio.st)
@@ -79,9 +79,9 @@ add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list
          (columns           = c("SMA.020","SMA.050","SMA.100", "SMA.200"),
-         formula            = "(SMA.020 <= SMA.050 & 
-                                SMA.050 <= SMA.100 & 
-                                SMA.100 <= SMA.200)",
+         formula            = "(SMA.020 < SMA.050 | 
+                                SMA.050 < SMA.100 | 
+                                SMA.100 < SMA.200)",
          label              = "trigger",
          cross              = TRUE),
     label                   = "goldenX_SMA_close")
@@ -138,36 +138,62 @@ addPosLimit(portfolio.st, symbols,
 # browser()
 t1 <- Sys.time()
 
-cwd          <- getwd()
-gxSMA_results  <- here::here("dashboard/rds/", "gxSMA_results.RData")
-if( file.exists(gxSMA_results)) {
-    load(gxSMA_results)
+cwd             <- getwd()
+gxSMA_results   <- here::here("dashboard/rds", "gxSMA_results.RData")
+
+if(file.exists(gxSMA_results)) {
+  base::load(gxSMA_results)
 } else {
-    gxSMA_strategy <- applyStrategy(
-            strategy = strategy.st, 
-            portfolios = portfolio.st)
+    gxSMA_strategy <- applyStrategy(strategy.st, portfolio.st)
+
     if(checkBlotterUpdate(portfolio.st, account.st, verbose = TRUE)) {
-        save(
-            list = "gxSMA_strategy", 
-            file = here::here("dashboard/rds/", 
-#            "gxSMA_results.RData"                              
-            paste0(gxSMA, "_", "results.RData")))
-        setwd("./dashboard/rds")
-        save.strategy(strategy.st)
-        setwd(cwd)
+
+      save(
+        list = "gxSMA_strategy", 
+        file = here::here("dashboard/rds/", paste0(gxSMA, "_", "results.RData")))
+
+    setwd("./dashboard/rds")
+    save.strategy(strategy.st)
+#   save.strategy(paste0(strategy.st, "_", "strategy"))
+    setwd(cwd)
+
+    }
   }
-}      
 
 t2 <- Sys.time()
 print(t2 - t1)
 ################################################################################
-# 8.0	Evaluation - update P&L and generate transactional history
+# 9.0	Evaluation - update P&L and generate transactional history
 ################################################################################
 updatePortf(portfolio.st)
 dateRange  <- time(getPortfolio(portfolio.st)$summary)[-1]
 updateAcct(account.st, dateRange)
 updateEndEq(account.st)
 
-gxSMA_Stats <- data.table(tradeStats(portfolio.st, use = "trades", inclZeroDays = FALSE))
-gxSMA_Stats[, 4:ncol(gxSMA_Stats)] <- round(gxSMA_Stats[, 4:ncol(gxSMA_Stats)], 2)
-gxSMA_Stats[, data.table(t(.SD), keep.rownames = TRUE)]
+gxSMA_pts <- blotter::perTradeStats(portfolio.st, symbols)
+
+gxSMA_stats <- data.table(tradeStats(portfolio.st, use = "trades", inclZeroDays = FALSE))
+gxSMA_stats[, 4:ncol(gxSMA_stats)] <- round(gxSMA_stats[, 4:ncol(gxSMA_stats)], 2)
+gxSMA_stats <- gxSMA_stats[, data.table(t(.SD), keep.rownames = TRUE)]
+################################################################################
+# 8.0	Trend - create dashboard dataset
+################################################################################
+gxSMA_trend <- data.table(gxSMA_pts)
+gxSMA_trend[, `:=`(tradeDays, lapply(paste0(gxSMA_pts[, 1], "/", gxSMA_pts[, 2]), 
+  function(x) length(SPL.AX[, 6][x])+1))]
+gxSMA_trend[, calendarDays := as.numeric(duration/86400)]
+
+gxSMA_trend[, c("catName","indicator"):=list("GoldenX", "EMA")]
+gxSMA_trend[, grp := .GRP, by=Start] 
+gxSMA_trend[, subcatName := paste0(catName, paste0(sprintf("%03d", grp)))]
+
+gxSMA_trend[, `:=`(tradeDays, lapply(paste0(gxSMA_pts[, 1], "/", gxSMA_pts[, 2]), 
+  function(x) length(SPL.AX[, 6][x])+1))][
+, calendarDays := as.numeric(duration/86400)][
+, c("catName","indicator"):=list("GoldenX", "SMA")][
+, grp := .GRP, by=Start][ 
+, subcatName := paste0(catName, paste0(sprintf("%03d", grp)))]
+
+# unlist a column in a data.table                           https://is.gd/ZuntI3
+gxSMA_trend[rep(gxSMA_trend[,.I], lengths(tradeDays))][, tradeDays := unlist(gxSMA_trend$tradeDays)][]
+gxSMA_trend$tradeDays <- unlist(gxSMA_trend$tradeDays)

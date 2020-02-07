@@ -154,7 +154,7 @@ addPosLimit("goldenX_EMA_portfolio", "SPL.AX", timestamp=initDate, maxpos=100, m
 cwd          <- getwd()
 goldenX_EMA  <- here::here("dashboard/rds/", "goldenX_EMA_results.RData")
 if( file.exists(goldenX_EMA)) {
-  load(goldenX_EMA)
+  base::load(goldenX_EMA)
 } else {
   results   <- applyStrategy(goldenX_EMA_strategy, portfolios = "goldenX_EMA_portfolio")
   updatePortf("goldenX_EMA_portfolio")
