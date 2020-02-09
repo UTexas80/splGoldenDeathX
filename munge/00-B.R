@@ -22,7 +22,7 @@ SPL.AX <-
   SPL.AX %>%
   na.omit() # Replace missing values (NA)       https://tinyurl.com/y5etxh8x ###
 ################################################################################
-## Step 00.02 death Cross Trading System       https://tinyurl.com/y3sq4ond  ###
+## Step 00.02 death Cross Trading System          https://tinyurl.com/y3sq4ond  ###
 ## Baseline Return                                                           ###
 ################################################################################
 close                     <- Cl(SPL.AX)

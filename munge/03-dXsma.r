@@ -1,7 +1,8 @@
 ################################################################################
 # 1.0 Setup
 ################################################################################
-strategy.st <- portfolio.st <- account.st <- gXsma
+browser()
+strategy.st <- portfolio.st <- account.st <- dXsma
 rm.strat(strategy.st)
 rm.strat(account.st)
 rm.strat(portfolio.st)
@@ -56,7 +57,7 @@ add.indicator(strategy.st,                          # 200-day SMA indicator
       n                     = 200), 
     label                   = "200")
 # ------------------------------------------------------------------------------
-gXsma_mktdata_ind <-  applyIndicators(               # apply indicators
+dXsma_mktdata_ind <-  applyIndicators(               # apply indicators
     strategy                = strategy.st,
     mktdata                 = SPL.AX)
 ################################################################################
@@ -66,38 +67,39 @@ add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list(
          columns            = c("SMA.020","SMA.050","SMA.100", "SMA.200"),
-         formula            = "(SMA.020 > SMA.050 & 
-                                SMA.050 > SMA.100 & 
-                                SMA.100 > SMA.200)",
+         formula            = "(SMA.020 < SMA.050 & 
+                                SMA.050 < SMA.100 & 
+                                SMA.100 < SMA.200)",
          label              = "trigger",
          cross              = TRUE),
-    label                   = "gXsma_open")
+    label                   = "dXsma_shortEntry")
 # ------------------------------------------------------------------------------
 add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list
          (columns           = c("SMA.020","SMA.050","SMA.100", "SMA.200"),
-         formula            = "(SMA.020 < SMA.050 | 
-                                SMA.050 < SMA.100 | 
-                                SMA.100 < SMA.200)",
+         formula            = "(SMA.020 > SMA.050 |
+                                SMA.050 > SMA.100 |
+                                SMA.100 > SMA.200)",
          label              = "trigger",
          cross              = TRUE),
-    label                   = "gXsma_close")
+    label                   = "dXsma_shortExit")
 # ------------------------------------------------------------------------------
-gXsma_mktdata_sig  <- applySignals(
+dXsma_mktdata_sig  <- applySignals(
     strategy                = strategy.st,
-    mktdata                 = gXsma_mktdata_ind)
+    mktdata                 = dXsma_mktdata_ind)
 ################################################################################
 # 5.0	Rules
 ################################################################################
  add.rule(strategy.st,
     name                    = "ruleSignal",
     arguments               = list(
-        sigcol              = "gXsma_open",
+        sigcol              = "dXsma_shortEntry",
         sigval              = TRUE,
         orderqty            = 1000,
         ordertype           = "market",
-        orderside           = "long",
+        orderside           = "short",
+        prefer              = "Open",
         pricemethod         = "market",
         TxnFees             = 0,
         osFUN               = osMaxPos),
@@ -107,11 +109,12 @@ gXsma_mktdata_sig  <- applySignals(
 add.rule(strategy.st,
     name                    = "ruleSignal",
     arguments               = list(
-        sigcol              = "gXsma_close",
+        sigcol              = "dXsma_shortExit",
         sigval              = TRUE,
         orderqty            = "all",
         ordertype           = "market",
-        orderside           = "long",
+        orderside           = "short",
+        prefer              = "Open",        
         pricemethod         = "market",
         TxnFees             = 0),
     type                    = "exit",
@@ -130,18 +133,18 @@ addPosLimit(portfolio.st, symbols,
 t1 <- Sys.time()
 # ------------------------------------------------------------------------------
 cwd             <- getwd()
-gXsma_results   <- here::here("dashboard/rds", "gXsma_results.RData")
+dXsma_results   <- here::here("dashboard/rds", "dXsma_results.RData")
 # ------------------------------------------------------------------------------
-if(file.exists(gXsma_results)) {
-  base::load(gXsma_results)
+if(file.exists(dXsma_results)) {
+  base::load(dXsma_results)
 } else {
-    gXsma_strategy <- applyStrategy(strategy.st, portfolio.st)
+    dXsma_strategy <- applyStrategy(strategy.st, portfolio.st)
 
     if(checkBlotterUpdate(portfolio.st, account.st, verbose = TRUE)) {
 
       save(
-        list = "gXsma_strategy", 
-        file = here::here("dashboard/rds/", paste0(gXsma, "_", "results.RData")))
+        list = "dXsma_strategy", 
+        file = here::here("dashboard/rds/", paste0(dXsma, "_", "results.RData")))
 
     setwd("./dashboard/rds")
     save.strategy(strategy.st)
@@ -161,24 +164,24 @@ dateRange  <- time(getPortfolio(portfolio.st)$summary)[-1]
 updateAcct(account.st, dateRange)
 updateEndEq(account.st)
 # ------------------------------------------------------------------------------
-gXsma_pts <- blotter::perTradeStats(portfolio.st, symbols)
+dXsma_pts <- blotter::perTradeStats(portfolio.st, symbols)
 # ------------------------------------------------------------------------------
-gXsma_stats <- data.table(tradeStats(portfolio.st, use = "trades", inclZeroDays = FALSE))
-gXsma_stats[, 4:ncol(gXsma_stats)] <- round(gXsma_stats[, 4:ncol(gXsma_stats)], 2)
-gXsma_stats <- gXsma_stats[, data.table(t(.SD), keep.rownames = TRUE)]
+dXsma_stats <- data.table(tradeStats(portfolio.st, use = "trades", inclZeroDays = FALSE))
+dXsma_stats[, 4:ncol(dXsma_stats)] <- round(dXsma_stats[, 4:ncol(dXsma_stats)], 2)
+dXsma_stats <- dXsma_stats[, data.table(t(.SD), keep.rownames = TRUE)]
 ################################################################################
 # 8.0	Trend - create dashboard dataset
 ################################################################################
-gXsma_trend <- data.table(gXsma_pts)
-gXsma_trend[, `:=`(tradeDays, lapply(paste0(gXsma_pts[, 1], "/", gXsma_pts[, 2]), 
+dXsma_trend <- data.table(dXsma_pts)
+dXsma_trend[, `:=`(tradeDays, lapply(paste0(dXsma_pts[, 1], "/", dXsma_pts[, 2]), 
   function(x) length(SPL.AX[, 6][x])+1))]
-gXsma_trend[, calendarDays := as.numeric(duration/86400)]
+dXsma_trend[, calendarDays := as.numeric(duration/86400)]
 # ------------------------------------------------------------------------------
-gXsma_trend[, c("catName","indicator"):=list("GoldenX", "EMA")]
-gXsma_trend[, grp := .GRP, by=Start] 
-gXsma_trend[, subcatName := paste0(catName, paste0(sprintf("%03d", grp)))]
+dXsma_trend[, c("catName","indicator"):=list("GoldenX", "EMA")]
+dXsma_trend[, grp := .GRP, by=Start] 
+dXsma_trend[, subcatName := paste0(catName, paste0(sprintf("%03d", grp)))]
 # ------------------------------------------------------------------------------
-gXsma_trend[, `:=`(tradeDays, lapply(paste0(gXsma_pts[, 1], "/", gXsma_pts[, 2]), 
+dXsma_trend[, `:=`(tradeDays, lapply(paste0(dXsma_pts[, 1], "/", dXsma_pts[, 2]), 
   function(x) length(SPL.AX[, 6][x])+1))][
 , calendarDays := as.numeric(duration/86400)][
 , c("catName","indicator"):=list("GoldenX", "SMA")][
@@ -187,5 +190,5 @@ gXsma_trend[, `:=`(tradeDays, lapply(paste0(gXsma_pts[, 1], "/", gXsma_pts[, 2])
 # ------------------------------------------------------------------------------
 # unlist a column in a data.table                           https://is.gd/ZuntI3
 # ------------------------------------------------------------------------------
-gXsma_trend[rep(gXsma_trend[,.I], lengths(tradeDays))][, tradeDays := unlist(gXsma_trend$tradeDays)][]
-gXsma_trend$tradeDays <- unlist(gXsma_trend$tradeDays)
+dXsma_trend[rep(dXsma_trend[,.I], lengths(tradeDays))][, tradeDays := unlist(dXsma_trend$tradeDays)][]
+dXsma_trend$tradeDays <- unlist(dXsma_trend$tradeDays)

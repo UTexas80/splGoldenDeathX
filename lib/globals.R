@@ -21,7 +21,7 @@ symbols     <-c("CSL.AX", "SPL.AX")
 symbols     <- "SPL.AX"
 dateFrom    <-"2002-01-01"
 ################################################################################
-## Dates needed for .xts lookup           https://tinyurl.com/y3h3jbt7       ### 
+## Dates needed for .xts lookup           https://tinyurl.com/y3h3jbt7       ###
 ################################################################################
 start.date  <-"2002-01-01"
 end.date    <-Sys.Date()
@@ -48,32 +48,36 @@ adjustment  <- TRUE                       # Adjust for Dividends, Stock Splits #
 tradeSize   <- 10000
 init_equity <- 1e4                        # $10,000                            #
 initEq      <- 1e6                        # $1,000,000                         #
-Sys.setenv(TZ = 'America/New_York')
+
 TxnFees = 0                               # Transaction Fees
 ################################################################################
 ## Financial Instruments Package setup                 # https://is.gd/3K7mRp ##
+## Initialize Currency And Instruments                 # https://financetrain.com/?p=26386
 ################################################################################
 FinancialInstrument::currency(c("AUD","USD"))          # Set the currency    ###
 stock(c("SPL.AX"), currency="AUD")                     # Define the stocks   ###
+Sys.setenv(TZ = 'America/New_York')
 # FinancialInstrument::exchange_rate('AUDUSD')         # define an exchange rate
+
 usd_aud <- Cl(getSymbols(
               "AUD=X",
-              src="yahoo", 
-              from = init_date, 
+              src="yahoo",
+              from = init_date,
               auto.assign = FALSE))
 ################################################################################
 ## Parameters                                                                ###
-################################################################################              
+################################################################################
 pctATR <- .02
 period <- 10
 atrOrder <- TRUE
-# ------------------------------------------------------------------------------ 
+# ------------------------------------------------------------------------------
 nRSI <- 2
 buyThresh <- 20
 sellThresh <- 80
 # ------------------------------------------------------------------------------
 curr <- 'AUD'
 # ------------------------------------------------------------------------------
+dXsma <- "dXsma"
 gxEMA <- "gxEMA"
 gxSMA <- "gxSMA"
 gXsma <- "gXsma"
