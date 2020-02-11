@@ -57,6 +57,7 @@ add.indicator(strategy.st,                          # 200-day SMA indicator
       n                     = 200), 
     label                   = "200")
 # ------------------------------------------------------------------------------
+
 dXsma_mktdata_ind <-  applyIndicators(               # apply indicators
     strategy                = strategy.st,
     mktdata                 = SPL.AX)
@@ -66,10 +67,10 @@ dXsma_mktdata_ind <-  applyIndicators(               # apply indicators
 add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list(
-         columns            = c("SMA.020","SMA.050","SMA.100", "SMA.200"),
-         formula            = "(SMA.020 < SMA.050 & 
-                                SMA.050 < SMA.100 & 
-                                SMA.100 < SMA.200)",
+        columns            = c("SMA.020","SMA.050","SMA.100", "SMA.200"),
+        formula            = "(SMA.020 < SMA.050 &
+                               SMA.050 < SMA.100 &
+                               SMA.100 < SMA.200)",
          label              = "trigger",
          cross              = TRUE),
     label                   = "dXsma_shortEntry")
@@ -77,10 +78,11 @@ add.signal(strategy.st,
 add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list
-         (columns           = c("SMA.020","SMA.050","SMA.100", "SMA.200"),
-         formula            = "(SMA.020 > SMA.050 |
-                                SMA.050 > SMA.100 |
-                                SMA.100 > SMA.200)",
+        (columns           = c("SMA.020","SMA.050","SMA.100", "SMA.200"),
+        formula            = "(SMA.020 > SMA.050 |
+                               SMA.050 > SMA.100 |
+                               SMA.100 > SMA.200) & 
+                               index.xts(mktdata) > '2002-12-02'",
          label              = "trigger",
          cross              = TRUE),
     label                   = "dXsma_shortExit")
@@ -114,7 +116,7 @@ add.rule(strategy.st,
         orderqty            = "all",
         ordertype           = "market",
         orderside           = "short",
-        prefer              = "Open",        
+        prefer              = "Open",
         pricemethod         = "market",
         TxnFees             = 0),
     type                    = "exit",
@@ -130,39 +132,45 @@ addPosLimit(portfolio.st, symbols,
 # 7.0	Strategy
 ################################################################################
 # browser()
-t1 <- Sys.time()
-# ------------------------------------------------------------------------------
-cwd             <- getwd()
-dXsma_results   <- here::here("dashboard/rds", "dXsma_results.RData")
-# ------------------------------------------------------------------------------
-if(file.exists(dXsma_results)) {
-  base::load(dXsma_results)
-} else {
-    dXsma_strategy <- applyStrategy(strategy.st, portfolio.st)
-
-    if(checkBlotterUpdate(portfolio.st, account.st, verbose = TRUE)) {
-
-      save(
-        list = "dXsma_strategy", 
-        file = here::here("dashboard/rds/", paste0(dXsma, "_", "results.RData")))
-
-    setwd("./dashboard/rds")
-    save.strategy(strategy.st)
-#   save.strategy(paste0(strategy.st, "_", "strategy"))
-    setwd(cwd)
-
-    }
-  }
-# ------------------------------------------------------------------------------
-t2 <- Sys.time()
+t1      <- Sys.time()
+results <- applyStrategy(strategy.st, portfolio.st, mktdata, symbols)
+t2      <- Sys.time()
 print(t2 - t1)
+# ------------------------------------------------------------------------------
+# cwd             <- getwd()
+# dXsma_results   <- here::here("dashboard/rds", "dXsma_results.RData")
+# # ------------------------------------------------------------------------------
+# if(file.exists(dXsma_results)) {
+#   base::load(dXsma_results)
+# } else {
+#     dXsma_strategy <- applyStrategy(strategy.st, portfolio.st)
+
+#     if(checkBlotterUpdate(portfolio.st, account.st, verbose = TRUE)) {
+
+#       save(
+#         list = "dXsma_strategy", 
+#         file = here::here("dashboard/rds/", paste0(dXsma, "_", "results.RData")))
+
+#     setwd("./dashboard/rds")
+#     save.strategy(strategy.st)
+# #   save.strategy(paste0(strategy.st, "_", "strategy"))
+#     setwd(cwd)
+
+#     }
+#   }
+# ------------------------------------------------------------------------------
+# t2 <- Sys.time()
+# print(t2 - t1)
 ################################################################################
 # 9.0	Evaluation - update P&L and generate transactional history
 ################################################################################
+# Set up analytics. Update portfolio, account and equity
 updatePortf(portfolio.st)
 dateRange  <- time(getPortfolio(portfolio.st)$summary)[-1]
-updateAcct(account.st, dateRange)
+#updateAcct(account.st, dateRange)
+updateAcct(account.st)
 updateEndEq(account.st)
+save.strategy(strategy.st)
 # ------------------------------------------------------------------------------
 dXsma_pts <- blotter::perTradeStats(portfolio.st, symbols)
 # ------------------------------------------------------------------------------
