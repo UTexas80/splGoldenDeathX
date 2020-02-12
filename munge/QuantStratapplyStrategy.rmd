@@ -1,0 +1,4 @@
+Error in if (last(trades$End) == last(trades$Start)) { : 
+  argument is of length zero
+
+dXsma_pts <- blotter::perTradeStats(portfolio.st, symbols)  

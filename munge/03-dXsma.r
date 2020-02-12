@@ -2,6 +2,7 @@
 # 1.0 Setup
 ################################################################################
 browser()
+from = "2003-01-01"
 strategy.st <- portfolio.st <- account.st <- dXsma
 rm.strat(strategy.st)
 rm.strat(account.st)
@@ -30,35 +31,35 @@ strategy(strategy.st, store = TRUE)                 # Strategy initialization
 # 3.0	Indicators
 ################################################################################
 add.indicator(strategy.st,                          # 20-day SMA indicator
-    name                    = "SMA", 
+    name                    = "SMA",
     arguments               = list(
-      x                     = quote(mktdata[,4]), 
-      n                     = 20), 
+      x                     = quote(mktdata[,4]),
+      n                     = 20),
     label                   = "020")
 # ------------------------------------------------------------------------------
 add.indicator(strategy.st,                          # 50-day SMA indicator
-    name                    = "SMA", 
+    name                    = "SMA",
     arguments               = list(
-      x                     = quote(mktdata[,4]), 
-      n                     = 50), 
+      x                     = quote(mktdata[,4]),
+      n                     = 50),
     label                   = "050")
 # ------------------------------------------------------------------------------
 add.indicator(strategy.st,                          # 100-day SMA indicator
-    name                    = "SMA", 
+    name                    = "SMA",
     arguments               = list(
-      x                     = quote(mktdata[,4]), 
-      n                     = 100), 
+      x                     = quote(mktdata[,4]),
+      n                     = 100),
     label                   = "100")
 # ------------------------------------------------------------------------------
 add.indicator(strategy.st,                          # 200-day SMA indicator
-    name                    = "SMA", 
+    name                    = "SMA",
     arguments               = list(
-      x                     = quote(mktdata[,4]), 
-      n                     = 200), 
+      x                     = quote(mktdata[,4]),
+      n                     = 200),
     label                   = "200")
 # ------------------------------------------------------------------------------
 
-dXsma_mktdata_ind <-  applyIndicators(               # apply indicators
+dXsma_mktdata_ind <-  applyIndicators(              # apply indicators
     strategy                = strategy.st,
     mktdata                 = SPL.AX)
 ################################################################################
@@ -67,10 +68,10 @@ dXsma_mktdata_ind <-  applyIndicators(               # apply indicators
 add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list(
-        columns            = c("SMA.020","SMA.050","SMA.100", "SMA.200"),
-        formula            = "(SMA.020 < SMA.050 &
-                               SMA.050 < SMA.100 &
-                               SMA.100 < SMA.200)",
+        columns             = c("SMA.020","SMA.050","SMA.100", "SMA.200"),
+        formula             = "(SMA.020 < SMA.050 &
+                                SMA.050 < SMA.100 &
+                                SMA.100 < SMA.200)",
          label              = "trigger",
          cross              = TRUE),
     label                   = "dXsma_shortEntry")
@@ -78,11 +79,11 @@ add.signal(strategy.st,
 add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list
-        (columns           = c("SMA.020","SMA.050","SMA.100", "SMA.200"),
-        formula            = "(SMA.020 > SMA.050 |
-                               SMA.050 > SMA.100 |
-                               SMA.100 > SMA.200) & 
-                               index.xts(mktdata) > '2002-12-02'",
+        (columns            = c("SMA.020","SMA.050","SMA.100", "SMA.200"),
+        formula             = "(SMA.020 > SMA.050  |
+                                SMA.050 > SMA.100  |
+                                SMA.100 > SMA.200) &
+                               index.xts(mktdata)  > '2002-12-02'",
          label              = "trigger",
          cross              = TRUE),
     label                   = "dXsma_shortExit")
@@ -90,10 +91,11 @@ add.signal(strategy.st,
 dXsma_mktdata_sig  <- applySignals(
     strategy                = strategy.st,
     mktdata                 = dXsma_mktdata_ind)
+applySignals(strategy.st, mktdata)
 ################################################################################
 # 5.0	Rules
 ################################################################################
- add.rule(strategy.st,
+add.rule(strategy.st,
     name                    = "ruleSignal",
     arguments               = list(
         sigcol              = "dXsma_shortEntry",

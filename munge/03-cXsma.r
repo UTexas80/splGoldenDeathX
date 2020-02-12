@@ -1,12 +1,25 @@
 # Stackoverflow https://is.gd/9x5VBU
 library(quantstrat)
 library(quantmod)
+
+browser()
+
 initdate = "1999-01-01"
 from = "2003-01-01"
 to = "2015-12-31"
 
+symbols = "CSL.AX"
 currency ("USD")
-stock("SPL.AX", currency = "AUD")
+CSL.AX <- tidyquant::tq_get(symbols,
+                  get = "stock.prices",
+                  from = from,
+                  to = to
+)
+# ------------Replace missing values (NA)       https://tinyurl.com/y5etxh8x ###
+
+CSL.AX <- tk_xts(CSL.AX)
+
+stock("CSL.AX", currency = "AUD")
 
 Sys.setenv (TZ = "UTC")
 
@@ -17,6 +30,7 @@ Sys.setenv (TZ = "UTC")
 
 tradesize <- 100000
 initeq <- 100000
+
 strategy.st <- portfolio.st <- account.st <- "firststrat"
 rm.strat(strategy.st)
 initPortf(portfolio.st,
@@ -53,6 +67,19 @@ add.signal(strategy.st,
                             relationship = "lt" ),
            label = "filterexit")
 
+# Short signals
+# add.signal(strategy.st,
+#           name = "sigCrossover",
+#           arguments = list(columns = c("Close", "namedLag.ind"),
+#                           relationship = "gt"),
+#           label = "coverOrBuy")
+# 
+# add.signal(strategy.st,
+#            name = "sigCrossover",
+#            arguments = list(columns = c("Close", "namedLag.ind"),
+#                             relationship = "lt"),
+#            label = "sellOrShort")
+
 add.rule(strategy.st, name = "ruleSignal",
          arguments = list(sigcol = "filterexit", sigval = TRUE,
                           orderqty = "all", ordertype = "market",
@@ -67,7 +94,22 @@ add.rule(strategy.st, name = "ruleSignal",
                           prefer = "Open"),
          type = "enter")
 
-
+# Short rules
+# add.rule(strategy.st, name = "ruleSignal",
+#     arguments = list(sigcol = "sellOrShort",
+#         sigval = TRUE, ordertype = "market",
+#         orderside = "short" , replace = FALSE,
+#         prefer = "Open", osFUN = osDollarATR,
+#         tradeSize = -tradeSize, pctATR = pctATR,
+#         atrMod = "X"),
+#     type = "enter" , path.dep = TRUE)
+# 
+# add.rule(strategy.st, name = "ruleSignal",
+#     arguments = list(sigcol = "coverOrBuy",
+#         sigval = TRUE, orderqty = "all",
+#         ordertype = "market", orderside = "short" ,
+#         replace = FALSE, prefer = "Open"),
+#     type = "exit" , path.dep = TRUE)
 
 applyStrategy(strategy.st, portfolio.st)
 

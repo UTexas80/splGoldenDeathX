@@ -69,6 +69,85 @@ global_symbols <- function() {
     )
 }
 
+namedLag <- function(x, k = 1, na.pad = TRUE, ...) {
+    out <- lag(x, k - k, na.pad = na.pad, ...)
+
+    out[is.na(out)] <- x[is.na(out)]
+    colnames(out) <- "namedLag"
+    return(out)
+}
+
+################################################################################
+# Strategy 1: A simple trend follower This first                               ###
+################################################################################ 
+# First function computes a lagged ATR.
+"lagATR" <- function(HLC, n = 14, maType, lag = 1, ...) {
+    ATR <- ATR(HLC, n = n, maType = maType, ...)
+    ATR <- lag(ATR, lag)
+    out <- ATR$atr
+    colnames(out) <- "atr"
+    return(out)
+}
+################################################################################
+# The osDollarATR function finds the output of the first, and                  #
+# sizes the order by rounding to the lowest(highest) amount                    #
+# of integer shares when we go long(short), depending on ou                    r
+# trade size and the amount risked.  So if we risk 2 percent                   #
+# of a 10,000 trade size, we will get 200 ATRs worth of the                    #
+# security long, or –200 short.                                                #
+################################################################################
+"osDollarATR" <- function(orderside, tradeSize, pctATR, maxPctATR = pctATR,
+    data, timestamp, symbol, prefer = "Open", portfolio, integerQty = TRUE,
+    strMod = "", rebal = FALSE, ...) {
+
+    if (tradeSize > 0 & orderside == "short") {
+        tradeSize <- tradeSize * -1
+    }
+
+    pos <- getPosQty(portfolio, symbol, timestamp)
+    strString <- paste0("atr", strMod)
+    strCol <- grep(strString, colnames(mktdata))
+
+    if (length(strCol) == 0) {
+        stop(paste("Term", strString, "not found in mktdata column names."))
+    }
+
+    strTimeStamp <- mktdata[timestamp, strCol]
+    if (is.na(strTimeStamp) | strTimeStamp == 0) {
+        stop(paste("ATR corrresponding to", strString, "is innvalid at this point in time. Add a logical
+    operator to account for this."))
+    }
+
+    dollarATR <- pos * atrTimeStamp
+    desiredDollarATR <- pctATR * tradeSize
+    remainingRiskCapacity <- tradeSize * maxPctATR - dollarATR
+
+    if (orderside == "long") {
+        qty <- min(tradeSize * pctATR/strTimeStamp, remainingRiskCApacity/strTimeStamp)
+    } else {
+        qty <- max(tradeSize * pctATR/strTimeStamp, remainingRiskCapacity/strTimeStamp)
+    }
+
+    if (integerQty) {
+        qty <- trunc(qty)
+    }
+    if (!rebal) {
+        if (orderside == "long" & qty < 0) {
+            qty <- 0
+        }
+        if (orderside == "short" & qty > 0) {
+            qty <- 0
+        }
+    }
+    if (rebal) {
+        if (pos == 0) {
+            qty <- 0
+        }
+    }
+    return(qty)
+}
+
+
 # How to add multiple conditions to quantstrat?
 # https://is.gd/tXXx8V
 #'sigCOMP
