@@ -1,7 +1,7 @@
 ################################################################################
 # 1.0 Setup
 ################################################################################
-browser()
+# browser()
 from = "2003-01-01"
 strategy.st <- portfolio.st <- account.st <- dXsma
 rm.strat(strategy.st)
@@ -100,13 +100,13 @@ add.rule(strategy.st,
     arguments               = list(
         sigcol              = "dXsma_shortEntry",
         sigval              = TRUE,
-        orderqty            = 1000,
-        ordertype           = "market",
+        orderqty            = -1000,
         orderside           = "short",
+        ordertype           = "market",
         prefer              = "Open",
         pricemethod         = "market",
-        TxnFees             = 0,
-        osFUN               = osMaxPos),
+        TxnFees             = 0),
+  #      osFUN               = osMaxPos),
     type                    = "enter",
     path.dep                = TRUE)
 # ------------------------------------------------------------------------------
@@ -116,8 +116,8 @@ add.rule(strategy.st,
         sigcol              = "dXsma_shortExit",
         sigval              = TRUE,
         orderqty            = "all",
-        ordertype           = "market",
         orderside           = "short",
+        ordertype           = "market",
         prefer              = "Open",
         pricemethod         = "market",
         TxnFees             = 0),
@@ -127,7 +127,7 @@ add.rule(strategy.st,
 # 6.0	Position Limits
 ################################################################################
 addPosLimit(portfolio.st, symbols, 
-    timestamp               <- initDate, 
+    timestamp               <- from, 
     maxpos                  <- 100,
     minpos                  <- 0)
 ################################################################################
@@ -187,14 +187,14 @@ dXsma_trend[, `:=`(tradeDays, lapply(paste0(dXsma_pts[, 1], "/", dXsma_pts[, 2])
   function(x) length(SPL.AX[, 6][x])+1))]
 dXsma_trend[, calendarDays := as.numeric(duration/86400)]
 # ------------------------------------------------------------------------------
-dXsma_trend[, c("catName","indicator"):=list("GoldenX", "EMA")]
+dXsma_trend[, c("catName","indicator"):=list("DeathX", "EMA")]
 dXsma_trend[, grp := .GRP, by=Start] 
 dXsma_trend[, subcatName := paste0(catName, paste0(sprintf("%03d", grp)))]
 # ------------------------------------------------------------------------------
 dXsma_trend[, `:=`(tradeDays, lapply(paste0(dXsma_pts[, 1], "/", dXsma_pts[, 2]), 
   function(x) length(SPL.AX[, 6][x])+1))][
 , calendarDays := as.numeric(duration/86400)][
-, c("catName","indicator"):=list("GoldenX", "SMA")][
+, c("catName","indicator"):=list("DeathX", "SMA")][
 , grp := .GRP, by=Start][ 
 , subcatName := paste0(catName, paste0(sprintf("%03d", grp)))]
 # ------------------------------------------------------------------------------

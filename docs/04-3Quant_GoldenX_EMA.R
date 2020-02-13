@@ -46,8 +46,8 @@ initAcct(name = "GoldenX",                     # Account Initialization      ###
 initOrders(portfolio="goldenX_EMA_portfolio",  # Order Initialization        ###
            symbols = symbols,
            initDate=init_date)
-# ------------------------------------------------------------------------------
-goldenX_EMA_strategy <- strategy("GoldenX")    # Strategy Initialization     ###
+# -------------------------------------------- # Strategy Initialization     ###
+goldenX_EMA_strategy <- strategy("GoldenX",  store = TRUE))
 ################################################################################
 ## Step 04.03: Add Indicators to the Strategy                                ###
 ################################################################################

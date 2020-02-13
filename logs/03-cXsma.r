@@ -2,7 +2,7 @@
 library(quantstrat)
 library(quantmod)
 
-browser()
+# browser()
 
 initdate = "1999-01-01"
 from = "2003-01-01"
