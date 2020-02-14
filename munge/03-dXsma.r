@@ -2,7 +2,7 @@
 # 1.0 Setup
 ################################################################################
 # browser()
-from = "2003-01-01"
+# from = "2003-01-01"
 strategy.st <- portfolio.st <- account.st <- dXsma
 rm.strat(strategy.st)
 rm.strat(account.st)
@@ -91,7 +91,7 @@ add.signal(strategy.st,
 dXsma_mktdata_sig  <- applySignals(
     strategy                = strategy.st,
     mktdata                 = dXsma_mktdata_ind)
-applySignals(strategy.st, mktdata)
+# applySignals(strategy.st, mktdata)
 ################################################################################
 # 5.0	Rules
 ################################################################################
@@ -166,11 +166,11 @@ print(t2 - t1)
 ################################################################################
 # 9.0	Evaluation - update P&L and generate transactional history
 ################################################################################
-# Set up analytics. Update portfolio, account and equity
+
 updatePortf(portfolio.st)
 dateRange  <- time(getPortfolio(portfolio.st)$summary)[-1]
-#updateAcct(account.st, dateRange)
-updateAcct(account.st)
+updateAcct(account.st, dateRange)
+# updateAcct(account.st)
 updateEndEq(account.st)
 save.strategy(strategy.st)
 # ------------------------------------------------------------------------------

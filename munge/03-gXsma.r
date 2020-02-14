@@ -96,8 +96,9 @@ gXsma_mktdata_sig  <- applySignals(
         sigcol              = "gXsma_open",
         sigval              = TRUE,
         orderqty            = 1000,
-        ordertype           = "market",
         orderside           = "long",
+        ordertype           = "market",
+        prefer              = "Open",
         pricemethod         = "market",
         TxnFees             = 0,
         osFUN               = osMaxPos),
@@ -110,8 +111,9 @@ add.rule(strategy.st,
         sigcol              = "gXsma_close",
         sigval              = TRUE,
         orderqty            = "all",
-        ordertype           = "market",
         orderside           = "long",
+        ordertype           = "market",
+        prefer              = "Open",
         pricemethod         = "market",
         TxnFees             = 0),
     type                    = "exit",
@@ -128,31 +130,34 @@ addPosLimit(portfolio.st, symbols,
 ################################################################################
 # browser()
 t1 <- Sys.time()
-# ------------------------------------------------------------------------------
-cwd             <- getwd()
-gXsma_results   <- here::here("dashboard/rds", "gXsma_results.RData")
-# ------------------------------------------------------------------------------
-if(file.exists(gXsma_results)) {
-  base::load(gXsma_results)
-} else {
-    gXsma_strategy <- applyStrategy(strategy.st, portfolio.st)
-
-    if(checkBlotterUpdate(portfolio.st, account.st, verbose = TRUE)) {
-
-      save(
-        list = "gXsma_strategy", 
-        file = here::here("dashboard/rds/", paste0(gXsma, "_", "results.RData")))
-
-    setwd("./dashboard/rds")
-    save.strategy(strategy.st)
-#   save.strategy(paste0(strategy.st, "_", "strategy"))
-    setwd(cwd)
-
-    }
-  }
-# ------------------------------------------------------------------------------
+gXsma_strategy <- applyStrategy(strategy.st, portfolio.st, mktdata, symbols)
 t2 <- Sys.time()
 print(t2 - t1)
+# ------------------------------------------------------------------------------
+# cwd             <- getwd()
+gXsma_results   <- here::here("dashboard/rds", "gXsma_results.RData")
+# ------------------------------------------------------------------------------
+# if(file.exists(gXsma_results)) {
+#   base::load(gXsma_results)
+# } else {
+#     gXsma_strategy <- applyStrategy(strategy.st, portfolio.st)
+
+#     if(checkBlotterUpdate(portfolio.st, account.st, verbose = TRUE)) {
+
+#       save(
+#         list = "gXsma_strategy", 
+#         file = here::here("dashboard/rds/", paste0(gXsma, "_", "results.RData")))
+
+#     setwd("./dashboard/rds")
+#     save.strategy(strategy.st)
+# #   save.strategy(paste0(strategy.st, "_", "strategy"))
+#     setwd(cwd)
+
+#     }
+#   }
+# ------------------------------------------------------------------------------
+# t2 <- Sys.time()
+# print(t2 - t1)
 ################################################################################
 # 9.0	Evaluation - update P&L and generate transactional history
 ################################################################################
@@ -160,6 +165,7 @@ updatePortf(portfolio.st)
 dateRange  <- time(getPortfolio(portfolio.st)$summary)[-1]
 updateAcct(account.st, dateRange)
 updateEndEq(account.st)
+save.strategy(strategy.st)
 # ------------------------------------------------------------------------------
 gXsma_pts <- blotter::perTradeStats(portfolio.st, symbols)
 # ------------------------------------------------------------------------------
