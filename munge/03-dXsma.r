@@ -1,8 +1,6 @@
 ################################################################################
 # 1.0 Setup
 ################################################################################
-# browser()
-# from = "2003-01-01"
 strategy.st <- portfolio.st <- account.st <- dXsma
 rm.strat(strategy.st)
 rm.strat(account.st)
@@ -91,7 +89,6 @@ add.signal(strategy.st,
 dXsma_mktdata_sig  <- applySignals(
     strategy                = strategy.st,
     mktdata                 = dXsma_mktdata_ind)
-# applySignals(strategy.st, mktdata)
 ################################################################################
 # 5.0	Rules
 ################################################################################
@@ -135,34 +132,10 @@ addPosLimit(portfolio.st, symbols,
 ################################################################################
 # browser()
 t1      <- Sys.time()
-results <- applyStrategy(strategy.st, portfolio.st, mktdata, symbols)
+dXsma_strategy <- applyStrategy(strategy.st, portfolio.st, mktdata, symbols)
 t2      <- Sys.time()
 print(t2 - t1)
-# ------------------------------------------------------------------------------
-# cwd             <- getwd()
-# dXsma_results   <- here::here("dashboard/rds", "dXsma_results.RData")
-# # ------------------------------------------------------------------------------
-# if(file.exists(dXsma_results)) {
-#   base::load(dXsma_results)
-# } else {
-#     dXsma_strategy <- applyStrategy(strategy.st, portfolio.st)
 
-#     if(checkBlotterUpdate(portfolio.st, account.st, verbose = TRUE)) {
-
-#       save(
-#         list = "dXsma_strategy", 
-#         file = here::here("dashboard/rds/", paste0(dXsma, "_", "results.RData")))
-
-#     setwd("./dashboard/rds")
-#     save.strategy(strategy.st)
-# #   save.strategy(paste0(strategy.st, "_", "strategy"))
-#     setwd(cwd)
-
-#     }
-#   }
-# ------------------------------------------------------------------------------
-# t2 <- Sys.time()
-# print(t2 - t1)
 ################################################################################
 # 9.0	Evaluation - update P&L and generate transactional history
 ################################################################################
@@ -170,7 +143,7 @@ print(t2 - t1)
 updatePortf(portfolio.st)
 dateRange  <- time(getPortfolio(portfolio.st)$summary)[-1]
 updateAcct(account.st, dateRange)
-# updateAcct(account.st)
+
 updateEndEq(account.st)
 save.strategy(strategy.st)
 # ------------------------------------------------------------------------------
