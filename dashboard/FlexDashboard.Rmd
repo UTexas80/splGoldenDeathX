@@ -325,7 +325,7 @@ Row {data-height=200}
 -------------------------------------
 
 ### Stock Price Over Time (Chart)
-```{r  1.1.3.1-viz-Price, eval=price}
+```{r  1.1.2.2-viz-Price, eval=price}
 # y <- getSymbols("CSL.AX", auto.assign = FALSE)
 
 renderHighchart({
@@ -342,7 +342,7 @@ renderHighchart({
 
 ### Distribution
 
-```{r 1.1.3.2-viz-histogram, eval=price}
+```{r 1.1.2.3-viz-histogram, eval=price}
 
 # draw a histogram
 renderPlot({
