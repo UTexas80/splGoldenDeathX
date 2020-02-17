@@ -123,8 +123,8 @@ add.rule(strategy.st,
 ################################################################################
 # 6.0	Position Limits
 ################################################################################
-addPosLimit(portfolio.st, symbols, 
-    timestamp               <- from, 
+addPosLimit(portfolio.st, symbols,
+    timestamp               <- from,
     maxpos                  <- 100,
     minpos                  <- 0)
 ################################################################################
@@ -175,3 +175,11 @@ dXsma_trend[, `:=`(tradeDays, lapply(paste0(dXsma_pts[, 1], "/", dXsma_pts[, 2])
 # ------------------------------------------------------------------------------
 dXsma_trend[rep(dXsma_trend[,.I], lengths(tradeDays))][, tradeDays := unlist(dXsma_trend$tradeDays)][]
 dXsma_trend$tradeDays <- unlist(dXsma_trend$tradeDays)
+# ------------------------------------------------------------------------------
+# add Start / End open price                                                 ***
+# ------------------------------------------------------------------------------
+setkey(dXsma_trend, "Start")
+dXsma_trend <- na.omit(dXsma_trend[SPL][, -c(27:31)])
+setkey(dXsma_trend, "End")
+dXsma_trend <- na.omit(dXsma_trend[SPL][, -c(28:32)])
+

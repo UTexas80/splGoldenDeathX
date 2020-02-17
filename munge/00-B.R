@@ -1,8 +1,10 @@
 ################################################################################
-## Step 00.00: Get Prices                                                    ###
+## Step 00.00: Get TidyQuant Stock Prices     https://tinyurl.com/smvt3xt    ###
 ################################################################################
-SPL <- tq_get("SPL.AX")                           ### Get TidyQuant Stock Prices
-SPL <- SPL[complete.cases(SPL), ]                 ### Delete NA
+SPL <- tq_get("SPL.AX", get = "stock.prices", from = "2002-01-01")
+SPL <- data.table(SPL[complete.cases(SPL), ])       #  Delete NA             ###
+SPL$date <- as.POSIXct(SPL$date, format="%Y-%m-%d") # Convert Date to POSIXct###
+setkey(SPL, "date")
 ################################################################################
 ## Step 00.01: xts Prices                      https://tinyurl.com/yy2mkklj  ###
 ##                                             https://tinyurl.com/yyyf4qqw  ###

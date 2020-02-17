@@ -5,7 +5,7 @@ library(quantmod)
 # browser()
 
 initdate = "1999-01-01"
-from = "2003-01-01"
+from = "2002-01-01"
 to = "2015-12-31"
 
 symbols = "CSL.AX"

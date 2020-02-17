@@ -1,5 +1,16 @@
+
 ################################################################################
-## Step 99.00 Save .rds files                                                ###
+## Step 99.00 trend                                                         ###
+################################################################################
+l                   <- list(dXema_trend, dXsma_trend, gXema_trend, gXsma_trend)
+trend               <- rbindlist(l)
+names(trend)[c(1:2,13,26:27)] <- c("startDate",  "endDate", "return", "startOpen",  "endOpen")
+trend               <- trend[, c(23,25,1, 26, 2, 27, 9:10, 13, 20:22)]
+# ------------------------------------------------------------------------------
+trendReturns <- data.table(t(trend[indicator == 'EMA', c(2,9)]))     # https://tinyurl.com/tmmubbh
+trendReturns <- setnames(trendReturns, as.character(trendReturns[1,]))[-1,]
+################################################################################
+## Step 99.01 Save .rds files                                                ###
 ################################################################################
 saveRDS(a,                         file        = here::here("dashboard/rds/", "trendReturns.rds"))
 saveRDS(calendarDays,              file        = here::here("dashboard/rds/", "calendarDays.rds"))
@@ -30,20 +41,20 @@ saveRDS(trendSMA,                  file        = here::here("dashboard/rds/", "t
 saveRDS(viz.BoxplotN,              file        = here::here("dashboard/rds/", "viz.BoxplotN.rds"))
 saveRDS(xtsEMA[complete.cases(xtsEMA), ], file = here::here("dashboard/rds/", "xtsEMA.rds"))
 ################################################################################
-## Step 99.01 Copy .RData strategy files                                     ###
+## Step 99.02 Copy .RData strategy files                                     ###
 ################################################################################
 file.copy(here::here("basic_strat.RData"),here::here("dashboard/rdata/", "basic_strat.RData"))
 file.copy(here::here("buyhold_strat.RData"),here::here("dashboard/rdata/", "buyhold_strat.RData"))
 ################################################################################
-## Step 99.02 Remove original .RData strategy files from the route           ###
+## Step 99.03 Remove original .RData strategy files from the route           ###
 ################################################################################
 file.remove(here::here("basic_strat.RData"))
 file.remove(here::here("buyhold_strat.RData"))
 ################################################################################
 ## Step 00.99: VERSION HISTORY                                               ###
 ################################################################################
-a99.version <- "1.0.0"
-a98.ModDate <- as.Date("2019-01-01")
+a99.version         <- "1.0.0"
+a98.ModDate         <- as.Date("2019-01-01")
 # ------------------------------------------------------------------------------
 # 2019.06.09 - v.1.0.0
 # 1st release
