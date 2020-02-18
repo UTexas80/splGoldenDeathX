@@ -151,7 +151,7 @@ n <- trend[substr(trend$catName, 1, 1) %like% "n"]
 
 ```{r quantstratInput}
 # load.strategy(here::here("dashboard/rds","buyHold_strategy"))
-load.strategy(here::here("dashboard/rds","gXsma"))
+# load.strategy(here::here("dashboard/rds","gXsma"))
 ```
 
 ```{R daydiff functions, include=FALSE, warning=FALSE, cache=FALSE}
@@ -621,18 +621,18 @@ DT::renderDataTable({
 
 ### EMA Trend Return Distribution
 ```{r 2.1.1.b-viz-box-returns, eval=trendReturns}
-chart.Boxplot(data.table(trendReturns, colorset = bluemono, main = "Trailing 36-Month Returns")
-    %>% select(starts_with("D")))
-chart.Boxplot(data.table(trendReturns) %>% select(starts_with("G")))
-chart.Boxplot(data.table(trendReturns) %>% select(starts_with("n")))
+# chart.Boxplot(data.table(trendReturns, colorset = bluemono, main = "Trailing 36-Month Returns")
+#    %>% select(starts_with("D")))
+chart.Boxplot(data.table(trendReturns) %>% select(starts_with("D")) %>% select(ends_with("EMA")))
+chart.Boxplot(data.table(trendReturns) %>% select(starts_with("G")) %>% select(ends_with("EMA")))
 ```
 
 ### SMA Trend Return Distribution
 
 ```{r 2.1.1.c-viz-box-returns, eval=trendReturnsSMA}
-chart.Boxplot(data.table(trendReturnsSMA) %>% select(starts_with("D")))
-chart.Boxplot(data.table(trendReturnsSMA) %>% select(starts_with("Golden")))
-chart.Boxplot(data.table(trendReturnsSMA) %>% select(starts_with("n")))
+chart.Boxplot(data.table(trendReturns) %>% select(starts_with("D")) %>% select(ends_with("SMA")))
+chart.Boxplot(data.table(trendReturns) %>% select(starts_with("G")) %>% select(ends_with("SMA")))
+# chart.Boxplot(data.table(trendReturnsSMA) %>% select(starts_with("n")))
 ```
 
 ### Composite Returns
@@ -640,7 +640,8 @@ chart.Boxplot(data.table(trendReturnsSMA) %>% select(starts_with("n")))
 renderPlotly({
   p <- plot_ly(type = "box") %>%
     add_boxplot(
-      y = d$return, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
+      y = d$return,
+      jitter = 0.3, pointpos = -1.8, boxpoints = "all",
       marker = list(color = "rgb(7,40,89)"),
       line = list(color = "rgb(7,40,89)"),
       name = "DeathX Returns"
@@ -651,12 +652,12 @@ renderPlotly({
       line = list(color = "rgb(7,40,89)"),
       name = "GoldeX Returns"
     ) %>%
-    add_boxplot(
-      y = n$return, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
-      marker = list(color = "rgb(7,40,89)"),
-      line = list(color = "rgb(7,40,89)"),
-      name = "n Returns"
-    ) %>%
+    # add_boxplot(
+    #   y = n$return, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
+    #   marker = list(color = "rgb(7,40,89)"),
+    #   line = list(color = "rgb(7,40,89)"),
+    #   name = "n Returns"
+    # ) %>%
     layout(title = "Composite Returns - EMA + SMA",
           yaxis = list(
           title = 'Return Percentage ',
@@ -668,7 +669,7 @@ renderPlotly({
 ### Returns by MA Type
 ```{r 2.1.1.e-box-returns, eval=trend}
 gSMA = g[indicator == 'SMA']
-nSMA = n[indicator == 'SMA']
+# nSMA = n[indicator == 'SMA']
 
 renderPlotly({
   p <- plot_ly(type = "box") %>%
@@ -699,19 +700,19 @@ renderPlotly({
       line = list(color = "rgb(7,40,89)"),
       name = "GoldenX-SMA"
     ) %>%
-    add_boxplot(
-      n = n[indicator == 'EMA'],
-      y = n$return, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
-      marker = list(color = "rgb(7,40,89)"),
-      line = list(color = "rgb(7,40,89)"),
-      name = "No X-EMA"
-    ) %>%
-    add_boxplot(
-      y = nSMA$return, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
-      marker = list(color = "rgb(7,40,89)"),
-      line = list(color = "rgb(7,40,89)"),
-      name = "No X-SMA"
-    ) %>% 
+    # add_boxplot(
+    #   n = n[indicator == 'EMA'],
+    #   y = n$return, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
+    #   marker = list(color = "rgb(7,40,89)"),
+    #   line = list(color = "rgb(7,40,89)"),
+    #   name = "No X-EMA"
+    # ) %>%
+    # add_boxplot(
+    #   y = nSMA$return, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
+    #   marker = list(color = "rgb(7,40,89)"),
+    #   line = list(color = "rgb(7,40,89)"),
+    #   name = "No X-SMA"
+    # ) %>% 
       layout(title = "Returns by Moving Average Type",
           yaxis = list(
           title = 'Return Percentage ',
@@ -737,12 +738,12 @@ renderPlotly({
       line = list(color = "rgb(7,40,89)"),
       name = "GoldeX tradeDays"
     ) %>%
-    add_boxplot(
-      y = n$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
-      marker = list(color = "rgb(7,40,89)"),
-      line = list(color = "rgb(7,40,89)"),
-      name = "n tradeDays"
-    ) %>%
+    # add_boxplot(
+    #   y = n$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
+    #   marker = list(color = "rgb(7,40,89)"),
+    #   line = list(color = "rgb(7,40,89)"),
+    #   name = "n tradeDays"
+    # ) %>%
       layout(title = "Composite Trade Days - EMA + SMA",
           yaxis = list(
           title = 'Trade Days')
@@ -784,19 +785,19 @@ renderPlotly({
       line = list(color = "rgb(7,40,89)"),
       name = "GoldenX-SMA"
     ) %>%
-    add_boxplot(
-      n = n[indicator == 'EMA'],
-      y = n$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
-      marker = list(color = "rgb(7,40,89)"),
-      line = list(color = "rgb(7,40,89)"),
-      name = "No X-EMA"
-    ) %>%
-    add_boxplot(
-      y = nSMA$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
-      marker = list(color = "rgb(7,40,89)"),
-      line = list(color = "rgb(7,40,89)"),
-      name = "No X-SMA"
-    ) %>%        
+    # add_boxplot(
+    #   n = n[indicator == 'EMA'],
+    #   y = n$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
+    #   marker = list(color = "rgb(7,40,89)"),
+    #   line = list(color = "rgb(7,40,89)"),
+    #   name = "No X-EMA"
+    # ) %>%
+    # add_boxplot(
+    #   y = nSMA$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
+    #   marker = list(color = "rgb(7,40,89)"),
+    #   line = list(color = "rgb(7,40,89)"),
+    #   name = "No X-SMA"
+    # ) %>%        
       layout(title = "Trade Days by Moving Average Type",
           yaxis = list(
           title = 'Trade Days')
@@ -1483,7 +1484,7 @@ flexdashboard::renderValueBox({
 ###
 
 ```{r 2.4.1.3-vbox-returns-cumulative}
-cumReturn <- percent(as.numeric(Return.cumulative(trend[,5])))
+cumReturn <- percent(as.numeric(Return.cumulative(trend[,9])))
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
     paste(

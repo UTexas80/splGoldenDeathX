@@ -182,14 +182,18 @@ gXsma_trend[, calendarDays := as.numeric(duration/86400)]
 # ------------------------------------------------------------------------------
 gXsma_trend[, c("catName","indicator"):=list("GoldenX", "EMA")]
 gXsma_trend[, grp := .GRP, by=Start] 
-gXsma_trend[, subcatName := paste0(catName, paste0(sprintf("%03d", grp)))]
+gXsma_trend[, subcatName := paste0(catName, 
+                            paste0(sprintf("%03d", grp),
+                            paste0(indicator)))]
 # ------------------------------------------------------------------------------
 gXsma_trend[, `:=`(tradeDays, lapply(paste0(gXsma_pts[, 1], "/", gXsma_pts[, 2]), 
   function(x) length(SPL.AX[, 6][x])+1))][
 , calendarDays := as.numeric(duration/86400)][
 , c("catName","indicator"):=list("GoldenX", "SMA")][
 , grp := .GRP, by=Start][ 
-, subcatName := paste0(catName, paste0(sprintf("%03d", grp)))]
+, subcatName := paste0(catName, 
+                paste0(sprintf("%03d", grp),
+                paste0(indicator)))]
 # ------------------------------------------------------------------------------
 # unlist a column in a data.table                           https://is.gd/ZuntI3
 # ------------------------------------------------------------------------------

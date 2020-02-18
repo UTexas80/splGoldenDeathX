@@ -189,7 +189,9 @@ gXema_trend[, `:=`(tradeDays, lapply(paste0(gXema_pts[, 1], "/", gXema_pts[, 2])
 , calendarDays := as.numeric(duration/86400)][
 , c("catName","indicator"):=list("GoldenX", "EMA")][
 , grp := .GRP, by=Start][ 
-, subcatName := paste0(catName, paste0(sprintf("%03d", grp)))]
+, subcatName := paste0(catName, 
+                paste0(sprintf("%03d", grp),
+                paste0(indicator)))]
 # ------------------------------------------------------------------------------
 # unlist a column in a data.table                           https://is.gd/ZuntI3
 # ------------------------------------------------------------------------------

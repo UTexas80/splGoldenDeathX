@@ -7,8 +7,9 @@ trend               <- rbindlist(l)
 names(trend)[c(1:2,13,26:27)] <- c("startDate",  "endDate", "return", "startOpen",  "endOpen")
 trend               <- trend[, c(23,25,1, 26, 2, 27, 9:10, 13, 20:22)]
 # ------------------------------------------------------------------------------
-trendReturns <- data.table(t(trend[indicator == 'EMA', c(2,9)]))     # https://tinyurl.com/tmmubbh
-trendReturns <- setnames(trendReturns, as.character(trendReturns[1,]))[-1,]
+trendReturns <- data.table(t(trend[, c(2,9)]))     # https://tinyurl.com/tmmubbh
+trendReturns <- setnames(trendReturns, as.character(trendReturns[1,]))[-1,] %>%
+                mutate_if(is.character,as.numeric)
 ################################################################################
 ## Step 99.01 Save .rds files                                                ###
 ################################################################################

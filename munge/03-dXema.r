@@ -135,51 +135,92 @@ t1      <- Sys.time()
 dXema_strategy <- applyStrategy(strategy.st, portfolio.st, mktdata, symbols)
 t2      <- Sys.time()
 print(t2 - t1)
-
 ################################################################################
-# 9.0	Evaluation - update P&L and generate transactional history
+# 8.0	Evaluation - update P&L and generate transactional history
 ################################################################################
-
 updatePortf(portfolio.st)
 dateRange  <- time(getPortfolio(portfolio.st)$summary)[-1]
 updateAcct(account.st, dateRange)
-
+# ------------------------------------------------------------------------------
 updateEndEq(account.st)
 save.strategy(strategy.st)
-# ------------------------------------------------------------------------------
-dXema_pts <- blotter::perTradeStats(portfolio.st, symbols)
-# ------------------------------------------------------------------------------
-dXema_stats <- data.table(tradeStats(portfolio.st, use = "trades", inclZeroDays = FALSE))
-dXema_stats[, 4:ncol(dXema_stats)] <- round(dXema_stats[, 4:ncol(dXema_stats)], 2)
-dXema_stats <- dXema_stats[, data.table(t(.SD), keep.rownames = TRUE)]
 ################################################################################
-# 8.0	Trend - create dashboard dataset
+# 9.0	Trend - create dashboard dataset
 ################################################################################
+dXema_pts   <- blotter::perTradeStats(portfolio.st, symbols)
 dXema_trend <- data.table(dXema_pts)
-dXema_trend[, `:=`(tradeDays, lapply(paste0(dXema_pts[, 1], "/", dXema_pts[, 2]), 
-  function(x) length(SPL.AX[, 6][x])+1))]
-dXema_trend[, calendarDays := as.numeric(duration/86400)]
-# ------------------------------------------------------------------------------
-dXema_trend[, c("catName","indicator"):=list("DeathX", "EMA")]
-dXema_trend[, grp := .GRP, by=Start] 
-dXema_trend[, subcatName := paste0(catName, paste0(sprintf("%03d", grp)))]
+# dXema_trend[, `:=`(tradeDays, lapply(paste0(dXema_pts[, 1], "/", dXema_pts[, 2]), 
+#   function(x) length(SPL.AX[, 6][x])+1))]
+# dXema_trend[, calendarDays := as.numeric(duration/86400)]
+# # ------------------------------------------------------------------------------
+# dXema_trend[, c("catName","indicator"):=list("DeathX", "EMA")]
+# dXema_trend[, grp := .GRP, by=Start] 
+# dXema_trend[, subcatName := paste0(catName, paste0(sprintf("%03d", grp)))]
 # ------------------------------------------------------------------------------
 dXema_trend[, `:=`(tradeDays, lapply(paste0(dXema_pts[, 1], "/", dXema_pts[, 2]), 
   function(x) length(SPL.AX[, 6][x])+1))][
 , calendarDays := as.numeric(duration/86400)][
 , c("catName","indicator"):=list("DeathX", "EMA")][
 , grp := .GRP, by=Start][ 
-, subcatName := paste0(catName, paste0(sprintf("%03d", grp)))]
+, subcatName := paste0(catName, 
+                paste0(sprintf("%03d", grp),
+                paste0(indicator)))]
 # ------------------------------------------------------------------------------
 # unlist a column in a data.table                           https://is.gd/ZuntI3
 # ------------------------------------------------------------------------------
-dXema_trend[rep(dXema_trend[,.I], lengths(tradeDays))][, tradeDays := unlist(dXema_trend$tradeDays)][]
+dXema_trend[rep(dXema_trend[,.I], lengths(tradeDays))][
+  , tradeDays := unlist(dXema_trend$tradeDays)][]
 dXema_trend$tradeDays <- unlist(dXema_trend$tradeDays)
 # ------------------------------------------------------------------------------
 # add Start / End open price                                                 ***
 # ------------------------------------------------------------------------------
 setkey(dXema_trend, "Start")
-dXema_trend <- na.omit(dXema_trend[SPL][, -c(27:31)])
+dXema_trend          <- na.omit(dXema_trend[SPL][, -c(27:31)])
 setkey(dXema_trend, "End")
-dXema_trend <- na.omit(dXema_trend[SPL][, -c(28:32)])
+dXema_trend          <- na.omit(dXema_trend[SPL][, -c(28:32)])
+################################################################################
+# 10.0	# Performance and Risk Metrics 
+################################################################################
+# ------------------------------------------------------------------------------
+# Profits
+# ------------------------------------------------------------------------------
 
+# ------------------------------------------------------------------------------
+dXema_stats          <- tradeStats(Portfolios = portfolio.st, use="trades", inclZeroDays=FALSE)
+# ------------------------------------------------------------------------------
+dXema_profit         <- dXema_stats %>% 
+  select(Net.Trading.PL, Gross.Profits, Gross.Losses, Profit.Factor)
+t(dXema_profit)
+# ------------------------------------------------------------------------------
+dXema_wins           <-  dXema_stats %>% 
+  select(Avg.Trade.PL, Avg.Win.Trade, Avg.Losing.Trade, Avg.WinLoss.Ratio)
+t(dXema_wins)
+# ------------------------------------------------------------------------------
+dXema_rets           <- PortfReturns(Account =  account.st)
+rownames(dXema_rets) <- NULL
+# ------------------------------------------------------------------------------
+dXema_perf           <- table.Arbitrary(dXema_rets,
+                            metrics = c(
+                              "Return.cumulative",
+                              "Return.annualized",
+                              "SharpeRatio.annualized",
+                              "CalmarRatio"),
+                            metricsNames = c(
+                              "Cumulative Return",
+                              "Annualized Return",
+                              "Annualized Sharpe Ratio",
+                              "Calmar Ratio"))
+# ------------------------------------------------------------------------------
+dXema_stats          <- data.table(dXema_stats)
+dXema_stats[, 4:ncol(dXema_stats)] <- round(dXema_stats[, 4:ncol(dXema_stats)], 2)
+dXema_stats         <- dXema_stats[, data.table(t(.SD), keep.rownames = TRUE)]
+# ------------------------------------------------------------------------------
+# Risk Statistics
+# ------------------------------------------------------------------------------ 
+dXema_risk           <- table.Arbitrary(dXema_rets,
+                            metrics = c(
+                              "StdDev.annualized",
+                              "maxDrawdown"),
+                            metricsNames = c(
+                              "Annualized StdDev",
+                              "Max DrawDown"))
