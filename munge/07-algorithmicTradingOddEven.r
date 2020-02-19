@@ -10,6 +10,7 @@ from="2003-01-01"
 to=Sys.Date()
 # ------------------------------------------------------------------------------
 options("getSymbols.warning4.0"=FALSE)
+FinancialInstrument::currency(c("USD"))                # Set the currency    ###
 currency('USD')
 Sys.setenv(TZ="UTC")
 # ------------------------------------------------------------------------------

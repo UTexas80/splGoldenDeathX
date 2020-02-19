@@ -9,6 +9,10 @@ add.config(
   header = "SPL GoldenDeathX" # header in reports
 )
 ################################################################################
+# ascertain global environment to dynamically name data frames 
+################################################################################
+g<-globalenv()                               # https://tinyurl.com/r3yrspv   ###
+################################################################################
 # Repo Package: data management to build centralized metadata repository ------- https://github.com/franapoli/repo
 ## Check existence of directory and create if doesn't exist                     ### https://tinyurl.com/y3adrqwa
 ################################################################################
@@ -49,47 +53,53 @@ tradeSize   <- 10000
 init_equity <- 1e4                        # $10,000                            #
 initEq      <- 1e6                        # $1,000,000                         #
 
-TxnFees = 0                               # Transaction Fees
+TxnFees     <- 0                          # Transaction Fees
 ################################################################################
-## Financial Instruments Package setup                 # https://is.gd/3K7mRp ##
-## Initialize Currency And Instruments                 # https://financetrain.com/?p=26386
+## Financial Instruments Package setup    # https://is.gd/3K7mRp ##
+## Initialize Currency And Instruments    # https://financetrain.com/?p=26386
 ################################################################################
-FinancialInstrument::currency(c("AUD","USD"))          # Set the currency    ###
-stock(c("SPL.AX"), currency="AUD")                     # Define the stocks   ###
+FinancialInstrument::currency(c("AUD"))                # Set the currency    ###
+stock(c("SPL.AX"), currency ="AUD")                    # Define the stocks   ###
 Sys.setenv(TZ = 'America/New_York')
 # FinancialInstrument::exchange_rate('AUDUSD')         # define an exchange rate
 
-usd_aud <- Cl(getSymbols(
+usd_aud     <- Cl(getSymbols(
               "AUD=X",
               src="yahoo",
               from = init_date,
               auto.assign = FALSE))
+usd_aud     <- complete.cases(usd_aud)
 ################################################################################
 ## Parameters                                                                ###
 ################################################################################
-pctATR <- .02
-period <- 10
-atrOrder <- TRUE
+pctATR      <- .02
+period      <- 10
+atrOrder    <- TRUE
 # ------------------------------------------------------------------------------
-nRSI <- 2
-buyThresh <- 20
-sellThresh <- 80
+nRSI        <- 2
+buyThresh   <- 20
+sellThresh  <- 80
 # ------------------------------------------------------------------------------
-curr <- 'AUD'
+curr        <- 'AUD'
 # ------------------------------------------------------------------------------
-dXema <- "dXema"
-dXsma <- "dXsma"
+dXema       <- "dXema"
+dXsma       <- "dXsma"
 # ------------------------------------------------------------------------------
-gXema <- "gXema"
-gXsma <- "gXsma"
+gXema       <- "gXema"
+gXsma       <- "gXsma"
 # ------------------------------------------------------------------------------
-gxEMA <- "gxEMA"
-gxSMA <- "gxSMA"
+gxEMA       <- "gxEMA"
+gxSMA       <- "gxSMA"
 # ------------------------------------------------------------------------------
-nSMA020 <- 20
-nSMA050 <- 50
-nSMA100 <- 100
-nSMA200 <- 200
+nXema       <- "nXema"
+nxEMA       <- "nxEMA"
+# ------------------------------------------------------------------------------
+indEMA <- "EMA"
+# ------------------------------------------------------------------------------
+nSMA020     <- 20
+nSMA050     <- 50
+nSMA100     <- 100
+nSMA200     <- 200
 ################################################################################
 ## Custom Theme                                                              ###
 ################################################################################

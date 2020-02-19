@@ -3,11 +3,17 @@ helper.function <- function()
   return(1)
 }
 
+##-- Global assignment within a function:
+myf <- function(x) {
+    innerf <- function(x) assign("Global.res", x^2, envir = .GlobalEnv)
+    innerf(x+1)
+}
+
 ################################################################################
-## How to lag date-index in a time-series in R?                              ### https://is.gd/HbAJqH
-## Where X is an xts object. I've converted the native POSIXct times into
-## dates, and added an NA to the head and taken off the final date with
-##  X[-nrow(X)]
+## How to lag date-index in a time-series in R?     ### https://is.gd/HbAJqH ###
+## Where X is an xts object. I've converted the native POSIXct times into    ###
+## dates, and added an NA to the head and taken off the final date with      ###
+##  X[-nrow(X)]                                                              ### 
 ################################################################################       
 dayDifff <- function(X)
 {
@@ -380,7 +386,10 @@ simple.ret <- function(x, col.name){
   x[,col.name] / lag(x[,col.name]) - 1
 }
 
-# http://www.cookbook-r.com/Manipulating_data/Comparing_data_frames/
+################################################################################
+## function to eliminate duplicates              https://tinyurl.com/twhxykb ###
+################################################################################
+
 dupsBetweenGroups <- function (df, idcol) {
     # df: the data frame
     # idcol: the column which identifies the group each row belongs to
@@ -425,7 +434,7 @@ dupsBetweenGroups <- function (df, idcol) {
     return(dupBetween)
 }
 ################################################################################
-## Clean, Consistent Column Names                                               https://tinyurl.com/yy3wo8rq                          
+## Clean, Consistent Column Names               https://tinyurl.com/yy3wo8rq ###                         
 ################################################################################
 clean_names <- function(.data, unique = FALSE) {
   n <- if (is.data.frame(.data)) colnames(.data) else .data
