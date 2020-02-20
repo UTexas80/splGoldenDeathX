@@ -5,36 +5,40 @@ setup(nXema)
 ################################################################################
 # 3.0	Indicators
 ################################################################################
-add.indicator(strategy.st,                          # 20-day EMA indicator
-    name                    = indEMA,
-    arguments               = list(
-      x                     = quote(mktdata[,4]),
-      n                     = 20),
-    label                   = "020")
+#add.indicator(strategy.st,                          # 20-day EMA indicator
+#    name                    = EMA,
+#    arguments               = list(
+#      x                     = quote(mktdata[,4]),
+#      n                     = 20),
+#    label                   = "020")
 # ------------------------------------------------------------------------------
-add.indicator(strategy.st,                          # 50-day EMA indicator
-    name                    = "EMA",
-    arguments               = list(
-      x                     = quote(mktdata[,4]),
-      n                     = 50),
-    label                   = "050")
+#add.indicator(strategy.st,                          # 50-day EMA indicator
+#    name                    = EMA,
+#    arguments               = list(
+#      x                     = quote(mktdata[,4]),
+#      n                     = 50),
+#    label                   = "050")
 # ------------------------------------------------------------------------------
-add.indicator(strategy.st,                          # 100-day EMA indicator
-    name                    = "EMA",
-    arguments               = list(
-      x                     = quote(mktdata[,4]),
-      n                     = 100),
-    label                   = "100")
+# add.indicator(strategy.st,                          # 100-day EMA indicator
+#     name                    = EMA,
+#     arguments               = list(
+#       x                     = quote(mktdata[,4]),
+#       n                     = 100),
+#     label                   = "100")
 # ------------------------------------------------------------------------------
-add.indicator(strategy.st,                          # 200-day EMA indicator
-    name                    = "EMA",
-    arguments               = list(
-      x                     = quote(mktdata[,4]),
-      n                     = 200),
-    label                   = "200")
+# add.indicator(strategy.st,                          # 200-day EMA indicator
+#     name                    = EMA,
+#     arguments               = list(
+#       x                     = quote(mktdata[,4]),
+#       n                     = 200),
+#     label                   = "200")
 # ------------------------------------------------------------------------------
-
-dXema_mktdata_ind <-  applyIndicators(              # apply indicators
+indicators(EMA, 4, 20,  "020")
+indicators(EMA, 4, 50,  "050")
+indicators(EMA, 4, 100, "100")
+indicators(EMA, 4, 200, "200")
+# ------------------------------------------------------------------------------
+nXema_mktdata_ind <-  applyIndicators(              # apply indicators
     strategy                = strategy.st,
     mktdata                 = SPL.AX)
 ################################################################################
@@ -63,9 +67,9 @@ add.signal(strategy.st,
          cross              = TRUE),
     label                   = "dXema_shortExit")
 # ------------------------------------------------------------------------------
-dXema_mktdata_sig  <- applySignals(
+nXema_mktdata_sig  <- applySignals(
     strategy                = strategy.st,
-    mktdata                 = dXema_mktdata_ind)
+    mktdata                 = nXema_mktdata_ind)
 ################################################################################
 # 5.0	Rules
 ################################################################################
@@ -107,7 +111,6 @@ addPosLimit(portfolio.st, symbols,
 ################################################################################
 # 7.0	Strategy
 ################################################################################
-# browser()
 t1      <- Sys.time()
 dXema_strategy <- applyStrategy(strategy.st, portfolio.st, mktdata, symbols)
 t2      <- Sys.time()
@@ -124,8 +127,8 @@ save.strategy(strategy.st)
 ################################################################################
 # 9.0	Trend - create dashboard dataset
 ################################################################################
-dXema_pts   <- blotter::perTradeStats(portfolio.st, symbols)
-dXema_trend <- data.table(dXema_pts)
+# dXema_pts   <- blotter::perTradeStats(portfolio.st, symbols)
+# dXema_trend <- data.table(dXema_pts)
 # ------------------------------------------------------------------------------
 report(nXema)
 # ------------------------------------------------------------------------------
@@ -137,27 +140,27 @@ report(nXema)
 # dXema_trend[, grp := .GRP, by=Start] 
 # dXema_trend[, subcatName := paste0(catName, paste0(sprintf("%03d", grp)))]
 # ------------------------------------------------------------------------------
-dXema_trend[, `:=`(tradeDays, lapply(paste0(dXema_pts[, 1], "/", dXema_pts[, 2]), 
-  function(x) length(SPL.AX[, 6][x])+1))][
-, calendarDays := as.numeric(duration/86400)][
-, c("catName","indicator"):=list("DeathX", "EMA")][
-, grp := .GRP, by=Start][ 
-, subcatName := paste0(catName, 
-                paste0(sprintf("%03d", grp),
-                paste0(indicator)))]
-# ------------------------------------------------------------------------------
-# unlist a column in a data.table                           https://is.gd/ZuntI3
-# ------------------------------------------------------------------------------
-dXema_trend[rep(dXema_trend[,.I], lengths(tradeDays))][
-  , tradeDays := unlist(dXema_trend$tradeDays)][]
-dXema_trend$tradeDays <- unlist(dXema_trend$tradeDays)
+# dXema_trend[, `:=`(tradeDays, lapply(paste0(dXema_pts[, 1], "/", dXema_pts[, 2]),
+#   function(x) length(SPL.AX[, 6][x])+1))][
+# , calendarDays := as.numeric(duration/86400)][
+# , c("catName","indicator"):=list("DeathX", "EMA")][
+# , grp := .GRP, by=Start][ 
+# , subcatName := paste0(catName, 
+#                 paste0(sprintf("%03d", grp),
+#                 paste0(indicator)))]
+# # ------------------------------------------------------------------------------
+# # unlist a column in a data.table                           https://is.gd/ZuntI3
+# # ------------------------------------------------------------------------------
+# dXema_trend[rep(dXema_trend[,.I], lengths(tradeDays))][
+#   , tradeDays := unlist(dXema_trend$tradeDays)][]
+# dXema_trend$tradeDays <- unlist(dXema_trend$tradeDays)
 # ------------------------------------------------------------------------------
 # add Start / End open price                                                 ***
 # ------------------------------------------------------------------------------
-setkey(dXema_trend, "Start")
-dXema_trend          <- na.omit(dXema_trend[SPL][, -c(27:31)])
-setkey(dXema_trend, "End")
-dXema_trend          <- na.omit(dXema_trend[SPL][, -c(28:32)])
+# setkey(dXema_trend, "Start")
+# dXema_trend          <- na.omit(dXema_trend[SPL][, -c(27:31)])
+# setkey(dXema_trend, "End")
+# dXema_trend          <- na.omit(dXema_trend[SPL][, -c(28:32)])
 ################################################################################
 # 10.0	# Performance and Risk Metrics 
 ################################################################################
@@ -165,42 +168,3 @@ dXema_trend          <- na.omit(dXema_trend[SPL][, -c(28:32)])
 # Profits
 # ------------------------------------------------------------------------------
 
-# ------------------------------------------------------------------------------
-dXema_stats          <- tradeStats(Portfolios = portfolio.st, use="trades", inclZeroDays=FALSE)
-# ------------------------------------------------------------------------------
-dXema_profit         <- dXema_stats %>% 
-  select(Net.Trading.PL, Gross.Profits, Gross.Losses, Profit.Factor)
-t(dXema_profit)
-# ------------------------------------------------------------------------------
-dXema_wins           <-  dXema_stats %>% 
-  select(Avg.Trade.PL, Avg.Win.Trade, Avg.Losing.Trade, Avg.WinLoss.Ratio)
-t(dXema_wins)
-# ------------------------------------------------------------------------------
-dXema_rets           <- PortfReturns(Account =  account.st)
-rownames(dXema_rets) <- NULL
-# ------------------------------------------------------------------------------
-dXema_perf           <- table.Arbitrary(dXema_rets,
-                            metrics = c(
-                              "Return.cumulative",
-                              "Return.annualized",
-                              "SharpeRatio.annualized",
-                              "CalmarRatio"),
-                            metricsNames = c(
-                              "Cumulative Return",
-                              "Annualized Return",
-                              "Annualized Sharpe Ratio",
-                              "Calmar Ratio"))
-# ------------------------------------------------------------------------------
-dXema_stats          <- data.table(dXema_stats)
-dXema_stats[, 4:ncol(dXema_stats)] <- round(dXema_stats[, 4:ncol(dXema_stats)], 2)
-dXema_stats         <- dXema_stats[, data.table(t(.SD), keep.rownames = TRUE)]
-# ------------------------------------------------------------------------------
-# Risk Statistics
-# ------------------------------------------------------------------------------ 
-dXema_risk           <- table.Arbitrary(dXema_rets,
-                            metrics = c(
-                              "StdDev.annualized",
-                              "maxDrawdown"),
-                            metricsNames = c(
-                              "Annualized StdDev",
-                              "Max DrawDown"))
