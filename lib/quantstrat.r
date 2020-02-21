@@ -32,12 +32,51 @@ strategy(strategy.st, store = TRUE)                 # Strategy initialization
 # 3.0	Indicators
 ################################################################################
 indicators <- function(name, x, n, label) {
-      add.indicator(strategy.st,                         
+      add.indicator(strategy.st,
         name                 = name,
         arguments            = list(
         x                    = quote(mktdata[,4]),
         n                    = n),
         label                = label)
+}
+################################################################################
+# 4.0	Signals
+################################################################################
+signals <- function(trendName) {
+    signal <- g[[paste(trendName, "signal", sep = "_")]] <-
+             applySignals(
+             strategy           = strategy.st,
+             mktdata            = nXema_mktdata_ind)
+}
+################################################################################
+# 6.0	Position Limits
+################################################################################
+positionLimits <- function(maxpos, minpos) {
+    addPosLimit(portfolio.st, symbols,
+        timestamp   <- from,
+        maxpos      <- maxpos,
+        minpos      <- minpos)
+}
+################################################################################
+# 7.0	Strategy
+################################################################################
+Strategy <- function(trendName) {
+    t1      <- Sys.time()
+    strat   <- g[[paste(trendName, "_strategy", sep = "_")]] <-
+        applyStrategy(strategy.st, portfolio.st, mktdata, symbols)
+    t2      <- Sys.time()
+    print(t2 - t1)
+}
+################################################################################
+# 8.0	Evaluation - update P&L and generate transactional history
+################################################################################
+evaluation <- function() {
+    updatePortf(portfolio.st)
+    dateRange  <- time(getPortfolio(portfolio.st)$summary)[-1]
+    updateAcct(account.st, dateRange)
+# ------------------------------------------------------------------------------
+    updateEndEq(account.st)
+    save.strategy(strategy.st)
 }
 ################################################################################
 # 9.0 Trend - create dynamic name dashboard dataset  https://tinyurl.com/r3yrspv

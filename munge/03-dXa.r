@@ -5,34 +5,6 @@ setup(nXema)
 ################################################################################
 # 3.0	Indicators
 ################################################################################
-#add.indicator(strategy.st,                          # 20-day EMA indicator
-#    name                    = EMA,
-#    arguments               = list(
-#      x                     = quote(mktdata[,4]),
-#      n                     = 20),
-#    label                   = "020")
-# ------------------------------------------------------------------------------
-#add.indicator(strategy.st,                          # 50-day EMA indicator
-#    name                    = EMA,
-#    arguments               = list(
-#      x                     = quote(mktdata[,4]),
-#      n                     = 50),
-#    label                   = "050")
-# ------------------------------------------------------------------------------
-# add.indicator(strategy.st,                          # 100-day EMA indicator
-#     name                    = EMA,
-#     arguments               = list(
-#       x                     = quote(mktdata[,4]),
-#       n                     = 100),
-#     label                   = "100")
-# ------------------------------------------------------------------------------
-# add.indicator(strategy.st,                          # 200-day EMA indicator
-#     name                    = EMA,
-#     arguments               = list(
-#       x                     = quote(mktdata[,4]),
-#       n                     = 200),
-#     label                   = "200")
-# ------------------------------------------------------------------------------
 indicators(EMA, 4, 20,  "020")
 indicators(EMA, 4, 50,  "050")
 indicators(EMA, 4, 100, "100")
@@ -67,9 +39,7 @@ add.signal(strategy.st,
          cross              = TRUE),
     label                   = "dXema_shortExit")
 # ------------------------------------------------------------------------------
-nXema_mktdata_sig  <- applySignals(
-    strategy                = strategy.st,
-    mktdata                 = nXema_mktdata_ind)
+signals(nXema)
 ################################################################################
 # 5.0	Rules
 ################################################################################
@@ -104,67 +74,17 @@ add.rule(strategy.st,
 ################################################################################
 # 6.0	Position Limits
 ################################################################################
-addPosLimit(portfolio.st, symbols,
-    timestamp               <- from,
-    maxpos                  <- 100,
-    minpos                  <- 0)
+positionLimits(maxpos, minpos)
 ################################################################################
 # 7.0	Strategy
 ################################################################################
-t1      <- Sys.time()
-dXema_strategy <- applyStrategy(strategy.st, portfolio.st, mktdata, symbols)
-t2      <- Sys.time()
-print(t2 - t1)
+Strategy(nXema)
 ################################################################################
 # 8.0	Evaluation - update P&L and generate transactional history
 ################################################################################
-updatePortf(portfolio.st)
-dateRange  <- time(getPortfolio(portfolio.st)$summary)[-1]
-updateAcct(account.st, dateRange)
-# ------------------------------------------------------------------------------
-updateEndEq(account.st)
-save.strategy(strategy.st)
+evaluation()
 ################################################################################
 # 9.0	Trend - create dashboard dataset
 ################################################################################
-# dXema_pts   <- blotter::perTradeStats(portfolio.st, symbols)
-# dXema_trend <- data.table(dXema_pts)
-# ------------------------------------------------------------------------------
 report(nXema)
 # ------------------------------------------------------------------------------
-# dXema_trend[, `:=`(tradeDays, lapply(paste0(dXema_pts[, 1], "/", dXema_pts[, 2]), 
-#   function(x) length(SPL.AX[, 6][x])+1))]
-# dXema_trend[, calendarDays := as.numeric(duration/86400)]
-# # ------------------------------------------------------------------------------
-# dXema_trend[, c("catName","indicator"):=list("DeathX", "EMA")]
-# dXema_trend[, grp := .GRP, by=Start] 
-# dXema_trend[, subcatName := paste0(catName, paste0(sprintf("%03d", grp)))]
-# ------------------------------------------------------------------------------
-# dXema_trend[, `:=`(tradeDays, lapply(paste0(dXema_pts[, 1], "/", dXema_pts[, 2]),
-#   function(x) length(SPL.AX[, 6][x])+1))][
-# , calendarDays := as.numeric(duration/86400)][
-# , c("catName","indicator"):=list("DeathX", "EMA")][
-# , grp := .GRP, by=Start][ 
-# , subcatName := paste0(catName, 
-#                 paste0(sprintf("%03d", grp),
-#                 paste0(indicator)))]
-# # ------------------------------------------------------------------------------
-# # unlist a column in a data.table                           https://is.gd/ZuntI3
-# # ------------------------------------------------------------------------------
-# dXema_trend[rep(dXema_trend[,.I], lengths(tradeDays))][
-#   , tradeDays := unlist(dXema_trend$tradeDays)][]
-# dXema_trend$tradeDays <- unlist(dXema_trend$tradeDays)
-# ------------------------------------------------------------------------------
-# add Start / End open price                                                 ***
-# ------------------------------------------------------------------------------
-# setkey(dXema_trend, "Start")
-# dXema_trend          <- na.omit(dXema_trend[SPL][, -c(27:31)])
-# setkey(dXema_trend, "End")
-# dXema_trend          <- na.omit(dXema_trend[SPL][, -c(28:32)])
-################################################################################
-# 10.0	# Performance and Risk Metrics 
-################################################################################
-# ------------------------------------------------------------------------------
-# Profits
-# ------------------------------------------------------------------------------
-
