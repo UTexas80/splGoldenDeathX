@@ -46,7 +46,29 @@ signals <- function(trendName) {
     signal <- g[[paste(trendName, "signal", sep = "_")]] <-
              applySignals(
              strategy           = strategy.st,
-             mktdata            = nXema_mktdata_ind)
+             mktdata            = mktdata)
+}
+################################################################################
+# 5.0	Rules                                       https://tinyurl.com/y93kc22r
+################################################################################
+# red.plot <- function(x, y, ...)  {
+# rules <- function(sigcol, sigval, orderqty,	orderside, ordertype, prefer, pricemethod, TxnFees, type)
+# , ...) {
+rules <- function(sigcol, sigval, ...) {
+    add.rule(strategy.st,
+        name                    = "ruleSignal",
+        arguments               = list(
+            sigcol              = sigcol,
+            sigval              = sigval,
+            orderqty            = -1000,
+            orderside           = "short",
+            ordertype           = "market",
+            prefer              = "Open",
+            pricemethod         = "market",
+            TxnFees             = 0),
+      #      osFUN               = osMaxPos),
+        type                    = "enter",
+        path.dep                = TRUE)  
 }
 ################################################################################
 # 6.0	Position Limits

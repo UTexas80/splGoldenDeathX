@@ -41,22 +41,24 @@ add.signal(strategy.st,
 # ------------------------------------------------------------------------------
 signals(nXema)
 ################################################################################
-# 5.0	Rules
+# 5.0	Rules                                      https://tinyurl.com/y93kc22r
 ################################################################################
-add.rule(strategy.st,
-    name                    = "ruleSignal",
-    arguments               = list(
-        sigcol              = "dXema_shortEntry",
-        sigval              = TRUE,
-        orderqty            = -1000,
-        orderside           = "short",
-        ordertype           = "market",
-        prefer              = "Open",
-        pricemethod         = "market",
-        TxnFees             = 0),
+rules("dXema_shortEntry", TRUE)
+# rules("dXema_shortEntry", 1:10, xlab="My x axis", ylab="My y axis")
+# add.rule(strategy.st,
+#     name                    = "ruleSignal",
+#     arguments               = list(
+#         sigcol              = "dXema_shortEntry",
+#         sigval              = TRUE,
+#         orderqty            = -1000,
+#         orderside           = "short",
+#         ordertype           = "market",
+#         prefer              = "Open",
+#         pricemethod         = "market",
+#         TxnFees             = 0),
   #      osFUN               = osMaxPos),
-    type                    = "enter",
-    path.dep                = TRUE)
+#   type                    = "enter",
+#    path.dep                = TRUE)
 # ------------------------------------------------------------------------------
 add.rule(strategy.st,
     name                    = "ruleSignal",
