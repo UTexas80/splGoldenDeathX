@@ -21,12 +21,7 @@ add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list(
         columns             = c("EMA.020","EMA.050","EMA.100", "EMA.200"),
-        formula             = "!(EMA.020 < EMA.050 &
-                                 EMA.050 < EMA.100 &
-                                 EMA.100 < EMA.200)| 
-                               !(EMA.020 > EMA.050 &
-                                 EMA.050 > EMA.100 &
-                                 EMA.100 > EMA.200)",
+        formula             = deathX,
          label              = "trigger",
          cross              = TRUE),
     label                   = paste(nXema, "shortEntry", sep = "_"))
@@ -35,10 +30,7 @@ add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list
         (columns            = c("EMA.020","EMA.050","EMA.100", "EMA.200"),
-        formula             = "(EMA.020 > EMA.050  |
-                                EMA.050 > EMA.100  |
-                                EMA.100 > EMA.200) &
-                               index.xts(mktdata)  > '2002-12-02'",
+         formula            = deathXno,
          label              = "trigger",
          cross              = TRUE),
     label                   =  paste(nXema, "shortExit", sep = "_"))

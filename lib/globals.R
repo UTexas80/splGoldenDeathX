@@ -45,6 +45,15 @@ end_date    <- Sys.Date()
 initDate    <- "1990-01-01"
 from        <- "2002-01-01"
 to          <- Sys.Date()
+deathX      <- "(EMA.020 < EMA.050 &
+                 EMA.050 < EMA.100 &
+                 EMA.100 < EMA.200)"
+deathXno    <- "(EMA.020 > EMA.050 |
+                 EMA.050 > EMA.100 |
+                 EMA.100 > EMA.200)"
+goldenX     <- "(EMA.020 > EMA.050 &
+                 EMA.050 > EMA.100 &
+                 EMA.100 > EMA.200)"
 ################################################################################
 ## Equity Values                                                             ###
 ################################################################################
@@ -97,8 +106,26 @@ gxSMA       <- "gxSMA"
 nXema       <- "nXema"
 nxEMA       <- "nxEMA"
 # ------------------------------------------------------------------------------
-EMA <- "EMA"
-SMA <- "SMA"
+EMA         <- "EMA"
+SMA         <- "SMA"
+# ------------------------------------------------------------------------------
+xA        <- "020"
+xB        <- "050"
+xC        <- "100"
+xD        <- "200"
+# ------------------------------------------------------------------------------
+cross     <- c(xA,xB,xC,xD)
+# ------------------------------------------------------------------------------
+crossEMA <- data.table(cbind(rep(EMA,length(cross)),cross))
+names(crossEMA)[1] <- "MA" # rename column name by index
+crossEMA[ , crossMA := do.call(paste, c(.SD, sep = "."))]
+signalEMA<-data.table(t(crossEMA[,3]))
+# names(signalEMA)[1:4] <- cross
+# ------------------------------------------------------------------------------
+crossSMA <- data.table(cbind(rep(SMA,length(cross)),cross))
+names(crossSMA)[1] <- "MA" # rename column name by index
+crossSMA[ , crossMA := do.call(paste, c(.SD, sep = "."))]
+signalSMA<-data.table(t(crossSMA[,3]))
 # ------------------------------------------------------------------------------
 nSMA020     <- 20
 nSMA050     <- 50
