@@ -3,6 +3,11 @@ helper.function <- function()
   return(1)
 }
 
+dummy <- function()
+{
+ 
+}
+
 ##-- Global assignment within a function:
 myf <- function(x) {
     innerf <- function(x) assign("Global.res", x^2, envir = .GlobalEnv)

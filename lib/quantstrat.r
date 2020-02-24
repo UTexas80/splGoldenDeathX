@@ -39,12 +39,18 @@ indicators <- function(name, x, n, label) {
         n                    = n),
         label                = label)
 }
+Apply_Indicators <- function(trendName) {
+    Apply_Indicators <- g[[paste(trendName, "mktdata", "ind", sep = "_")]] <-
+        applyIndicators(              # apply indicators
+            strategy                = strategy.st,
+            mktdata                 = SPL.AX)
+}    
 ################################################################################
 # 4.0	Signals
 ################################################################################
-signals <- function(trendName) {
-    signal <- g[[paste(trendName, "signal", sep = "_")]] <-
-             applySignals(
+ApplySignals <- function(trendName) {
+    ApplySignals <- g[[paste(trendName, "signal", sep = "_")]] <-
+        applySignals(
              strategy           = strategy.st,
              mktdata            = mktdata)
 }
@@ -52,24 +58,24 @@ signals <- function(trendName) {
 # 5.0	Rules                                       https://tinyurl.com/y93kc22r
 ################################################################################
 # red.plot <- function(x, y, ...)  {
-# rules <- function(sigcol, sigval, orderqty,	orderside, ordertype, prefer, pricemethod, TxnFees, type)
+# rules <- function(sigcol, sigval, orderqty, orderside, ordertype, prefer, pricemethod, TxnFees, type)
 # , ...) {
-rules <- function(sigcol, sigval, ...) {
+rules <- function(sigcol, sigval, orderqty, orderside, ordertype, prefer, pricemethod, TxnFees, type, ...) {
     add.rule(strategy.st,
         name                    = "ruleSignal",
         arguments               = list(
-            sigcol              = sigcol,
+            sigcol               = sigcol,
             sigval              = sigval,
-            orderqty            = -1000,
-            orderside           = "short",
-            ordertype           = "market",
-            prefer              = "Open",
-            pricemethod         = "market",
-            TxnFees             = 0),
-      #      osFUN               = osMaxPos),
-        type                    = "enter",
-        path.dep                = TRUE)  
-}
+            orderqty            = orderqty,
+            orderside           = orderside,
+            ordertype           = ordertype,
+            prefer              = prefer,
+            pricemethod         = pricemethod,
+            TxnFees             = TxnFees),
+     #      osFUN                = dummy()),
+        type                    = type,
+        path.dep                = TRUE)
+ }
 ################################################################################
 # 6.0	Position Limits
 ################################################################################
@@ -84,7 +90,7 @@ positionLimits <- function(maxpos, minpos) {
 ################################################################################
 Strategy <- function(trendName) {
     t1      <- Sys.time()
-    strat   <- g[[paste(trendName, "_strategy", sep = "_")]] <-
+    strat   <- g[[paste(trendName, "strategy", sep = "_")]] <-
         applyStrategy(strategy.st, portfolio.st, mktdata, symbols)
     t2      <- Sys.time()
     print(t2 - t1)
@@ -125,7 +131,8 @@ report <- function(trendName) {
 # add Start / End open price                                                 ***
 # ------------------------------------------------------------------------------
     m <-  data.table(mktdata, keep.rownames = T)
-    m$index <- as.POSIXct(m$index, tz = "NewYork")
+    # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+    m$index <- as.POSIXct(m$index, tz = "Australia/Sydney")
     setkey(m, "index")
 # ------------------------------------------------------------------------------    
     t <- setkey(t, "Start")
