@@ -39,15 +39,25 @@ indicators <- function(name, x, n, label) {
         n                    = n),
         label                = label)
 }
-Apply_Indicators <- function(trendName) {
+ApplyIndicators <- function(trendName) {
     Apply_Indicators <- g[[paste(trendName, "mktdata", "ind", sep = "_")]] <-
         applyIndicators(              # apply indicators
             strategy                = strategy.st,
             mktdata                 = SPL.AX)
-}    
+}
 ################################################################################
 # 4.0	Signals
 ################################################################################
+AddSignals <- function(name, columns, formula, label, cross, trendName, Label) {
+    add.signal(strategy.st,
+        name                    = name,
+        arguments               = list(
+            columns             = columns,
+            formula             = formula,
+            label               = label,
+            cross               = cross),
+        label                   = paste(trendName, Label, sep = "_"))
+}
 ApplySignals <- function(trendName) {
     ApplySignals <- g[[paste(trendName, "signal", sep = "_")]] <-
         applySignals(
@@ -178,7 +188,7 @@ report <- function(trendName) {
     g[[paste(trendName, "stats", sep = "_")]] <- s[, t(.SD)]
 # ------------------------------------------------------------------------------
 # Risk Statistics
-# ------------------------------------------------------------------------------ 
+# ------------------------------------------------------------------------------
     risk <- g[[paste(trendName, "risk", sep = "_")]] <-
             table.Arbitrary(r, metrics = c(
                                "StdDev.annualized",

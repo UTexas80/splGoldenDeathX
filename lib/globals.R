@@ -114,9 +114,9 @@ xB        <- "050"
 xC        <- "100"
 xD        <- "200"
 # ------------------------------------------------------------------------------
-cross     <- c(xA,xB,xC,xD)
+xcross     <- c(xA,xB,xC,xD)
 # ------------------------------------------------------------------------------
-crossEMA <- data.table(cbind(rep(EMA,length(cross)),cross))
+crossEMA <- data.table(cbind(rep(EMA,length(xcross)),xcross))
 names(crossEMA)[1] <- "MA" # rename column name by index
 crossEMA[ , crossMA := do.call(paste, c(.SD, sep = "."))]
 signalEMA<-data.table(t(crossEMA[,3]))

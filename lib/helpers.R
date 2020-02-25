@@ -2,12 +2,19 @@ helper.function <- function()
 {
   return(1)
 }
-
-dummy <- function()
-{
- 
+################################################################################
+# Cross initialization                              https://tinyurl.com/vvafxad
+################################################################################
+cross <- function(...){
+    cross <- data.table(...) # THIS WILL BE A data.table STORING EVERYTHING:
+#   sum(...)       # Example of inbuilt function
+    crossEMA  <<- data.table(cbind(rep(EMA,length(cross)),cross))
+    # ind       <<- data.table(
+    #   cbind(EMA,4,t(cross(...)),sprintf("%03d",t(cross(...)))))
+    # cbind(EMA,4,t(cross(20,50,100,200)),sprintf("%03d",t(cross(20,50,100,200))))
+    return(cross)
 }
-
+# ------------------------------------------------------------------------------
 ##-- Global assignment within a function:
 myf <- function(x) {
     innerf <- function(x) assign("Global.res", x^2, envir = .GlobalEnv)
@@ -18,8 +25,8 @@ myf <- function(x) {
 ## How to lag date-index in a time-series in R?     ### https://is.gd/HbAJqH ###
 ## Where X is an xts object. I've converted the native POSIXct times into    ###
 ## dates, and added an NA to the head and taken off the final date with      ###
-##  X[-nrow(X)]                                                              ### 
-################################################################################       
+##  X[-nrow(X)]                                                              ###
+################################################################################
 dayDifff <- function(X)
 {
     as.numeric(as.Date(index(X))) - c(NA, as.numeric(as.Date(index(X[-nrow(X)]))))

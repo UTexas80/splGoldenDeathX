@@ -1,7 +1,7 @@
 # History files see https://raw.githubusercontent.com/github/gitignore/master/R.gitignore
 .Rapp.history
 # Session Data files
-.RData
+/*.RData
 .Ruserdata
 
 # R Saved Object
