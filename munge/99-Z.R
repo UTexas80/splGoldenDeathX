@@ -89,7 +89,8 @@ while (last.diagnostic <= nrow(diagnostic)) {
 
   last.diagnostic <- last.diagnostic + diagnostic.rows + 1
 }
-
+dtTables <- data.table::tables()
+lTables <- lsos()
 finish.time <- Sys.time()
 timeProcessing <- finish.time - start.time
 ################################################################################

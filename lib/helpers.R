@@ -8,10 +8,12 @@ helper.function <- function()
 cross <- function(...){
     cross <- data.table(...) # THIS WILL BE A data.table STORING EVERYTHING:
 #   sum(...)       # Example of inbuilt function
-    crossEMA  <<- data.table(cbind(rep(EMA,length(cross)),cross))
+    # crossEMA  <<- data.table(cbind(rep(EMA,length(cross)),cross))
     # ind       <<- data.table(
     #   cbind(EMA,4,t(cross(...)),sprintf("%03d",t(cross(...)))))
-    # cbind(EMA,4,t(cross(20,50,100,200)),sprintf("%03d",t(cross(20,50,100,200))))
+    # crossEMA  <<- cbind(EMA,4,t(cross(20,50,100,200)),sprintf("%03d",t(cross(20,50,100,200))))
+    crossEMA  <<- cbind("EMA",4,t(cross),sprintf("%03d",t(cross)))
+    crossSMA  <<- cbind("SMA",4,t(cross),sprintf("%03d",t(cross)))
     return(cross)
 }
 # ------------------------------------------------------------------------------

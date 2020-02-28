@@ -106,7 +106,8 @@ gxSMA       <- "gxSMA"
 nXema       <- "nXema"
 nxEMA       <- "nxEMA"
 # ------------------------------------------------------------------------------
-EMA         <- "EMA"
+# https://is.gd/NEjTM3 [Pass arguments to a function from each row of a matrix]
+# EMA         <- "EMA"
 SMA         <- "SMA"
 # ------------------------------------------------------------------------------
 xA        <- "020"
@@ -116,7 +117,7 @@ xD        <- "200"
 # ------------------------------------------------------------------------------
 xcross     <- c(xA,xB,xC,xD)
 # ------------------------------------------------------------------------------
-crossEMA <- data.table(cbind(rep(EMA,length(xcross)),xcross))
+crossEMA <- data.table(cbind(rep("EMA",length(xcross)),xcross))
 names(crossEMA)[1] <- "MA" # rename column name by index
 crossEMA[ , crossMA := do.call(paste, c(.SD, sep = "."))]
 signalEMA<-data.table(t(crossEMA[,3]))
