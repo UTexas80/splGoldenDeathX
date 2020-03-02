@@ -1,5 +1,7 @@
 # VERSION HISTORY
 z99.version <- "1.0.0"
+# VERSION HISTORY
+z99.version = "1.0.0"
 z99.ModDate <- as.Date("2019-06-09")
 ################################################################################
 ## Step 99.00 create object table                                            ###
@@ -91,8 +93,10 @@ while (last.diagnostic <= nrow(diagnostic)) {
 }
 dtTables <- data.table::tables()
 lTables <- lsos()
+# ------------------------------------------------------------------------------
 finish.time <- Sys.time()
 timeProcessing <- finish.time - start.time
+print(finish.time - start.time)
 ################################################################################
 ## Step 99.99: VERSION HISTORY                                               ###
 ## http://tinyurl.com/y54k8gsw                                               ###

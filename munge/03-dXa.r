@@ -5,7 +5,7 @@ setup(nXema)
 ################################################################################
 # 3.0	Indicators
 ################################################################################
-browser()
+# browser()
 # x <- list("EMA", 4, 20, "020")
 # z<-paste("'",as.character(x),"'",collapse=", ",sep="")
 # indicators(x)
@@ -15,19 +15,25 @@ browser()
 # indicators(EMA, 4, 100, "100")
 # indicators(EMA, 4, 200, "200")
 # indEMA <- cbind(EMA,4,t(cross(20,50,100,200)),sprintf("%03d",t(cross(20,50,100,200))))
-apply(crossEMA, 1, function(x)do.call(indicators, as.list(x)))
+# apply(crossEMA, 1, function(x)do.call(indicators, as.list(x)))
+apply(crossEMA, 1, function(x)
+  indicators(
+    x[1], 
+    as.integer(x[2]),
+    as.integer(x[3]),
+    x[4]))
 str(getStrategy(nXema)$indicators)
 # ------------------------------------------------------------------------------
-browser()
+# browser()
 ApplyIndicators(nXema)                              # apply indicators
-browser()
+# browser()
 # nXema_mktdata_ind <-  applyIndicators(
 #     strategy                = strategy.st,
 #     mktdata                 = SPL.AX)
 ################################################################################
 # 4.0	Signals
 ################################################################################
-browser()
+# browser()
 AddSignals("sigFormula",c("EMA.020","EMA.050","EMA.100","EMA.200"), deathX,   "trigger", TRUE , nXema, "shortEntry")
 AddSignals("sigFormula",c("EMA.020","EMA.050","EMA.100","EMA.200"), deathXno, "trigger", TRUE , nXema, "shortExit")
 # add.signal(strategy.st,
