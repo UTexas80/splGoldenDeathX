@@ -56,7 +56,7 @@ add.indicator(strategy.st,                          # 200-day EMA indicator
       n                     = 200),
     label                   = "200")
 # ------------------------------------------------------------------------------
-
+str(getStrategy(dXema)$indicators)
 dXema_mktdata_ind <-  applyIndicators(              # apply indicators
     strategy                = strategy.st,
     mktdata                 = SPL.AX)
@@ -80,12 +80,12 @@ add.signal(strategy.st,
         (columns            = c("EMA.020","EMA.050","EMA.100", "EMA.200"),
         formula             = "(EMA.020 > EMA.050  |
                                 EMA.050 > EMA.100  |
-                                EMA.100 > EMA.200) &
-                               index.xts(mktdata)  > '2002-12-02'",
+                                EMA.100 > EMA.200) & index(mktdata) > '2002-12-02'",
          label              = "trigger",
          cross              = TRUE),
     label                   = "dXema_shortExit")
 # ------------------------------------------------------------------------------
+str(getStrategy(dXema)$signals)
 dXema_mktdata_sig  <- applySignals(
     strategy                = strategy.st,
     mktdata                 = dXema_mktdata_ind)

@@ -1,0 +1,37 @@
+List of 4
+ $ 020:List of 5
+  ..$ name     : chr "EMA"
+  ..$ label    : chr "020"
+  ..$ enabled  : logi TRUE
+  ..$ arguments:List of 2
+  .. ..$ x: language mktdata[, 4]
+  .. ..$ n: num 20
+  ..$ call     : language add.indicator(strategy = strategy.st, name = "EMA", arguments = list(x = quote(mktdata[,      4]), n = 20), label = "020")
+  ..- attr(*, "class")= chr "strat_indicator"
+ $ 050:List of 5
+  ..$ name     : chr "EMA"
+  ..$ label    : chr "050"
+  ..$ enabled  : logi TRUE
+  ..$ arguments:List of 2
+  .. ..$ x: language mktdata[, 4]
+  .. ..$ n: num 50
+  ..$ call     : language add.indicator(strategy = strategy.st, name = "EMA", arguments = list(x = quote(mktdata[,      4]), n = 50), label = "050")
+  ..- attr(*, "class")= chr "strat_indicator"
+ $ 100:List of 5
+  ..$ name     : chr "EMA"
+  ..$ label    : chr "100"
+  ..$ enabled  : logi TRUE
+  ..$ arguments:List of 2
+  .. ..$ x: language mktdata[, 4]
+  .. ..$ n: num 100
+  ..$ call     : language add.indicator(strategy = strategy.st, name = "EMA", arguments = list(x = quote(mktdata[,      4]), n = 100), label = "100")
+  ..- attr(*, "class")= chr "strat_indicator"
+ $ 200:List of 5
+  ..$ name     : chr "EMA"
+  ..$ label    : chr "200"
+  ..$ enabled  : logi TRUE
+  ..$ arguments:List of 2
+  .. ..$ x: language mktdata[, 4]
+  .. ..$ n: num 200
+  ..$ call     : language add.indicator(strategy = strategy.st, name = "EMA", arguments = list(x = quote(mktdata[,      4]), n = 200), label = "200")
+  ..- attr(*, "class")= chr "strat_indicator"

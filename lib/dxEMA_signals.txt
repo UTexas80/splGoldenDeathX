@@ -1,0 +1,23 @@
+List of 2
+ $ :List of 5
+  ..$ name     : chr "sigFormula"
+  ..$ label    : chr "dXema_shortEntry"
+  ..$ enabled  : logi TRUE
+  ..$ arguments:List of 4
+  .. ..$ columns: chr [1:4] "EMA.020" "EMA.050" "EMA.100" "EMA.200"
+  .. ..$ formula: chr "(EMA.020 < EMA.050 &\n                                EMA.050 < EMA.100 &\n                                EMA.100 < EMA.200)"
+  .. ..$ label  : chr "dXema_shortEntry"
+  .. ..$ cross  : logi TRUE
+  ..$ call     : language add.signal(strategy = strategy.st, name = "sigFormula", arguments = list(columns = c("EMA.020",      "EMA.050", "| __truncated__ ...
+  ..- attr(*, "class")= chr "strat_signal"
+ $ :List of 5
+  ..$ name     : chr "sigFormula"
+  ..$ label    : chr "dXema_shortExit"
+  ..$ enabled  : logi TRUE
+  ..$ arguments:List of 4
+  .. ..$ columns: chr [1:4] "EMA.020" "EMA.050" "EMA.100" "EMA.200"
+  .. ..$ formula: chr "(EMA.020 > EMA.050  |\n                                EMA.050 > EMA.100  |\n                                EM"| __truncated__
+  .. ..$ label  : chr "dXema_shortExit"
+  .. ..$ cross  : logi TRUE
+  ..$ call     : language add.signal(strategy = strategy.st, name = "sigFormula", arguments = list(columns = c("EMA.020",      "EMA.050", "| __truncated__ ...
+  ..- attr(*, "class")= chr "strat_signal"

@@ -54,6 +54,7 @@ AddSignals("sigFormula",c("EMA.020","EMA.050","EMA.100","EMA.200"), deathXno, "t
 #         cross              = TRUE),
 #    label                   =  paste(nXema, "shortExit", sep = "_"))
 # ------------------------------------------------------------------------------
+str(getStrategy(nXema)$signals)
 ApplySignals(nXema)
 ################################################################################
 # 5.0	Rules                                      https://tinyurl.com/y93kc22r

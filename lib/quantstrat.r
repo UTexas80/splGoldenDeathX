@@ -125,12 +125,14 @@ report <- function(trendName) {
     t <- g[[paste(trendName, "trend", sep = "_")]] <- data.table(x)
     t[, calendarDays := as.numeric(duration/86400)]
     t[, `:=`(tradeDays, lapply(paste0(x[, 1], "/", x[, 2]),
-            function(x) length(SPL.AX[, 6][x])+1))]
-    t[, c("catName","indicator"):=list("DeathX", EMA)]
-    t[, grp := .GRP, by=Start]
-    t[, subcatName := paste0(catName, 
-                paste0(sprintf("%03d", grp),
-                paste0(indicator)))]
+                               function(x) length(SPL.AX[, 6][x])+1))]
+#   t[, c("catName","indicator"):=list("DeathX", "EMA")]
+    t[, catName      := "DeathX"]
+    t[, indicator    := "EMA"]
+    t[, grp          := .GRP, by = Start]
+    t[, subcatName   := paste0(catName, 
+                        paste0(sprintf("%03d", grp),
+                        paste0(indicator)))]
 # ------------------------------------------------------------------------------
 # unlist a column in a data.table                           https://is.gd/ZuntI3
 # ------------------------------------------------------------------------------
