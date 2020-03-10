@@ -2,6 +2,7 @@
 .Rapp.history
 # Session Data files
 /*.RData
+/*.Rhistory
 .Ruserdata
 
 # R Saved Object
