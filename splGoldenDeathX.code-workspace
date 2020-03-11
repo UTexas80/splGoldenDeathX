@@ -19,10 +19,7 @@
 			"activityBarBadge.foreground": "#e7e7e7",
 			"titleBar.inactiveBackground": "#02030099",
 			"titleBar.inactiveForeground": "#e7e7e799",
-			"statusBarItem.hoverBackground": "#243600",
-			"activityBar.background": "#233204",
-			"titleBar.activeBackground": "#314606",
-			"titleBar.activeForeground": "#F5FDE5"
+			"statusBarItem.hoverBackground": "#243600"
 		},
 		"terminal.integrated.cursorStyle": "underline",
 		"editor.suggest.localityBonus": true,

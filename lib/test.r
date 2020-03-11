@@ -1,4 +1,18 @@
-test <- function(name, indicator, symbols = symbols, initDate = initDate, initEq  = initEq) {
+
+
+testInd <- function(name, x, n, label) {
+      add.indicator(strategy.st,
+        name                 = name,
+        arguments            = list(
+        x                    = quote(mktdata[,4]),
+        n                    = n),
+        label                = label)
+
+        print(name, x, n, label)
+}
+
+
+xtest <- function(name, indicator, symbols = symbols, initDate = initDate, initEq  = initEq) {
   
 # 1.0 Setup
 # ------------------------------------------------------------------------------
