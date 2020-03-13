@@ -13,6 +13,7 @@
 	"settings": {
 		"workbench.colorCustomizations": {
 			"tab.unfocusedActiveBorder": "#fff0",
+			"activityBar.activeBackground": "#243600",
 			"activityBar.activeBorder": "#006a9f",
 			"activityBar.inactiveForeground": "#e7e7e799",
 			"activityBarBadge.background": "#006a9f",

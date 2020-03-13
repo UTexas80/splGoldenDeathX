@@ -33,9 +33,14 @@ unique(dT.test1[,c(1,3,8)])
 mapply(function(x){x},c(unique(dT.test1[,c(1,3,8)])))
 
 z<- unique(dT.test1[,c(1,3,8)])
+
 g <- dT.test1
-y<-unique(dT.test1[,c(1,3,8)])
+keycols = c("id","i.id","i.id.1")
 setkeyv(g, keycols)
+
+y<-unique(dT.test1[,c(1,3,8)])
+setkeyv(y, keycols)
+
 g[y[1,]]
 
 
