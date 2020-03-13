@@ -34,6 +34,10 @@ mapply(function(x){x},c(unique(dT.test1[,c(1,3,8)])))
 
 z<- unique(dT.test1[,c(1,3,8)])
 
+#  set several columns as the key in data.table 
+# https://tinyurl.com/w2ng9pj
+setkeyv(z, c("id","i.id","i.id.1"))
+
 g <- dT.test1
 keycols = c("id","i.id","i.id.1")
 setkeyv(g, keycols)
@@ -42,8 +46,17 @@ y<-unique(dT.test1[,c(1,3,8)])
 setkeyv(y, keycols)
 
 g[y[1,]]
+g[y[3,]][,c(9,11:13)]
 
 
-#  set several columns as the key in data.table 
-# https://tinyurl.com/w2ng9pj
-setkeyv(z, c("id","i.id","i.id.1"))
+sapply(z$id, function(a) {
+    sapply(z$i.id, function(b) {
+        sapply(z$i.id.1, function(c) { 
+            c
+        })
+    })
+})
+
+
+mapply(function(x) {g[y[x,]][,c(9,11:13)]}, as.integer(rownames(y)), SIMPLIFY = FALSE)
+mapply(function(x) {indicators(g[y[x,]][,c(9,11:13)])}, as.integer(rownames(y)), SIMPLIFY = FALSE)
