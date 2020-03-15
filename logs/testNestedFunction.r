@@ -41,6 +41,7 @@ setkeyv(z, c("id","i.id","i.id.1"))
 g <- dT.test1
 keycols = c("id","i.id","i.id.1")
 setkeyv(g, keycols)
+setkeyv(dT.test1, keycols)
 
 y<-unique(dT.test1[,c(1,3,8)])
 setkeyv(y, keycols)
@@ -60,3 +61,15 @@ sapply(z$id, function(a) {
 
 mapply(function(x) {g[y[x,]][,c(9,11:13)]}, as.integer(rownames(y)), SIMPLIFY = FALSE)
 mapply(function(x) {indicators(g[y[x,]][,c(9,11:13)])}, as.integer(rownames(y)), SIMPLIFY = FALSE)
+
+
+  indicators(x[1], as.integer(x[2]), as.integer(x[3]), x[4]))
+
+
+# Passing vector with multiple values into R function                           https://tinyurl.com/uy65emg 
+mapply(function(x) {table(g[y[x,]][,c(9,11:13)])}, as.integer(rownames(y)), SIMPLIFY = FALSE)
+
+
+# Nesting Functions in R with the Piping Operator                               https://tinyurl.com/vhap722
+mapply(function(x) {g[y[x,]][,c(9,11:13)]} %>% {x}   , as.integer(rownames(y)), SIMPLIFY = FALSE)
+mapply(function(x) {g[y[x,]][,c(9,11:13)]} %>% {g[y[x,]][,c(9,11:13)]}, as.integer(rownames(y)), SIMPLIFY = FALSE)
