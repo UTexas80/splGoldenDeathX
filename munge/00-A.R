@@ -29,6 +29,10 @@ dT.test2 <- dT.test[
 dT.test3 <- dT.indMetrics[
             dT.ind, allow.cartesian = T][
             i.id==1,c(7,3:5)]
+
+
+dT.trend <- dT.strategy[
+    dT.ind, allow.cartesian = T][,c(5,8)][, tname:= paste0(abbv,i.name)]
 ################################################################################
 ## Step 00.99: VERSION HISTORY                                               ###
 ################################################################################
