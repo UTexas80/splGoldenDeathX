@@ -1,0 +1,6 @@
+Peterson's Annual Report
+Flextable
+change index.yml 
+create RMarkdown Word Template: https://rmarkdown.rstudio.com/articles_docx.html
+
+Hello - How can I confirm that my payments are suspended for the next 90 days? I just a deferment request on my phone as well as cancelling AutoPay. I just don't want any surprises coming my way. Thank you.

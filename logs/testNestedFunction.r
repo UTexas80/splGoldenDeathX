@@ -77,3 +77,39 @@ mapply(function(x) {table(g[y[x,]][,c(9,11:13)])} %>% {g[y[x,]][,c(9,11:13)]}, a
 
 
 mapply(function(x) {g[y[x,]][,c(9,11:13)]} %>% {x}, as.integer(rownames(y)), SIMPLIFY = FALSE)
+
+apply(crossEMA, 1, function(x)
+  indicators(
+    x[1], 
+    as.integer(x[2]),
+    as.integer(x[3]),
+    x[4]))
+
+mapply(function(x) {
+  apply(table(g[y[x,]][,c(9,11:13)]), 1, function(x)
+    indicators(x[1], as.integer(x[2]),as.integer(x[3]),x[4]))}, 
+  as.integer(rownames(y)), SIMPLIFY = FALSE)
+
+
+m <- mapply(function(x) {table(g[y[x,]][,c(9,11:13)])} %>% {g[y[x,]][,c(9,11:13)]}, as.integer(rownames(y)), SIMPLIFY = FALSE)
+
+
+# function accept a dataframe as an argument?     https://tinyurl.com/vajvn48
+dt_ind_ema <- data.table(crossEMA)
+
+
+# add class to stock
+class(dt_ind_ema) <- "ind"
+
+# this is an abstract base method
+get_Strategy <- function(dt_ind) {
+  UseMethod("get_Strategy")
+}
+
+# this is the implementation for "indicator" objects,
+# you could have more for other "class" objects
+get_Strategy.ind <- function(dt_ind){
+  print("Plot Strategy Indicators")
+}
+
+get_Strategy(dt_ind_ema)
