@@ -3,10 +3,10 @@ get_Strategy <<- function(dt_ind) {
   UseMethod("get_Strategy")
 }
 
-m <- mapply(function(x) {g[y[x,]][,c(9,11:13)]}, as.integer(rownames(y)), SIMPLIFY = FALSE)
-x <- unique(do.call(rbind, m))
-class(x) <- "ind"
-get_Strategy(x)
+# m <- mapply(function(x) {g[y[x,]][,c(9,11:13)]}, as.integer(rownames(y)), SIMPLIFY = FALSE)
+# x <- unique(do.call(rbind, m))
+# class(x) <- "ind"
+# get_Strategy(x)
 
 # this is the implementation for "indicator" objects,
 # you could have more for other "class" objects
@@ -15,20 +15,20 @@ get_Strategy.ind <<- function(dt_ind){
   print("Plot  Indicators")
 
   dt_ind <<- setDT(dt_ind, FALSE)
-  
+
   # as.data.table(dt_indc)
-  
+
   apply(dt_ind, 1, function(x)indicators(
-      x[1], 
+      x[1],
       as.integer(x[2]),
       as.integer(x[3]),
       x[4]))
-  
+
 }
 
 testListToDt <- function(ls_ind) {
-  
-  lapply(ls_ind, function(x) )
+
+  lapply(ls_ind, function(x) x)
 }
 
 
@@ -45,7 +45,7 @@ testInd <- function(name, x, n, label) {
 
 
 xtest <- function(name, indicator, symbols = symbols, initDate = initDate, initEq  = initEq) {
-  
+
 # 1.0 Setup
 # ------------------------------------------------------------------------------
 #   1.10 – assign names
@@ -82,37 +82,37 @@ xtest <- function(name, indicator, symbols = symbols, initDate = initDate, initE
 #   3.1 20-day SMA indicator
 ##------------------------------------------------------------------------------
     add.indicator(strategy.st,
-              name      = "EMA", 
+              name      = "EMA",
               arguments = list(
-                x       = quote(mktdata[,4]), 
-                n       = 20), 
+                x       = quote(mktdata[,4]),
+                n       = 20),
               label     = "020")
 ##------------------------------------------------------------------------------
 ##  3.2 Add the 50-day SMA indicator
 ##------------------------------------------------------------------------------
     add.indicator(strategy.st,
-              name      = "EMA", 
+              name      = "EMA",
               arguments = list(
-                x       = quote(mktdata[,4]), 
-                n       = 50), 
+                x       = quote(mktdata[,4]),
+                n       = 50),
               label     = "050")
 ##------------------------------------------------------------------------------
 ##  3.3 Add the 100-day SMA indicator
 ##------------------------------------------------------------------------------
     add.indicator(strategy.st,
-              name      = "EMA", 
+              name      = "EMA",
               arguments = list(
-                x       = quote(mktdata[,4]), 
-                n       = 100), 
+                x       = quote(mktdata[,4]),
+                n       = 100),
               label     = "100")
 ##------------------------------------------------------------------------------
 ##  3.4 Add the 200-day SMA indicator
 ##------------------------------------------------------------------------------
     add.indicator(strategy.st,
-              name      = "EMA", 
+              name      = "EMA",
               arguments = list(
-                x       = quote(mktdata[,4]), 
-                n       = 200), 
+                x       = quote(mktdata[,4]),
+                n       = 200),
               label     = "200")
 ################################################################################
 ##  3.5 apply indicators
