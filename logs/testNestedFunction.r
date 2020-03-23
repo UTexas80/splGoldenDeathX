@@ -58,7 +58,8 @@ sapply(z$id, function(a) {
     })
 })
 
-# mapply and by functions in R                                                  https://tinyurl.com/vs7god7
+# mapply and by functions in R      
+# tinyurl.com/vs7god7                                            https://tinyurl.com/vs7god7
 mapply(function(x) {g[y[x,]][,c(9,11:13)]}, as.integer(rownames(y)), SIMPLIFY = FALSE)
 mapply(function(x) {indicators(g[y[x,]][,c(9,11:13)])}, as.integer(rownames(y)), SIMPLIFY = FALSE)
 
@@ -113,6 +114,8 @@ get_Strategy.ind <<- function(dt_ind){
   library("data.table")
   print("Plot  Indicators")
   x <- data.table(dt_ind)
+    dt_ind[,1]
+  x[,1]
 }
 
 get_Strategy(dt_ind_ema)

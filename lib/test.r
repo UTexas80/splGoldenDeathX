@@ -7,6 +7,7 @@ get_Strategy <<- function(dt_ind) {
 # x <- unique(do.call(rbind, m))
 # class(x) <- "ind"
 # get_Strategy(x)
+# sapply(dT.trend[,3], function(x) x)
 
 # this is the implementation for "indicator" objects,
 # you could have more for other "class" objects
