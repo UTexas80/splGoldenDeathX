@@ -70,12 +70,11 @@ mapply(function(x) {indicators(g[y[x,]][,c(9,11:13)])}, as.integer(rownames(y)),
 # Passing vector with multiple values into R function                           https://tinyurl.com/uy65emg 
 mapply(function(x) {table(g[y[x,]][,c(9,11:13)])}, as.integer(rownames(y)), SIMPLIFY = FALSE)
 dT.trend <- dT.strategy[
-    dT.ind, allow.cartesian = T][,c(5,8)][, tname:= paste0(abbv,i.name)]
+    dT.ind, allow.cartesian = T][,c(1:2,5,8)][, tname:= paste0(abbv,i.name)]
 
 # Nesting Functions in R with the Piping Operator                               https://tinyurl.com/vhap722
 mapply(function(x) {g[y[x,]][,c(9,11:13)]} %>% {x}, as.integer(rownames(y)), SIMPLIFY = FALSE)
 mapply(function(x) {table(g[y[x,]][,c(9,11:13)])} %>% {g[y[x,]][,c(9,11:13)]}, as.integer(rownames(y)), SIMPLIFY = FALSE)
-
 
 mapply(function(x) {g[y[x,]][,c(9,11:13)]} %>% {x}, as.integer(rownames(y)), SIMPLIFY = FALSE)
 
@@ -98,10 +97,8 @@ m <- mapply(function(x) {table(g[y[x,]][,c(9,11:13)])} %>% {g[y[x,]][,c(9,11:13)
 # function accept a dataframe as an argument?     https://tinyurl.com/vajvn48
 dt_ind_ema <- data.table(crossEMA)
 
-
 # add class to stock
 class(dt_ind_ema) <- "ind"
-
 
 # this is an abstract base method
 get_Strategy <- function(dt_ind) {
@@ -114,7 +111,7 @@ get_Strategy.ind <<- function(dt_ind){
   library("data.table")
   print("Plot  Indicators")
   x <- data.table(dt_ind)
-    dt_ind[,1]
+  dt_ind[,1]
   x[,1]
 }
 

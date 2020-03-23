@@ -1,13 +1,14 @@
-# this is an abstract base method
-get_Strategy <<- function(dt_ind) {
-  UseMethod("get_Strategy")
-}
-
 # m <- mapply(function(x) {g[y[x,]][,c(9,11:13)]}, as.integer(rownames(y)), SIMPLIFY = FALSE)
 # x <- unique(do.call(rbind, m))
 # class(x) <- "ind"
 # get_Strategy(x)
-# sapply(dT.trend[,3], function(x) x)
+#  sapply(dT.trend[,3], function(x) x)
+
+
+# this is an abstract base method
+get_Strategy <<- function(dt_ind) {
+  UseMethod("get_Strategy")
+}
 
 # this is the implementation for "indicator" objects,
 # you could have more for other "class" objects
