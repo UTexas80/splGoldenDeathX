@@ -30,6 +30,7 @@ dT.test3 <- dT.indMetrics[
             dT.ind, allow.cartesian = T][
             i.id==1,c(7,3:5)]
 
+dt_ma_ema <- setDT(dT.test3,FALSE)
 
 dT.trend <- dT.strategy[
     dT.ind, allow.cartesian = T][,c(5,8)][, tname:= paste0(abbv,i.name)]

@@ -63,7 +63,7 @@ mapply(function(x) {g[y[x,]][,c(9,11:13)]}, as.integer(rownames(y)), SIMPLIFY = 
 mapply(function(x) {indicators(g[y[x,]][,c(9,11:13)])}, as.integer(rownames(y)), SIMPLIFY = FALSE)
 
 
-  indicators(x[1], as.integer(x[2]), as.integer(x[3]), x[4]))
+  # sindicators(x[1], as.integer(x[2]), as.integer(x[3]), x[4]))
 
 
 # Passing vector with multiple values into R function                           https://tinyurl.com/uy65emg 
@@ -101,6 +101,7 @@ dt_ind_ema <- data.table(crossEMA)
 # add class to stock
 class(dt_ind_ema) <- "ind"
 
+
 # this is an abstract base method
 get_Strategy <- function(dt_ind) {
   UseMethod("get_Strategy")
@@ -108,8 +109,10 @@ get_Strategy <- function(dt_ind) {
 
 # this is the implementation for "indicator" objects,
 # you could have more for other "class" objects
-get_Strategy.ind <- function(dt_ind){
-  print("Plot Strategy Indicators")
+get_Strategy.ind <<- function(dt_ind){
+  library("data.table")
+  print("Plot  Indicators")
+  x <- data.table(dt_ind)
 }
 
 get_Strategy(dt_ind_ema)

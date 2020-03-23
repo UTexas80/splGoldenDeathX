@@ -1,3 +1,35 @@
+# this is an abstract base method
+get_Strategy <<- function(dt_ind) {
+  UseMethod("get_Strategy")
+}
+
+m <- mapply(function(x) {g[y[x,]][,c(9,11:13)]}, as.integer(rownames(y)), SIMPLIFY = FALSE)
+x <- unique(do.call(rbind, m))
+class(x) <- "ind"
+get_Strategy(x)
+
+# this is the implementation for "indicator" objects,
+# you could have more for other "class" objects
+get_Strategy.ind <<- function(dt_ind){
+
+  print("Plot  Indicators")
+
+  dt_ind <<- setDT(dt_ind, FALSE)
+  
+  # as.data.table(dt_indc)
+  
+  apply(dt_ind, 1, function(x)indicators(
+      x[1], 
+      as.integer(x[2]),
+      as.integer(x[3]),
+      x[4]))
+  
+}
+
+testListToDt <- function(ls_ind) {
+  
+  lapply(ls_ind, function(x) )
+}
 
 
 testInd <- function(name, x, n, label) {
