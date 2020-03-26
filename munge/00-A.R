@@ -29,15 +29,15 @@ dT.test2 <- dT.test[
 dT.test3 <- dT.indMetrics[
             dT.ind, allow.cartesian = T][
             i.id==1,c(7,3:5)]
-
+# ------------------------------------------------------------------------------
 dt_ma_ema <- setDT(dT.test3,FALSE)
-
-dT.strategyName <- dT.strategy[
+# ------------------------------------------------------------------------------
+dT.strategy_ind_name <- dT.strategy[
     dT.ind, allow.cartesian = T][
             ,c(2,5,8)][
             , tname:= paste0(abbv,i.name)][
             , id:=  .I[]]                                       # add row number
-setcolorder(dT.strategyName, c(5, 1:4))    
+setcolorder(dT.strategyName, c(5, 1:4))                         # column order
 ################################################################################
 ## Step 00.99: VERSION HISTORY                                               ###
 ################################################################################
