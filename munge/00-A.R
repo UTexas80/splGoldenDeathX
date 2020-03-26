@@ -37,7 +37,7 @@ dT.strategy_ind_name <- dT.strategy[
             ,c(2,5,8)][
             , tname:= paste0(abbv,i.name)][
             , id:=  .I[]]                                       # add row number
-setcolorder(dT.strategyName, c(5, 1:4))                         # column order
+setcolorder(dT.strategy_ind_name, c(5, 1:4))                    # column order
 ################################################################################
 ## Step 00.99: VERSION HISTORY                                               ###
 ################################################################################
