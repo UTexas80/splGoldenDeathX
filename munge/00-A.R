@@ -7,13 +7,13 @@
 ## Step 00.00 Processing Start Time - start the timer                        ###
 ################################################################################
 start.time <- Sys.time()
-cross(20,50, 100, 200)
+cross(20,50,100,200)
 ################################################################################
 ## Step 00.01 set data.table keys                                            ###
 ################################################################################
 setkey(dT.name, id)
 setkey(dT.strategy,trend)
-setkey(dT.ind,trend)
+setkey(dT.ind,strategy)
 setkey(dT.indMetrics, fk)
 setkey(dT.sig,id)
 # ------------------------------------------------------------------------------
@@ -32,8 +32,12 @@ dT.test3 <- dT.indMetrics[
 
 dt_ma_ema <- setDT(dT.test3,FALSE)
 
-dT.trend <- dT.strategy[
-    dT.ind, allow.cartesian = T][,c(1:2,5,8)][, tname:= paste0(abbv,i.name)]
+dT.strategyName <- dT.strategy[
+    dT.ind, allow.cartesian = T][
+            ,c(2,5,8)][
+            , tname:= paste0(abbv,i.name)][
+            , id:=  .I[]]                                       # add row number
+setcolorder(dT.strategyName, c(5, 1:4))    
 ################################################################################
 ## Step 00.99: VERSION HISTORY                                               ###
 ################################################################################
