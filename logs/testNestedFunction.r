@@ -115,4 +115,29 @@ get_Strategy.ind <<- function(dt_ind){
   x[,1]
 }
 
+
+
+
+
+# =----
+  
+  get_setup <- function(trend) {
+    UseMethod("get_setup")
+  }
+class(trend_name) < "name"
+class(trend_name) < "trend"
+get_setup.trend <<- function(trend_name){
+  library("data.table")
+  print("Plot strategy")
+  x <- data.table(trend_name)
+  trend_name[,5]
+}
+get_setup.trend <<- function(trend_name){
+  library("data.table")
+  print("Plot strategy")
+  x <<- data.table(trend_name)
+  trend_name[,5]
+}
 get_Strategy(dt_ind_ema)
+
+mapply(function(x){setup(x)},trend_name)

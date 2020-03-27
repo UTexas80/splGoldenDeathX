@@ -1,12 +1,11 @@
-
-setup <- function(trendName) {
 ################################################################################
 # 1.0 Setup
 ################################################################################
-strategy.st <<- portfolio.st <<- account.st <<- trendName
-rm.strat(strategy.st)
-rm.strat(account.st)
-rm.strat(portfolio.st)
+setup <- function(trendName) {
+  strategy.st <<- portfolio.st <<- account.st <<- trendName
+  rm.strat(strategy.st)
+  rm.strat(account.st)
+  rm.strat(portfolio.st)
 ################################################################################
 # 2.0	Initialization
 ################################################################################

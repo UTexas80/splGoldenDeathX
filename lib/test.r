@@ -45,7 +45,6 @@ testInd <- function(name, x, n, label) {
         print(name, x, n, label)
 }
 
-
 xtest <- function(name, indicator, symbols = symbols, initDate = initDate, initEq  = initEq) {
 
 # 1.0 Setup
