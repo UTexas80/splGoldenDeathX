@@ -11,13 +11,13 @@ cross(20,50,100,200)
 ################################################################################
 ## Step 00.01 set data.table keys                                            ###
 ################################################################################
-setkey(dT.name, id)
-setkey(dT.strategy,trend)
-setkey(dT.ind,strategy)
-setkey(dT.indMetrics, fk)
+setkey(dT.trend, id)
+setkey(dT.strategy,trend_id)
+setkey(dT.ind,trend_id)
+setkey(dT.indMetrics, trend_id)
 setkey(dT.sig,id)
 # ------------------------------------------------------------------------------
-dT.test <-  dT.name[
+dT.test <-  dT.trend[
             dT.strategy][
             dT.ind, allow.cartesian = T]
 setkey(dT.test, i.id.1)
@@ -32,12 +32,23 @@ dT.test3 <- dT.indMetrics[
 # ------------------------------------------------------------------------------
 dt_ma_ema <- setDT(dT.test3,FALSE)
 # ------------------------------------------------------------------------------
-trend_name <- dT.strategy[
+trend_name <- dT.strategy[                            # https://tinyurl.com/vajvn48
     dT.ind, allow.cartesian = T][
             ,c(2,5,8)][
             , tname:= paste0(abbv,i.name)][
-            , id:=  .I[]]                                       # add row number
+            , id:=  .I[]]                             # add row number
 setcolorder(trend_name, c(5, 1:4))                    # column order
+class(trend_name) <- "setup"                          # add class to trend_name
+
+stocks <- data.frame(
+  time = as.Date('2009-01-01') + 0:9,
+  X = rnorm(10, 0, 1),
+  Y = rnorm(10, 0, 2),
+  Z = rnorm(10, 0, 4)
+)
+
+# add class to stock
+class(stocks) <- "stock"
 ################################################################################
 ## Step 00.99: VERSION HISTORY                                               ###
 ################################################################################

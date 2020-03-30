@@ -1,39 +1,24 @@
+
 # m <- mapply(function(x) {g[y[x,]][,c(9,11:13)]}, as.integer(rownames(y)), SIMPLIFY = FALSE)
 # x <- unique(do.call(rbind, m))
 # class(x) <- "ind"
 # get_Strategy(x)
 #  sapply(dT.trend[,3], function(x) x)
 
-
-# this is an abstract base method
-get_Strategy <<- function(dt_ind) {
+# ------------------------------------------------------------------------------
+# this is like an abstract base method
+get_Strategy <- function(trendName) {
   UseMethod("get_Strategy")
 }
 
-# this is the implementation for "indicator" objects,
+# this is the implementation for "trend" objects,
 # you could have more for other "class" objects
-get_Strategy.ind <<- function(dt_ind){
-
-  print("Plot  Indicators")
-
-  dt_ind <<- setDT(dt_ind, FALSE)
-
-  # as.data.table(dt_indc)
-
-  apply(dt_ind, 1, function(x)indicators(
-      x[1],
-      as.integer(x[2]),
-      as.integer(x[3]),
-      x[4]))
-
+get_Strategy.setup <- function(trendName){
+  print("Setup Strategy")
+  setupTrend <<- setDT(trendName)
+  apply(setupTrend, 1, function(x) setup(x[5]))
 }
-
-testListToDt <- function(ls_ind) {
-
-  lapply(ls_ind, function(x) x)
-}
-
-
+# ------------------------------------------------------------------------------
 testInd <- function(name, x, n, label) {
       add.indicator(strategy.st,
         name                 = name,
@@ -120,4 +105,16 @@ xtest <- function(name, indicator, symbols = symbols, initDate = initDate, initE
 ################################################################################
     paste(mktdata_ind, sep = "_", indicator ) <- applyIndicators(strategy = strategy.st,mktdata = symbols)
     mktdata_ind[is.na(mktdata_ind)] = 0
- }
+}
+
+
+# this is like an abstract base method
+getStockPlot <- function(stocks_df) {
+  UseMethod("getStockPlot")
+}
+
+# this is the implementation for "stock" objects,
+# you could have more for other "class" objects
+getStockPlot.stock <- function(stocks_df){
+  print("Plot Stocks")
+}
