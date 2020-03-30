@@ -38,7 +38,20 @@ trend_name <- dT.strategy[                            # https://tinyurl.com/vajv
             , tname:= paste0(abbv,i.name)][
             , id:=  .I[]]                             # add row number
 setcolorder(trend_name, c(5, 1:4))                    # column order
+# ------------------------------------------------------------------------------
+setkey(dT.indMetrics, "trend_id")
+setkey(trend_name, "trend_id")
+trend_ind <<- 
+  setorder(
+    trend_name[
+      dT.indMetrics, allow.cartesian =T][
+        ,c(1:2,5,4,7:9)][
+      , id:=  .I[]]
+  ,tname)
+# ------------------------------------------------------------------------------
 class(trend_name) <- "setup"                          # add class to trend_name
+class(trend_ind)  <- "ind"                            # add class to trend_name
+# ------------------------------------------------------------------------------
 
 stocks <- data.frame(
   time = as.Date('2009-01-01') + 0:9,
