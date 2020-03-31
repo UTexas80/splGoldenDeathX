@@ -48,11 +48,11 @@ trend_ind <<-
         ,c(1:2,5,4,7:9)][
       , id:=  .I[]]
   ,tname)
+trend_ind[, ind_id := rleid(tname)]                   # group contiguous elements
 # ------------------------------------------------------------------------------
 class(trend_name) <- "setup"                          # add class to trend_name
 class(trend_ind)  <- "ind"                            # add class to trend_name
 # ------------------------------------------------------------------------------
-
 stocks <- data.frame(
   time = as.Date('2009-01-01') + 0:9,
   X = rnorm(10, 0, 1),

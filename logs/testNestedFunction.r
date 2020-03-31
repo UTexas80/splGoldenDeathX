@@ -11,7 +11,7 @@ t(
 sapply(dT.indMetrics, function(a) {
     sapply(dT.ind, function(b) {
         sapply(dT.strategy, function(c) { 
-            sapply(dT.name,   function(d) {a})
+            sapply(dT.name, function(d) {a})
             })
         })
     })
@@ -171,3 +171,9 @@ testListToDt <- function(ls_ind) {
   lapply(ls_ind, function(x) x)
 }
 
+for (i in 1:nrow(setupTrend)) {
+  print (i)
+  for (j in 1:nrow(trend_ind)) {
+    print (j)
+  }
+}

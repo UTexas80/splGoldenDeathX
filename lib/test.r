@@ -118,3 +118,5 @@ getStockPlot <- function(stocks_df) {
 getStockPlot.stock <- function(stocks_df){
   print("Plot Stocks")
 }
+
+`%@%` <- function(x, f) eval.parent(as.call(append(as.list(substitute(f)), list(x), 1))) # https://tinyurl.com/qo443mb

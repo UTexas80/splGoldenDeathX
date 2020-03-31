@@ -388,7 +388,7 @@ dirCheck <- function(mainDir, subDir) {
     }
 }
 
-f<- function (x) {
+f <- function (x) {
   x <- names(x)   
   return(x)
 }
