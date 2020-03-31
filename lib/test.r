@@ -6,18 +6,44 @@
 #  sapply(dT.trend[,3], function(x) x)
 
 # ------------------------------------------------------------------------------
+# function accept a dataframe as an argument?     https://tinyurl.com/vajvn48
+# ------------------------------------------------------------------------------
 # this is like an abstract base method
-get_Strategy <- function(trendName) {
+get_Strategy <- function(trendName, trendInd) {
   UseMethod("get_Strategy")
 }
 
 # this is the implementation for "trend" objects,
 # you could have more for other "class" objects
-get_Strategy.setup <- function(trendName){
+get_Strategy.setup <- function(trendName, trendInd) {
   print("Setup Strategy")
+
   setupTrend <<- setDT(trendName)
-  apply(setupTrend, 1, function(x) setup(x[5]))
+  setupInd <<- setDT(trendInd)
+
+  print("SetDT data.tables")
+
+  for (i in 1:length(setupTrend)) {
+    print(i)
+    apply(setupTrend[i, ], 1, function(x) setup(x[5]))
+    for (j in 1:nrow(setupInd[strategy_ind_id == i])) {
+      print(j)
+      apply(setupInd[strategy_ind_id == j, c(4, 2, 6:7)], 1, function(x) 
+        indicators(x[1], as.integer(x[2]), as.integer(x[3]), x[4]))
+      str(getStrategy(setupTrend[i,5])$indicators)
+      ApplyIndicators(setupTrend[i,5])
+    }
+    # str(getStrategy(setupTrend[i,5])$indicators)
+
+  }
 }
+
+# this is the implementation for "indicator" objects,
+# you could have more for other "class" objects
+get_Strategy.ind <<- function(i, trendInd){
+  print("setup Indicators")
+}
+
 # ------------------------------------------------------------------------------
 testInd <- function(name, x, n, label) {
       add.indicator(strategy.st,
@@ -119,4 +145,10 @@ getStockPlot.stock <- function(stocks_df){
   print("Plot Stocks")
 }
 
+
+# How to run multiple functions one after another?
 `%@%` <- function(x, f) eval.parent(as.call(append(as.list(substitute(f)), list(x), 1))) # https://tinyurl.com/qo443mb
+# f(trend_ind); f(dT.metrics); f(dT.rules) # https://tinyurl.com/rkmef5n
+
+
+

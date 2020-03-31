@@ -32,7 +32,8 @@ dT.test3 <- dT.indMetrics[
 # ------------------------------------------------------------------------------
 dt_ma_ema <- setDT(dT.test3,FALSE)
 # ------------------------------------------------------------------------------
-trend_name <- dT.strategy[                            # https://tinyurl.com/vajvn48
+trend_name <<- 
+  dT.strategy[                            # https://tinyurl.com/vajvn48
     dT.ind, allow.cartesian = T][
             ,c(2,5,8)][
             , tname:= paste0(abbv,i.name)][
@@ -41,6 +42,7 @@ setcolorder(trend_name, c(5, 1:4))                    # column order
 # ------------------------------------------------------------------------------
 setkey(dT.indMetrics, "trend_id")
 setkey(trend_name, "trend_id")
+# ------------------------------------------------------------------------------
 trend_ind <<- 
   setorder(
     trend_name[
@@ -48,10 +50,14 @@ trend_ind <<-
         ,c(1:2,5,4,7:9)][
       , id:=  .I[]]
   ,tname)
-trend_ind[, ind_id := rleid(tname)]                   # group contiguous elements
+trend_ind[, strategy_ind_id := rleid(tname)]          # group contiguous elements
+# ------------------------------------------------------------------------------
+trend_signal <<- 
+
+
 # ------------------------------------------------------------------------------
 class(trend_name) <- "setup"                          # add class to trend_name
-class(trend_ind)  <- "ind"                            # add class to trend_name
+class(trend_ind)  <- "setup"                          # add class to trend_name
 # ------------------------------------------------------------------------------
 stocks <- data.frame(
   time = as.Date('2009-01-01') + 0:9,
