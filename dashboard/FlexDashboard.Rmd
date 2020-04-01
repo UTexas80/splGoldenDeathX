@@ -115,11 +115,11 @@ xprices <- function() {
 ```
 
 ```{r rdsInput}
-# buyHold_results           <- readRDS(here::here("dashboard/rds", "buyHold_results.rds"))
+# buyHold_results         <- readRDS(here::here("dashboard/rds", "buyHold_results.rds"))
 calendarDays              <- readRDS(here::here("dashboard/rds", "calendarDays.rds"))
 dtEMA                     <- readRDS(here::here("dashboard/rds", "dtEMA.rds"))
 golden                    <- readRDS(here::here("dashboard/rds", "golden.rds"))
-# goldenX_EMA_results       <- readRDS(here::here("dashboard/rds", "goldenX_EMA_results.rds"))
+# goldenX_EMA_results     <- readRDS(here::here("dashboard/rds", "goldenX_EMA_results.rds"))
 tradeDays                 <- readRDS(here::here("dashboard/rds", "tradeDays.rds"))
 trend                     <- data.table(readRDS(here::here("dashboard/rds", "trend.rds")))
 trendClose                <- readRDS(here::here("dashboard/rds", "trendClose.rds"))
@@ -132,7 +132,7 @@ trendReturnsEMAlong       <- data.table(readRDS(here::here("dashboard/rds", "tre
 trendReturnsSMA           <- data.table(readRDS(here::here("dashboard/rds", "trendReturnsSMA.rds")))
 trendReturnsSMAlong       <- data.table(readRDS(here::here("dashboard/rds", "trendReturnsSMAlong.rds")))
 trendSMA                  <- data.table(readRDS(here::here("dashboard/rds", "trendSMA.rds")))
-# trendSummary              <- data.table(readRDS(here::here("dashboard/rds", "trendSummary.rds")))
+# trendSummary            <- data.table(readRDS(here::here("dashboard/rds", "trendSummary.rds")))
 trendSummaryEMA           <- data.table(readRDS(here::here("dashboard/rds", "trendSummaryEMA.rds")))       
 trendSummaryGroup         <- data.table(readRDS(here::here("dashboard/rds", "trendSummaryGroup.rds")))
 xtsEMA                    <- as.xts(readRDS(here::here("dashboard/rds", "xtsEMA.rds")))

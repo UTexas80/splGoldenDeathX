@@ -52,12 +52,13 @@ trend_ind <<-
   ,tname)
 trend_ind[, strategy_ind_id := rleid(tname)]          # group contiguous elements
 # ------------------------------------------------------------------------------
-trend_signal <<- 
+trend_signal <<- "TEST"
 
-
+class(trend_name) <<- class(trend_ind) <<- class(trend_signal) <<- "setup"
 # ------------------------------------------------------------------------------
-class(trend_name) <- "setup"                          # add class to trend_name
-class(trend_ind)  <- "setup"                          # add class to trend_name
+class(trend_name)     <- "setup"                       # add class to trend_name
+class(trend_ind)      <- "setup"                       # add class to trend_name
+class(trend_signal)   <- "setup"                       # add class to trend_name
 # ------------------------------------------------------------------------------
 stocks <- data.frame(
   time = as.Date('2009-01-01') + 0:9,
