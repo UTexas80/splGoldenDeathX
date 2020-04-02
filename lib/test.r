@@ -45,15 +45,26 @@ get_Strategy.ind <<- function(i, trendInd){
 }
 
 # ------------------------------------------------------------------------------
-testInd <- function(name, x, n, label) {
-      add.indicator(strategy.st,
-        name                 = name,
-        arguments            = list(
-        x                    = quote(mktdata[,4]),
-        n                    = n),
-        label                = label)
+# testInd <- function(name, x, n, label) {
+#       add.indicator(strategy.st,
+#         name                 = name,
+#         arguments            = list(
+#         x                    = quote(mktdata[,4]),
+#         n                    = n),
+#         label                = label)
 
-        print(name, x, n, label)
+#         print(name, x, n, label)
+# }
+# ------------------------------------------------------------------------------
+testInd <- function(trendInd) {
+     add.indicator(strategy.st,
+       name                 = trendInd[,4],
+       arguments            = list(
+       x                    = quote(mktdata[,4]),
+       n                    = trendInd[,6]),
+       label                = paste0(trendInd[,4],trendInd[,7]))
+
+       print(name, x, n, label)
 }
 
 xtest <- function(name, indicator, symbols = symbols, initDate = initDate, initEq  = initEq) {
