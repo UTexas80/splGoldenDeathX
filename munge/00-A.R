@@ -1,8 +1,8 @@
 # Example preprocessing script.
 # How Do I in R?                                https://tinyurl.com/y9j67lfk ###
 ############################################### https://tinyurl.com/yddh54gn ###
-## checkpoint ## or any date in YYYY-MM-DD format after 2014-09-17 
-## checkpoint("2015-01-15") 
+## checkpoint ## or any date in YYYY-MM-DD format after 2014-09-17
+## checkpoint("2015-01-15")
 ################################################################################
 ## Step 00.00 Processing Start Time - start the timer                        ###
 ################################################################################
@@ -32,11 +32,11 @@ dT.test3 <- dT.indMetrics[
 # ------------------------------------------------------------------------------
 dt_ma_ema <- setDT(dT.test3,FALSE)
 # ------------------------------------------------------------------------------
-trend_name <<- 
-  dT.strategy[                            # https://tinyurl.com/vajvn48
+trend_name <<-
+  dT.strategy[                                     # https://tinyurl.com/vajvn48
     dT.ind, allow.cartesian = T][
             ,c(2,5,8)][
-            , tname:= paste0(abbv,i.name)][
+            , tname:= paste0(abbv,tolower(i.name))][
             , id:=  .I[]]                             # add row number
 setcolorder(trend_name, c(5, 1:4))                    # column order
 # ------------------------------------------------------------------------------
@@ -66,7 +66,6 @@ stocks <- data.frame(
   Y = rnorm(10, 0, 2),
   Z = rnorm(10, 0, 4)
 )
-
 # add class to stock
 class(stocks) <- "stock"
 ################################################################################

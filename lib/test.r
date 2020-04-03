@@ -22,19 +22,21 @@ get_Strategy.setup <- function(trendName, trendInd) {
   setupInd   <<- setDT(trendInd)
 
   print("SetDT data.tables")
-
+# ------------------------------------------------------------------------------
   for (i in 1:length(setupTrend)) {
     print(i)
-    apply(setupTrend[i, ], 1, function(x) setup(x[5]))
+    apply(setupTrend[i,5], 1, function(x) setup(x))
+# ------------------------------------------------------------------------------
     for (j in 1:nrow(setupInd[strategy_ind_id == i])) {
       print(j)
-      apply(setupInd[strategy_ind_id == j, c(4, 2, 6:7)], 1, function(x) 
-        indicators(x[1], as.integer(x[2]), as.integer(x[3]), x[4]))
+      apply(setupInd[strategy_ind_id == j, c(4:7)], 1, 
+        function(x) testInd(setupInd))
+#       indicators(x[1], as.integer(x[2]), as.integer(x[3]), x[4]))
       str(getStrategy(setupTrend[i,5])$indicators)
-      ApplyIndicators(setupTrend[i,5])
     }
-    # str(getStrategy(setupTrend[i,5])$indicators)
-
+# ------------------------------------------------------------------------------
+    apply(setupTrend[i,5], 1, 
+      function(x) ApplyIndicators(x))
   }
 }
 
@@ -64,7 +66,7 @@ testInd <- function(trendInd) {
        n                    = trendInd[,6]),
        label                = paste0(trendInd[,4],trendInd[,7]))
 
-       print(name, x, n, label)
+       # print(name, x, n, label)
 }
 
 xtest <- function(name, indicator, symbols = symbols, initDate = initDate, initEq  = initEq) {

@@ -39,7 +39,7 @@ indicators <- function(name, x, n, label) {
         label                = label)
 }
 ApplyIndicators <- function(trendName) {
-    Apply_Indicators <- g[[paste(trendName, "mktdata", "ind", sep = "_")]] <-
+    Apply_Indicators <<- g[[paste(trendName, "mktdata", "ind", sep = "_")]] <<-
         applyIndicators(              # apply indicators
             strategy                = strategy.st,
             mktdata                 = SPL.AX)
@@ -145,18 +145,18 @@ report <- function(trendName) {
     # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
     m$index <- as.POSIXct(m$index, tz = "Australia/Sydney")
     setkey(m, "index")
-# ------------------------------------------------------------------------------    
+# ------------------------------------------------------------------------------
     t <- setkey(t, "Start")
     t <- na.omit(t[m][, c(1:26)])
 #   t <- na.omit(t[SPL][, -c(27:31)])
     t <- setkey(t, "End")
-    t <- na.omit(t[m][, c(1:27)])    
+    t <- na.omit(t[m][, c(1:27)])
 #   t <- na.omit(t[SPL][, -c(28:32)])
     g[[paste(trendName, "trend", sep = "_")]] <- data.table(t)
 # ------------------------------------------------------------------------------
     s <- g[[paste(trendName, "stats", sep = "_")]] <-
-         blotter::tradeStats(Portfolios = portfolio.st, 
-                             use="trades", 
+         blotter::tradeStats(Portfolios = portfolio.st,
+                             use="trades",
                              inclZeroDays=FALSE)
 # ------------------------------------------------------------------------------
     p <- g[[paste(trendName, "profit", sep = "_")]] <- data.table(s)  %>%
