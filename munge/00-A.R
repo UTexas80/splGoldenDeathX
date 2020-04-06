@@ -1,8 +1,8 @@
 # Example preprocessing script.
 # How Do I in R?                                https://tinyurl.com/y9j67lfk ###
 ############################################### https://tinyurl.com/yddh54gn ###
-## checkpoint ## or any date in YYYY-MM-DD format after 2014-09-17
-## checkpoint("2015-01-15")
+## checkpoint ## or any date in YYYY-MM-DD format after 2014-09-17 
+## checkpoint("2015-01-15") 
 ################################################################################
 ## Step 00.00 Processing Start Time - start the timer                        ###
 ################################################################################
@@ -32,11 +32,11 @@ dT.test3 <- dT.indMetrics[
 # ------------------------------------------------------------------------------
 dt_ma_ema <- setDT(dT.test3,FALSE)
 # ------------------------------------------------------------------------------
-trend_name <<-
-  dT.strategy[                                     # https://tinyurl.com/vajvn48
+trend_name <<- 
+  dT.strategy[                            # https://tinyurl.com/vajvn48
     dT.ind, allow.cartesian = T][
             ,c(2,5,8)][
-            , tname:= paste0(abbv,tolower(i.name))][
+            , tname:= paste0(abbv,i.name)][
             , id:=  .I[]]                             # add row number
 setcolorder(trend_name, c(5, 1:4))                    # column order
 # ------------------------------------------------------------------------------
@@ -50,15 +50,15 @@ trend_ind <<-
         ,c(1:2,5,4,7:9)][
       , id:=  .I[]]
   ,tname)
-trend_ind[, strategy_ind_id := rleid(tname)]         # group contiguous elements
+trend_ind[, strategy_ind_id := rleid(tname)]          # group contiguous elements
 # ------------------------------------------------------------------------------
-# trend_signal <<- "TEST"
+trend_signal <<- "TEST"
 
 # class(trend_name) <<- class(trend_ind) <<- class(trend_signal) <<- "setup"
 # ------------------------------------------------------------------------------
 class(trend_name)     <- "setup"                       # add class to trend_name
 class(trend_ind)      <- "setup"                       # add class to trend_name
-# class(trend_signal)   <- "setup"                       # add class to trend_name
+#class(trend_signal)   <- "setup"                       # add class to trend_name
 # ------------------------------------------------------------------------------
 stocks <- data.frame(
   time = as.Date('2009-01-01') + 0:9,
@@ -66,6 +66,7 @@ stocks <- data.frame(
   Y = rnorm(10, 0, 2),
   Z = rnorm(10, 0, 4)
 )
+
 # add class to stock
 class(stocks) <- "stock"
 ################################################################################

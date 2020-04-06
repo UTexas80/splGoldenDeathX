@@ -23,27 +23,40 @@ get_Strategy.setup <- function(trendName, trendInd) {
 
   print("SetDT data.tables")
 # ------------------------------------------------------------------------------
-  for (i in 1:length(setupTrend)) {
+  for (i in 1:nrow(setupTrend)) {
     print(i)
     apply(setupTrend[i,5], 1, function(x) setup(x))
 # ------------------------------------------------------------------------------
-    for (j in 1:nrow(setupInd[strategy_ind_id == i])) {
-      print(j)
-      apply(setupInd[strategy_ind_id == j, c(4:7)], 1, 
-        function(x) testInd(setupInd))
-#       indicators(x[1], as.integer(x[2]), as.integer(x[3]), x[4]))
-      str(getStrategy(setupTrend[i,5])$indicators)
-    }
+    apply(setupInd[strategy_ind_id ==i, c(4:7)], 1, function (x) indicators(
+        x[1], as.integer(x[2]), as.integer(x[3]), x[4]))
+    str(getStrategy(setupTrend[i,5])$indicators)
+    g[[paste(setupTrend[i,5], "mktdata", "ind", sep = "_")]] <-
+      applyIndicators(
+        strategy                = setupTrend[i,5],
+        mktdata                 = SPL.AX)
 # ------------------------------------------------------------------------------
-    apply(setupTrend[i,5], 1, 
-      function(x) ApplyIndicators(x))
-  }
+ }
 }
+
+# For each row in an R dataframe                        https://tinyurl.com/wlae6xb
+rows = function(x) lapply(seq_len(nrow(x)), function(i) lapply(x,function(c) c[i])) 
+
 
 # this is the implementation for "indicator" objects,
 # you could have more for other "class" objects
-get_Strategy.ind <<- function(i, trendInd){
+get_Strategy.ind <<- function(trendInd){
   print("setup Indicators")
+  z   <<- setDT(trendInd)
+  print(class(z))
+  for (i in 1:nrow(z)) {
+    add.indicator(strategy.st,
+                  name                 = z[i,1],
+                  arguments            = list(
+                    x                    = quote(mktdata[,4]),
+                    n                    = z[i,3]),
+                  label                = z[i,4])
+
+  }
 }
 
 # ------------------------------------------------------------------------------
@@ -58,14 +71,13 @@ get_Strategy.ind <<- function(i, trendInd){
 #         print(name, x, n, label)
 # }
 # ------------------------------------------------------------------------------
-testInd <- function(trendInd) {
-     add.indicator(strategy.st,
-       name                 = trendInd[,4],
-       arguments            = list(
-       x                    = quote(mktdata[,4]),
-       n                    = trendInd[,6]),
-       label                = paste0(trendInd[,4],trendInd[,7]))
-
+testInd <- function(setupInd) {
+  add.indicator(strategy.st,
+   name                 = setupInd[,1],
+   arguments            = list(
+   x                    = quote(mktdata[,4]),
+   n                    = setupInd[,3]),
+   label                = setupInd[,4])
        # print(name, x, n, label)
 }
 
