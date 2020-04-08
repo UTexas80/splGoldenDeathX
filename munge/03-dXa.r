@@ -34,8 +34,8 @@ ApplyIndicators(nXema)                              # apply indicators
 # 4.0	Signals
 ################################################################################
 # browser()
-AddSignals("sigFormula",c("EMA.020","EMA.050","EMA.100","EMA.200"), deathX,   "trigger", TRUE , nXema, "shortEntry")
-AddSignals("sigFormula",c("EMA.020","EMA.050","EMA.100","EMA.200"), deathXno, "trigger", TRUE , nXema, "shortExit")
+AddSignals("sigFormula",c("ema.020","ema.050","ema.100","ema.200"), deathX,   "trigger", TRUE , nXema, "shortEntry")
+AddSignals("sigFormula",c("ema.020","ema.050","ema.100","ema.200"), deathXno, "trigger", TRUE , nXema, "shortExit")
 # add.signal(strategy.st,
 #     name                    = "sigFormula",
 #     arguments               = list(

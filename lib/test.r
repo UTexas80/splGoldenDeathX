@@ -22,11 +22,11 @@ get_Strategy.setup <- function(trendName, trendInd) {
   setupInd   <<- setDT(trendInd)
 
   print("SetDT data.tables")
-# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------ 1.0 Setup
   for (i in 1:nrow(setupTrend)) {
     print(i)
     apply(setupTrend[i,5], 1, function(x) setup(x))
-# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------ 2.0 Indicators
     apply(setupInd[strategy_ind_id ==i, c(4:7)], 1, function (x) indicators(
         x[1], as.integer(x[2]), as.integer(x[3]), x[4]))
     str(getStrategy(setupTrend[i,5])$indicators)
@@ -34,13 +34,12 @@ get_Strategy.setup <- function(trendName, trendInd) {
       applyIndicators(
         strategy                = setupTrend[i,5],
         mktdata                 = SPL.AX)
-# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------3.0 Signals
  }
 }
 
 # For each row in an R dataframe                        https://tinyurl.com/wlae6xb
 rows = function(x) lapply(seq_len(nrow(x)), function(i) lapply(x,function(c) c[i])) 
-
 
 # this is the implementation for "indicator" objects,
 # you could have more for other "class" objects

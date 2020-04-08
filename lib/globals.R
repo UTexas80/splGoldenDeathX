@@ -45,16 +45,17 @@ end_date    <- Sys.Date()
 initDate    <- "1990-01-01"
 from        <- "2002-01-01"
 to          <- Sys.Date()
-deathX      <- "(EMA.020 < EMA.050 &
+deathX <- dXema_Open  <- "(EMA.020 < EMA.050 &
                  EMA.050 < EMA.100 &
                  EMA.100 < EMA.200)"
+dXemaClose  <-  "(EMA.020 > EMA.050 & EMA.050 > EMA.100 & EMA.100 > EMA.200 & index.xts(mktdata) > '2002-12-02')"
 deathXno    <- "(EMA.020 > EMA.050 |
                  EMA.050 > EMA.100 |
                  EMA.100 > EMA.200)"
-goldenXlong  <- "(EMA.020 > EMA.050 &
+goldenXlong <- "(EMA.020 > EMA.050 &
                  EMA.050 > EMA.100 &
                  EMA.100 > EMA.200)"
-deathXshort <-  "(EMA.020 > EMA.050 & EMA.050 > EMA.100 & EMA.100 > EMA.200 & index.xts(mktdata) > '2002-12-02')"
+
 ################################################################################
 ## Equity Values                                                             ###
 ################################################################################
