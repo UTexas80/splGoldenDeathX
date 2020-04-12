@@ -12,10 +12,10 @@ cross(20,50,100,200)
 ## Step 00.01 set data.table keys                                            ###
 ################################################################################
 setkey(dT.trend, id)
-setkey(dT.strategy,trend_id)
-setkey(dT.ind,trend_id)
+setkey(dT.strategy, trend_id)
+setkey(dT.ind, trend_id)
 setkey(dT.indMetrics, trend_id)
-setkey(dT.sig,id)
+setkey(dT.sig, trend_id)
 # ------------------------------------------------------------------------------
 dT.test <-  dT.trend[
             dT.strategy][
@@ -51,6 +51,16 @@ trend_ind <<-
       , id:=  .I[]]
   ,tname)
 trend_ind[, strategy_ind_id := rleid(tname)]          # group contiguous elements
+# ------------------------------------------------------------------------------
+dt_ma <- setkey(
+            data.table::dcast(
+              dT.ind[
+
+              dT.indMetrics, allow.cartesian = T], name ~ label, drop = FALSE),
+          name)
+dt_ma <-  cbind(dt_ma, 
+            mapply(function(x,y)
+              {paste(x,y,sep=".")},dt_ma[,1],dt_ma[,c(2:5)]))
 # ------------------------------------------------------------------------------
 trend_signal <<- "TEST"
 dcast(dt_ma_ema, name ~ label, drop=FALSE)            #  ema 020 050 100 200
