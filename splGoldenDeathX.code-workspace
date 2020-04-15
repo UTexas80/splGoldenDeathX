@@ -19,22 +19,19 @@
 	"settings": {
 		"workbench.colorCustomizations": {
 			"tab.unfocusedActiveBorder": "#fff0",
-			"activityBar.background": "#243600",
 			"activityBar.activeBackground": "#243600",
 			"activityBar.activeBorder": "#006a9f",
-			"activityBar.foreground": "#e7e7e7",
 			"activityBar.inactiveForeground": "#e7e7e799",
 			"activityBarBadge.background": "#006a9f",
 			"activityBarBadge.foreground": "#e7e7e7",
-			"titleBar.activeBackground": "#020300",
 			"titleBar.inactiveBackground": "#02030099",
-			"titleBar.activeForeground": "#e7e7e7",
 			"titleBar.inactiveForeground": "#e7e7e799",
-			"statusBar.background": "#020300",
 			"statusBarItem.hoverBackground": "#243600",
-			"statusBar.foreground": "#e7e7e7",
 			"statusBar.border": "#020300",
-			"titleBar.border": "#020300"
+			"titleBar.border": "#020300",
+			"activityBar.background": "#233204",
+			"titleBar.activeBackground": "#314606",
+			"titleBar.activeForeground": "#F5FDE5"
 		},
 		"terminal.integrated.cursorStyle": "underline",
 		"editor.suggest.localityBonus": true,

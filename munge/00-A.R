@@ -53,14 +53,22 @@ trend_ind <<-
 trend_ind[, strategy_ind_id := rleid(tname)]          # group contiguous elements
 # ------------------------------------------------------------------------------
 dt_ma <- setkey(
-            data.table::dcast(
-              dT.ind[
-
-              dT.indMetrics, allow.cartesian = T], name ~ label, drop = FALSE),
-          name)
-dt_ma <-  cbind(dt_ma, 
-            mapply(function(x,y)
-              {paste(x,y,sep=".")},dt_ma[,1],dt_ma[,c(2:5)]))
+  data.table::dcast(
+    dT.ind[
+      dT.indMetrics,
+      allow.cartesian = T
+    ], name ~ label,
+    drop = FALSE
+  ),
+  name
+)
+dt_ma <- cbind(
+  dt_ma,
+  mapply(function(x, y) {
+    paste(x, y, sep = ".")
+  }, dt_ma[, 1], dt_ma[, c(2:5)])
+)
+names(dt_ma)[6:len(dt_ma)] <-  colnames(dt_ma[, 2:5])
 # ------------------------------------------------------------------------------
 trend_signal <<- "TEST"
 dcast(dt_ma_ema, name ~ label, drop=FALSE)            #  ema 020 050 100 200
