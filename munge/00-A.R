@@ -69,6 +69,7 @@ dt_ma <- cbind(
   }, dt_ma[, 1], dt_ma[, c(2:5)])
 )
 names(dt_ma)[6:len(dt_ma)] <-  colnames(dt_ma[, 2:5])
+dt_ma$id <- row.names.data.frame(dt_ma)
 # ------------------------------------------------------------------------------
 trend_signal <<- "TEST"
 dcast(dt_ma_ema, name ~ label, drop=FALSE)            #  ema 020 050 100 200

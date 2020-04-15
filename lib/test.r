@@ -27,7 +27,7 @@ get_Strategy.setup <- function(trendName, trendInd) {
     print(i)
     apply(setupTrend[i,5], 1, function(x) setup(x))
 # ------------------------------------------------------------------------------ 2.0 Indicators
-    apply(setupInd[strategy_ind_id ==i, c(4:7)], 1, function (x) indicators(
+    apply(setupInd[strategy_ind_id == i, c(4:7)], 1, function (x) indicators(
         x[1], as.integer(x[2]), as.integer(x[3]), x[4]))
     str(getStrategy(setupTrend[i,5])$indicators)
     g[[paste(setupTrend[i,5], "mktdata", "ind", sep = "_")]] <-
