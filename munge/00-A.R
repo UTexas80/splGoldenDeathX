@@ -37,8 +37,8 @@ trend_name <<-
     dT.ind, allow.cartesian = T][
             ,c(2,5,8)][
             , tname:= paste0(abbv,i.name)][
-            , id:=  .I[]]                                        # add row number
-setcolorder(trend_name, c(5, 1:4))                               # column order
+            , id:=  .I[]]                                       # add row number
+setcolorder(trend_name, c(5, 1:4))                              # column order
 # ------------------------------------------------------------------------------
 setkey(dT.indMetrics, "trend_id")
 setkey(trend_name, "trend_id")
