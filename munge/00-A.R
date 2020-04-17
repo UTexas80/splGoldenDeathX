@@ -33,11 +33,12 @@ dT.test3 <- dT.indMetrics[
 dt_ma_ema <- setDT(dT.test3,FALSE)
 # ------------------------------------------------------------------------------
 trend_name <<- 
-  dT.strategy[                                     # https://tinyurl.com/vajvn48
-    dT.ind, allow.cartesian = T][
-            ,c(2,5,8)][
-            , tname:= paste0(abbv,i.name)][
-            , id:=  .I[]]                                       # add row number
+  setorder(
+    dT.strategy[                                   # https://tinyurl.com/vajvn48
+      dT.ind, allow.cartesian = T][
+              ,c(2,5,8)][
+              , tname:= paste0(abbv,i.name)], tname)[
+              , id:=  .I[]]                                     # add row number
 setcolorder(trend_name, c(5, 1:4))                              # column order
 # ------------------------------------------------------------------------------
 setkey(dT.indMetrics, "trend_id")
