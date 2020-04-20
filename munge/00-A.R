@@ -15,7 +15,8 @@ setkey(dT.trend, id)
 setkey(dT.strategy, trend_id)
 setkey(dT.ind, trend_id)
 setkey(dT.indMetrics, trend_id)
-setkey(dT.sig, trend_id)
+# setkey(dT.sig, trend_id)
+setkey(dT.sig, id)
 # ------------------------------------------------------------------------------
 dT.test <-  dT.trend[
             dT.strategy][
@@ -65,12 +66,14 @@ dt_ma <- setkey(
 )
 dt_ma <- cbind(
   dt_ma,
-  mapply(function(x, y) {
-    paste(x, y, sep = ".")
+  mapply(function(x, y) {shQuote(
+    paste(x, y, sep = "."))
   }, dt_ma[, 1], dt_ma[, c(2:5)])
 )
 names(dt_ma)[6:len(dt_ma)] <-  colnames(dt_ma[, 2:5])
+dt_ma$sig <- as.character(interaction(dt_ma[,6:9],sep=", "))
 dt_ma$id <- row.names.data.frame(dt_ma)
+setcolorder(dt_ma, c(len(dt_ma), 2:len(dt_ma)-1))                 # column order
 # ------------------------------------------------------------------------------
 trend_signal <<- "TEST"
 dcast(dt_ma_ema, name ~ label, drop=FALSE)            #  ema 020 050 100 200
@@ -80,6 +83,7 @@ dcast(dt_ma_ema, name ~ label, drop=FALSE)            #  ema 020 050 100 200
 class(trend_name)     <- "setup"                       # add class to trend_name
 class(trend_ind)      <- "setup"                       # add class to trend_name
 #class(trend_signal)   <- "setup"                      # add class to trend_name
+# get_Strategy(trend_Name, trend_Ind)
 # ------------------------------------------------------------------------------
 stocks <- data.frame(
   time = as.Date('2009-01-01') + 0:9,

@@ -174,4 +174,28 @@ getStockPlot.stock <- function(stocks_df){
 # f(trend_ind); f(dT.metrics); f(dT.rules) # https://tinyurl.com/rkmef5n
 
 
+################################################################################
+# 4.0	Signals
+################################################################################
+set_Signals <- function(i,j) {
+    add.signal(strategy.st,
+        name                    = dT.sig[,2],
+        arguments               = list(
+            columns             = dt_ma[j, ncol(dt_ma)]),
+            formula             = if (i > 0) {
+                                    dT.formula[i, 5]
+                                  } else {
+                                    paste("!", dT.formula[i, 5])
+},
+            label               = dT.sig[,3],
+            cross               = dT.sig[,4],
+        label                   = paste(setupTrend[i,5], dT.trade[i], sep = "_"))
+}
+ApplySignals <- function(trendName) {
+    ApplySignals <- g[[paste(trendName, "signal", sep = "_")]] <-
+        applySignals(
+             strategy           = strategy.st,
+             mktdata            = mktdata)
+}
+
 
