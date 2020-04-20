@@ -36,10 +36,12 @@ get_Strategy.setup <- function(trendName, trendInd) {
         mktdata                 = SPL.AX)
 # ------------------------------------------------------------------------------3.0 Signals
     for(j in 1:2) {
+      print(j)
       set_Signals(i,j)
-          print(j)
+      str(getStrategy(setupTrend[1,5])$signals)
+      ApplySignals(setupTrend[1,5])
     }
- }
+  }
 }
 
 # For each row in an R dataframe                        https://tinyurl.com/wlae6xb
