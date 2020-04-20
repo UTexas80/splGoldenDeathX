@@ -181,15 +181,11 @@ set_Signals <- function(i,j) {
     add.signal(strategy.st,
         name                    = dT.sig[,2],
         arguments               = list(
-            columns             = dt_ma[j, ncol(dt_ma)]),
-            formula             = if (i > 0) {
-                                    dT.formula[i, 5]
-                                  } else {
-                                    paste("!", dT.formula[i, 5])
-},
+            columns             = dt_ma[j, ncol(dt_ma)],
+            formula             = dT.formula[i, 5],
             label               = dT.sig[,3],
-            cross               = dT.sig[,4],
-        label                   = paste(setupTrend[i,5], dT.trade[i], sep = "_"))
+            cross               = dT.sig[,4]),
+         label                  = paste(setupTrend[1,5], dT.trade[1,2], sep = "_"))
 }
 ApplySignals <- function(trendName) {
     ApplySignals <- g[[paste(trendName, "signal", sep = "_")]] <-
