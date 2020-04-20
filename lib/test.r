@@ -35,6 +35,10 @@ get_Strategy.setup <- function(trendName, trendInd) {
         strategy                = setupTrend[i,5],
         mktdata                 = SPL.AX)
 # ------------------------------------------------------------------------------3.0 Signals
+    for(j in 1:2) {
+      set_Signals(i,j)
+          print(j)
+    }
  }
 }
 
