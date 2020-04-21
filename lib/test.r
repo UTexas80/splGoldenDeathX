@@ -24,9 +24,10 @@ get_Strategy.setup <- function(trendName, trendInd) {
   print("SetDT data.tables")
 # ------------------------------------------------------------------------------ 1.0 Setup
   for (i in 1:nrow(setupTrend)) {
-    print(i)
+    print(paste("iteration = ", i, sep = " "))
     apply(setupTrend[i,5], 1, function(x) setup(x))
 # ------------------------------------------------------------------------------ 2.0 Indicators
+    print(paste(" start iteration = ", i, sep = " "))
     apply(setupInd[strategy_ind_id == i, c(4:7)], 1, function (x) indicators(
         x[1], as.integer(x[2]), as.integer(x[3]), x[4]))
     str(getStrategy(setupTrend[i,5])$indicators)
@@ -36,10 +37,15 @@ get_Strategy.setup <- function(trendName, trendInd) {
         mktdata                 = SPL.AX)
 # ------------------------------------------------------------------------------3.0 Signals
     for(j in 1:2) {
-      print(j)
+
+      browser()
       set_Signals(i,j)
-      str(getStrategy(setupTrend[1,5])$signals)
-      ApplySignals(setupTrend[1,5])
+      str(getStrategy(setupTrend[i,5])$signals)
+print(paste("i = ", i, sep = " "))
+        g[[paste(setupTrend[i,5], "signal", sep = "_")]] <<-
+        applySignals(
+          strategy           = paste0(setupTrend[i,3], tolower(setupTrend[i,4])),
+          mktdata            = SPL.AX)
     }
   }
 }

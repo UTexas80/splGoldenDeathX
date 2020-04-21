@@ -82,7 +82,7 @@ dcast(dt_ma_ema, name ~ label, drop=FALSE)            #  ema 020 050 100 200
 # ------------------------------------------------------------------------------
 class(trend_name)     <- "setup"                       # add class to trend_name
 class(trend_ind)      <- "setup"                       # add class to trend_name
-#class(trend_signal)   <- "setup"                      # add class to trend_name
+# class(trend_signal)   <- "setup"                     # add class to trend_name
 # get_Strategy(trend_name, trend_ind)
 # ------------------------------------------------------------------------------
 stocks <- data.frame(
