@@ -58,10 +58,7 @@ AddSignals <- function(name, columns, formula, label, cross, trendName, Label) {
         label                   = paste(trendName, Label, sep = "_"))
 }
 ApplySignals <- function(trendName) {
-    ApplySignals <- g[[paste(trendName, "signal", sep = "_")]] <-
-        applySignals(
-             strategy           = strategy.st,
-             mktdata            = mktdata)
+    
 }
 ################################################################################
 # 5.0	Rules                                       https://tinyurl.com/y93kc22r
