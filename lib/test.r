@@ -41,10 +41,12 @@ get_Strategy.setup <- function(trendName, trendInd) {
       browser()
       set_Signals(i,j)
       str(getStrategy(setupTrend[i,5])$signals)
-print(paste("i = ", i, sep = " "))
-        g[[paste(setupTrend[i,5], "signal", sep = "_")]] <<-
+      print(paste("i = ", i, sep = " "))
+      print(paste("strategy.st = ", strategy.st, sep = " "))
+      g[[paste(setupTrend[i,5], "signal", sep = "_")]] <<-
         applySignals(
-          strategy           = paste0(setupTrend[i,3], tolower(setupTrend[i,4])),
+#         strategy           = paste0(setupTrend[i,3], tolower(setupTrend[i,4])),
+          strategy           = strategy.st,
           mktdata            = SPL.AX)
     }
   }
@@ -190,6 +192,10 @@ getStockPlot.stock <- function(stocks_df){
 # 4.0	Signals
 ################################################################################
 set_Signals <- function(i,j) {
+    browser()
+      print(paste("i = ", i, sep = " "))
+      print(paste("j = ", j, sep = " "))
+      print(paste("strategy.st = ", strategy.st, sep = " "))
     add.signal(strategy.st,
         name                    = dT.sig[,2],
         arguments               = list(
