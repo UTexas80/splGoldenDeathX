@@ -22,7 +22,7 @@ stock(symbols, currency="USD", multiplier=1)
 ## -----------------------------------------------------------------------------
 strategy.st <- portfolio.st <- account.st <- "nonDerivedData"
 # ------------------------------------------------------------------------------
-#  1.02.01                                   
+#  1.02.01 
 # If there are any other portfolios or account book with these names
 # remove them using rm.strat function
 rm.strat(strategy.st)

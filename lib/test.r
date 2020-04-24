@@ -24,7 +24,9 @@ get_Strategy.setup <- function(trendName, trendInd) {
   print("SetDT data.tables")
 # ------------------------------------------------------------------------------ 1.0 Setup
   for (i in 1:nrow(setupTrend)) {
+    browser()
     print(paste("iteration = ", i, sep = " "))
+    print(paste("strategy state = ", strategy.st))
     apply(setupTrend[i,5], 1, function(x) setup(x))
 # ------------------------------------------------------------------------------ 2.0 Indicators
     print(paste(" start iteration = ", i, sep = " "))
@@ -37,21 +39,20 @@ get_Strategy.setup <- function(trendName, trendInd) {
         mktdata                 = SPL.AX)
 # ------------------------------------------------------------------------------3.0 Signals
     for(j in 1:2) {
-
-      browser()
+      browser
+      print(paste("strategy state = ", strategy.st))
       set_Signals(i,j)
       str(getStrategy(setupTrend[i,5])$signals)
       print(paste("i = ", i, sep = " "))
       print(paste("strategy.st = ", strategy.st, sep = " "))
-      g[[paste(setupTrend[i,5], "signal", sep = "_")]] <<-
-        applySignals(
-#         strategy           = paste0(setupTrend[i,3], tolower(setupTrend[i,4])),
-          strategy           = strategy.st,
-          mktdata            = SPL.AX)
     }
+      g[[paste(setupTrend[i,5], "signal", sep = "_")]] <<-
+        applySignals('dxEMA', SPL.AX)
+#         strategy           = paste0(setupTrend[i,3], tolower(setupTrend[i,4])),
+
   }
 }
-
+# ------------------------------------------------------------------------------
 # For each row in an R dataframe                        https://tinyurl.com/wlae6xb
 rows = function(x) lapply(seq_len(nrow(x)), function(i) lapply(x,function(c) c[i])) 
 
