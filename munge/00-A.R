@@ -72,17 +72,21 @@ dt_ma <- cbind(
 )
 names(dt_ma)[6:len(dt_ma)] <-  colnames(dt_ma[, 2:5])
 dt_ma$sig <- as.character(interaction(dt_ma[,6:9],sep=", "))
-dt_ma$id <- row.names.data.frame(dt_ma)
+dt_ma$id <- as.numeric(row.names.data.frame(dt_ma))
+dt_ma$trend_id = 1
 setcolorder(dt_ma, c(len(dt_ma), 2:len(dt_ma)-1))                 # column order
+setkey(dt_ma,trend_id)
 # ------------------------------------------------------------------------------
-trend_signal <<- "TEST"
+trend_signal <<- 
+  dT.sig[dt_ma][trend_name, allow.cartesian = T]
+names(trend_signal)[16] <- "strategy_ind_id"
 dcast(dt_ma_ema, name ~ label, drop=FALSE)            #  ema 020 050 100 200
-
+strategy_ind_id
 # class(trend_name) <<- class(trend_ind) <<- class(trend_signal) <<- "setup"
 # ------------------------------------------------------------------------------
 class(trend_name)     <- "setup"                       # add class to trend_name
 class(trend_ind)      <- "setup"                       # add class to trend_name
-# class(trend_signal)   <- "setup"                     # add class to trend_name
+class(trend_signal)   <- "setup"                     # add class to trend_name
 # get_Strategy(trend_name, trend_ind)
 # ------------------------------------------------------------------------------
 stocks <- data.frame(

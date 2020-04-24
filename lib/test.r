@@ -9,17 +9,18 @@
 # function accept a dataframe as an argument?     https://tinyurl.com/vajvn48
 # ------------------------------------------------------------------------------
 # this is like an abstract base method
-get_Strategy <- function(trendName, trendInd) {
+get_Strategy <- function(trendName, trendInd, trendSig) {
   UseMethod("get_Strategy")
 }
 
 # this is the implementation for "trend" objects,
 # you could have more for other "class" objects
-get_Strategy.setup <- function(trendName, trendInd) {
+get_Strategy.setup <- function(trendName, trendInd, trendSig) {
   print("Setup Strategy")
 
   setupTrend <<- setDT(trendName)
   setupInd   <<- setDT(trendInd)
+  setupSig   <<- setDT(trendSig)
 
   print("SetDT data.tables")
 # ------------------------------------------------------------------------------ 1.0 Setup
@@ -30,8 +31,9 @@ get_Strategy.setup <- function(trendName, trendInd) {
     apply(setupTrend[i,5], 1, function(x) setup(x))
 # ------------------------------------------------------------------------------ 2.0 Indicators
     print(paste(" start iteration = ", i, sep = " "))
-    apply(setupInd[strategy_ind_id == i, c(4:7)], 1, function (x) indicators(
-        x[1], as.integer(x[2]), as.integer(x[3]), x[4]))
+    apply(setupInd[strategy_ind_id == i, c(4:7)], 1, 
+      function (x) 
+        AddSignals(x[1], as.integer(x[2]), as.integer(x[3]), x[4]))
     str(getStrategy(setupTrend[i,5])$indicators)
     g[[paste(setupTrend[i,5], "mktdata", "ind", sep = "_")]] <-
       applyIndicators(
@@ -42,14 +44,17 @@ get_Strategy.setup <- function(trendName, trendInd) {
       browser
       print(paste("strategy state = ", strategy.st))
       set_Signals(i,j)
+      apply(setupSig[strategy_ind_id == i, ], 1, function (x) 
+          indicators(x[1], as.integer(x[2]), as.integer(x[3]), x[4]))      
+AddSignals("sigFormula",c("ema.020","ema.050","ema.100","ema.200"), deathX,   "trigger", TRUE , nXema, "shortEntry")
       str(getStrategy(setupTrend[i,5])$signals)
       print(paste("i = ", i, sep = " "))
       print(paste("strategy.st = ", strategy.st, sep = " "))
     }
       g[[paste(setupTrend[i,5], "signal", sep = "_")]] <<-
-        applySignals('dxEMA', SPL.AX)
-#         strategy           = paste0(setupTrend[i,3], tolower(setupTrend[i,4])),
-
+        applySignals( 
+          strategy                = setupTrend[i,5],
+          mktdata                 = SPL.AX)
   }
 }
 # ------------------------------------------------------------------------------
