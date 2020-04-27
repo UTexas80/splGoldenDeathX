@@ -58,7 +58,7 @@ AddSignals <- function(name, columns, formula, label, cross, trendName, Label) {
         label                   = paste(trendName, Label, sep = "_"))
 }
 ApplySignals <- function(trendName) {
-    
+
 }
 ################################################################################
 # 5.0	Rules                                       https://tinyurl.com/y93kc22r

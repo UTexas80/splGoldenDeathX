@@ -39,19 +39,19 @@ get_Strategy.setup <- function(trendName, trendInd, trendSig) {
         mktdata                 = SPL.AX)
 # ------------------------------------------------------------------------------3.0 Signals
     for(j in 1:2) {
-      browser()
       print(paste("strategy state = ", strategy.st))
  #     set_Signals(i,j)
-      apply(setupSig[strategy_ind_id == i, ], 1, 
+      apply(setupSig[strategy_id == i, ], 1, 
         function (x)
-          AddSignals( x[5],                                        # name - sigFormula
-                      c( x[6] ),                                   # argument columns
-                        x[7],                                      # argument formula
-                        x[8],                                      # argument label  - trigger
-                        x[9],                                      # argument cross  - TRUE
-                        x[10],                                     # label
-                      )
-                  ) 
+          set_Signals(
+            x[5],                                      # name - sigFormula
+            x[6],                                      # argument columns
+            x[7],                                      # argument formula
+            x[8],                                      # argument label  - trigger
+            x[9],                                      # argument cross  - TRUE
+            x[10]                                     # label
+            )
+          ) 
       str(getStrategy(setupTrend[i,5])$signals)
     }
       g[[paste(setupTrend[i,5], "signal", sep = "_")]] <<-
@@ -80,6 +80,29 @@ get_Strategy.ind <<- function(trendInd){
 
   }
 }
+
+################################################################################
+# 4.0	Signals
+################################################################################
+set_Signals <- function(name, columns, formula, label, cross, Label) {
+  browser()
+  print(paste("strategy.st = ", strategy.st, sep = " "))
+  add.signal(strategy.st,
+             name                  = name,
+             arguments             = list(
+               columns             = c(columns),
+               formula             = formula,
+               label               = label,
+               cross               = cross),
+             label                 = Label)
+}
+ApplySignals <- function(trendName) {
+  ApplySignals <- g[[paste(trendName, "signal", sep = "_")]] <-
+    applySignals(
+      strategy           = strategy.st,
+      mktdata            = mktdata)
+}
+
 
 # ------------------------------------------------------------------------------
 # testInd <- function(name, x, n, label) {
@@ -197,28 +220,5 @@ getStockPlot.stock <- function(stocks_df){
 # f(trend_ind); f(dT.metrics); f(dT.rules) # https://tinyurl.com/rkmef5n
 
 
-################################################################################
-# 4.0	Signals
-################################################################################
-set_Signals <- function(i,j) {
-    browser()
-      print(paste("i = ", i, sep = " "))
-      print(paste("j = ", j, sep = " "))
-      print(paste("strategy.st = ", strategy.st, sep = " "))
-    add.signal(strategy.st,
-        name                    = dT.sig[,2],
-        arguments               = list(
-            columns             = dt_ma[j, ncol(dt_ma)],
-            formula             = dT.formula[i, 5],
-            label               = dT.sig[,3],
-            cross               = dT.sig[,4]),
-         label                  = paste(setupTrend[1,5], dT.trade[1,2], sep = "_"))
-}
-ApplySignals <- function(trendName) {
-    ApplySignals <- g[[paste(trendName, "signal", sep = "_")]] <-
-        applySignals(
-             strategy           = strategy.st,
-             mktdata            = mktdata)
-}
 
 
