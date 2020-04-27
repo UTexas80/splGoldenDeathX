@@ -17,7 +17,6 @@ get_Strategy <- function(trendName, trendInd, trendSig) {
 # you could have more for other "class" objects
 get_Strategy.setup <- function(trendName, trendInd, trendSig) {
   print("Setup Strategy")
-  browser()
   setupTrend <<- setDT(trendName)
   setupInd   <<- setDT(trendInd)
   setupSig   <<- setDT(trendSig)
@@ -40,7 +39,7 @@ get_Strategy.setup <- function(trendName, trendInd, trendSig) {
 # ------------------------------------------------------------------------------3.0 Signals
     for(j in 1:2) {
       print(paste("strategy state = ", strategy.st))
- #     set_Signals(i,j)
+      browser()
       apply(setupSig[strategy_id == i, ], 1, 
         function (x)
           set_Signals(
@@ -96,6 +95,7 @@ set_Signals <- function(name, columns, formula, label, cross, Label) {
                cross               = cross),
              label                 = Label)
 }
+
 ApplySignals <- function(trendName) {
   ApplySignals <- g[[paste(trendName, "signal", sep = "_")]] <-
     applySignals(
