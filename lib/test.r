@@ -17,23 +17,21 @@ get_Strategy <- function(trendName, trendInd, trendSig) {
 # you could have more for other "class" objects
 get_Strategy.setup <- function(trendName, trendInd, trendSig) {
   print("Setup Strategy")
-
+  browser()
   setupTrend <<- setDT(trendName)
   setupInd   <<- setDT(trendInd)
   setupSig   <<- setDT(trendSig)
-
-  print("SetDT data.tables")
 # ------------------------------------------------------------------------------ 1.0 Setup
   for (i in 1:nrow(setupTrend)) {
-    browser()
-    print(paste("iteration = ", i, sep = " "))
-    print(paste("strategy state = ", strategy.st))
     apply(setupTrend[i,5], 1, function(x) setup(x))
 # ------------------------------------------------------------------------------ 2.0 Indicators
-    print(paste(" start iteration = ", i, sep = " "))
     apply(setupInd[strategy_ind_id == i, c(4:7)], 1, 
       function (x) 
-        AddSignals(x[1], as.integer(x[2]), as.integer(x[3]), x[4]))
+        indicators(
+          x[1],                                                   # name   - EMA/SMA
+          as.integer(x[2]),                                       # x      - quote(mktdata[,4]
+          as.integer(x[3]),                                       # n      - 20,50,100,200
+          x[4]))                                                  # label  - "020",050","100","200"                 
     str(getStrategy(setupTrend[i,5])$indicators)
     g[[paste(setupTrend[i,5], "mktdata", "ind", sep = "_")]] <-
       applyIndicators(
@@ -41,15 +39,20 @@ get_Strategy.setup <- function(trendName, trendInd, trendSig) {
         mktdata                 = SPL.AX)
 # ------------------------------------------------------------------------------3.0 Signals
     for(j in 1:2) {
-      browser
+      browser()
       print(paste("strategy state = ", strategy.st))
-      set_Signals(i,j)
-      apply(setupSig[strategy_ind_id == i, ], 1, function (x) 
-          indicators(x[1], as.integer(x[2]), as.integer(x[3]), x[4]))      
-AddSignals("sigFormula",c("ema.020","ema.050","ema.100","ema.200"), deathX,   "trigger", TRUE , nXema, "shortEntry")
+ #     set_Signals(i,j)
+      apply(setupSig[strategy_ind_id == i, ], 1, 
+        function (x)
+          AddSignals( x[5],                                        # name - sigFormula
+                      c( x[6] ),                                   # argument columns
+                        x[7],                                      # argument formula
+                        x[8],                                      # argument label  - trigger
+                        x[9],                                      # argument cross  - TRUE
+                        x[10],                                     # label
+                      )
+                  ) 
       str(getStrategy(setupTrend[i,5])$signals)
-      print(paste("i = ", i, sep = " "))
-      print(paste("strategy.st = ", strategy.st, sep = " "))
     }
       g[[paste(setupTrend[i,5], "signal", sep = "_")]] <<-
         applySignals( 

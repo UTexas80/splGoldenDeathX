@@ -11,12 +11,12 @@ cross(20,50,100,200)
 ################################################################################
 ## Step 00.01 set data.table keys                                            ###
 ################################################################################
-setkey(dT.trend, id)
-setkey(dT.strategy, trend_id)
+setkey(dT.formula, id)
 setkey(dT.ind, trend_id)
 setkey(dT.indMetrics, trend_id)
-# setkey(dT.sig, trend_id)
 setkey(dT.sig, id)
+setkey(dT.strategy, trend_id)
+setkey(dT.trend, id)
 # ------------------------------------------------------------------------------
 dT.test <-  dT.trend[
             dT.strategy][
@@ -77,17 +77,20 @@ dt_ma$trend_id = 1
 setcolorder(dt_ma, c(len(dt_ma), 2:len(dt_ma)-1))                 # column order
 setkey(dt_ma,trend_id)
 # ------------------------------------------------------------------------------
-trend_signal <<- 
-  dT.sig[dt_ma][trend_name, allow.cartesian = T]
-names(trend_signal)[16] <- "strategy_ind_id"
-dcast(dt_ma_ema, name ~ label, drop=FALSE)            #  ema 020 050 100 200
-strategy_ind_id
+trend_signal <<-
+    dT.sig[dt_ma][trend_name, allow.cartesian = T][
+      , c(1:4, 14, 16,19)]
+trend_signal$id <- as.numeric(row.names(trend_signal))
+setkey(trend_signal, id)
+trend_signal <<- trend_signal[dT.formula][, c(8:10,1:2,5,12,3:4,11)]
+names(trend_signal)[10] <- c("strategy_name")
+# dcast(dt_ma_ema, name ~ label, drop=FALSE)            #  ema 020 050 100 200
 # class(trend_name) <<- class(trend_ind) <<- class(trend_signal) <<- "setup"
 # ------------------------------------------------------------------------------
 class(trend_name)     <- "setup"                       # add class to trend_name
 class(trend_ind)      <- "setup"                       # add class to trend_name
-class(trend_signal)   <- "setup"                     # add class to trend_name
-# get_Strategy(trend_name, trend_ind)
+class(trend_signal)   <- "setup"                       # add class to trend_name
+# get_Strategy(trend_name, trend_ind, trend_signal)
 # ------------------------------------------------------------------------------
 stocks <- data.frame(
   time = as.Date('2009-01-01') + 0:9,
