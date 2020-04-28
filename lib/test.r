@@ -37,25 +37,24 @@ get_Strategy.setup <- function(trendName, trendInd, trendSig) {
         strategy                = setupTrend[i,5],
         mktdata                 = SPL.AX)
 # ------------------------------------------------------------------------------3.0 Signals
-    for(j in 1:2) {
-      print(paste("strategy state = ", strategy.st))
+#    for(j in 1:2) {
       browser()
       apply(setupSig[strategy_id == i, ], 1, 
         function (x)
           set_Signals(
-            x[5],                                      # name - sigFormula
-            x[6],                                      # argument columns
-            x[7],                                      # argument formula
-            x[8],                                      # argument label  - trigger
-            x[9],                                      # argument cross  - TRUE
-            x[10]                                     # label
+            x[5],                                                  # name - sigFormula
+            x[6],                                                  # argument columns
+            x[7],                                                  # argument formula
+            x[8],                                                  # argument label  - trigger
+            x[9],                                                  # argument cross  - TRUE
+            x[10]                                                  # label
             )
           ) 
       str(getStrategy(setupTrend[i,5])$signals)
-    }
-      g[[paste(setupTrend[i,5], "signal", sep = "_")]] <<-
+#    }
+#      g[[paste(setupTrend[i,5], "signal", sep = "_")]] <<-
         applySignals( 
-          strategy                = setupTrend[i,5],
+          strategy                = strategy.st,
           mktdata                 = SPL.AX)
   }
 }
@@ -90,7 +89,7 @@ set_Signals <- function(name, columns, formula, label, cross, Label) {
              name                  = name,
              arguments             = list(
                columns             = c(columns),
-               formula             = formula,
+               formula             = shQuote(formula),
                label               = label,
                cross               = cross),
              label                 = Label)

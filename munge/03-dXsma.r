@@ -86,7 +86,9 @@ add.signal(strategy.st,
          cross              = TRUE),
     label                   = "dXsma_shortExit")
 # ------------------------------------------------------------------------------
-dXsma_mktdata_sig  <- applySignals(
+str(getStrategy(dXema)$signals)
+# ------------------------------------------------------------------------------
+dXsma_mktdata_sig  <-  applySignals(
     strategy                = strategy.st,
     mktdata                 = dXsma_mktdata_ind)
 ################################################################################
