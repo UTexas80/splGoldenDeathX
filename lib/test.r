@@ -89,7 +89,7 @@ set_Signals <- function(name, columns, formula, label, cross, Label) {
              name                  = name,
              arguments             = list(
                columns             = c(columns),
-               formula             = shQuote(formula),
+               formula             = paste0(chr(39), chr(40), formula, chr(41), chr(39)),
                label               = label,
                cross               = cross),
              label                 = Label)
