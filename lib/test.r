@@ -74,7 +74,6 @@ get_Strategy.ind <<- function(trendInd){
                     x                    = quote(mktdata[,4]),
                     n                    = z[i,3]),
                   label                = z[i,4])
-
   }
 }
 
@@ -87,6 +86,7 @@ set_Signals <- function(name, columns, formula, label, cross, Label) {
              arguments             = list(
                columns             = c(columns),
                formula             = formula,
+ #              formula             = paste0(chr(39), chr(40), formula, chr(41), chr(39)),
                label               = label,
                cross               = cross),
              label                 = Label)
