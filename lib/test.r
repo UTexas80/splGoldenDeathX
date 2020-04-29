@@ -32,13 +32,11 @@ get_Strategy.setup <- function(trendName, trendInd, trendSig) {
           as.integer(x[3]),                                       # n      - 20,50,100,200
           x[4]))                                                  # label  - "020",050","100","200"                 
     str(getStrategy(setupTrend[i,5])$indicators)
-    g[[paste(setupTrend[i,5], "mktdata", "ind", sep = "_")]] <-
+    mdata <-g[[paste(setupTrend[i,5], "mktdata", "ind", sep = "_")]] <<-
       applyIndicators(
         strategy                = setupTrend[i,5],
         mktdata                 = SPL.AX)
 # ------------------------------------------------------------------------------3.0 Signals
-#    for(j in 1:2) {
-      browser()
       apply(setupSig[strategy_id == i, ], 1, 
         function (x)
           set_Signals(
@@ -51,11 +49,12 @@ get_Strategy.setup <- function(trendName, trendInd, trendSig) {
             )
           ) 
       str(getStrategy(setupTrend[i,5])$signals)
-#    }
+      browser()
+      print(paste("strategy.st = ", setupTrend[i,5], sep = " "))
 #      g[[paste(setupTrend[i,5], "signal", sep = "_")]] <<-
         applySignals( 
-          strategy                = strategy.st,
-          mktdata                 = SPL.AX)
+          strategy                = setupTrend[i,5],
+          mktdata                 = mdata)
   }
 }
 # ------------------------------------------------------------------------------
@@ -83,13 +82,11 @@ get_Strategy.ind <<- function(trendInd){
 # 4.0	Signals
 ################################################################################
 set_Signals <- function(name, columns, formula, label, cross, Label) {
-  browser()
-  print(paste("strategy.st = ", strategy.st, sep = " "))
   add.signal(strategy.st,
              name                  = name,
              arguments             = list(
                columns             = c(columns),
-               formula             = shQuote(formula),
+               formula             = formula,
                label               = label,
                cross               = cross),
              label                 = Label)
@@ -101,8 +98,6 @@ ApplySignals <- function(trendName) {
       strategy           = strategy.st,
       mktdata            = mktdata)
 }
-
-
 # ------------------------------------------------------------------------------
 # testInd <- function(name, x, n, label) {
 #       add.indicator(strategy.st,
