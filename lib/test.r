@@ -37,7 +37,7 @@ get_Strategy.setup <- function(trendName, trendInd, trendSig) {
         strategy                = setupTrend[i,5],
         mktdata                 = SPL.AX)
 # ------------------------------------------------------------------------------3.0 Signals
-      apply(setupSig[strategy_id == i, ], 1, 
+      apply(setupSig[id == i, ], 1, 
         function (x)
           set_Signals(
             x[5],                                                  # name - sigFormula
@@ -81,8 +81,10 @@ get_Strategy.ind <<- function(trendInd){
 # 4.0	Signals
 ################################################################################
 set_Signals <- function(name, columns, formula, label, cross, Label) {
+  
+  browser()
+  
   add.signal(strategy.st,
-             browser()
              name                  = name,
              arguments             = list(
                columns             = c(columns),

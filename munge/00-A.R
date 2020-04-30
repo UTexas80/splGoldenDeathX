@@ -78,11 +78,12 @@ setcolorder(dt_ma, c(len(dt_ma), 2:len(dt_ma)-1))                 # column order
 setkey(dt_ma,trend_id)
 # ------------------------------------------------------------------------------
 trend_signal <<-
-    dT.sig[dt_ma][trend_name, allow.cartesian = T][
-      , c(1:4, 14, 16,19)]
+    dT.sig[dt_ma][trend_name, on = "i.name"][
+      , c(1:4, 14:15,19)]
 trend_signal$id <- as.numeric(row.names(trend_signal))
 setkey(trend_signal, id)
-trend_signal <<- trend_signal[dT.formula][, c(8:10,1:2,5,12,3:4,11)]
+names(trend_signal)[6] <- c("ma_id")
+trend_signal <<- trend_signal[dT.formula, on = "id==strategy_id"][, c(8:10,1:2,5,12,3:4,11)]
 names(trend_signal)[10] <- c("strategy_name")
 # dcast(dt_ma_ema, name ~ label, drop=FALSE)            #  ema 020 050 100 200
 # class(trend_name) <<- class(trend_ind) <<- class(trend_signal) <<- "setup"
