@@ -82,6 +82,7 @@ get_Strategy.ind <<- function(trendInd){
 ################################################################################
 set_Signals <- function(name, columns, formula, label, cross, Label) {
   add.signal(strategy.st,
+             browser()
              name                  = name,
              arguments             = list(
                columns             = c(columns),
