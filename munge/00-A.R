@@ -45,10 +45,10 @@ setcolorder(trend_name, c(5, 1:4))                              # column order
 setkey(dT.indMetrics, "trend_id")
 setkey(trend_name, "trend_id")
 # ------------------------------------------------------------------------------
-trend_ind <<- 
+trend_ind <<-
   setorder(
     trend_name[
-      dT.indMetrics, allow.cartesian =T][
+      dT.indMetrics, allow.cartesian = T][
         ,c(1:2,5,4,7:9)][
       , id:=  .I[]]
   ,tname)
@@ -80,17 +80,18 @@ setkey(dt_ma,trend_id)
 trend_signal <<-
     dT.sig[dt_ma][trend_name, on = "i.name"][
       , c(1:4, 14:15,19)]
-trend_signal$id <- as.numeric(row.names(trend_signal))
+trend_signal$id         <- as.numeric(row.names(trend_signal))
 setkey(trend_signal, id)
-names(trend_signal)[6] <- c("ma_id")
-trend_signal <<- trend_signal[dT.formula, on = "id==strategy_id"][, c(8:10,1:2,5,12,3:4,11)]
+names(trend_signal)[6]  <- c("ma_id")
+trend_signal            <- trend_signal[dT.formula, on = "id==strategy_id"][, c(8:10,1:2,5,12,3:4,11)]
 names(trend_signal)[10] <- c("strategy_name")
-# dcast(dt_ma_ema, name ~ label, drop=FALSE)            #  ema 020 050 100 200
-# class(trend_name) <<- class(trend_ind) <<- class(trend_signal) <<- "setup"
 # ------------------------------------------------------------------------------
-class(trend_name)     <- "setup"                       # add class to trend_name
-class(trend_ind)      <- "setup"                       # add class to trend_name
-class(trend_signal)   <- "setup"                       # add class to trend_name
+trend_rules             <- setkey(setDT(dT.rules),id)
+# ------------------------------------------------------------------------------
+class(trend_name)       <- "setup"                     # add class to trend_name
+class(trend_ind)        <- "setup"                     # add class to trend_name
+class(trend_rules)      <- "setup"                     # add class to trend_name
+class(trend_signal)     <- "setup"                     # add class to trend_name
 # get_Strategy(trend_name, trend_ind, trend_signal)
 # ------------------------------------------------------------------------------
 stocks <- data.frame(
@@ -99,7 +100,7 @@ stocks <- data.frame(
   Y = rnorm(10, 0, 2),
   Z = rnorm(10, 0, 4)
 )
-
+# ------------------------------------------------------------------------------
 # add class to stock
 class(stocks) <- "stock"
 ################################################################################

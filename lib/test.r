@@ -9,17 +9,18 @@
 # function accept a dataframe as an argument?     https://tinyurl.com/vajvn48
 # ------------------------------------------------------------------------------
 # this is like an abstract base method
-get_Strategy <- function(trendName, trendInd, trendSig) {
+get_Strategy <- function(trendName, trendInd, trendSig, trendRules) {
   UseMethod("get_Strategy")
 }
 
 # this is the implementation for "trend" objects,
 # you could have more for other "class" objects
-get_Strategy.setup <- function(trendName, trendInd, trendSig) {
+get_Strategy.setup <- function(trendName, trendInd, trendSig, trendRules) {
   print("Setup Strategy")
   setupTrend <<- setDT(trendName)
   setupInd   <<- setDT(trendInd)
   setupSig   <<- setDT(trendSig)
+  setupRules <<- setDT(trendRules)
 # ------------------------------------------------------------------------------ 1.0 Setup
   for (i in 1:nrow(setupTrend)) {
     apply(setupTrend[i,5], 1, function(x) setup(x))
@@ -71,8 +72,8 @@ get_Strategy.ind <<- function(trendInd){
     add.indicator(strategy.st,
                   name                 = z[i,1],
                   arguments            = list(
-                    x                    = quote(mktdata[,4]),
-                    n                    = z[i,3]),
+                    x                  = quote(mktdata[,4]),
+                    n                  = z[i,3]),
                   label                = z[i,4])
   }
 }
