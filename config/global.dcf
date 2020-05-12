@@ -20,5 +20,5 @@ logging_level: INFO
 munging: TRUE
 recursive_loading: TRUE
 sticky_variables: NONE
-version: 0.9.1
+version: 0.9.2
 tables_type: data_table
