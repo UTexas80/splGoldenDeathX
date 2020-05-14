@@ -2,12 +2,12 @@
 ################################################################################
 ## Step 99.00 trend                                                         ###
 ################################################################################
-l                   <- list(dXema_trend, dXsma_trend, gXema_trend, gXsma_trend)
-trend               <- rbindlist(l)
-names(trend)[c(1:2,13,27,29)] <- c("startDate",  "endDate", "return", "startOpen",  "endOpen")
-trend               <- trend[, c(23,22, 25,1, 27, 2, 29, 9:10, 13, 20:21, 28)]
+l                             <- list(dXema_trend, dXsma_trend, gXema_trend, gXsma_trend)
+trend                         <- rbindlist(l)
+names(trend)[c(1:2,13,26:27)] <- c("startDate", "endDate", "return", "startOpen", "endOpen")
+trend                         <- trend[, c(23,22, 25,1, 26, 2, 27, 13, 9:10, 20:21)]
 # ------------------------------------------------------------------------------
-trendReturns <- data.table(t(trend[, c(2,9)]))     # https://tinyurl.com/tmmubbh
+trendReturns <- data.table(t(trend[, c(3,8)]))     # https://tinyurl.com/tmmubbh
 trendReturns <- setnames(trendReturns, as.character(trendReturns[1,]))[-1,] %>%
                 mutate_if(is.character,as.numeric)
 ################################################################################
