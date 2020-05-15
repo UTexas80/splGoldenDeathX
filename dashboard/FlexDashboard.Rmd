@@ -471,11 +471,11 @@ Column {data-height=17%}
 
 # https://is.gd/vb865W In flexdashboard, can a valueBox be clicked to update a text box like an actionButton?
 
-trendnameEMA    <- tail(trend[indicator == 'EMA'][order(endDate)], 1)[, 12]
+trendnameEMA    <- tail(trend[indicator == 'EMA'][order(endDate)], 1)[, 2]
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
     paste("EMA Current Trend:", " ", trendnameEMA),
-    actionButton("button3", " ", style = "background-color:rgba(0, 0, 0, 0.0); border-color:rgba(0, 0, 0,           0.0); position: absolute; overflow: hidden; left: 0px; top: 0px; right: 0px; bottom: 0px;    
+    actionButton("button3", " ", style = "background-color:rgba(0, 0, 0, 0.0); border-color:rgba(0, 0, 0,           0.0); position: absolute; overflow: hidden; left: 0px; top: 0px; right: 0px; bottom: 0px;
           width:100%"),
     color = ifelse(trendname1 == "D", "black",
       ifelse(trendname1 == "G", "teal",
@@ -497,7 +497,7 @@ flexdashboard::renderValueBox({
 
 # https://is.gd/vb865W In flexdashboard, can a valueBox be clicked to update a text box like an actionButton?
 
-trendnameSMA    <- tail(trend[indicator == 'SMA'][order(endDate)], 1)[, 12]
+trendnameSMA    <- tail(trend[indicator == 'SMA'][order(endDate)], 1)[, 2]
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
     paste("SMA Current Trend:", " ", trendnameSMA),
@@ -523,7 +523,7 @@ flexdashboard::renderValueBox({
 ###
 
 ```{r 2.1.0.2a-vbox-returns-roi, eval=trend}
-trendROIema <- percent(tail(trend[order(endDate)][indicator == 'EMA'],1)[,9][[1]],
+trendROIema <- percent(tail(trend[order(endDate)][indicator == 'EMA'],1)[,8][[1]],
   scale = 100, prefix = "", suffix = "%", big.mark = " ", decimal.mark = ".",
   trim = TRUE
 )
@@ -545,7 +545,7 @@ flexdashboard::renderValueBox({
 })
 ```
 ```{r 2.1.0.2b-vbox-returns-roi, eval=trend}
-trendROI <- percent(tail(trend[order(endDate)][indicator == 'SMA'],1)[,9][[1]],
+trendROI <- percent(tail(trend[order(endDate)][indicator == 'SMA'],1)[,8][[1]],
   scale = 100, prefix = "", suffix = "%", big.mark = " ", decimal.mark = ".",
   trim = TRUE
 )
@@ -572,7 +572,7 @@ flexdashboard::renderValueBox({
 ```{r 2.1.0.3a-vbox-trade-days, eval=trend}
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
-    paste("EMA Trade Days:", " ", format(tail(trend[indicator=='EMA'][order(endDate)], 1)[, 10], big.mark = ",")),
+    paste("EMA Trade Days:", " ", format(tail(trend[indicator=='EMA'][order(endDate)], 1)[, 11], big.mark = ",")),
     color = # 0000ff
     , icon = "fa-calendar"
   )
@@ -582,7 +582,7 @@ flexdashboard::renderValueBox({
 ```{r 2.1.0.3b-vbox-trade-days, eval=trend}
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
-    paste("SMA Trade Days:", " ", format(tail(trend[indicator=='SMA'][order(endDate)], 1)[, 10], big.mark = ",")),
+    paste("SMA Trade Days:", " ", format(tail(trend[indicator=='SMA'][order(endDate)], 1)[, 11], big.mark = ",")),
     color = # 0000ff
     , icon = "fa-calendar"
   )
