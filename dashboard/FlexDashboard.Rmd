@@ -157,7 +157,11 @@ n <- trend[substr(trend$catName, 1, 1) %like% "n"]
 
 ```{r quantstratInput}
 # load.strategy(here::here("dashboard/rds","buyHold_strategy"))
-# load.strategy(here::here("dashboard/rds","gXsma"))
+# load.strategy(dXsma)
+dXsma.rets.bh <-PortfReturns(Account = "dXsma")
+gXsma.rets.bh <-PortfReturns(Account = "gXsma")
+# load(here::here("gXsma.RData"))
+# blot <- ls.str(.blotter)
 ```
 
 ```{R daydiff functions, include=FALSE, warning=FALSE, cache=FALSE}
@@ -469,7 +473,7 @@ renderHighchart({
 2.1 Summary {data-navmenu="2-Trends" data-icon="fa-list"}
 =====================================
 
-Column {data-height=17%}
+Column {data-height=19%}
 -------------------------------------
 ###
 
@@ -852,15 +856,18 @@ DT::renderDataTable({
 #     )
 #   )
 # })
+gXsma.rets.bh
 ```
 
 ### Daily Transaction P & L
 ```{r 2.1.1.j-viz-dailyTxnPL}
-
 renderHighchart({
-  goldenX_EMA_dailyTxnPL <-  data.table(blotter::dailyTxnPL("goldenX_EMA_portfolio"), keep.rownames = TRUE)
-    hchart(goldenX_EMA_dailyTxnPL, "column", hcaes( x = 'index',  y = 'SPL.AX.DailyTxnPL'))
+  chart.Posn("gXsma", Symbol = 'SPL.AX',TA = 'add_SMA(n = 10,col = 4, on = 1)')
 })
+# renderHighchart({
+#   goldenX_EMA_dailyTxnPL <-  data.table(blotter::dailyTxnPL("goldenX_EMA_portfolio"), keep.rownames = TRUE)
+#     hchart(goldenX_EMA_dailyTxnPL, "column", hcaes( x = 'index',  y = 'SPL.AX.DailyTxnPL'))
+# })
 ```
 
 Row {data-height=33%}
@@ -1133,7 +1140,7 @@ DT::renderDataTable({
 ```{r 2.2.2.3-viz-goldenX-EMA-chartstats}
 renderPlot({
   
-    chart.Posn("goldenX_EMA_portfolio", 
+    chart.Posn("gXsma", 
            Symbol = "SPL.AX",  
            Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
            TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")

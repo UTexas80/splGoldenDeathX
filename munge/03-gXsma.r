@@ -169,6 +169,7 @@ updateAcct(account.st, dateRange)
 # ------------------------------------------------------------------------------
 updateEndEq(account.st)
 save.strategy(strategy.st)
+# save.strategy(here::here("dashboard/rds", strategy.st))
 ################################################################################
 # 9.0	Trade Stats - create dashboard trade statistics
 ################################################################################
