@@ -29,31 +29,31 @@ strategy(strategy.st, store = TRUE)                 # Strategy initialization
 # 3.0	Indicators
 ################################################################################
 add.indicator(strategy.st,                          # 20-day SMA indicator
-    name                    = "SMA", 
+    name                    = "SMA",
     arguments               = list(
-      x                     = quote(mktdata[,4]), 
-      n                     = 20), 
+      x                     = quote(mktdata[,4]),
+      n                     = 20),
     label                   = "020")
 # ------------------------------------------------------------------------------
 add.indicator(strategy.st,                          # 50-day SMA indicator
-    name                    = "SMA", 
+    name                    = "SMA",
     arguments               = list(
-      x                     = quote(mktdata[,4]), 
-      n                     = 50), 
+      x                     = quote(mktdata[,4]),
+      n                     = 50),
     label                   = "050")
 # ------------------------------------------------------------------------------
 add.indicator(strategy.st,                          # 100-day SMA indicator
-    name                    = "SMA", 
+    name                    = "SMA",
     arguments               = list(
-      x                     = quote(mktdata[,4]), 
-      n                     = 100), 
+      x                     = quote(mktdata[,4]),
+      n                     = 100),
     label                   = "100")
 # ------------------------------------------------------------------------------
 add.indicator(strategy.st,                          # 200-day SMA indicator
-    name                    = "SMA", 
+    name                    = "SMA",
     arguments               = list(
-      x                     = quote(mktdata[,4]), 
-      n                     = 200), 
+      x                     = quote(mktdata[,4]),
+      n                     = 200),
     label                   = "200")
 # ------------------------------------------------------------------------------
 gXsma_mktdata_ind <-  applyIndicators(               # apply indicators
@@ -66,8 +66,8 @@ add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list(
          columns            = c("SMA.020","SMA.050","SMA.100", "SMA.200"),
-         formula            = "(SMA.020 > SMA.050 & 
-                                SMA.050 > SMA.100 & 
+         formula            = "(SMA.020 > SMA.050 &
+                                SMA.050 > SMA.100 &
                                 SMA.100 > SMA.200)",
          label              = "trigger",
          cross              = TRUE),
@@ -77,12 +77,14 @@ add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list
          (columns           = c("SMA.020","SMA.050","SMA.100", "SMA.200"),
-         formula            = "(SMA.020 < SMA.050 | 
-                                SMA.050 < SMA.100 | 
+         formula            = "(SMA.020 < SMA.050 |
+                                SMA.050 < SMA.100 |
                                 SMA.100 < SMA.200)",
          label              = "trigger",
          cross              = TRUE),
     label                   = "gXsma_close")
+# ------------------------------------------------------------------------------    
+str(getStrategy(gXsma)$signals)
 # ------------------------------------------------------------------------------
 gXsma_mktdata_sig  <- applySignals(
     strategy                = strategy.st,
@@ -95,7 +97,7 @@ gXsma_mktdata_sig  <- applySignals(
     arguments               = list(
         sigcol              = "gXsma_open",
         sigval              = TRUE,
-        orderqty            = 1000,
+        orderqty            = init_equity,
         orderside           = "long",
         ordertype           = "market",
         prefer              = "Open",
@@ -121,9 +123,9 @@ add.rule(strategy.st,
 ################################################################################
 # 6.0	Position Limits
 ################################################################################
-addPosLimit(portfolio.st, symbols, 
-    timestamp               <- initDate, 
-    maxpos                  <- 100,
+addPosLimit(portfolio.st, symbols,
+    timestamp               <- initDate,
+    maxpos                  <- init_equity,
     minpos                  <- 0)
 ################################################################################
 # 7.0	Strategy
@@ -159,30 +161,50 @@ gXsma_results   <- here::here("dashboard/rds", "gXsma_results.RData")
 # t2 <- Sys.time()
 # print(t2 - t1)
 ################################################################################
-# 9.0	Evaluation - update P&L and generate transactional history
+# 8.0	Evaluation - update P&L and generate transactional history
 ################################################################################
 updatePortf(portfolio.st)
 dateRange  <- time(getPortfolio(portfolio.st)$summary)[-1]
 updateAcct(account.st, dateRange)
+# ------------------------------------------------------------------------------
 updateEndEq(account.st)
 save.strategy(strategy.st)
-# ------------------------------------------------------------------------------
+################################################################################
+# 9.0	Trade Stats - create dashboard trade statistics
+################################################################################
 gXsma_pts <- blotter::perTradeStats(portfolio.st, symbols)
 # ------------------------------------------------------------------------------
-gXsma_stats <- data.table(tradeStats(portfolio.st, use = "trades", inclZeroDays = FALSE))
+gXsma_stats <- as.data.table(tradeStats(portfolio.st,
+                            use = "trades", 
+                            inclZeroDays = FALSE))
+# ------------------------------------------------------------------------------
+gXsma_profit         <- gXsma_stats %>%
+  select(Net.Trading.PL, Gross.Profits, Gross.Losses, Profit.Factor)
+t(gXsma_profit)
+# ------------------------------------------------------------------------------
+gXsma_wins           <-  gXsma_stats %>%
+  select(Avg.Trade.PL, Avg.Win.Trade, Avg.Losing.Trade, Avg.WinLoss.Ratio)
+t(gXsma_wins)
+# ------------------------------------------------------------------------------
 gXsma_stats[, 4:ncol(gXsma_stats)] <- round(gXsma_stats[, 4:ncol(gXsma_stats)], 2)
 gXsma_stats <- gXsma_stats[, data.table(t(.SD), keep.rownames = TRUE)]
+# ------------------------------------------------------------------------------
+# use first row data as column names                https://tinyurl.com/ya3v4edm
+# ------------------------------------------------------------------------------
+gXsma_trade_stats <- data.table::transpose(gXsma_stats)
+setnames(gXsma_trade_stats, as.character(gXsma_trade_stats[1,]))
+gXsma_trade_stats <- gXsma_trade_stats[-1,]
 ################################################################################
-# 8.0	Trend - create dashboard dataset
+# 10.0	Trend - create dashboard dataset
 ################################################################################
 gXsma_trend <- data.table(gXsma_pts)
 gXsma_trend[, `:=`(tradeDays, lapply(paste0(gXsma_pts[, 1], "/", gXsma_pts[, 2]), 
   function(x) length(SPL.AX[, 6][x])+1))]
 gXsma_trend[, calendarDays := as.numeric(duration/86400)]
 # ------------------------------------------------------------------------------
-gXsma_trend[, c("catName","indicator"):=list("GoldenX", "EMA")]
-gXsma_trend[, grp := .GRP, by=Start] 
-gXsma_trend[, subcatName := paste0(catName, 
+gXsma_trend[, c("catName","indicator"):=list("GoldenX", "SMA")]
+gXsma_trend[, grp := .GRP, by=Start]
+gXsma_trend[, subcatName := paste0(catName,
                             paste0(sprintf("%03d", grp),
                             paste0(indicator)))]
 # ------------------------------------------------------------------------------
@@ -191,13 +213,14 @@ gXsma_trend[, `:=`(tradeDays, lapply(paste0(gXsma_pts[, 1], "/", gXsma_pts[, 2])
 , calendarDays := as.numeric(duration/86400)][
 , c("catName","indicator"):=list("GoldenX", "SMA")][
 , grp := .GRP, by=Start][ 
-, subcatName := paste0(catName, 
+, subcatName := paste0(catName,
                 paste0(sprintf("%03d", grp),
                 paste0(indicator)))]
 # ------------------------------------------------------------------------------
 # unlist a column in a data.table                           https://is.gd/ZuntI3
 # ------------------------------------------------------------------------------
-gXsma_trend[rep(gXsma_trend[,.I], lengths(tradeDays))][, tradeDays := unlist(gXsma_trend$tradeDays)][]
+gXsma_trend[rep(gXsma_trend[,.I], lengths(tradeDays))][
+    , tradeDays := unlist(gXsma_trend$tradeDays)][]
 gXsma_trend$tradeDays <- unlist(gXsma_trend$tradeDays)
 # ------------------------------------------------------------------------------
 # add Start / End open price                                                 ***
@@ -206,3 +229,35 @@ setkey(gXsma_trend, "Start")
 gXsma_trend <- na.omit(gXsma_trend[SPL][, -c(27:31)])
 setkey(gXsma_trend, "End")
 gXsma_trend <- na.omit(gXsma_trend[SPL][, -c(28:32)])
+################################################################################
+# 11.0	# Performance and Risk Metrics 
+################################################################################
+gXsma_rets           <- PortfReturns(Account =  account.st)
+rownames(gXsma_rets) <- NULL
+# ------------------------------------------------------------------------------
+gXsma_perf <- table.Arbitrary(gXsma_rets,
+  metrics = c(
+    "Return.cumulative",
+    "Return.annualized",
+    "SharpeRatio.annualized",
+    "CalmarRatio"
+  ),
+  metricsNames = c(
+    "Cumulative Return",
+    "Annualized Return",
+    "Annualized Sharpe Ratio",
+    "Calmar Ratio"
+  )
+)
+# ------------------------------------------------------------------------------ Risk
+gXsma_risk <- table.Arbitrary(gXsma_rets,
+  metrics = c(
+    "StdDev.annualized",
+    "maxDrawdown"
+  ),
+  metricsNames = c(
+    "Annualized StdDev",
+    "Max DrawDown"
+  )
+)
+

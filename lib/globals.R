@@ -60,7 +60,7 @@ goldenXlong <- "(EMA.020 > EMA.050 &
 ## Equity Values                                                             ###
 ################################################################################
 adjustment  <- TRUE                       # Adjust for Dividends, Stock Splits #
-init_equity <- 1e4                        # $10,000                            #
+init_equity <- as.integer(1e4)            # $10,000                            #
 initEq      <- 1e6                        # $1,000,000                         #
 tradeSize   <- 10000
 # ------------------------------------------------------------------------------

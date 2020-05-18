@@ -86,7 +86,7 @@ add.signal(strategy.st,
          cross              = TRUE),
     label                   = "dXsma_shortExit")
 # ------------------------------------------------------------------------------
-str(getStrategy(dXema)$signals)
+str(getStrategy(dXsma)$signals)
 # ------------------------------------------------------------------------------
 dXsma_mktdata_sig  <-  applySignals(
     strategy                = strategy.st,
@@ -99,7 +99,7 @@ add.rule(strategy.st,
     arguments               = list(
         sigcol              = "dXsma_shortEntry",
         sigval              = TRUE,
-        orderqty            = -1000,
+        orderqty            = -init_equity,
         orderside           = "short",
         ordertype           = "market",
         prefer              = "Open",
@@ -127,7 +127,7 @@ add.rule(strategy.st,
 ################################################################################
 addPosLimit(portfolio.st, symbols,
     timestamp               <- from,
-    maxpos                  <- 100,
+    maxpos                  <- -init_equity,
     minpos                  <- 0)
 ################################################################################
 # 7.0	Strategy
@@ -137,25 +137,43 @@ t1      <- Sys.time()
 dXsma_strategy <- applyStrategy(strategy.st, portfolio.st, mktdata, symbols)
 t2      <- Sys.time()
 print(t2 - t1)
-
 ################################################################################
-# 9.0	Evaluation - update P&L and generate transactional history
+# 8.0	Evaluation - update P&L and generate transactional history
 ################################################################################
-
 updatePortf(portfolio.st)
 dateRange  <- time(getPortfolio(portfolio.st)$summary)[-1]
 updateAcct(account.st, dateRange)
-
+# ------------------------------------------------------------------------------
 updateEndEq(account.st)
 save.strategy(strategy.st)
-# ------------------------------------------------------------------------------
-dXsma_pts <- blotter::perTradeStats(portfolio.st, symbols)
-# ------------------------------------------------------------------------------
-dXsma_stats <- data.table(tradeStats(portfolio.st, use = "trades", inclZeroDays = FALSE))
-dXsma_stats[, 4:ncol(dXsma_stats)] <- round(dXsma_stats[, 4:ncol(dXsma_stats)], 2)
-dXsma_stats <- dXsma_stats[, data.table(t(.SD), keep.rownames = TRUE)]
 ################################################################################
-# 8.0	Trend - create dashboard dataset
+# 9.0	Trade Stats - create dashboard trade statistics
+################################################################################
+dXsma_pts    <- blotter::perTradeStats(portfolio.st, symbols)
+# ------------------------------------------------------------------------------
+dXsma_stats  <- tradeStats(Portfolios = portfolio.st,
+                           use="trades",
+                           inclZeroDays=FALSE)
+# -----------------------------------------------------------------------------
+dXsma_profit <- dXsma_stats %>%
+  select(Net.Trading.PL, Gross.Profits, Gross.Losses, Profit.Factor)
+t(dXsma_profit)
+# ------------------------------------------------------------------------------
+dXsma_wins   <-  dXsma_stats %>%
+  select(Avg.Trade.PL, Avg.Win.Trade, Avg.Losing.Trade, Avg.WinLoss.Ratio)
+t(dXsma_wins)
+# ------------------------------------------------------------------------------
+dXsma_stats  <- as.data.table(dXsma_stats)
+dXsma_stats[, 4:ncol(dXsma_stats)] <- round(dXsma_stats[, 4:ncol(dXsma_stats)], 2)
+dXsma_stats  <- dXsma_stats[, data.table(t(.SD), keep.rownames = TRUE)]
+# ------------------------------------------------------------------------------
+# use first row data as column names                https://tinyurl.com/ya3v4edm
+# ------------------------------------------------------------------------------
+dXsma_trade_stats <- data.table::transpose(dXsma_stats)
+setnames(dXsma_trade_stats, as.character(dXsma_trade_stats[1,]))
+dXsma_trade_stats <- dXsma_trade_stats[-1,]
+################################################################################
+# 10.0	Trend - create dashboard dataset
 ################################################################################
 dXsma_trend <- data.table(dXsma_pts)
 dXsma_trend[, `:=`(tradeDays, lapply(paste0(dXsma_pts[, 1], "/", dXsma_pts[, 2]), 
@@ -163,8 +181,9 @@ dXsma_trend[, `:=`(tradeDays, lapply(paste0(dXsma_pts[, 1], "/", dXsma_pts[, 2])
 dXsma_trend[, calendarDays := as.numeric(duration/86400)]
 # ------------------------------------------------------------------------------
 dXsma_trend[, c("catName","indicator"):=list("DeathX", "EMA")]
-dXsma_trend[, grp := .GRP, by=Start] 
-dXsma_trend[, subcatName := paste0(catName, paste0(sprintf("%03d", grp)))]
+dXsma_trend[, grp := .GRP, by=Start]
+dXsma_trend[, subcatName := paste0(catName,
+                            paste0(sprintf("%03d", grp)))]
 # ------------------------------------------------------------------------------
 dXsma_trend[, `:=`(tradeDays, lapply(paste0(dXsma_pts[, 1], "/", dXsma_pts[, 2]), 
   function(x) length(SPL.AX[, 6][x])+1))][
@@ -177,7 +196,8 @@ dXsma_trend[, `:=`(tradeDays, lapply(paste0(dXsma_pts[, 1], "/", dXsma_pts[, 2])
 # ------------------------------------------------------------------------------
 # unlist a column in a data.table                           https://is.gd/ZuntI3
 # ------------------------------------------------------------------------------
-dXsma_trend[rep(dXsma_trend[,.I], lengths(tradeDays))][, tradeDays := unlist(dXsma_trend$tradeDays)][]
+dXsma_trend[rep(dXsma_trend[,.I], lengths(tradeDays))][
+    , tradeDays := unlist(dXsma_trend$tradeDays)][]
 dXsma_trend$tradeDays <- unlist(dXsma_trend$tradeDays)
 # ------------------------------------------------------------------------------
 # add Start / End open price                                                 ***
@@ -186,4 +206,35 @@ setkey(dXsma_trend, "Start")
 dXsma_trend <- na.omit(dXsma_trend[SPL][, -c(27:31)])
 setkey(dXsma_trend, "End")
 dXsma_trend <- na.omit(dXsma_trend[SPL][, -c(28:32)])
+################################################################################
+# 11.0	# Performance and Risk Metrics 
+################################################################################
+dXsma_rets           <- PortfReturns(Account =  account.st)
+rownames(dXsma_rets) <- NULL
+# ------------------------------------------------------------------------------
+dXsma_perf <- table.Arbitrary(dXsma_rets,
+  metrics = c(
+    "Return.cumulative",
+    "Return.annualized",
+    "SharpeRatio.annualized",
+    "CalmarRatio"
+  ),
+  metricsNames = c(
+    "Cumulative Return",
+    "Annualized Return",
+    "Annualized Sharpe Ratio",
+    "Calmar Ratio"
+  )
+)
+# ------------------------------------------------------------------------------ Risk
+dXsma_risk <- table.Arbitrary(dXsma_rets,
+  metrics = c(
+    "StdDev.annualized",
+    "maxDrawdown"
+  ),
+  metricsNames = c(
+    "Annualized StdDev",
+    "Max DrawDown"
+  )
+)
 

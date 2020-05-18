@@ -119,6 +119,12 @@ xprices <- function() {
 calendarDays              <- readRDS(here::here("dashboard/rds", "calendarDays.rds"))
 dtEMA                     <- readRDS(here::here("dashboard/rds", "dtEMA.rds"))
 golden                    <- readRDS(here::here("dashboard/rds", "golden.rds"))
+# ------------------------------------------------------------------------------
+dt_trade_stats            <- readRDS(here::here("dashboard/rds", "dt_trade_stats.rds"))
+dXema_trade_stats         <- readRDS(here::here("dashboard/rds", "dXema_trade_stats.rds"))
+dXsma_trade_stats         <- readRDS(here::here("dashboard/rds", "dXsma_trade_stats.rds"))
+gXema_trade_stats         <- readRDS(here::here("dashboard/rds", "gXema_trade_stats.rds"))
+gXsma_trade_stats         <- readRDS(here::here("dashboard/rds", "gXsma_trade_stats.rds"))
 # goldenX_EMA_results     <- readRDS(here::here("dashboard/rds", "goldenX_EMA_results.rds"))
 tradeDays                 <- readRDS(here::here("dashboard/rds", "tradeDays.rds"))
 trend                     <- data.table(readRDS(here::here("dashboard/rds", "trend.rds")))
@@ -767,11 +773,11 @@ renderPlotly({
     ) %>%
     add_boxplot(
       d = d[indicator == 'SMA'],
-      y = d$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
+      y = dSMA$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
       marker = list(color = "rgb(7,40,89)"),
       line = list(color = "rgb(7,40,89)"),
       name = "DeathX-SMA"
-    ) %>%    
+    ) %>%
     add_boxplot(
       g = g[indicator == 'EMA'],
       y = g$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
@@ -797,34 +803,34 @@ renderPlotly({
     #   marker = list(color = "rgb(7,40,89)"),
     #   line = list(color = "rgb(7,40,89)"),
     #   name = "No X-SMA"
-    # ) %>%        
+    # ) %>%
       layout(title = "Trade Days by Moving Average Type",
           yaxis = list(
           title = 'Trade Days')
-    )  
+    )
 })
 ```
 
 ### Trade Stats
-```{r 2.1.1.h-table-tradestats}
+```{r 2.1.1.h-table-tradestats, eval=dt_trade_stats}
 # goldenX_EMA_tradestats <- blotter::tradeStats(
-#   "goldenX_EMA_portfolio", 
-#     Dates =     
+#   "goldenX_EMA_portfolio",
+#     Dates =
 #       paste(format(input$dateRange2.2[1]),format(input$dateRange2.2[2]),sep = "::"))
-# 
-# DT::renderDataTable({
-#   DT::datatable(goldenX_EMA_tradestats,
-#     rownames = FALSE,
-#     extensions = c("Scroller"),
-#     options = list(
-#       order = list(list(3, "desc")),
-#       pageLength = 10,
-#       scrollX = TRUE,
-#       scrollY = 280,
-#       scroller = TRUE
-#     )
-#   )
-# })
+
+DT::renderDataTable({
+  DT::datatable(dt_trade_stats,
+    rownames = FALSE,
+    extensions = c("Scroller"),
+    options = list(
+      order = list(list(3, "desc")),
+      pageLength = 10,
+      scrollX = TRUE,
+      scrollY = 280,
+      scroller = TRUE
+    )
+  )
+})
 ```
 
 ### Daily Transaction P & L
