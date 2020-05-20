@@ -94,6 +94,15 @@ class(trend_rules)      <- "setup"                     # add class to trend_name
 class(trend_signal)     <- "setup"                     # add class to trend_name
 # get_Strategy(trend_name, trend_ind, trend_signal)
 # ------------------------------------------------------------------------------
+dt_strategy <<- 
+    setorder(
+        dT.strategy[dT.ind, allow.cartesian = T][
+        , strategy_name:= paste0(abbv,i.name)], 
+        strategy_name)[
+        , id:=  .I[]][
+        , formula:= paste0(formula, i.name)  
+        ] 
+# ------------------------------------------------------------------------------
 stocks <- data.frame(
   time = as.Date('2009-01-01') + 0:9,
   X = rnorm(10, 0, 1),
