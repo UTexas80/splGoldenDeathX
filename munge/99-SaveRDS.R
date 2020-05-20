@@ -2,7 +2,12 @@
 ################################################################################
 ## Step 99.00 trend                                                          ###
 ################################################################################
-l                             <- list(dXema_trend, dXsma_trend, gXema_trend, gXsma_trend)
+l                             <- list(dXema_trend, 
+                                      dXsma_trend, 
+                                      gXema_trend, 
+                                      gXsma_trend,
+                                      nXema_trend
+                                      )
 trend                         <- rbindlist(l)
 names(trend)[c(1:2,13,26:27)] <- c("startDate", "endDate", "return", "startOpen", "endOpen")
 trend                         <- trend[, c(23,22, 25,1, 26, 2, 27, 13, 9:10, 20:21)]

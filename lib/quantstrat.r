@@ -119,11 +119,11 @@ report <- function(trendName) {
     x <- g[[paste(trendName, "pts", sep = "_")]] <-
         blotter::perTradeStats(portfolio.st, symbols)
     t <- g[[paste(trendName, "trend", sep = "_")]] <- data.table(x)
-    t[, calendarDays := as.numeric(duration/86400)]
     t[, `:=`(tradeDays, lapply(paste0(x[, 1], "/", x[, 2]),
                                function(x) length(SPL.AX[, 6][x])+1))]
+    t[, calendarDays := as.numeric(duration/86400)]
 #   t[, c("catName","indicator"):=list("DeathX", "EMA")]
-    t[, catName      := "DeathX"]
+    t[, catName      := "NoX"]
     t[, indicator    := "EMA"]
     t[, grp          := .GRP, by = Start]
     t[, subcatName   := paste0(catName, 
@@ -144,11 +144,11 @@ report <- function(trendName) {
     setkey(m, "index")
 # ------------------------------------------------------------------------------
     t <- setkey(t, "Start")
-    t <- na.omit(t[m][, c(1:26)])
-#   t <- na.omit(t[SPL][, -c(27:31)])
+#   t <- na.omit(t[m][, c(1:26)])
+    t <- na.omit(t[SPL][, -c(27:31)])
     t <- setkey(t, "End")
-    t <- na.omit(t[m][, c(1:27)])
-#   t <- na.omit(t[SPL][, -c(28:32)])
+#   t <- na.omit(t[m][, c(1:27)])
+    t <- na.omit(t[SPL][, -c(28:32)])
     g[[paste(trendName, "trend", sep = "_")]] <- data.table(t)
 # ------------------------------------------------------------------------------
     s <- g[[paste(trendName, "stats", sep = "_")]] <-
