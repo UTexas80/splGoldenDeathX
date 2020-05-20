@@ -75,6 +75,7 @@ adjustment  <- TRUE                       # Adjust for Dividends, Stock Splits #
 init_equity <- as.integer(1e4)            # $10,000                            #
 initEq      <- 1e6                        # $1,000,000                         #
 tradeSize   <- 10000
+orderqty    <- as.integer(1e4)            # $10,000                            #
 # ------------------------------------------------------------------------------
 maxpos      <- 100
 minpos      <- 0

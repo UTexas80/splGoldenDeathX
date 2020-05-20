@@ -52,15 +52,15 @@ AddSignals("sigFormula",c("EMA.020","EMA.050","EMA.100","EMA.200"), nXema_close,
 #         formula            = deathXno,
 #         label              = "trigger",
 #         cross              = TRUE),
-#    label                   =  paste(nXema, "shortExit", sep = "_"))
+#    label                   = paste(nXema, "shortExit", sep = "_"))
 # ------------------------------------------------------------------------------
 str(getStrategy(nXema)$signals)
 ApplySignals(nXema)
 ################################################################################
 # 5.0	Rules                                      https://tinyurl.com/y93kc22r
 ################################################################################
-rules(paste(nXema, "shortEntry", sep = "_"), TRUE, -10000, "short", "market", "Open", "market", 0, "enter")
-rules(paste(nXema, "shortExit",  sep = "_"), TRUE,  10000, "short", "market", "Open", "market", 0, "exit")
+rules(paste(nXema, "shortEntry", sep = "_"), TRUE, orderqty, "long", "market", "Open", "market", 0, "enter")
+rules(paste(nXema, "shortExit",  sep = "_"), TRUE,  "all",   "long", "market", "Open", "market", 0, "exit")
 # rules("dXema_shortEntry", 1:10, xlab="My x axis", ylab="My y axis")
 # add.rule(strategy.st,
 #     name                    = "ruleSignal",
