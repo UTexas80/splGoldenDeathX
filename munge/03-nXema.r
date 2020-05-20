@@ -34,8 +34,8 @@ ApplyIndicators(nXema)                              # apply indicators
 # 4.0	Signals
 ################################################################################
 # browser()
-AddSignals("sigFormula",c("ema.020","ema.050","ema.100","ema.200"), nXema_open,  "trigger", TRUE , nXema, "shortEntry")
-AddSignals("sigFormula",c("ema.020","ema.050","ema.100","ema.200"), nXema_close, "trigger", TRUE , nXema, "shortExit")
+AddSignals("sigFormula",c("EMA.020","EMA.050","EMA.100","EMA.200"), nXema_open,  "trigger", TRUE , nXema, "shortEntry")
+AddSignals("sigFormula",c("EMA.020","EMA.050","EMA.100","EMA.200"), nXema_close, "trigger", TRUE , nXema, "shortExit")
 # add.signal(strategy.st,
 #     name                    = "sigFormula",
 #     arguments               = list(
@@ -59,8 +59,8 @@ ApplySignals(nXema)
 ################################################################################
 # 5.0	Rules                                      https://tinyurl.com/y93kc22r
 ################################################################################
-rules(paste(nXema, "shortEntry", sep = "_"), TRUE, -1000, "short", "market", "Open", "market", 0, "enter")
-rules(paste(nXema, "shortExit",  sep = "_"), TRUE,  1000, "short", "market", "Open", "market", 0, "exit")
+rules(paste(nXema, "shortEntry", sep = "_"), TRUE, -10000, "short", "market", "Open", "market", 0, "enter")
+rules(paste(nXema, "shortExit",  sep = "_"), TRUE,  10000, "short", "market", "Open", "market", 0, "exit")
 # rules("dXema_shortEntry", 1:10, xlab="My x axis", ylab="My y axis")
 # add.rule(strategy.st,
 #     name                    = "ruleSignal",
