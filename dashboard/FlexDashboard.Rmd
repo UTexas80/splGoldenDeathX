@@ -975,7 +975,7 @@ radioButtons("radio2.2", "Moving Avg:",
 )
 ```
 
-Column {data-height=17%}
+Column {data-height=21%}
 -------------------------------------
 
 ###
@@ -1240,7 +1240,7 @@ radioButtons("radio2.3", "Moving Avg:",
 )
 ```
 
-Row {data-height=17%}
+Row {data-height=21%}
 -------------------------------------
 
 ###
@@ -1453,7 +1453,7 @@ radioButtons("radio2.4", "Moving Avg:",
 )
 ```
 
-Row {data-height=17%}
+Row {data-height=21%}
 -------------------------------------
 
 ###
