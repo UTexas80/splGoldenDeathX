@@ -43,7 +43,7 @@ aa<-data.table(aa, keep.rownames = TRUE)
 aa<-cbind(aa, startDate,endDate, countDate)
 ################################################################################
 ## Reorder Columns
-# aa <- aa[, c(1,3:4,5,2)]                                                          
+# aa <- aa[, c(1,3:4,5,2)]
 ################################################################################
 ## Rename Columns
 # names(aa)[1:5]<-c("catName", "startDate", "endDate", "count", "return")

@@ -20,6 +20,12 @@ dt_trade_stats <- rbind.data.frame(dXema_trade_stats,
                                    dXsma_trade_stats,
                                    gXema_trade_stats,
                                    gXsma_trade_stats)
+# ------------------------------------------------------------------------------
+nXema_trade_stats <- data.table::transpose(as.data.table(nXema_trend[, c(25,13)]))
+setnames(nXema_trade_stats, as.character(nXema_trade_stats[1,]))
+nXema_trade_stats <- nXema_trade_stats[-1,]
+nXema_trade_stats <- nXema_trade_stats[, lapply(.SD, as.numeric)]
+chart.Boxplot(nXema_trade_stats)
 ################################################################################
 ## Step 99.01 Statistics                                                     ###
 ################################################################################
