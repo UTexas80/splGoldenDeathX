@@ -2,7 +2,7 @@
 ## Step 00.01 Golden Cross Trading System       https://tinyurl.com/y3sq4ond ###
 ## Baseline Return                                                           ###
 ################################################################################
-# ret                      <- ROC(Cl(SPL.AX))
+ret                      <- ROC(Cl(SPL.AX))
 ################################################################################
 ## Step 00.02.Baseline Signal & Return                  https://is.gd/swRbXV ###
 ## Seems counterintuitive but to create a leading .xts indicator use:        ###
@@ -41,25 +41,15 @@ trendDrawGolden            <-as.data.table(cbind(trendDrawGoldenEMA,
                                 trendDrawGoldenSMA))
 # ------------------------------------------------------------------------------
 trendSummaryGoldenEMA      <-as.data.table(table.AnnualizedReturns(goldenEMA, 
-
     Rf = 0.02 / 252), keep.rownames = TRUE)
-
 trendSummaryGoldenSMA      <-as.data.table(table.AnnualizedReturns(goldenSMA, 
-
     Rf = 0.02 / 252), keep.rownames = TRUE)
-
 trendSummaryGolden         <-as.data.table(table.AnnualizedReturns(golden, 
-
     Rf = 0.02 / 252), keep.rownames = TRUE)
-
-
 
 trendClose                 <-merge(deathCloseEMA, deathCloseSMA, goldenCloseEMA, 
-
                                 goldenCloseSMA)   
-
 colnames(trendClose)       <- c("deathEMA", "deathSMA", "goldenEMA", "goldenSMA")
-
 ################################################################################
 ## Step 00.99: VERSION HISTORY                                               ###
 ################################################################################
