@@ -1158,7 +1158,7 @@ yhpG <- list(title = "Counts", titlefont = F)
 ybpG <- list(title = g$catName, titlefont = F)
 
 renderPlotly({
-  ind <- unique(trend[,7])[(as.numeric(input$radio2.2) - 2),]
+  ind <- unique(trend[,1])[(as.numeric(input$radio2.2) - 2),]
   g <- g[indicator == ind]
   g <- g[(startDate >= input$dateRange2.2[1] & 
           endDate   <= input$dateRange2.2[2])]
@@ -1202,7 +1202,7 @@ yhpG <- list(title = "Counts", titlefont = F)
 ybpG <- list(title = g$catName, titlefont = F)
 
 renderPlotly({
-  ind <- unique(trend[,7])[(as.numeric(input$radio2.2) - 2),]
+  ind <- unique(trend[,1])[(as.numeric(input$radio2.2) - 2),]
   g <- g[indicator == ind]
   g <- g[(startDate >= input$dateRange2.2[1] & 
           endDate   <= input$dateRange2.2[2])]
@@ -1389,7 +1389,7 @@ yhpD <- list(title = "Counts", titlefont = F)
 ybpD <- list(title = d$catName, titlefont = F)
 
 renderPlotly({
-  ind <- unique(trend[,7])[(as.numeric(input$radio2.3) - 0),]
+  ind <- unique(trend[,1])[(as.numeric(input$radio2.3) - 0),]
   d   <- d[indicator == ind]
   d   <- d[(startDate >= input$dateRange2.3[1] & endDate <= input$dateRange2.3[2])]
 
@@ -1415,7 +1415,7 @@ yhp <- list(title = "Counts", titlefont = F)
 ybp <- list(title = d$catName, titlefont = F)
 
 renderPlotly({
-  ind <- unique(trend[,7])[(as.numeric(input$radio2.3) - 0),]
+  ind <- unique(trend[,1])[(as.numeric(input$radio2.3) - 0),]
   d <- d[indicator == ind]
   d <- d[(startDate >= input$dateRange2.3[1] & 
           endDate   <= input$dateRange2.3[2])]
@@ -1586,7 +1586,7 @@ yhp <- list(title = "Counts", titlefont = F)
 ybp <- list(title = n$catName, titlefont = F)
 
 renderPlotly({
-  ind <- unique(trend[,7])[(as.numeric(input$radio2.4) - 4),]
+  ind <- unique(trend[,1])[(as.numeric(input$radio2.4) - 4),]
   n   <- n[indicator == ind]
   n   <- n[(startDate >= input$dateRange2.4[1] & endDate <= input$dateRange2.4[2])]
 
@@ -1612,7 +1612,7 @@ yhp <- list(title = "Counts", titlefont = F)
 ybp <- list(title = n$catName, titlefont = F)
 
 renderPlotly({
-  ind <- unique(trend[,7])[(as.numeric(input$radio2.4) - 4),]
+  ind <- unique(trend[,1])[(as.numeric(input$radio2.4) - 4),]
   n <- n[indicator == ind]
   n <- n[(startDate >= input$dateRange2.4[1] & 
           endDate   <= input$dateRange2.4[2])]
