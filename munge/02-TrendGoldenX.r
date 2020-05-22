@@ -8,7 +8,7 @@ ret                      <- ROC(Cl(SPL.AX))
 ## Seems counterintuitive but to create a leading .xts indicator use:        ###
 ## lag(x, -1)                                                                ###
 # ------------------------------------------------------------------------------
-#golden_ma_sig             <- lag(ifelse(ema020 > ema050 & ema050 >          ###                    
+#golden_ma_sig             <- lag(ifelse(ema020 > ema050 & ema050 >          ###
 #ema100 & ema100 > ema200, 1, 0), -1)                                        ###
 ################################################################################
 golden_ma_sigEMA           <- ifelse(ema020 > ema050 & ema050 >

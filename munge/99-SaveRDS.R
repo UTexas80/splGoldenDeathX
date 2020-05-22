@@ -2,9 +2,9 @@
 ################################################################################
 ## Step 99.00 trend                                                          ###
 ################################################################################
-l                             <- list(dXema_trend, 
-                                      dXsma_trend, 
-                                      gXema_trend, 
+l                             <- list(dXema_trend,
+                                      dXsma_trend,
+                                      gXema_trend,
                                       gXsma_trend,
                                       nXema_trend
                                       )

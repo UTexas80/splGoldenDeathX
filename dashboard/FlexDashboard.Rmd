@@ -1086,7 +1086,7 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 
 ```{r 2.2.2.1-table-golden, eval=trend}
 DT::renderDataTable({
-    ind <- unique(trend[,7])[(as.numeric(input$radio2.2) - 2),]
+    ind <- unique(trend[,1])[(as.numeric(input$radio2.2) - 2),]
     trendTable <- trend[indicator == ind]
     trendTable <- trendTable[catName == "GoldenX" & 
                         (startDate >= input$dateRange2.2[1] & 
@@ -1351,7 +1351,7 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 
 ```{r 2.3.2.1-table-death}
 DT::renderDataTable({
-    ind <- unique(trend[,7])[(as.numeric(input$radio2.3)),]
+    ind <- unique(trend[,1])[(as.numeric(input$radio2.3)),]
     trendTable <- trend[indicator == ind]
     trendTable <- trendTable[catName == "DeathX" & 
                         (startDate >= input$dateRange2.3[1] & 
@@ -1548,9 +1548,9 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 
 ```{r 2.4.2.a-table-golden-five}
 DT::renderDataTable({
-    ind <- unique(trend[,7])[(as.numeric(input$radio2.4) - 4),]
+    ind <- unique(trend[,1])[(as.numeric(input$radio2.4) - 4),]
     trendTable <- trend[indicator == ind]
-    trendTable <- trendTable[catName == "n" & 
+    trendTable <- trendTable[catName == "NoX" & 
                         (startDate >= input$dateRange2.4[1] & 
                          endDate <= input$dateRange2.4[2])][,-7]
     DT::datatable(trendTable,
