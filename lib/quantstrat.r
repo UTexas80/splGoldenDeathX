@@ -164,7 +164,7 @@ report <- function(trendName) {
     select(Avg.Trade.PL, Avg.Win.Trade, Avg.Losing.Trade, Avg.WinLoss.Ratio)
     t(w)
 # ------------------------------------------------------------------------------
-    r <- g[[paste(trendName, "returns", sep = "_")]] <-  
+    r <- g[[paste(trendName, "returns", sep = "_")]] <- 
         PortfReturns(Account =  account.st)
     rownames(r) <- NULL
 # ------------------------------------------------------------------------------

@@ -1,31 +1,3 @@
-
-################################################################################
-## Step 99.00 trend                                                          ###
-################################################################################
-l                             <- list(dXema_trend,
-                                      dXsma_trend,
-                                      gXema_trend,
-                                      gXsma_trend,
-                                      nXema_trend
-                                      )
-trend                         <- rbindlist(l)
-names(trend)[c(1:2,13,26:27)] <- c("startDate", "endDate", "return", "startOpen", "endOpen")
-trend                         <- trend[, c(23,22, 25,1, 26, 2, 27, 13, 9:10, 20:21)]
-# ------------------------------------------------------------------------------
-trendReturns <- data.table(t(trend[, c(3,8)]))     # https://tinyurl.com/tmmubbh
-trendReturns <- setnames(trendReturns, as.character(trendReturns[1,]))[-1,] %>%
-                mutate_if(is.character,as.numeric)
-# ------------------------------------------------------------------------------
-dt_trade_stats <- rbind.data.frame(dXema_trade_stats,
-                                   dXsma_trade_stats,
-                                   gXema_trade_stats,
-                                   gXsma_trade_stats)
-# ------------------------------------------------------------------------------
-nXema_trade_stats <- data.table::transpose(as.data.table(nXema_trend[, c(25,13)]))
-setnames(nXema_trade_stats, as.character(nXema_trade_stats[1,]))
-nXema_trade_stats <- nXema_trade_stats[-1,]
-nXema_trade_stats <- nXema_trade_stats[, lapply(.SD, as.numeric)]
-chart.Boxplot(nXema_trade_stats)
 ################################################################################
 ## Step 99.01 Statistics                                                     ###
 ################################################################################
@@ -53,7 +25,7 @@ saveRDS(trend,                     file  = here::here("dashboard/rds/", "trend.r
 saveRDS(trendDrawEMA,              file  = here::here("dashboard/rds/", "trendDraw.rds"))
 saveRDS(trendReturns,              file  = here::here("dashboard/rds/", "trendReturns.rds"))
 # saveRDS(trendReturnsAnnualized,  file        = here::here("dashboard/rds/", "trendReturnsAnnualized.rds"))
-# saveRDS(trendReturnsDaily,       file        = here::here("dashboard/rds/", "trendReturnsDaily.rds"))
+saveRDS(trendReturnsDaily,         file  = here::here("dashboard/rds/", "trendReturnsDaily.rds"))
 saveRDS(trendReturnsEMAlong,       file  = here::here("dashboard/rds/", "trendReturnsEMAlong.rds"))
 saveRDS(trendReturnsSMA,           file  = here::here("dashboard/rds/", "trendReturnsSMA.rds"))
 saveRDS(trendReturnsSMAlong,       file  = here::here("dashboard/rds/", "trendReturnsSMAlong.rds"))

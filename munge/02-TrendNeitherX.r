@@ -2,7 +2,7 @@
 ## Step 00.01 Golden Cross Trading System       https://tinyurl.com/y3sq4ond ###
 ## Baseline Return                                                           ###
 ################################################################################
-# ret                       <- ROC(Cl(SPL.AX))
+ret                       <- ROC(Cl(SPL.AX))
 ################################################################################
 ## Step 00.02.Baseline Signal & Return                  https://is.gd/swRbXV ###
 ## Seems counterintuitive but to create a leading .xts indicator use:        ###

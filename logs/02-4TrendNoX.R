@@ -17,7 +17,7 @@ dtGoldenDeathSMA <- data.table(xts::rbind.xts(death_ma_retSMA, golden_ma_retSMA)
     keep.rownames = T)    
 ################################################################################
 ## Converting a data frame to xts --------------------- https://is.gd/9ucTXR ###
-## as_xts(q, date_col = t)                                                   ###   
+## as_xts(q, date_col = t)                                                   ###
 ## as_xts is deprecated; use tk_xts                                          ###
 ################################################################################
 ## Step 00.03.neither Cross Indicator                                        ###
@@ -42,7 +42,7 @@ trendSummaryNeither <-as.data.table(table.AnnualizedReturns(neither,
 trendReturnsAnnualized <- cbind(trendSummaryDeath[,1:3],
                       trendSummaryGolden[,2:3],
                       trendSummaryNeither[,2:4])
-trendReturnsDaily <- cbind(death[,1:2], golden[,1:2], neither)                      
+trendReturnsDaily <- cbind(death[,1:2], golden[,1:2], neither)
 ################################################################################
 ## Step 00.06.Closing Price Table                                            ###
 ################################################################################

@@ -80,7 +80,7 @@ add.signal(strategy.st,
         (columns            = c("EMA.020","EMA.050","EMA.100", "EMA.200"),
         formula             = "(EMA.020 > EMA.050  |
                                 EMA.050 > EMA.100  |
-                                EMA.100 > EMA.200) & index(mktdata) > '2002-12-02'",
+                                EMA.100 > EMA.200)",
          label              = "trigger",
          cross              = TRUE),
     label                   = "dXema_shortExit")

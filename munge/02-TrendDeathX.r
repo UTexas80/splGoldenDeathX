@@ -4,7 +4,6 @@
 ################################################################################
 close                     <- Cl(SPL.AX)
 ret                       <- ROC(Cl(SPL.AX))
-
 ################################################################################
 ## Step 00.02.Baseline Signal & Return                  https://is.gd/swRbXV ###
 ## Seems counterintuitive but to create a leading .xts indicator use:        ###

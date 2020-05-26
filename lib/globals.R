@@ -122,7 +122,7 @@ nXema       <- "nXema"
 nxEMA       <- "nxEMA"
 # ------------------------------------------------------------------------------
 # https://is.gd/NEjTM3 [Pass arguments to a function from each row of a matrix]
-# EMA         <- "EMA"
+# EMA       <- "EMA"
 SMA         <- "SMA"
 # ------------------------------------------------------------------------------
 xA        <- "020"
