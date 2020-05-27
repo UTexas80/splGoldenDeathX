@@ -35,7 +35,7 @@ death_ma_sigEMA           <- lag(ifelse(ema020 < ema050 & ema050 <
                              1)
 # ------------------------------------------------------------------------------
 death_ma_sigSMA           <- lag(ifelse(sma020 < sma050 & sma050 <
-                                    sma100 & sma100 < sma200, 1, 0),
+                                        sma100 & sma100 < sma200, 1, 0),
                              1)
 # ------------------------------------------------------------------------------
 deathOpenEMA              <- (open * death_ma_sigEMA[death_ma_sigEMA$EMA == 1])
@@ -43,8 +43,8 @@ deathOpenSMA              <- (open * death_ma_sigSMA[death_ma_sigSMA$SMA == 1])
 # ------------------------------------------------------------------------------
 # dXema_ret                 <- (ret * death_ma_sigEMA[death_ma_sigEMA$EMA == 1])
 # dXsma_ret                 <- (ret * death_ma_sigSMA[death_ma_sigSMA$SMA == 1])
-death_ma_retEMA           <- dailyReturn(deathOpenEMA)
-death_ma_retSMA           <- dailyReturn(deathOpenSMA)
+death_ma_retEMA           <- dailyReturn(deathOpenEMA) * -1
+death_ma_retSMA           <- dailyReturn(deathOpenSMA) * -1
 # ------------------------------------------------------------------------------
 deathEMA                  <- cbind(death_ma_retEMA, ret)
 deathSMA                  <- cbind(death_ma_retSMA, ret)
@@ -57,11 +57,11 @@ colnames(death)           <- c("dXema", "dXsma", "Buy&Hold")
 ## Step 99.04.Golden Cross Indicator                                         ###
 ################################################################################
 golden_ma_sigEMA           <- lag(ifelse(ema020 > ema050 & ema050 >
-                                     ema100 & ema100 > ema200, 1, 0),
+                                         ema100 & ema100 > ema200, 1, 0),
                               1)
 # ------------------------------------------------------------------------------
 golden_ma_sigSMA           <- lag(ifelse(sma020 > sma050 & sma050 >
-                                     sma100 & sma100 > sma200, 1, 0),
+                                         sma100 & sma100 > sma200, 1, 0),
                               1)
 # ------------------------------------------------------------------------------
 goldenOpenEMA             <- (open * golden_ma_sigEMA[golden_ma_sigEMA$EMA == 1])
@@ -87,11 +87,26 @@ nXema_sig <- lag(
                        !(ema020 > ema050 & ema050 > ema100 & ema100 > ema200), 1,0),
                 1)
 # ------------------------------------------------------------------------------
+nXsma_sig <- lag(
+                ifelse(!(sma020 < sma050 & sma050 < sma100 & sma100 < sma200) &
+                       !(sma020 > sma050 & sma050 > sma100 & sma100 > sma200), 1,0),
+                1)
+# ------------------------------------------------------------------------------
 nXema_open <- (open * nXema_sig[nXema_sig$EMA == 1])
+nXsma_open <- (open * nXsma_sig[nXsma_sig$SMA == 1])
 # ------------------------------------------------------------------------------
 nXema_ret  <- dailyReturn(nXema_open)
+nXsma_ret  <- dailyReturn(nXsma_open)
 # ------------------------------------------------------------------------------
 nXema      <- cbind(nXema_ret, ret)
+nXsma      <- cbind(nXsma_ret, ret)
+nX         <- cbind(nXema[,1], nXsma[,1], ret)
+# ------------------------------------------------------------------------------
+colnames(nXema)  <- c("nXema", "Buy&Hold")
+colnames(nXsma)  <- c("nXsma", "Buy&Hold")
+colnames(nX)     <- c("nXema", "nXsma", "Buy&Hold")
+# ------------------------------------------------------------------------------
+trendReturnsDaily <- cbind(death[,1:2], golden[,1:2], nX)
 ################################################################################
 ## Step 99.99: VERSION HISTORY                                               ###
 ################################################################################
