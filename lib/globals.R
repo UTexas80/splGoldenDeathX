@@ -121,6 +121,9 @@ gxSMA       <- "gxSMA"
 nXema       <- "nXema"
 nxEMA       <- "nxEMA"
 # ------------------------------------------------------------------------------
+nXsma       <- "nXsma"
+nxSMA       <- "nxSMA"
+# ------------------------------------------------------------------------------
 # https://is.gd/NEjTM3 [Pass arguments to a function from each row of a matrix]
 # EMA       <- "EMA"
 SMA         <- "SMA"
