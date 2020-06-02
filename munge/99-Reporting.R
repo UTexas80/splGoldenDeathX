@@ -2,7 +2,8 @@
 ## Step 99.00 trade stats                                                    ###
 ################################################################################
 dtSPL$row <- dtSPL[, .I[1], by=date][,2]
-dtSPL$dayDiff <- data.table(dayDifff(SPL.AX))
+dtSPL$dayDiff <- data.table(dayDifff(SPL.AX))                                   # https://tinyurl.com/ybcssoh8
+dtSPL[is.na(dtSPL)] <- 0                                                        # replace na's with zero
 data.table::setkey(dtSPL, date)
 # ------------------------------------------------------------------------------
 l       <- list(dXema_trend, dXsma_trend, gXema_trend, gXsma_trend, nXema_trend, nXsma_trend)
@@ -13,34 +14,32 @@ trend$End   <- as_date(trend$End)
 # ------------------------------------------------------------------------------
 # names(trend)[c(1:2,13,27,29)] <- c("startDate", "endDate", "return", "startOpen", "endOpen")
 data.table::setkey(trend, Start)
-trend      <- trend[dtSPL, nomatch = 0][,-c(30:35)]
+trend      <- trend[dtSPL, nomatch = 0][,-c(28:33)]
 data.table::setkey(trend, End)
-trend      <- trend[dtSPL, nomatch = 0][,-c(32:37)]
+trend      <- trend[dtSPL, nomatch = 0][,-c(30:35)]
 # ------------------------------------------------------------------------------
 # trend   <- trend[, c(23, 22, 25, 1, 27, 2, 29, 13, 9:10, 20:21)]
 # trend   <- dtSPL[trend][,-c(2:7)]
 # ------------------------------------------------------------------------------
 # trend[, `:=`(tradeStart, lapply(trend[,4],    function(x)  x + 86400))]
-trend[, `:=`(tradeStart, lapply(trend[,30],    function(x) xts:::index.xts(SPL.AX[x+1])))]
+# trend[, `:=`(tradeStart, lapply(trend[,30],    function(x) xts:::index.xts(SPL.AX[x+1])))]
+trend$tradeStart = trend$Start + trend$dayDiff
 trend[, `:=`(tradeOpen,   apply( trend[,1], 1, function(x) lag(Op(SPL.AX), -1)[x]))]
 # ------------------------------------------------------------------------------
 # data.table::setkey(trend, End)
 # trend   <- dtSPL[trend]
 # browser()
 # trend   <- dtSPL[trend][,-c(2:7)]
-# ------------------------------------------------------------------------------
-trend[, `:=`(tradeEnd, apply(trend[,31],  1,  function(x) if(x < nrow(SPL.AX)) {xts:::index.xts(SPL.AX[x+1])}))]
-
-if(x != nrow(SPL.AX)) {
-  print("X is an Integer")
-}
-
-
-trend[, `:=`(tradeEnd,    lapply(trend[,1],    function(x) x + trend[,39]))]
+# # ------------------------------------------------------------------------------
+# trend[, `:=`(tradeEnd, apply(trend[,31],  1,  function(x) if(x < nrow(SPL.AX)) {xts:::index.xts(SPL.AX[x+1])}))]
+# if(x != nrow(SPL.AX)) {
+#   print("X is an Integer")
+# }
+# trend[, `:=`(tradeEnd,    lapply(trend[,1],    function(x) x + trend[,39]))]
+trend$tradeEnd = trend$End + trend$i.dayDiff
 trend[, `:=`(tradeClose,   apply( trend[,2], 1, function(x) lag(Op(SPL.AX), -1)[x]))]
-browser()
 # ------------------------------------------------------------------------------# https://tinyurl.com/tmmubbh
-trendReturns      <- data.table(t(trend[, c(7,10)]))                             # subcatName, return
+trendReturns      <- data.table(t(trend[, c(25,13)]))                             # subcatName, return
 trendReturns      <- setnames(trendReturns, as.character(trendReturns[1,]))[-1,] %>%
                      mutate_if(is.character,as.numeric) 
 # ------------------------------------------------------------------------------
