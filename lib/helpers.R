@@ -16,11 +16,40 @@ cross <- function(...){
     crossSMA  <<- cbind("SMA",4,t(cross),sprintf("%03d",t(cross)))
     return(cross)
 }
+
 # ------------------------------------------------------------------------------
 ##-- Global assignment within a function:
+# ------------------------------------------------------------------------------
 myf <- function(x) {
     innerf <- function(x) assign("Global.res", x^2, envir = .GlobalEnv)
     innerf(x+1)
+}
+# ------------------------------------------------------------------------------
+
+################################################################################
+# Replicate left, mid, right formulas               https://tinyurl.com/yyq62obr
+################################################################################
+left = function(text, num_char) {
+  substr(text, 1, num_char)
+}
+
+mid = function(text, start_num, num_char) {
+  substr(text, start_num, start_num + num_char - 1)
+}
+
+right = function(text, num_char) {
+  substr(text, nchar(text) - (num_char-1), nchar(text))
+}
+# ------------------------------------------------------------------------------
+
+################################################################################
+# Clean column names
+################################################################################
+clean_col_names <- function(dt_name) {
+  dt <- as.data.table( as.table(sapply(dtTables[NAME %like% paste0(dt_name,"*") ,][,1], function(x) x)))[,3]
+  for(i in 1:nrow(dt)) {
+    dt[i,] <<- clean_names( dt[i,])
+  }  
 }
 
 ################################################################################

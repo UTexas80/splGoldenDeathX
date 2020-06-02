@@ -116,15 +116,22 @@ evaluation <- function() {
 # 9.0 Trend - create dynamic name dashboard dataset  https://tinyurl.com/r3yrspv
 ################################################################################
 report <- function(trendName) {
-    x <- g[[paste(trendName, "pts", sep = "_")]] <-
+    x  <- g[[paste(trendName, "pts", sep = "_")]] <-
         blotter::perTradeStats(portfolio.st, symbols)
-    t <- g[[paste(trendName, "trend", sep = "_")]] <- data.table(x)
+# ------------------------------------------------------------------------------
+    s <- g[[paste(trendName, "trade", "stats", sep = "_")]] <-
+#        blotter::tradeStats(Portfolios = portfolio.st,
+         tradeStats(Portfolios = portfolio.st,
+                           use = "trades",
+                  inclZeroDays = FALSE)
+# ------------------------------------------------------------------------------
+    t  <- g[[paste(trendName, "trend", sep = "_")]] <- data.table(x)
     t[, `:=`(tradeDays, lapply(paste0(x[, 1], "/", x[, 2]),
                                function(x) length(SPL.AX[, 6][x])+1))]
     t[, calendarDays := as.numeric(duration/86400)]
 #   t[, c("catName","indicator"):=list("DeathX", "EMA")]
-    t[, catName      := "NoX"]
-    t[, indicator    := "EMA"]
+    t[, catName      := dT.strategy[3,3]]
+    t[, indicator    := toupper(right(trendName,3))]
     t[, grp          := .GRP, by = Start]
     t[, subcatName   := paste0(catName, 
                         paste0(sprintf("%03d", grp),
@@ -150,11 +157,6 @@ report <- function(trendName) {
 #   t <- na.omit(t[m][, c(1:27)])
     t <- na.omit(t[SPL][, -c(28:32)])
     g[[paste(trendName, "trend", sep = "_")]] <- data.table(t)
-# ------------------------------------------------------------------------------
-    s <- g[[paste(trendName, "stats", sep = "_")]] <-
-         blotter::tradeStats(Portfolios = portfolio.st,
-                             use="trades",
-                             inclZeroDays=FALSE)
 # ------------------------------------------------------------------------------
     p <- g[[paste(trendName, "profit", sep = "_")]] <- data.table(s)  %>%
     select(Net.Trading.PL, Gross.Profits, Gross.Losses, Profit.Factor)
@@ -182,9 +184,6 @@ report <- function(trendName) {
 ################################################################################
 # 10.0	# Performance and Risk Metrics 
 ################################################################################
-    s<- data.table(s[, 4:ncol(s)] <- round(s[, 4:ncol(s)], 2), keep.rownames = T)
-    g[[paste(trendName, "stats", sep = "_")]] <- s[, t(.SD)]
-# ------------------------------------------------------------------------------
 # Risk Statistics
 # ------------------------------------------------------------------------------
     risk <- g[[paste(trendName, "risk", sep = "_")]] <-

@@ -617,7 +617,7 @@ DT::renderDataTable({
       scroller = TRUE
     )
   ) %>%
-    formatDate(c("startDate", "endDate")) %>%
+    formatDate(c("startDate", "endDate", "tradeStart", "tradeEnd")) %>%
     formatRound("tradeDays", 0) %>%
     formatPercentage("return",2) %>%
     formatStyle("return",
