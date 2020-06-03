@@ -12,11 +12,10 @@ trend   <- rbindlist(l)
 trend$Start <- as_date(trend$Start)
 trend$End   <- as_date(trend$End)
 # ------------------------------------------------------------------------------
-# names(trend)[c(1:2,13,27,29)] <- c("startDate", "endDate", "return", "startOpen", "endOpen")
 data.table::setkey(trend, Start)
-trend      <- trend[dtSPL, nomatch = 0][,-c(28:33)]
-data.table::setkey(trend, End)
 trend      <- trend[dtSPL, nomatch = 0][,-c(30:35)]
+data.table::setkey(trend, End)
+trend      <- trend[dtSPL, nomatch = 0][,-c(32:37)]
 # ------------------------------------------------------------------------------
 # trend   <- trend[, c(23, 22, 25, 1, 27, 2, 29, 13, 9:10, 20:21)]
 # trend   <- dtSPL[trend][,-c(2:7)]
@@ -38,6 +37,7 @@ trend[, `:=`(tradeOpen,   apply( trend[,1], 1, function(x) lag(Op(SPL.AX), -1)[x
 # trend[, `:=`(tradeEnd,    lapply(trend[,1],    function(x) x + trend[,39]))]
 trend$tradeEnd = trend$End + trend$i.dayDiff
 trend[, `:=`(tradeClose,   apply( trend[,2], 1, function(x) lag(Op(SPL.AX), -1)[x]))]
+names(trend)[c(34,36,13,35,37)] <- c("startDate", "endDate", "return", "startOpen", "endOpen")
 # ------------------------------------------------------------------------------# https://tinyurl.com/tmmubbh
 trendReturns      <- data.table(t(trend[, c(25,13)]))                             # subcatName, return
 trendReturns      <- setnames(trendReturns, as.character(trendReturns[1,]))[-1,] %>%
