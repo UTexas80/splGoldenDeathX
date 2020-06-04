@@ -157,6 +157,12 @@ report <- function(trendName) {
 #   t <- na.omit(t[m][, c(1:27)])
     t <- na.omit(t[SPL][, -c(28:32)])
     g[[paste(trendName, "trend", sep = "_")]] <- data.table(t)
+# ------------------------------------------------------------------------------    
+# [1] "Start"               "End"                 "Init.Qty"            "Init.Pos"            "Max.Pos"             "End.Pos"            
+# [7] "Closing.Txn.Qty"     "Num.Txns"            "Max.Notional.Cost"   "Net.Trading.PL"      "MAE"                 "MFE"                
+# [13] "Pct.Net.Trading.PL"  "Pct.MAE"             "Pct.MFE"             "tick.Net.Trading.PL" "tick.MAE"            "tick.MFE"           
+# [19] "duration"            "tradeDays"           "calendarDays"        "catName"             "indicator"           "grp"                
+# [25] "subcatName"          "symbol"              "adjusted"            "volume"              "i.adjusted"   
 # ------------------------------------------------------------------------------
     p <- g[[paste(trendName, "profit", sep = "_")]] <- data.table(s)  %>%
     select(Net.Trading.PL, Gross.Profits, Gross.Losses, Profit.Factor)

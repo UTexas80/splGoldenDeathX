@@ -8,16 +8,35 @@ data.table::setkey(dtSPL, date)
 # ------------------------------------------------------------------------------
 l       <- list(dXema_trend, dXsma_trend, gXema_trend, gXsma_trend, nXema_trend, nXsma_trend)
 trend   <- rbindlist(l)
+# ------------------------------------------------------------------------------
+# [1] "Start"               "End"                 "Init.Qty"            "Init.Pos"            "Max.Pos"             "End.Pos"            
+# [7] "Closing.Txn.Qty"     "Num.Txns"            "Max.Notional.Cost"   "Net.Trading.PL"      "MAE"                 "MFE"                
+# [13] "Pct.Net.Trading.PL"  "Pct.MAE"             "Pct.MFE"             "tick.Net.Trading.PL" "tick.MAE"            "tick.MFE"           
+# [19] "duration"            "tradeDays"           "calendarDays"        "catName"             "indicator"           "grp"                
+# [25] "subcatName"          "symbol"              "adjusted"            "volume"              "i.adjusted"
 # ------------------------------------------------------------------------------# https://tinyurl.com/yb29lhr9
 trend$Start <- as_date(trend$Start)
 trend$End   <- as_date(trend$End)
 # ------------------------------------------------------------------------------
 data.table::setkey(trend, Start)
 trend      <- trend[dtSPL, nomatch = 0][,-c(30:35)]
+# ------------------------------------------------------------------------------
+# [1] "Start"               "End"                 "Init.Qty"            "Init.Pos"            "Max.Pos"             "End.Pos"            
+# [7] "Closing.Txn.Qty"     "Num.Txns"            "Max.Notional.Cost"   "Net.Trading.PL"      "MAE"                 "MFE"                
+# [13] "Pct.Net.Trading.PL"  "Pct.MAE"             "Pct.MFE"             "tick.Net.Trading.PL" "tick.MAE"            "tick.MFE"           
+# [19] "duration"            "tradeDays"           "calendarDays"        "catName"             "indicator"           "grp"                
+# [25] "subcatName"          "symbol"              "adjusted"            "volume"              "i.adjusted"          "row"                
+# [31] "dayDiff" 
 data.table::setkey(trend, End)
 trend      <- trend[dtSPL, nomatch = 0][,-c(32:37)]
 # ------------------------------------------------------------------------------
-# trend   <- trend[, c(23, 22, 25, 1, 27, 2, 29, 13, 9:10, 20:21)]
+# [1] "Start"               "End"                 "Init.Qty"            "Init.Pos"            "Max.Pos"             "End.Pos"            
+# [7] "Closing.Txn.Qty"     "Num.Txns"            "Max.Notional.Cost"   "Net.Trading.PL"      "MAE"                 "MFE"                
+# [13] "Pct.Net.Trading.PL"  "Pct.MAE"             "Pct.MFE"             "tick.Net.Trading.PL" "tick.MAE"            "tick.MFE"           
+# [19] "duration"            "tradeDays"           "calendarDays"        "catName"             "indicator"           "grp"                
+# [25] "subcatName"          "symbol"              "adjusted"            "volume"              "i.adjusted"          "row"                
+# [31] "dayDiff"             "i.row"               "i.dayDiff"
+# ------------------------------------------------------------------------------
 # trend   <- dtSPL[trend][,-c(2:7)]
 # ------------------------------------------------------------------------------
 # trend[, `:=`(tradeStart, lapply(trend[,4],    function(x)  x + 86400))]
@@ -38,10 +57,23 @@ trend[, `:=`(tradeOpen,   apply( trend[,1], 1, function(x) lag(Op(SPL.AX), -1)[x
 trend$tradeEnd = trend$End + trend$i.dayDiff
 trend[, `:=`(tradeClose,   apply( trend[,2], 1, function(x) lag(Op(SPL.AX), -1)[x]))]
 names(trend)[c(34,36,13,35,37)] <- c("startDate", "endDate", "return", "startOpen", "endOpen")
+# # ------------------------------------------------------------------------------
+# [1] "Start"               "End"                 "Init.Qty"            "Init.Pos"            "Max.Pos"             "End.Pos"            
+# [7] "Closing.Txn.Qty"     "Num.Txns"            "Max.Notional.Cost"   "Net.Trading.PL"      "MAE"                 "MFE"                
+# [13] "return"              "Pct.MAE"             "Pct.MFE"             "tick.Net.Trading.PL" "tick.MAE"            "tick.MFE"           
+# [19] "duration"            "tradeDays"           "calendarDays"        "catName"             "indicator"           "grp"                
+# [25] "subcatName"          "symbol"              "adjusted"            "volume"              "i.adjusted"          "row"                
+# [31] "dayDiff"             "i.row"               "i.dayDiff"           "startDate"           "startOpen"           "endDate"            
+# [37] "endOpen"  
 # ------------------------------------------------------------------------------# https://tinyurl.com/tmmubbh
 trendReturns      <- data.table(t(trend[, c(25,13)]))                             # subcatName, return
 trendReturns      <- setnames(trendReturns, as.character(trendReturns[1,]))[-1,] %>%
-                     mutate_if(is.character,as.numeric) 
+                     mutate_if(is.character,as.numeric)
+trend   <- trend[, c(23, 22, 25, 1,35,2, 37, 13, 9, 10, 20:21)]
+names(trend)[c(4,6)] <- c("startDate", "endDate")
+# ------------------------------------------------------------------------------
+# [1] "indicator"         "catName"           "subcatName"        "startDate"         "startOpen"         "endDate"           "endOpen"          
+# [8] "return"            "Max.Notional.Cost" "Net.Trading.PL"    "tradeDays"         "calendarDays" 
 # ------------------------------------------------------------------------------
 dt_trade_stats    <- rbind.data.frame(dXema_trade_stats,
                                    dXsma_trade_stats,
