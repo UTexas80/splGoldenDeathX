@@ -38,7 +38,7 @@ saveRDS(trendSummaryEMA,           file  = here::here("dashboard/rds/", "trendSu
 # saveRDS(results,                 file        = here::here("dashboard/rds", "goldenX_EMA_results.rds"))
 # ------------------------------------------------------------------------------
 # saveRDS(viz.BoxplotN,            file        = here::here("dashboard/rds/", "viz.BoxplotN.rds"))
-# saveRDS(xtsEMA[complete.cases(xtsEMA), ], file = here::here("dashboard/rds/", "xtsEMA.rds"))
+saveRDS(xtsEMA[complete.cases(xtsEMA), ], file = here::here("dashboard/rds/", "xtsEMA.rds"))
 ################################################################################
 ## Step 99.03 Copy .RData strategy files                                     ###
 ################################################################################

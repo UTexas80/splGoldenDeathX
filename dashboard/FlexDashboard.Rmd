@@ -128,19 +128,19 @@ gXsma_trade_stats         <- readRDS(here::here("dashboard/rds", "gXsma_trade_st
 # goldenX_EMA_results     <- readRDS(here::here("dashboard/rds", "goldenX_EMA_results.rds"))
 tradeDays                 <- readRDS(here::here("dashboard/rds", "tradeDays.rds"))
 trend                     <- data.table(readRDS(here::here("dashboard/rds", "trend.rds")))
-trendClose                <- readRDS(here::here("dashboard/rds", "trendClose.rds"))
+# trendClose                <- readRDS(here::here("dashboard/rds", "trendClose.rds"))
 trendDraw                 <- data.table(readRDS(here::here("dashboard/rds", "trendDraw.rds")))
-trendEMA                  <- data.table(readRDS(here::here("dashboard/rds", "trendEMA.rds")))
+# trendEMA                  <- data.table(readRDS(here::here("dashboard/rds", "trendEMA.rds")))
 trendReturns              <- data.table(readRDS(here::here("dashboard/rds", "trendReturns.rds")))
-trendReturnsAnnualized    <- data.table(readRDS(here::here("dashboard/rds", "trendReturnsAnnualized.rds")))
+# trendReturnsAnnualized    <- data.table(readRDS(here::here("dashboard/rds", "trendReturnsAnnualized.rds")))
 trendReturnsDaily         <- readRDS(here::here("dashboard/rds", "trendReturnsDaily.rds"))
 trendReturnsEMAlong       <- data.table(readRDS(here::here("dashboard/rds", "trendReturnsEMAlong.rds")))
 trendReturnsSMA           <- data.table(readRDS(here::here("dashboard/rds", "trendReturnsSMA.rds")))
 trendReturnsSMAlong       <- data.table(readRDS(here::here("dashboard/rds", "trendReturnsSMAlong.rds")))
-trendSMA                  <- data.table(readRDS(here::here("dashboard/rds", "trendSMA.rds")))
+# trendSMA                  <- data.table(readRDS(here::here("dashboard/rds", "trendSMA.rds")))
 # trendSummary            <- data.table(readRDS(here::here("dashboard/rds", "trendSummary.rds")))
-trendSummaryEMA           <- data.table(readRDS(here::here("dashboard/rds", "trendSummaryEMA.rds")))       
-trendSummaryGroup         <- data.table(readRDS(here::here("dashboard/rds", "trendSummaryGroup.rds")))
+#trendSummaryEMA           <- data.table(readRDS(here::here("dashboard/rds", "trendSummaryEMA.rds")))       
+# trendSummaryGroup         <- data.table(readRDS(here::here("dashboard/rds", "trendSummaryGroup.rds")))
 xtsEMA                    <- as.xts(readRDS(here::here("dashboard/rds", "xtsEMA.rds")))
 ```
 
@@ -894,65 +894,64 @@ renderPlotly({
 ```
 
 ### Trend Returns Annualized
-```{r 2.1.2.2-viz-pie, eval=trendReturnsAnnualized}
-m <- melt(trendReturnsAnnualized[1,], id.vars = c("rn"))[,-1]
-names(m) <- c("trend", "return")
-m <- m[-7, `:=`(trend=str_sub(trend, end = -4), indicator= str_sub(trend, -3, -1))]
+<!-- # ```{r 2.1.2.2-viz-pie, eval=trendReturnsAnnualized} -->
+<!-- # m <- melt(trendReturnsAnnualized[1,], id.vars = c("rn"))[,-1] -->
+<!-- # names(m) <- c("trend", "return") -->
+<!-- # m <- m[-7, `:=`(trend=str_sub(trend, end = -4), indicator= str_sub(trend, -3, -1))] -->
+<!-- # -->
+<!-- # mEMA <- m[indicator=='EMA'] -->
+<!-- # mSMA <- m[indicator=='SMA'] -->
+<!-- # -->
+<!-- # renderPlotly({ -->
+<!-- #     p <- plot_ly(type = "bar") %>% -->
+<!-- #       add_bars(mEMA, x = ~mEMA$trend, y = ~mEMA$return, text = ~mEMA$indicator, textposition = 'auto', -->
+<!-- #                 marker = list(color = -->
+<!-- #                     c('black' -->
+<!-- #                     ,'teal' -->
+<!-- #                     ,'purple'))) %>% -->
+<!-- #       add_bars(mSMA, x = ~mSMA$trend, y = ~mSMA$return, text = ~mSMA$indicator, textposition = 'auto', -->
+<!-- #                 marker = list(color = -->
+<!-- #                     c('black' -->
+<!-- #                     ,'teal' -->
+<!-- #                     ,'purple' -->
+<!-- #                     ))) %>% -->
+<!-- #       layout( -->
+<!-- #         xaxis = list(title = ""), -->
+<!-- #         yaxis = list( -->
+<!-- #           title = 'Percent', -->
+<!-- #           tickformat = "%"), -->
+<!-- #         barmode = 'group', bargap = 0.15, bargroupgap = 0.1, -->
+<!-- #         showlegend = FALSE) -->
 
-mEMA <- m[indicator=='EMA']
-mSMA <- m[indicator=='SMA']
-
-renderPlotly({
-    p <- plot_ly(type = "bar") %>%
-      add_bars(mEMA, x = ~mEMA$trend, y = ~mEMA$return, text = ~mEMA$indicator, textposition = 'auto',
-                marker = list(color = 
-                    c('black'
-                    ,'teal'
-                    ,'purple'))) %>%
-      add_bars(mSMA, x = ~mSMA$trend, y = ~mSMA$return, text = ~mSMA$indicator, textposition = 'auto',
-                marker = list(color = 
-                    c('black'
-                    ,'teal'
-                    ,'purple'
-                    ))) %>%
-      layout(
-        xaxis = list(title = ""),
-        yaxis = list(
-          title = 'Percent',
-          tickformat = "%"),
-        barmode = 'group', bargap = 0.15, bargroupgap = 0.1,
-        showlegend = FALSE)
-     
-})  
-```
+<!-- <!-- # }) --> -->
+<!-- ``` -->
 
 ### Trend Trade Days Distribution
-```{r 2.1.2.3-viz-barchart, eval=trendSummaryGroup}
-emaPct <- trendSummaryGroup[1:3, occurrencePct := count/sum(count)][1:3, tradeDaysPct := tradeDays/sum(tradeDays)][1:3, c(2:5,8,7)]
-smaPct <- trendSummaryGroup[4:6, occurrencePct := count/sum(count)][4:6, tradeDaysPct := tradeDays/sum(tradeDays)][4:6, c(2:5,8,7)]
-renderPlotly({
-    p <- plot_ly(type = "bar") %>%
-      add_bars( x = emaPct$catName, y = emaPct$tradeDaysPct, text = ~emaPct$indicator, textposition = 'auto',
-                marker = list(color = 
-                  c('rgba(0,0,0,1)'
-                    ,'teal'
-                    ,'purple'))) %>%
-      add_bars( x = smaPct$catName, y = smaPct$tradeDaysPct, text = ~smaPct$indicator, textposition = 'auto',
-                marker = list(color = 
-                  c('rgba(0,0,0,1)'
-                    ,'teal'
-                    ,'purple'))) %>%
-
-      layout(
-          yaxis = list(
-          title = 'Percent',
-          tickformat = "%"),
-        barmode = 'group', bargap = 0.15, bargroupgap = 0.1,
-        showlegend = F)
-
-})  
-```
-
+<!-- ```{r 2.1.2.3-viz-barchart, eval=trendSummaryGroup}
+<!--  emaPct <- trendSummaryGroup[1:3, occurrencePct := count/sum(count)][1:3, tradeDaysPct := tradeDays/sum(tradeDays)][1:3, c(2:5,8,7)]
+<!--  smaPct <- trendSummaryGroup[4:6, occurrencePct := count/sum(count)][4:6, tradeDaysPct := tradeDays/sum(tradeDays)][4:6, c(2:5,8,7)]
+<!--  renderPlotly({
+<!--      p <- plot_ly(type = "bar") %>%
+<!--        add_bars( x = emaPct$catName, y = emaPct$tradeDaysPct, text = ~emaPct$indicator, textposition = 'auto',
+<!--                  marker = list(color = 
+<!--                    c('rgba(0,0,0,1)'
+<!--                      ,'teal'
+<!--                      ,'purple'))) %>%
+<!--        add_bars( x = smaPct$catName, y = smaPct$tradeDaysPct, text = ~smaPct$indicator, textposition = 'auto',
+<!--                  marker = list(color = 
+<!--                    c('rgba(0,0,0,1)'
+<!--                      ,'teal'
+<!--                      ,'purple'))) %>%
+<!--  
+<!--        layout(
+<!--            yaxis = list(
+<!--            title = 'Percent',
+<!--            tickformat = "%"),
+<!--          barmode = 'group', bargap = 0.15, bargroupgap = 0.1,
+<!--          showlegend = F)
+<!--  
+<!--  }) 
+ ``` -->
 2.2 Golden Cross {data-navmenu="2-Trends" data-icon="fa-list" data-orientation=rows}
 =====================================
 
