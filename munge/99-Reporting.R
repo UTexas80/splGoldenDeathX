@@ -3,7 +3,7 @@
 ################################################################################
 dtSPL$row <- dtSPL[, .I[1], by=date][,2]
 dtSPL$dayDiff <- data.table(dayDifff(SPL.AX))                                   # https://tinyurl.com/ybcssoh8
-dtSPL[is.na(dtSPL)] <- 0                                                        # replace na's with zero
+# dtSPL[is.na(dtSPL)] <- 0                                                        # replace na's with zero
 data.table::setkey(dtSPL, date)
 # ------------------------------------------------------------------------------
 l       <- list(dXema_trend, dXsma_trend, gXema_trend, gXsma_trend, nXema_trend, nXsma_trend)
