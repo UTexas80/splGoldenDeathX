@@ -227,9 +227,9 @@ gXsma_trend$tradeDays <- unlist(gXsma_trend$tradeDays)
 # add Start / End open price                                                 ***
 # ------------------------------------------------------------------------------
 setkey(gXsma_trend, "Start")
-gXsma_trend <- na.omit(gXsma_trend[SPL][, -c(27:31)])
+gXsma_trend <- na.omit(gXsma_trend[SPL][, -c(26,28:32)])
 setkey(gXsma_trend, "End")
-gXsma_trend <- na.omit(gXsma_trend[SPL][, -c(28:32)])
+gXsma_trend <- na.omit(gXsma_trend[SPL][, -c(27,29:33)])
 ################################################################################
 # 11.0	# Performance and Risk Metrics 
 ################################################################################

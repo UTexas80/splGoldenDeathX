@@ -202,9 +202,9 @@ dXema_trend$tradeDays <- unlist(dXema_trend$tradeDays)
 # add Start / End open price                                                 ***
 # ------------------------------------------------------------------------------
 setkey(dXema_trend, "Start")
-dXema_trend          <- na.omit(dXema_trend[SPL][, -c(27:31)])
+dXema_trend          <- na.omit(dXema_trend[SPL][, -c(26,28:32)])
 setkey(dXema_trend, "End")
-dXema_trend          <- na.omit(dXema_trend[SPL][, -c(28:32)])
+dXema_trend          <- na.omit(dXema_trend[SPL][, -c(27,29:33)])
 ################################################################################
 # 11.0	# Performance and Risk Metrics
 ################################################################################
