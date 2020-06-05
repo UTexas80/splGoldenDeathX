@@ -132,7 +132,7 @@ trend                     <- data.table(readRDS(here::here("dashboard/rds", "tre
 trendDraw                 <- data.table(readRDS(here::here("dashboard/rds", "trendDraw.rds")))
 # trendEMA                  <- data.table(readRDS(here::here("dashboard/rds", "trendEMA.rds")))
 trendReturns              <- data.table(readRDS(here::here("dashboard/rds", "trendReturns.rds")))
-# trendReturnsAnnualized    <- data.table(readRDS(here::here("dashboard/rds", "trendReturnsAnnualized.rds")))
+trendReturnsAnnualized    <- data.table(readRDS(here::here("dashboard/rds", "trendReturnsAnnualized.rds")))
 trendReturnsDaily         <- readRDS(here::here("dashboard/rds", "trendReturnsDaily.rds"))
 trendReturnsEMAlong       <- data.table(readRDS(here::here("dashboard/rds", "trendReturnsEMAlong.rds")))
 trendReturnsSMA           <- data.table(readRDS(here::here("dashboard/rds", "trendReturnsSMA.rds")))
@@ -894,37 +894,35 @@ renderPlotly({
 ```
 
 ### Trend Returns Annualized
-<!-- # ```{r 2.1.2.2-viz-pie, eval=trendReturnsAnnualized} -->
-<!-- # m <- melt(trendReturnsAnnualized[1,], id.vars = c("rn"))[,-1] -->
-<!-- # names(m) <- c("trend", "return") -->
-<!-- # m <- m[-7, `:=`(trend=str_sub(trend, end = -4), indicator= str_sub(trend, -3, -1))] -->
-<!-- # -->
-<!-- # mEMA <- m[indicator=='EMA'] -->
-<!-- # mSMA <- m[indicator=='SMA'] -->
-<!-- # -->
-<!-- # renderPlotly({ -->
-<!-- #     p <- plot_ly(type = "bar") %>% -->
-<!-- #       add_bars(mEMA, x = ~mEMA$trend, y = ~mEMA$return, text = ~mEMA$indicator, textposition = 'auto', -->
-<!-- #                 marker = list(color = -->
-<!-- #                     c('black' -->
-<!-- #                     ,'teal' -->
-<!-- #                     ,'purple'))) %>% -->
-<!-- #       add_bars(mSMA, x = ~mSMA$trend, y = ~mSMA$return, text = ~mSMA$indicator, textposition = 'auto', -->
-<!-- #                 marker = list(color = -->
-<!-- #                     c('black' -->
-<!-- #                     ,'teal' -->
-<!-- #                     ,'purple' -->
-<!-- #                     ))) %>% -->
-<!-- #       layout( -->
-<!-- #         xaxis = list(title = ""), -->
-<!-- #         yaxis = list( -->
-<!-- #           title = 'Percent', -->
-<!-- #           tickformat = "%"), -->
-<!-- #         barmode = 'group', bargap = 0.15, bargroupgap = 0.1, -->
-<!-- #         showlegend = FALSE) -->
+```{r 2.1.2.2-viz-pie, eval=trendReturnsAnnualized}
+m <- melt(trendReturnsAnnualized[1,], id.vars = c("rn"))[,-1]
+names(m) <- c("trend", "return")
+m <- m[-7, `:=`(trend=str_sub(trend, end = -4), indicator= str_sub(trend, -3, -1))]
+mEMA <- m[indicator=='EMA']
+mSMA <- m[indicator=='SMA']
+renderPlotly({
+   p <- plot_ly(type = "bar") %>%
+     add_bars(mEMA, x = ~mEMA$trend, y = ~mEMA$return, text = ~mEMA$indicator, textposition = 'auto',
+               marker = list(color =
+                   c('black'
+                   ,'teal'
+                   ,'purple'))) %>%
+     add_bars(mSMA, x = ~mSMA$trend, y = ~mSMA$return, text = ~mSMA$indicator, textposition = 'auto',
+               marker = list(color =
+                   c('black'
+                   ,'teal'
+                   ,'purple'
+                   ))) %>%
+     layout(
+       xaxis = list(title = ""),
+       yaxis = list(
+         title = 'Percent',
+         tickformat = "%"),
+       barmode = 'group', bargap = 0.15, bargroupgap = 0.1,
+       showlegend = FALSE)
 
-<!-- <!-- # }) --> -->
-<!-- ``` -->
+})
+```
 
 ### Trend Trade Days Distribution
 <!-- ```{r 2.1.2.3-viz-barchart, eval=trendSummaryGroup}
