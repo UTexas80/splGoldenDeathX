@@ -9,16 +9,16 @@ data.table::setkey(dtSPL, date)
 l       <- list(dXema_trend, dXsma_trend, gXema_trend, gXsma_trend, nXema_trend, nXsma_trend)
 trend   <- rbindlist(l)
 # ------------------------------------------------------------------------------
-# [1] "Start"               "End"                 "Init.Qty"            "Init.Pos"            "Max.Pos"             "End.Pos"
-# [7] "Closing.Txn.Qty"     "Num.Txns"            "Max.Notional.Cost"   "Net.Trading.PL"      "MAE"                 "MFE"
-# [13] "Pct.Net.Trading.PL"  "Pct.MAE"             "Pct.MFE"             "tick.Net.Trading.PL" "tick.MAE"            "tick.MFE"
-# [19] "duration"            "tradeDays"           "calendarDays"        "catName"             "indicator"           "grp"
-# [25] "subcatName"          "open"                "i.open"
+# [1] "Start"               "End"                 "Init.Qty"            "Init.Pos"            "Max.Pos"             "End.Pos"            
+# [7] "Closing.Txn.Qty"     "Num.Txns"            "Max.Notional.Cost"   "Net.Trading.PL"      "MAE"                 "MFE"                
+# [13] "Pct.Net.Trading.PL"  "Pct.MAE"             "Pct.MFE"             "tick.Net.Trading.PL" "tick.MAE"            "tick.MFE"           
+# [19] "duration"            "tradeDays"           "calendarDays"        "catName"             "indicator"           "grp"                
+# [25] "subcatName"          "open"                "i.open"   
 # ------------------------------------------------------------------------------
-trend   <- trend[, c(23, 22, 25, 1:2, 27, 13, 9:10, 20:21, 28:29)]
+trend   <- trend[, c(23, 22, 25, 1, 26, 2, 27, 13, 9:10, 20:21)]
 # ------------------------------------------------------------------------------# https://tinyurl.com/yb29lhr9
 # indicator, catName, subcatName, Start, startOpen, end, endOpen, return, Max.Notational.Cost, Net.Trading.PL, tradeDays#, Calendar Days
-names(trend)[c(4:7,13)] <- c("startDate", "endDate", "startOpen", "return",  "endOpen")
+names(trend)[c(4:8)] <- c("startDate", "startOpen", "endDate", "endOpen", "return")
 # ------------------------------------------------------------------------------
 # [1] "indicator"         "catName"           "subcatName"        "startDate"         "startOpen"         "endDate"
 # [7] "endOpen"           "return"            "Max.Notional.Cost" "Net.Trading.PL"    "tradeDays"         "calendarDays"
@@ -74,7 +74,7 @@ names(trend)[c(4:7,13)] <- c("startDate", "endDate", "startOpen", "return",  "en
 # [31] "dayDiff"             "i.row"               "i.dayDiff"           "startDate"           "startOpen"           "endDate"            
 # [37] "endOpen"  
 # ------------------------------------------------------------------------------# https://tinyurl.com/tmmubbh
-trendReturns      <- data.table(t(trend[, c(3,8)]))                           # subcatName, return
+trendReturns      <- data.table(t(trend[, c(3,8)]))                             # subcatName, return
 trendReturns      <- setnames(trendReturns, as.character(trendReturns[1,]))[-1,] %>%
                      mutate_if(is.character,as.numeric)
 # trend   <- trend[, c(23, 22, 25, 1,35,2, 37, 13, 9, 10, 20:21)]   
