@@ -15,10 +15,10 @@ trend   <- rbindlist(l)
 # [19] "duration"            "tradeDays"           "calendarDays"        "catName"             "indicator"           "grp"
 # [25] "subcatName"          "open"                "i.open"
 # ------------------------------------------------------------------------------
-trend   <- trend[, c(23, 22, 25, 1, 26, 2, 27, 13, 9:10, 20:21)]
+trend   <- trend[, c(23, 22, 25, 1:2, 27, 13, 9:10, 20:21, 28:29)]
 # ------------------------------------------------------------------------------# https://tinyurl.com/yb29lhr9
 # indicator, catName, subcatName, Start, startOpen, end, endOpen, return, Max.Notational.Cost, Net.Trading.PL, tradeDays#, Calendar Days
-names(trend)[c(4,6,8,5,7)] <- c("startDate", "endDate", "return", "startOpen", "endOpen")
+names(trend)[c(4:7,13)] <- c("startDate", "endDate", "startOpen", "return",  "endOpen")
 # ------------------------------------------------------------------------------
 # [1] "indicator"         "catName"           "subcatName"        "startDate"         "startOpen"         "endDate"
 # [7] "endOpen"           "return"            "Max.Notional.Cost" "Net.Trading.PL"    "tradeDays"         "calendarDays"
@@ -48,7 +48,7 @@ names(trend)[c(4,6,8,5,7)] <- c("startDate", "endDate", "return", "startOpen", "
 # trend   <- dtSPL[trend][,-c(2:7)]
 # ------------------------------------------------------------------------------
 # trend[, `:=`(tradeStart, lapply(trend[,4],    function(x)  x + 86400))]
-# trend[, `:=`(tradeStart, lapply(trend[,30],    function(x) xts:::index.xts(SPL.AX[x+1])))]
+# trend[, `:=`(tradeStart, lapply(trend[,4],    function(x) xts:::index.xts(SPL.AX[x+1])))]
 # trend$tradeStart = trend$Start + trend$dayDiff
 # trend[, `:=`(tradeOpen,   apply( trend[,1], 1, function(x) lag(Op(SPL.AX), -1)[x]))]
 # ------------------------------------------------------------------------------
