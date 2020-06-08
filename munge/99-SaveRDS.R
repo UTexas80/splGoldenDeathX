@@ -30,9 +30,9 @@ saveRDS(trendReturnsEMAlong,       file  = here::here("dashboard/rds/", "trendRe
 saveRDS(trendReturnsSMA,           file  = here::here("dashboard/rds/", "trendReturnsSMA.rds"))
 saveRDS(trendReturnsSMAlong,       file  = here::here("dashboard/rds/", "trendReturnsSMAlong.rds"))
 saveRDS(trendSummaryEMA,           file  = here::here("dashboard/rds/", "trendSummaryEMA.rds"))
-# saveRDS(trendSummaryGroup,       file  = here::here("dashboard/rds/", "trendSummaryGroup.rds"))
-# saveRDS(trendEMA,                file  = here::here("dashboard/rds/", "trendEMA.rds"))
-# saveRDS(trendSMA,                file  = here::here("dashboard/rds/", "trendSMA.rds"))
+saveRDS(trendSummaryGroup,         file  = here::here("dashboard/rds/", "trendSummaryGroup.rds"))
+saveRDS(emaPct,                    file  = here::here("dashboard/rds/", "emaPct.rds"))
+saveRDS(smaPct,                    file  = here::here("dashboard/rds/", "smaPct.rds"))
 # ------------------------------------------------------------------------------
 # saveRDS(buyHold_results,         file        = here::here("dashboard/rds", "buyHold_results.rds"))
 # saveRDS(results,                 file        = here::here("dashboard/rds", "goldenX_EMA_results.rds"))

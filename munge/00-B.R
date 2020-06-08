@@ -7,7 +7,8 @@ SPL$date <- as.POSIXct(SPL$date, format="%Y-%m-%d") # Convert Date to POSIXct###
 setkey(SPL, "date")
 ################################################################################
 ## Step 00.01: xts Prices                      https://tinyurl.com/yy2mkklj  ###
-##                                             https://tinyurl.com/yyyf4qqw  ###
+##                                             https://tinyurl.com/yyyf4qqw  ###  
+## This is where SPL.AX gets created from symbols                            ###                   
 ################################################################################
 xtsPrices <-
   getSymbols(symbols,
