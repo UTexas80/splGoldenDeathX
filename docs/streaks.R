@@ -3,6 +3,8 @@
 # ------------------------------------------------------------------------------
 library(tidyverse)
 
+x <- data.frame(trials=c(0,1,1,1,0,0,1,0,1,1,1,0,0,0,0,0,1))
+
 get_streaks <- function(vec){
     x <- data.frame(trials=vec)
     x <- x %>% mutate(lagged=lag(trials)) %>%  #note: that's dplyr::lag, not stats::lag
