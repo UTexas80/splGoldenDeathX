@@ -152,10 +152,10 @@ report <- function(trendName) {
 # ------------------------------------------------------------------------------
     t <- setkey(t, "Start")
 #   t <- na.omit(t[m][, c(1:26)])
-    t <- na.omit(t[SPL][, -c(26,28:32)])
+    t <- na.omit(t[SPL, nomatch = 0][, -c(26,28:32)])
     t <- setkey(t, "End")
 #   t <- na.omit(t[m][, c(1:27)])
-    t <- na.omit(t[SPL][, -c(27,29:33)])
+    t <- na.omit(t[SPL, nomatch = 0][, -c(27,29:33)])
     g[[paste(trendName, "trend", sep = "_")]] <- data.table(t)
 # ------------------------------------------------------------------------------    
 # [1] "Start"               "End"                 "Init.Qty"            "Init.Pos"            "Max.Pos"             "End.Pos"            
