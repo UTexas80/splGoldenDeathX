@@ -19,11 +19,11 @@ trendSummaryGroup <- trend[, .(count = .N,                  # .N is nb per group
                                by = .(indicator, catName)][
                                order(indicator, catName)
                                ]
-trendSummaryGroup <- trendSummaryGroup[, .(occurrencePct = count/sum(count),
-                                          tradeDaysPct = tradeDays/sum(tradeDays)),
-                                          by = .(indicator)][
-                                          order(indicator)
-                                      ][, c(1:7)]
+# trendSummaryGroup <- trendSummaryGroup[, .(occurrencePct = count/sum(count),
+#                                           tradeDaysPct = tradeDays/sum(tradeDays)),
+#                                           by = .(indicator)][
+#                                           order(indicator)
+#                                       ][, c(1:7)]
 emaPct <- trendSummaryGroup[
   indicator == "EMA", occurrencePct := count / sum(count)][
   indicator == "EMA", tradeDaysPct := tradeDays / sum(tradeDays)][1:3]
