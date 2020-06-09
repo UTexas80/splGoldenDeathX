@@ -210,8 +210,7 @@ dXema_trend          <- na.omit(dXema_trend[SPL, nomatch = 0][, -c(27,29:33)])
 ################################################################################
 dXema_rets           <- PortfReturns(Account =  account.st)
 rownames(dXema_rets) <- NULL
-paste(strategy.st)
-names(data)[3]<-"new_name
+names(dXema_rets)[1] <- strategy.st
 # ------------------------------------------------------------------------------
 dXema_perf <- table.Arbitrary(dXema_rets,
   metrics = c(

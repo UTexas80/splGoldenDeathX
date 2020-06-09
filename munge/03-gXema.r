@@ -231,6 +231,7 @@ gXema_trend <- na.omit(gXema_trend[SPL, nomatch = 0][, -c(27,29:33)])
 ################################################################################
 gXema_rets           <- PortfReturns(Account =  account.st)
 rownames(gXema_rets) <- NULL
+names(gXema_rets)[1] <- strategy.st
 # ------------------------------------------------------------------------------
 gXema_perf <- table.Arbitrary(gXema_rets,
   metrics = c(

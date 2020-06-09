@@ -2,7 +2,7 @@
 # How Do I in R?                                https://tinyurl.com/y9j67lfk ###
 ############################################### https://tinyurl.com/yddh54gn ###
 ## checkpoint ## or any date in YYYY-MM-DD format after 2014-09-17 
-## checkpoint("2015-01-15") 
+## checkpoint("2015-01-15")
 ################################################################################
 ## Step 00.00 Processing Start Time - start the timer                        ###
 ################################################################################
@@ -33,7 +33,7 @@ dT.test3 <- dT.indMetrics[
 # ------------------------------------------------------------------------------
 dt_ma_ema <- setDT(dT.test3,FALSE)
 # ------------------------------------------------------------------------------
-trend_name <<- 
+trend_name <<-
   setorder(
     dT.strategy[                                   # https://tinyurl.com/vajvn48
       dT.ind, allow.cartesian = T][
@@ -97,11 +97,11 @@ class(trend_signal)     <- "setup"                     # add class to trend_name
 dt_strategy <<- 
     setorder(
         dT.strategy[dT.ind, allow.cartesian = T][
-        , strategy_name:= paste0(abbv,i.name)], 
+        , strategy_name:= paste0(abbv,i.name)],
         strategy_name)[
         , id:=  .I[]][
-        , formula:= paste0(formula, i.name)  
-        ] 
+        , formula:= paste0(formula, i.name)
+        ]
 # ------------------------------------------------------------------------------
 stocks <- data.frame(
   time = as.Date('2009-01-01') + 0:9,
