@@ -1,9 +1,9 @@
-################################################################################
+X################################################################################
 ## Step 00.01.Baseline Signal & Return                  https://is.gd/swRbXV ###
 ## Seems counterintuitive but to create a leading .xts indicator use:        ###
 ## lag(x, -1)                                                                ###
 # ------------------------------------------------------------------------------
-#death_ma_sig             <- lag(ifelse(ema020 > ema050 & ema050 >           ###                    
+#death_ma_sig             <- lag(ifelse(ema020 > ema050 & ema050 >           ###
 #ema100 & ema100 > ema200, 1, 0), -1)                                        ###
 ################################################################################
 death_ma_sigEMA           <- ifelse(ema020 < ema050 & ema050 <
@@ -37,11 +37,11 @@ trendDrawDeathSMA         <-as.data.table(maxDrawdown(deathSMA))
 trendDrawDeath            <-as.data.table(cbind(trendDrawDeathEMA, 
                                 trendDrawDeathSMA))
 # ------------------------------------------------------------------------------
-trendSummaryDeathEMA      <-as.data.table(table.AnnualizedReturns(deathEMA, 
+trendSummaryDeathEMA      <-as.data.table(table.AnnualizedReturns(deathEMA,
     Rf = 0.02 / 252), keep.rownames = TRUE)
-trendSummaryDeathSMA      <-as.data.table(table.AnnualizedReturns(deathSMA, 
+trendSummaryDeathSMA      <-as.data.table(table.AnnualizedReturns(deathSMA,
     Rf = 0.02 / 252), keep.rownames = TRUE)
-trendSummaryDeath         <-as.data.table(table.AnnualizedReturns(death, 
+trendSummaryDeath         <-as.data.table(table.AnnualizedReturns(death,
     Rf = 0.02 / 252), keep.rownames = TRUE)
 ################################################################################
 ## Step 00.99: VERSION HISTORY                                               ###

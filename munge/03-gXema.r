@@ -227,7 +227,7 @@ gXema_trend <- na.omit(gXema_trend[SPL, nomatch = 0][, -c(26,28:32)])
 setkey(gXema_trend, "End")
 gXema_trend <- na.omit(gXema_trend[SPL, nomatch = 0][, -c(27,29:33)])
 ################################################################################
-# 11.0	# Performance and Risk Metrics 
+# 11.0	# Performance and Risk Metrics                                       ***
 ################################################################################
 gXema_rets           <- PortfReturns(Account =  account.st)
 rownames(gXema_rets) <- NULL
