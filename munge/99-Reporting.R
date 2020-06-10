@@ -198,7 +198,8 @@ colnames(nXema)  <- c("nXema", "Buy&Hold")
 colnames(nXsma)  <- c("nXsma", "Buy&Hold")
 colnames(nX)     <- c("nXema", "nXsma", "Buy&Hold")
 # ------------------------------------------------------------------------------
-trendReturnsDaily <- cbind(death[,1:2], golden[,1:2], nX)
+# trendReturnsDaily <- cbind(death[,1:2], golden[,1:2], nX)
+trendReturnsDaily <- cbind(dXema_rets,dXsma_rets,gXema_rets,gXsma_rets,nX)
 ################################################################################
 ## Step 99.99: VERSION HISTORY                                               ###
 ################################################################################

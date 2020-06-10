@@ -1577,9 +1577,23 @@ flexdashboard::renderValueBox({
 
 Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 -------------------------------------
+
+### Price & Transactions Chart
+```{r 2.4.2.1-viz-nox-posn-chartstats}
+
+    renderPlot({
+      ind <- tolower(unique(trend[,1])[(as.numeric(input$radio2.4) - 4),]) 
+      chart.Posn(paste0("nX", ind), 
+       Symbol = "SPL.AX",  
+       Dates  = paste(format(input$dateRange2.4[1]), format(input$dateRange2.4[2]),sep = "::"),
+       TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
+    })
+
+```
+
 ### NoX Crossing Table
 
-```{r 2.4.2.a-table-noX, eval=trend}
+```{r 2.4.2.2-table-noX, eval=trend}
 DT::renderDataTable({
     ind <- unique(trend[,1])[(as.numeric(input$radio2.4) - 4),]
     trendTable <- trend[indicator == ind]
