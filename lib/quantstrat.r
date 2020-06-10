@@ -157,8 +157,8 @@ report <- function(trendName) {
 #   t <- na.omit(t[m][, c(1:27)])
     t <- na.omit(t[SPL, nomatch = 0][, -c(27,29:33)])
     g[[paste(trendName, "trend", sep = "_")]] <- data.table(t)
-# ------------------------------------------------------------------------------    
-# [1] "Start"               "End"                 "Init.Qty"            "Init.Pos"            "Max.Pos"             "End.Pos"            
+# ------------------------------------------------------------------------------   
+# [1] "Start"               "End"                 "Init.Qty"            "Init.Pos"            "Max.Pos"             "End.Pos
 # [7] "Closing.Txn.Qty"     "Num.Txns"            "Max.Notional.Cost"   "Net.Trading.PL"      "MAE"                 "MFE"                
 # [13] "Pct.Net.Trading.PL"  "Pct.MAE"             "Pct.MFE"             "tick.Net.Trading.PL" "tick.MAE"            "tick.MFE"           
 # [19] "duration"            "tradeDays"           "calendarDays"        "catName"             "indicator"           "grp"                
@@ -172,10 +172,11 @@ report <- function(trendName) {
     select(Avg.Trade.PL, Avg.Win.Trade, Avg.Losing.Trade, Avg.WinLoss.Ratio)
     t(w)
 # ------------------------------------------------------------------------------
-    r <- g[[paste(trendName, "returns", sep = "_")]] <- 
+    r <- g[[paste(trendName, "rets", sep = "_")]] <- 
         PortfReturns(Account =  account.st)
     rownames(r) <- NULL
-    names(r)[1] <- trendName
+    names(r)[1] <- strategy.st
+    g[[paste(trendName, "rets", sep = "_")]] <- data.table(r)
 # ------------------------------------------------------------------------------
     perf <- g[[paste(trendName, "perf", sep = "_")]] <- 
             table.Arbitrary(r, metrics = c(

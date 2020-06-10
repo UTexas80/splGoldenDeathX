@@ -2,12 +2,13 @@
 ## Step 99.00 trade stats                                                    ###
 ################################################################################
 dtSPL$row <- dtSPL[, .I[1], by=date][,2]
-dtSPL$dayDiff <- data.table(dayDifff(SPL.AX))     # https://tinyurl.com/ybcssoh8
+dtSPL$dayDiff <- dayDifff(SPL.AX)                 # https://tinyurl.com/ybcssoh8
 # ------------------------------------------------------------------------------
 dtSPL[1,9] <- 1                                   # replace first na's with zero
 dtSPL[nrow(dtSPL),9] <- 0                         # replace last na's with zero
 data.table::setkey(dtSPL, date)
-
+# ------------------------------------------------------------------------------
+tRD <- cbind(dXema_rets,dXsma_rets,gXema_rets,gXsma_rets,nXema_rets,nXsma_rets)
 # ------------------------------------------------------------------------------
 l       <- list(dXema_trend, dXsma_trend, gXema_trend, gXsma_trend, nXema_trend, nXsma_trend)
 trend   <- rbindlist(l)
