@@ -175,8 +175,8 @@ report <- function(trendName) {
     r <- g[[paste(trendName, "rets", sep = "_")]] <- 
         PortfReturns(Account =  account.st)
     rownames(r) <- NULL
-    names(r)[1] <- strategy.st
-    g[[paste(trendName, "rets", sep = "_")]] <- data.table(r)
+    # names(r)[1] <- strategy.st
+    # g[[paste(trendName, "rets", sep = "_")]] <- data.table(r)
 # ------------------------------------------------------------------------------
     perf <- g[[paste(trendName, "perf", sep = "_")]] <- 
             table.Arbitrary(r, metrics = c(

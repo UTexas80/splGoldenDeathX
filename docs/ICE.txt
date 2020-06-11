@@ -1,0 +1,34 @@
+Job Purpose
+
+The Senior Data Analyst will join the Quant Group which designs, implements, and supports enterprise quantitative models and systems. 
+The primary role of this position will be to design and develop financial data models, and perform data analysis to support data needs from other Quant divisions. 
+The candidate for this job must have ability to work in a fast-paced environment, formulate and articulate solutions and defend assumptions. 
+This role requires frequent interaction with Quant Research, Risk Managers, Developers and Senior Management.
+
+Responsibilities
+Financial data preparation, validation and visualization 
+Develop data set processes for data modeling, mining and production of quantitative models 
+Recommend ways to improve data reliability, efficiency and quality 
+Manage large data sets and interpret database architectures 
+Coordinate with quantitative research and analytics experts to develop and refine data management best practices, policies, and procedures 
+Provide documentations and/or presentations to illustrate methods, techniques, and findings for individuals with diverse professional backgrounds 
+Engage in innovative research tasks 
+
+Knowledge And Experience
+Bachelor’s degree in Data Science/Analytics, Computer Engineering, Mathematics, Statistics or similar required; Post Graduate degree in Data Science, Computer Engineering, Mathematics, Statistics or similar preferred 
+5+ years of experience in Data Engineer/Analyst/Scientist 
+Strong programming experience in Python, R, MATLAB, C/C++ or Java 
+Advanced working SQL knowledge and experience working with relational databases 
+Ability to work in a high-performance, high-velocity environment 
+Strong analytical and organizational skills with acute attention to detail 
+Strong communication skills 
+Customer focused and result oriented 
+Experience in data visualization tools such as Tableau preferred 
+Experience with code versioning tools such as Git preferred 
+Experience in Quantitative Finance and Machine Learning preferred 
+
+Intercontinental Exchange, Inc. is an Equal Opportunity and Affirmative Action Employer. All qualified applicants will receive consideration for employment without regard to race, color, religion, gender, sexual orientation, gender identity, national origin or ancestry, age, disability or veteran status, or other protected status.
+
+Additional Information
+Job Type Standard 
+Schedule Full-time
