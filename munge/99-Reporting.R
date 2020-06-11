@@ -135,8 +135,8 @@ deathOpenSMA              <- (open * death_ma_sigSMA[death_ma_sigSMA$SMA == 1])
 # ------------------------------------------------------------------------------
 # dXema_ret                 <- (ret * death_ma_sigEMA[death_ma_sigEMA$EMA == 1])
 # dXsma_ret                 <- (ret * death_ma_sigSMA[death_ma_sigSMA$SMA == 1])
-death_ma_retEMA           <- dailyReturn(deathOpenEMA) * -1
-death_ma_retSMA           <- dailyReturn(deathOpenSMA) * -1
+death_ma_retEMA           <- dailyReturn(deathOpenEMA)
+death_ma_retSMA           <- dailyReturn(deathOpenSMA)
 # ------------------------------------------------------------------------------
 deathEMA                  <- cbind(death_ma_retEMA, ret)
 deathSMA                  <- cbind(death_ma_retSMA, ret)
@@ -199,7 +199,7 @@ colnames(nXsma)  <- c("nXsma", "Buy&Hold")
 colnames(nX)     <- c("nXema", "nXsma", "Buy&Hold")
 # ------------------------------------------------------------------------------
 # trendReturnsDaily <- cbind(death[,1:2], golden[,1:2], nX)
-trendReturnsDaily <- cbind(dXema_rets,dXsma_rets,gXema_rets,gXsma_rets,nX)
+trendReturnsDaily <- cbind(death[,-c(3)],golden[,-c(3)],nX)
 ################################################################################
 ## Step 99.99: VERSION HISTORY                                               ###
 ################################################################################

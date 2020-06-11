@@ -1,6 +1,7 @@
 https://datascienceplus.com/automated-data-report-storytelling-in-r/
 
 # modify TrendReturnsDaily
+# daily2annual.zoo(golden, FUN = sum, na.rm = TRUE)
 
 glimpse(dXema_trend)
 Rows: 30

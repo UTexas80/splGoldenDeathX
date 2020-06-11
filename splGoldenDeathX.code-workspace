@@ -32,6 +32,7 @@
 		},
 		"terminal.integrated.cursorStyle": "underline",
 		"editor.suggest.localityBonus": true,
-		"peacock.color": "#020300"
+		"peacock.color": "#020300",
+		"markdown-todo.sortByCount": false
 	}
 }
