@@ -634,18 +634,17 @@ DT::renderDataTable({
 
 ### EMA Trend Return Distribution
 ```{r 2.1.1.b-viz-box-returns, eval=trendReturns}
-# chart.Boxplot(data.table(trendReturns, colorset = bluemono, main = "Trailing 36-Month Returns")
-#    %>% select(starts_with("D")))
 chart.Boxplot(data.table(trendReturns) %>% select(starts_with("D")) %>% select(ends_with("EMA")))
 chart.Boxplot(data.table(trendReturns) %>% select(starts_with("G")) %>% select(ends_with("EMA")))
+chart.Boxplot(data.table(trendReturns) %>% select(starts_with("N")) %>% select(ends_with("EMA")))
 ```
 
 ### SMA Trend Return Distribution
 
-```{r 2.1.1.c-viz-box-returns, eval=trendReturnsSMA}
+```{r 2.1.1.c-viz-box-returns, eval=trendReturns}
 chart.Boxplot(data.table(trendReturns) %>% select(starts_with("D")) %>% select(ends_with("SMA")))
 chart.Boxplot(data.table(trendReturns) %>% select(starts_with("G")) %>% select(ends_with("SMA")))
-# chart.Boxplot(data.table(trendReturnsSMA) %>% select(starts_with("n")))
+chart.Boxplot(data.table(trendReturns) %>% select(starts_with("N")) %>% select(ends_with("SMA")))
 ```
 
 ### Composite Returns
@@ -862,17 +861,6 @@ DT::renderDataTable({
 gXsma.rets.bh
 ```
 
-### Daily Transaction P & L
-```{r 2.1.1.j-viz-dailyTxnPL}
-renderHighchart({
-  chart.Posn("gXsma", Symbol = 'SPL.AX',TA = 'add_SMA(n = 10,col = 4, on = 1)')
-})
-# renderHighchart({
-#   goldenX_EMA_dailyTxnPL <-  data.table(blotter::dailyTxnPL("goldenX_EMA_portfolio"), keep.rownames = TRUE)
-#     hchart(goldenX_EMA_dailyTxnPL, "column", hcaes( x = 'index',  y = 'SPL.AX.DailyTxnPL'))
-# })
-```
-
 Row {data-height=33%}
 -------------------------------------
 ### Composite Trend Return Distribution
@@ -999,7 +987,7 @@ flexdashboard::renderValueBox({
 
   calendarDays <- format(input$dateRange2.2[2] - input$dateRange2.2[1], big.mark = ",")
   calendarDays <- substr(calendarDays, 1, nchar(calendarDays) - 5)
-    
+
   flexdashboard::valueBox(
     paste(calendarDays, " ", "Calendar Days"),
   )
@@ -1028,7 +1016,7 @@ flexdashboard::renderValueBox({
           trendReturnsDaily
             [,as.numeric(input$radio2.2)])
             [paste(format(input$dateRange2.2[1]),format(input$dateRange2.2[2]),sep = "::")]) > 0, 
-           "teal", "red"),    
+           "teal", "red"),
     icon = "ion-cash"
   )
 })
@@ -1057,8 +1045,8 @@ flexdashboard::renderValueBox({
         na.omit(
           trendReturnsDaily
             [,as.numeric(input$radio2.2)])
-            [paste(format(input$dateRange2.2[1][+1]), format(input$dateRange2.2[2]),sep = "::")]) > 0, 
-      "teal", "red"),    
+            [paste(format(input$dateRange2.2[1][+1]), format(input$dateRange2.2[2]),sep = "::")]) > 0,
+      "teal", "red"),
     icon = "ion-cash"
   )
 })
@@ -1075,7 +1063,7 @@ flexdashboard::renderValueBox({
           [paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::")]
     )
   )
- 
+
   flexdashboard::valueBox(
     paste("Trade Days: ", "", tradeDays),
     color = # 0000ff
@@ -1086,14 +1074,27 @@ flexdashboard::renderValueBox({
 
 Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 -------------------------------------
+
+### Price & Transactions Chart
+```{r 2.2.2.1-viz-goldenx-posn-chartstats}
+
+    renderPlot({
+      ind <- tolower(unique(trend[,1])[(as.numeric(input$radio2.2) - 2),])
+      chart.Posn(paste0("gX", ind),
+       Symbol = "SPL.AX",
+       Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
+       TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
+    })
+```
+
 ### Golden Crossing Table
 
-```{r 2.2.2.1-table-goldenx, eval=trend}
+```{r 2.2.2.2-table-goldenx, eval=trend}
 DT::renderDataTable({
     ind <- unique(trend[,1])[(as.numeric(input$radio2.2) - 2),]
     trendTable <- trend[indicator == ind]
-    trendTable <- trendTable[catName == "GoldenX" & 
-                        (startDate >= input$dateRange2.2[1] & 
+    trendTable <- trendTable[catName == "GoldenX" &
+                        (startDate >= input$dateRange2.2[1] &
                          endDate <= input$dateRange2.2[2])][,-9]
     DT::datatable(trendTable,
     rownames = FALSE,
@@ -1120,25 +1121,13 @@ DT::renderDataTable({
 })
 ```
 
-### Price & Transactions Chart
-```{r 2.2.2.2-viz-goldenx-posn-chartstats}
-
-    renderPlot({
-      ind <- tolower(unique(trend[,1])[(as.numeric(input$radio2.2) - 2),]) 
-      chart.Posn(paste0("gX", ind), 
-       Symbol = "SPL.AX",  
-       Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
-       TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
-    })
-
-```
 ### Trade Stats
 ```{r 2.2.2.3-table-goldenX-tradestats}
 # goldenX_EMA_tradestats <- blotter::tradeStats(
-#   "goldenX_EMA_portfolio", 
+#   "goldenX_EMA_portfolio",
 #     Dates = "2009-01-01::2019-12-02")
-#       
-# 
+#
+#
 # DT::renderDataTable({
 #   DT::datatable(goldenX_EMA_tradestats,
 #     rownames = FALSE,
@@ -1266,7 +1255,7 @@ flexdashboard::renderValueBox({
 
   calendarDays <- format(input$dateRange2.3[2] - input$dateRange2.3[1], big.mark = ",")
   calendarDays <- substr(calendarDays, 1, nchar(calendarDays) - 5)
-    
+
   flexdashboard::valueBox(
     paste(calendarDays, " ", "Calendar Days"),
   )
@@ -1353,9 +1342,23 @@ flexdashboard::renderValueBox({
 
 Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 -------------------------------------
+
+### Price & Transactions Chart
+```{r 2.3.2.1-viz-deathX-posn-chartstats}
+
+    renderPlot({
+      ind <- tolower(unique(trend[,1])[(as.numeric(input$radio2.3) - 0),])
+      chart.Posn(paste0("dX", ind),
+       Symbol = "SPL.AX",
+       Dates  = paste(format(input$dateRange2.3[1]), format(input$dateRange2.3[2]),sep = "::"),
+       TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
+    })
+
+```
+
 ### DeathX Crossing Table
 
-```{r 2.3.2.1-table-death, eval=trend}
+```{r 2.3.2.2-table-death, eval=trend}
 DT::renderDataTable({
     ind <- unique(trend[,1])[(as.numeric(input$radio2.3)),]
     trendTable <- trend[indicator == ind]
@@ -1385,19 +1388,6 @@ DT::renderDataTable({
       color = styleInterval(c(0), c("maroon", "darkgreen"))
     )
 })
-```
-
-### Price & Transactions Chart
-```{r 2.3.2.2-viz-deathX-posn-chartstats}
-
-    renderPlot({
-      ind <- tolower(unique(trend[,1])[(as.numeric(input$radio2.3) - 0),]) 
-      chart.Posn(paste0("dX", ind), 
-       Symbol = "SPL.AX",  
-       Dates  = paste(format(input$dateRange2.3[1]), format(input$dateRange2.3[2]),sep = "::"),
-       TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
-    })
-
 ```
 
 Row {data-height=33%}
@@ -1582,9 +1572,9 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 ```{r 2.4.2.1-viz-nox-posn-chartstats}
 
     renderPlot({
-      ind <- tolower(unique(trend[,1])[(as.numeric(input$radio2.4) - 4),]) 
-      chart.Posn(paste0("nX", ind), 
-       Symbol = "SPL.AX",  
+      ind <- tolower(unique(trend[,1])[(as.numeric(input$radio2.4) - 4),])
+      chart.Posn(paste0("nX", ind),
+       Symbol = "SPL.AX",
        Dates  = paste(format(input$dateRange2.4[1]), format(input$dateRange2.4[2]),sep = "::"),
        TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
     })

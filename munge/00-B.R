@@ -7,8 +7,8 @@ SPL$date <- as.POSIXct(SPL$date, format="%Y-%m-%d") # Convert Date to POSIXct###
 setkey(SPL, "date")
 ################################################################################
 ## Step 00.01: xts Prices                      https://tinyurl.com/yy2mkklj  ###
-##                                             https://tinyurl.com/yyyf4qqw  ###  
-## This is where SPL.AX gets created from symbols                            ###                   
+##                                             https://tinyurl.com/yyyf4qqw  ###
+## This is where SPL.AX gets created from symbols                            ###
 ################################################################################
 xtsPrices <-
   getSymbols(symbols,
@@ -25,13 +25,13 @@ SPL.AX <-
   SPL.AX %>%
   na.omit() # Replace missing values (NA)       https://tinyurl.com/y5etxh8x ###
 ################################################################################
-## Step 00.02 death Cross Trading System          https://tinyurl.com/y3sq4ond  ###
+## Step 00.02 death Cross Trading System        https://tinyurl.com/y3sq4ond ###
 ## Baseline Return                                                           ###
 ################################################################################
 close                     <- Cl(SPL.AX)
-ret                       <- ROC(Cl(SPL.AX))  
+ret                       <- ROC(Cl(SPL.AX))
 ################################################################################
-## Step 00.03: xts EMA / SMA                    https://tinyurl.com/yy8ozaa2 ### 
+## Step 00.03: xts EMA / SMA                    https://tinyurl.com/yy8ozaa2 ###
 ## Exponential Moving Average - EMA calculates an exponentially-weighted     ###
 ## mean, giving more weight to recent observations                           ###
 ## Simple Moving Average - SMA calculates the arithmetic mean of the series  ###
@@ -51,13 +51,13 @@ sma050 <- SMA(Cl(SPL.AX), 50)
 sma100 <- SMA(Cl(SPL.AX), 100)
 sma200 <- SMA(Cl(SPL.AX), 200)
 # ------------------------------------------------------------------------------
-xtsEMA <- merge(merge(merge(merge(merge(ema005, ema010, join = "inner"), 
-  ema020, join = "inner"), ema050, join = "inner"), ema100, 
+xtsEMA <- merge(merge(merge(merge(merge(ema005, ema010, join = "inner"),
+  ema020, join = "inner"), ema050, join = "inner"), ema100,
   join = "inner"), ema200, join = "inner")
 ################################################################################
-## Step 00.04: rename columns using Base R     https://tinyurl.com/y6fwyvwk  ### 
+## Step 00.04: rename columns using Base R     https://tinyurl.com/y6fwyvwk  ###
 ################################################################################
-names(xtsEMA) <- c("ema005", "ema010", "ema020", "ema050", "ema100", "ema200") 
+names(xtsEMA) <- c("ema005", "ema010", "ema020", "ema050", "ema100", "ema200")
 ################################################################################
 ## Step 00.05: falkulate xtsEMA Months                                       ###
 ################################################################################
@@ -86,26 +86,26 @@ dtEMA <- data.table(dtEMA)
 dtEMA[order(event), group := rleid(event)]
 dtEMA <- data.table(dtEMA)
 # ------------------------------------------------------------------------------
-dtEMA <- dtEMA[order(group, subgroup)][event == "n", `:=`(eventGroup, 
+dtEMA <- dtEMA[order(group, subgroup)][event == "n", `:=`(eventGroup,
   rleid(subgroup))]
-dtEMA <- dtEMA[order(group, subgroup)][event == "DeathX", `:=`(eventGroup, 
+dtEMA <- dtEMA[order(group, subgroup)][event == "DeathX", `:=`(eventGroup,
   rleid(subgroup))]
-dtEMA <- dtEMA[order(group, subgroup)][event == "GoldenX", `:=`(eventGroup, 
+dtEMA <- dtEMA[order(group, subgroup)][event == "GoldenX", `:=`(eventGroup,
   rleid(subgroup))]
 # Concatenate and zero fill two columns ------- https://tinyurl.com/yxmv734u ---
-dtEMA[, eventGroupNum := paste0(event, paste0(sprintf("%03d", eventGroup)))]   
-# rename column name by index & setkey--------- https://tinyurl.com/y6fwyvwk --- 
-names(dtEMA)[1] <- "date" 
+dtEMA[, eventGroupNum := paste0(event, paste0(sprintf("%03d", eventGroup)))]
+# rename column name by index & setkey--------- https://tinyurl.com/y6fwyvwk ---
+names(dtEMA)[1] <- "date"
 setkey(dtEMA, "date")
 ################################################################################
 ## Step 00.08: SMA Group trend elements         https://tinyurl.com/yytlybll ###
 ## prefix with 'grp' perform a group by with elements that are contiguous    ###
 ################################################################################
 xtsSMA <- merge(merge(merge(merge(merge(sma005, sma010, join = "inner"),
-  sma020, join = "inner"), sma050, join = "inner"), sma100, 
+  sma020, join = "inner"), sma050, join = "inner"), sma100,
   join = "inner"), sma200, join = "inner")
 # ------------------------------------------------------------------------------
-names(xtsSMA) <- c("sma005", "sma010", "sma020", "sma050", "sma100", "sma200") 
+names(xtsSMA) <- c("sma005", "sma010", "sma020", "sma050", "sma100", "sma200")
 # ------------------------------------------------------------------------------
 dtSMA <- as.data.table(xtsSMA)
 dtSMA <- dtSMA %>%
@@ -123,16 +123,16 @@ dtSMA <- data.table(dtSMA)
 dtSMA[order(catName), group := rleid(catName)]
 dtSMA <- data.table(dtSMA)
 # ------------------------------------------------------------------------------
-dtSMA <- dtSMA[order(group, number)][catName == "n", `:=`(subGroup, 
+dtSMA <- dtSMA[order(group, number)][catName == "n", `:=`(subGroup,
   rleid(number))]
-dtSMA <- dtSMA[order(group, number)][catName == "DeathX", `:=`(subGroup, 
+dtSMA <- dtSMA[order(group, number)][catName == "DeathX", `:=`(subGroup,
   rleid(number))]
-dtSMA <- dtSMA[order(group, number)][catName == "GoldenX", `:=`(subGroup, 
+dtSMA <- dtSMA[order(group, number)][catName == "GoldenX", `:=`(subGroup,
   rleid(number))]
 # Concatenate and zero fill two columns ------- https://tinyurl.com/yxmv734u ---
-dtSMA[, catNum := paste0(catName, paste0(sprintf("%03d", subGroup)))]   
-# rename column name by index & setkey--------- https://tinyurl.com/y6fwyvwk --- 
-names(dtSMA)[1] <- "date" 
+dtSMA[, catNum := paste0(catName, paste0(sprintf("%03d", subGroup)))]
+# rename column name by index & setkey--------- https://tinyurl.com/y6fwyvwk ---
+names(dtSMA)[1] <- "date"
 dtSMA[, indicator := "SMA"]
 setkey(dtSMA, "date")
 ################################################################################
@@ -142,7 +142,7 @@ goldenX <- ema020 > ema050 & ema050 > ema100 & ema100 > ema200
 dtGoldenX <- as.data.table(goldenX)
 dtGoldenX <- dtGoldenX[EMA == TRUE]
 ################################################################################
-## Step 00.10 rename column names by index      https://tinyurl.com/y6fwyvwk ### 
+## Step 00.10 rename column names by index      https://tinyurl.com/y6fwyvwk ###
 ## create data.table index                                                   ###
 ################################################################################
 names(dtGoldenX)[1] <- "date" # rename column name by index
@@ -151,9 +151,9 @@ setkey(dtGoldenX, "date") # create data.table index
 ## Step 00.11 T/F: determine if a day meets the golden/death X criteria      ###
 ################################################################################
 # convert column from logical to character; xts doesn't recognize TRUE/FALSE ---
-dtGoldenX %>% mutate_if(is.logical, as.character) -> dtGoldenX 
+dtGoldenX %>% mutate_if(is.logical, as.character) -> dtGoldenX
 # converting data table to xts ---------------- https://tinyurl.com/y66xbu3h ---
-# goldenX.xts <- xts(dtGoldenX[, -1], order.by = dtGoldenX[, 1])                  
+# goldenX.xts <- xts(dtGoldenX[, -1], order.by = dtGoldenX[, 1])
 # priceGoldenX.xts <- SPL.AX[index(goldenX.xts)]
 dtGoldenX <- data.table(dtGoldenX)
 dtGoldenX[EMA == "TRUE", EMA := "goldenX"]

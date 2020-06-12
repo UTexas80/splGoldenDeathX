@@ -201,6 +201,8 @@ colnames(nX)       <- c("nXema", "nXsma", "Buy&Hold")
 # trendReturnsDaily <- cbind(death[,1:2], golden[,1:2], nX)
 trendReturnsDaily  <- cbind(death[,-c(3)],golden[,-c(3)],nX)
 trendReturnsAnnual <- daily2annual.zoo(trendReturnsDaily, FUN = sum, na.rm = TRUE)
+Return.annualized(trendReturnsAnnual)
+Return.cumulative(trendReturnsAnnual)
 ################################################################################
 ## Step 99.99: VERSION HISTORY                                               ###
 ################################################################################
