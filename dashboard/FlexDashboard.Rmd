@@ -609,11 +609,13 @@ Column {data-height=50%, .tabset .tabset-fade}
 
 ```{r 2.1.1.a-table-Trend, eval=trend}
 DT::renderDataTable({
-  DT::datatable(trend,
+  DT::datatable(trend[,-c(9,13:16)],
     rownames = FALSE,
     extensions = c("Scroller"),
+    filter = 'top',
     options = list(
-      order = list(list(3, "desc")),
+      dom = 'ltipr',
+      order = list(list(6, "desc"), list(1, 'asc')),
       pageLength = 10,
       scrollX = TRUE,
       scrollY = 280,
@@ -1095,12 +1097,14 @@ DT::renderDataTable({
     trendTable <- trend[indicator == ind]
     trendTable <- trendTable[catName == "GoldenX" &
                         (startDate >= input$dateRange2.2[1] &
-                         endDate <= input$dateRange2.2[2])][,-9]
+                         endDate <= input$dateRange2.2[2])][,-c(9,13:16)]
     DT::datatable(trendTable,
     rownames = FALSE,
     extensions = c("Scroller"),
+    filter = 'top',
     options = list(
-      order = list(list(3, "desc")),
+      dom = 'ltipr',
+      order = list(list(6, "desc"), list(1, 'asc')),
       pageLength = 10,
       scrollX = TRUE,
       scrollY = 280,
@@ -1364,12 +1368,14 @@ DT::renderDataTable({
     trendTable <- trend[indicator == ind]
     trendTable <- trendTable[catName == "DeathX" & 
                         (startDate >= input$dateRange2.3[1] & 
-                         endDate <= input$dateRange2.3[2])][,-9]
+                         endDate <= input$dateRange2.3[2])][,-c(9,13:16)]
     DT::datatable(trendTable,
     rownames = FALSE,
     extensions = c("Scroller"),
+    filter = 'top',
     options = list(
-      order = list(list(3, "desc")),
+      dom = 'ltipr',
+      order = list(list(6, "desc"), list(1, 'asc')),
       pageLength = 10,
       scrollX = TRUE,
       scrollY = 280,
@@ -1589,16 +1595,18 @@ DT::renderDataTable({
     trendTable <- trend[indicator == ind]
     trendTable <- trendTable[catName == "NoX" & 
                         (startDate >= input$dateRange2.4[1] & 
-                         endDate <= input$dateRange2.4[2])][,-9]
+                         endDate <= input$dateRange2.4[2])][,-c(9,13:16)]
     DT::datatable(trendTable,
     rownames = FALSE,
     extensions = c("Scroller"),
+    filter = 'top',
     options = list(
-      order = list(list(3, "desc")),
+      dom = 'ltipr',
+      order = list(list(6, "desc"), list(1, 'asc')),
       pageLength = 10,
-      scrollX = TRUE,
-      scrollY = 280,
-      scroller = TRUE
+            scroller = TRUE,
+      scrollX = 400,
+      scrollY = 280
     )
   ) %>%
     formatDate(c("startDate", "endDate")) %>%
