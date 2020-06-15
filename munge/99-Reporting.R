@@ -56,46 +56,10 @@ trend      <- trend[dtSPL, nomatch = 0][,-c(13:18)]
 data.table::setkey(trend, endDate)
 trend      <- trend[dtSPL, nomatch = 0][,-c(15:20)]
 # trend$endDate = trend$endDate + trend$i.dayDiff
-# ------------------------------------------------------------------------------
-# [1] "indicator"         "catName"           "subcatName"        "startDate"         "startOpen"         "endDate"           "endOpen"          
-# [8] "return"            "Max.Notional.Cost" "Net.Trading.PL"    "tradeDays"         "calendarDays"      "row"               "dayDiff"          
-# [15] "i.row"             "i.dayDiff"
-# ------------------------------------------------------------------------------
-# trend   <- dtSPL[trend][,-c(2:7)]
-# ------------------------------------------------------------------------------
-# trend[, `:=`(tradeStart, lapply(trend[,4],    function(x)  x + 86400))]
-# trend[, `:=`(tradeStart, lapply(trend[,4],    function(x) xts:::index.xts(SPL.AX[x+1])))]
-# trend$tradeStart = trend$Start + trend$dayDiff
-# trend[, `:=`(tradeOpen,   apply( trend[,1], 1, function(x) lag(Op(SPL.AX), -1)[x]))]
-# ------------------------------------------------------------------------------
-# data.table::setkey(trend, End)
-# trend   <- dtSPL[trend]
-# browser()
-# trend   <- dtSPL[trend][,-c(2:7)]
-# # ------------------------------------------------------------------------------
-# trend[, `:=`(tradeEnd, apply(trend[,31],  1,  function(x) if(x < nrow(SPL.AX)) {xts:::index.xts(SPL.AX[x+1])}))]
-# if(x != nrow(SPL.AX)) {
-#   print("X is an Integer")
-# }
-# trend[, `:=`(tradeEnd,    lapply(trend[,1],    function(x) x + trend[,39]))]
-# trend$tradeEnd = trend$End + trend$i.dayDiff
-# trend[, `:=`(tradeClose,   apply( trend[,2], 1, function(x) lag(Op(SPL.AX), -1)[x]))]
-# names(trend)[c(34,36,13,35,37)] <- c("startDate", "endDate", "return", "startOpen", "endOpen")
-# # ------------------------------------------------------------------------------
-# [1] "Start"               "End"                 "Init.Qty"            "Init.Pos"            "Max.Pos"             "End.Pos"            
-# [7] "Closing.Txn.Qty"     "Num.Txns"            "Max.Notional.Cost"   "Net.Trading.PL"      "MAE"                 "MFE"                
-# [13] "return"              "Pct.MAE"             "Pct.MFE"             "tick.Net.Trading.PL" "tick.MAE"            "tick.MFE"           
-# [19] "duration"            "tradeDays"           "calendarDays"        "catName"             "indicator"           "grp"                
-# [25] "subcatName"          "symbol"              "adjusted"            "volume"              "i.adjusted"          "row"                
-# [31] "dayDiff"             "i.row"               "i.dayDiff"           "startDate"           "startOpen"           "endDate"            
-# [37] "endOpen"  
 # ------------------------------------------------------------------------------# https://tinyurl.com/tmmubbh
 trendReturns      <- data.table(t(trend[, c(3,8)]))                             # subcatName, return
 trendReturns      <- setnames(trendReturns, as.character(trendReturns[1,]))[-1,] %>%
                      mutate_if(is.character,as.numeric)
-# trend   <- trend[, c(23, 22, 25, 1,35,2, 37, 13, 9, 10, 20:21)]   
-# "indicator" , "catName", "subcatName", "Start", "startOpen", "end", "endOpen", "return", "Max.Notational.Cost", Net.Trading.PL, tradeDays#, Calendar Days  
-# names(trend)[c(4,6)] <- c("startDate", "endDate")
 # ------------------------------------------------------------------------------
 # [1] "indicator"         "catName"           "subcatName"        "startDate"         "startOpen"         "endDate"           "endOpen"    
 # [8] "return"            "Max.Notional.Cost" "Net.Trading.PL"    "tradeDays"         "calendarDays" 
@@ -107,11 +71,6 @@ dt_trade_stats    <- rbind.data.frame(dXema_trade_stats,
                                    nXema_trade_stats,
                                    nXsma_trade_stats
                                    )
-# ------------------------------------------------------------------------------
-# nXema_trade_stats <- data.table::transpose(as.data.table(nXema_trend[, c(25,13)]))
-# setnames(nXema_trade_stats, as.character(nXema_trade_stats[1,]))
-# nXema_trade_stats <- nXema_trade_stats[-1,]
-# nXema_trade_stats <- nXema_trade_stats[, lapply(.SD, as.numeric)]
 ################################################################################
 ## Step 99.01 Daily Trend Returns                                  quantmod  ###
 ################################################################################

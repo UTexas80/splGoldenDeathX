@@ -314,7 +314,7 @@ DT::renderDataTable({
     extensions = c("Scroller"),
     options = list(
       pageLength = 20
-      ,order = list(list(0, "desc"))
+      ,order = list(list(1, "desc"))
       ,scrollX = TRUE
       ,scrollY = 280
       ,scroller = TRUE)
@@ -615,7 +615,7 @@ DT::renderDataTable({
     filter = 'top',
     options = list(
       dom = 'ltipr',
-      order = list(list(6, "desc"), list(1, 'asc')),
+      order = list(list(5, "desc"), list(0, 'asc')),
       pageLength = 10,
       scrollX = TRUE,
       scrollY = 280,
@@ -977,7 +977,7 @@ Column {data-height=21%}
 ```{r 2.2.1.1.a-vbox-goldenx-trend-name}
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
-    paste("Golden Cross", str_sub(colnames(trendReturnsDaily[,as.numeric(input$radio2.2)]),-3, -1)),
+    paste("Golden Cross", toupper(str_sub(colnames(trendReturnsDaily[,as.numeric(input$radio2.2)]),-3, -1))),
     color = 'teal',
     icon = 'fa-cross'
   )
@@ -1081,7 +1081,7 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 ```{r 2.2.2.1-viz-goldenx-posn-chartstats}
 
     renderPlot({
-      ind <- tolower(unique(trend[,1])[(as.numeric(input$radio2.2) - 2),])
+      ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
       chart.Posn(paste0("gX", ind),
        Symbol = "SPL.AX",
        Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
@@ -1093,7 +1093,7 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 
 ```{r 2.2.2.2-table-goldenx, eval=trend}
 DT::renderDataTable({
-    ind <- unique(trend[,1])[(as.numeric(input$radio2.2) - 2),]
+    ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),]
     trendTable <- trend[indicator == ind]
     trendTable <- trendTable[catName == "GoldenX" &
                         (startDate >= input$dateRange2.2[1] &
@@ -1104,7 +1104,7 @@ DT::renderDataTable({
     filter = 'top',
     options = list(
       dom = 'ltipr',
-      order = list(list(6, "desc"), list(1, 'asc')),
+      order = list(list(5, "desc"), list(0, 'asc')),
       pageLength = 10,
       scrollX = TRUE,
       scrollY = 280,
@@ -1247,7 +1247,7 @@ Row {data-height=21%}
 ```{r 2.3.1.1.a-vbox-trend-name}
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
-    paste("Death Cross", str_sub(colnames(trendReturnsDaily[,as.numeric(input$radio2.3)]),-3, -1)),
+    paste("Death Cross", toupper(str_sub(colnames(trendReturnsDaily[,as.numeric(input$radio2.3)]),-3, -1))),
     color = 'black',
     icon = 'fa-cross'
   )
@@ -1268,7 +1268,7 @@ flexdashboard::renderValueBox({
 
 ###
 
-```{r 2.3.1.2-deathx-vbox-returns-annualy}
+```{r 2.3.1.2-deathx-vbox-returns-annual}
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
     paste(
@@ -1351,7 +1351,7 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 ```{r 2.3.2.1-viz-deathX-posn-chartstats}
 
     renderPlot({
-      ind <- tolower(unique(trend[,1])[(as.numeric(input$radio2.3) - 0),])
+      ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.3) - 0),])
       chart.Posn(paste0("dX", ind),
        Symbol = "SPL.AX",
        Dates  = paste(format(input$dateRange2.3[1]), format(input$dateRange2.3[2]),sep = "::"),
@@ -1364,7 +1364,7 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 
 ```{r 2.3.2.2-table-death, eval=trend}
 DT::renderDataTable({
-    ind <- unique(trend[,1])[(as.numeric(input$radio2.3)),]
+    ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.3)),]
     trendTable <- trend[indicator == ind]
     trendTable <- trendTable[catName == "DeathX" & 
                         (startDate >= input$dateRange2.3[1] & 
@@ -1375,7 +1375,7 @@ DT::renderDataTable({
     filter = 'top',
     options = list(
       dom = 'ltipr',
-      order = list(list(6, "desc"), list(1, 'asc')),
+      order = list(list(5, "desc"), list(0, 'asc')),
       pageLength = 10,
       scrollX = TRUE,
       scrollY = 280,
@@ -1478,7 +1478,7 @@ Row {data-height=21%}
 ```{r 2.4.1.1.a-vbox-noX-trend-name}
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
-        paste("No Cross", str_sub(colnames(trendReturnsDaily[,as.numeric(input$radio2.4)]),-3, -1)),
+        paste("No Cross", toupper(str_sub(colnames(trendReturnsDaily[,as.numeric(input$radio2.4)]),-3, -1))),
           color = 'purple',
           icon = 'fa-cross'
   )
@@ -1578,7 +1578,7 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 ```{r 2.4.2.1-viz-nox-posn-chartstats}
 
     renderPlot({
-      ind <- tolower(unique(trend[,1])[(as.numeric(input$radio2.4) - 4),])
+      ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),])
       chart.Posn(paste0("nX", ind),
        Symbol = "SPL.AX",
        Dates  = paste(format(input$dateRange2.4[1]), format(input$dateRange2.4[2]),sep = "::"),
@@ -1591,7 +1591,7 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 
 ```{r 2.4.2.2-table-noX, eval=trend}
 DT::renderDataTable({
-    ind <- unique(trend[,1])[(as.numeric(input$radio2.4) - 4),]
+    ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),]
     trendTable <- trend[indicator == ind]
     trendTable <- trendTable[catName == "NoX" & 
                         (startDate >= input$dateRange2.4[1] & 
@@ -1602,7 +1602,7 @@ DT::renderDataTable({
     filter = 'top',
     options = list(
       dom = 'ltipr',
-      order = list(list(6, "desc"), list(1, 'asc')),
+      order = list(list(5, "desc"), list(0, 'asc')),
       pageLength = 10,
             scroller = TRUE,
       scrollX = 400,

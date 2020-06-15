@@ -47,8 +47,8 @@ file.copy(here::here("buyhold_strat.RData"),here::here("dashboard/rdata/", "buyh
 ################################################################################
 ## Step 99.04 Remove original .RData strategy files from the route           ###
 ################################################################################
-file.remove(here::here("basic_strat.RData"))
-file.remove(here::here("buyhold_strat.RData"))
+# file.remove(here::here("basic_strat.RData"))
+# file.remove(here::here("buyhold_strat.RData"))
 ################################################################################
 ## Step 99.99: VERSION HISTORY                                               ###
 ################################################################################
