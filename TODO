@@ -1,3 +1,20 @@
+Remove duplicates keeping entry with largest absolute value
+https://tinyurl.com/y738qcsc
+https://stackoverflow.com/questions/12805964/remove-duplicates-keeping-entry-with-largest-absolute-value
+x <- as.xts(gXema_trend[,c(2,6)])
+x[,1] <- 1
+names(x)[1] <- "EMA"
+
+library(data.table)
+aDT <- as.data.table(a)
+setkey(aDT,"id")
+aDT[J(unique(id)), list(value = value[which.max(abs(value))])]
+
+Or a not as fast, but still fast, alternative :
+library(data.table)
+as.data.table(a)[, .SD[which.max(abs(value))], by=id]
+
+
 https://datascienceplus.com/automated-data-report-storytelling-in-r/
 
 # modify TrendReturnsDaily
