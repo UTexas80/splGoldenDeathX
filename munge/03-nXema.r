@@ -18,7 +18,7 @@ setup(nXema)
 # apply(crossEMA, 1, function(x)do.call(indicators, as.list(x)))
 apply(crossEMA, 1, function(x)
   indicators(
-    x[1], 
+    x[1],
     as.integer(x[2]),
     as.integer(x[3]),
     x[4]))

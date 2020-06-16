@@ -618,7 +618,7 @@ DT::renderDataTable({
       order = list(list(5, "desc"), list(0, 'asc')),
       pageLength = 10,
       scrollX = TRUE,
-      scrollY = 280,
+      scrollY = 300,
       scroller = TRUE
     )
   ) %>%
