@@ -28,7 +28,10 @@
 			"titleBar.inactiveForeground": "#e7e7e799",
 			"statusBarItem.hoverBackground": "#243600",
 			"statusBar.border": "#020300",
-			"titleBar.border": "#020300"
+			"titleBar.border": "#020300",
+			"activityBar.background": "#233204",
+			"titleBar.activeBackground": "#314606",
+			"titleBar.activeForeground": "#F5FDE5"
 		},
 		"terminal.integrated.cursorStyle": "underline",
 		"editor.suggest.localityBonus": true,

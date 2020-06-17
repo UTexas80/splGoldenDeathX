@@ -111,6 +111,19 @@ golden_ma_sigEMA           <- lag(ifelse(ema020 > ema050 & ema050 >
                                          ema100 & ema100 > ema200, 1, 0),
                               1)
 # ------------------------------------------------------------------------------
+# get last day of trend to the sequence
+# ------------------------------------------------------------------------------
+x1 <- as.xts(gXema_trend[,c(2,6)])
+x1[,1] <- 1
+names(x1)[1] <- "EMA"
+# ------------------------------------------------------------------------------
+# Remove duplicates dates from rbin keeping entry with largest absolute value (1) 
+# https://tinyurl.com/y738qcsc
+# ------------------------------------------------------------------------------
+y1 <- golden_ma_sigEMA
+z1 <- rbind(x1,y1)
+golden_ma_sigEMA<-as.xts(as.data.table(z1)[, .SD[which.max(abs(EMA))], by=index])  
+# ------------------------------------------------------------------------------
 golden_ma_sigSMA           <- lag(ifelse(sma020 > sma050 & sma050 >
                                          sma100 & sma100 > sma200, 1, 0),
                               1)

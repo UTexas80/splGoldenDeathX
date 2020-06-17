@@ -5,14 +5,20 @@ x <- as.xts(gXema_trend[,c(2,6)])
 x[,1] <- 1
 names(x)[1] <- "EMA"
 
+y <- golden_ma_sigEMA
+
+z <- rbind(x,y)
+a<-as.xts(as.data.table(z)[, .SD[which.max(abs(EMA))], by=index])  
+
+
 library(data.table)
-aDT <- as.data.table(a)
-setkey(aDT,"id")
-aDT[J(unique(id)), list(value = value[which.max(abs(value))])]
+aDT <- as.data.table(z, keep.rownames = TRUE)
+setkey(aDT,"index")
+aDT[J(unique(index)), list(value = value[which.max(abs(value))])]
 
 Or a not as fast, but still fast, alternative :
 library(data.table)
-as.data.table(a)[, .SD[which.max(abs(value))], by=id]
+as.data.table(a)[, .SD[which.max(abs(value))], by=index]
 
 
 https://datascienceplus.com/automated-data-report-storytelling-in-r/
