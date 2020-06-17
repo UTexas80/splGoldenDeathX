@@ -85,9 +85,35 @@ death_ma_sigEMA           <- lag(ifelse(ema020 < ema050 & ema050 <
                                         ema100 & ema100 < ema200, 1, 0),
                              1)
 # ------------------------------------------------------------------------------
+# get signals last day of the trend
+# ------------------------------------------------------------------------------
+x1 <- as.xts(dXema_trend[,c(2,6)])
+x1[,1] <- 1
+names(x1)[1] <- "EMA"
+# ------------------------------------------------------------------------------
+# Remove duplicates dates from rbin keeping entry with largest absolute value (1) 
+# https://tinyurl.com/y738qcsc
+# ------------------------------------------------------------------------------
+y1 <- death_ma_sigEMA
+z1 <- rbind(x1,y1)
+death_ma_sigEMA<-as.xts(as.data.table(z1)[, .SD[which.max(abs(EMA))], by=index])
+# ------------------------------------------------------------------------------
 death_ma_sigSMA           <- lag(ifelse(sma020 < sma050 & sma050 <
                                         sma100 & sma100 < sma200, 1, 0),
                              1)
+# ------------------------------------------------------------------------------
+# get signals last day of the trend
+# ------------------------------------------------------------------------------
+x2 <- as.xts(dXema_trend[,c(2,6)])
+x2[,1] <- 1
+names(x2)[1] <- "SMA"
+# ------------------------------------------------------------------------------
+# Remove duplicates dates from rbin keeping entry with largest absolute value (1) 
+# https://tinyurl.com/y738qcsc
+# ------------------------------------------------------------------------------
+y2 <- death_ma_sigSMA
+z2 <- rbind(x2,y2)
+death_ma_sigSMA<-as.xts(as.data.table(z2)[, .SD[which.max(abs(SMA))], by=index])
 # ------------------------------------------------------------------------------
 deathOpenEMA              <- (open * death_ma_sigEMA[death_ma_sigEMA$EMA == 1])
 deathOpenSMA              <- (open * death_ma_sigSMA[death_ma_sigSMA$SMA == 1])
@@ -111,22 +137,35 @@ golden_ma_sigEMA           <- lag(ifelse(ema020 > ema050 & ema050 >
                                          ema100 & ema100 > ema200, 1, 0),
                               1)
 # ------------------------------------------------------------------------------
-# get last day of trend to the sequence
+# get signals last day of the trend
 # ------------------------------------------------------------------------------
-x1 <- as.xts(gXema_trend[,c(2,6)])
-x1[,1] <- 1
-names(x1)[1] <- "EMA"
+x3 <- as.xts(gXema_trend[,c(2,6)])
+x3[,1] <- 1
+names(x3)[1] <- "EMA"
 # ------------------------------------------------------------------------------
 # Remove duplicates dates from rbin keeping entry with largest absolute value (1) 
 # https://tinyurl.com/y738qcsc
 # ------------------------------------------------------------------------------
-y1 <- golden_ma_sigEMA
-z1 <- rbind(x1,y1)
-golden_ma_sigEMA<-as.xts(as.data.table(z1)[, .SD[which.max(abs(EMA))], by=index])  
+y3 <- golden_ma_sigEMA
+z3 <- rbind(x3,y3)
+golden_ma_sigEMA<-as.xts(as.data.table(z3)[, .SD[which.max(abs(EMA))], by=index])
 # ------------------------------------------------------------------------------
 golden_ma_sigSMA           <- lag(ifelse(sma020 > sma050 & sma050 >
                                          sma100 & sma100 > sma200, 1, 0),
                               1)
+# ------------------------------------------------------------------------------
+# get signals last day of the trend
+# ------------------------------------------------------------------------------
+x4 <- as.xts(gXsma_trend[,c(2,6)])
+x4[,1] <- 1
+names(x4)[1] <- "SMA"
+# ------------------------------------------------------------------------------
+# Remove duplicates dates from rbin keeping entry with largest absolute value (1) 
+# https://tinyurl.com/y738qcsc
+# ------------------------------------------------------------------------------
+y4 <- golden_ma_sigSMA
+z4 <- rbind(x4,y4)
+golden_ma_sigSMA<-as.xts(as.data.table(z4)[, .SD[which.max(abs(SMA))], by=index])
 # ------------------------------------------------------------------------------
 goldenOpenEMA             <- (open * golden_ma_sigEMA[golden_ma_sigEMA$EMA == 1])
 goldenOpenSMA             <- (open * golden_ma_sigSMA[golden_ma_sigSMA$SMA == 1])
@@ -151,10 +190,36 @@ nXema_sig <- lag(
                        !(ema020 > ema050 & ema050 > ema100 & ema100 > ema200), 1,0),
                 1)
 # ------------------------------------------------------------------------------
+# get signals last day of the trend
+# ------------------------------------------------------------------------------
+x5 <- as.xts(nXema_trend[,c(2,6)])
+x5[,1] <- 1
+names(x5)[1] <- "EMA"
+# ------------------------------------------------------------------------------
+# Remove duplicates dates from rbin keeping entry with largest absolute value (1) 
+# https://tinyurl.com/y738qcsc
+# ------------------------------------------------------------------------------
+y5 <- nXema_sig
+z5 <- rbind(x5,y5)
+nXema_sig <-as.xts(as.data.table(z5)[, .SD[which.max(abs(EMA))], by=index])
+# ------------------------------------------------------------------------------
 nXsma_sig <- lag(
                 ifelse(!(sma020 < sma050 & sma050 < sma100 & sma100 < sma200) &
                        !(sma020 > sma050 & sma050 > sma100 & sma100 > sma200), 1,0),
                 1)
+# ------------------------------------------------------------------------------
+# get signals last day of the trend
+# ------------------------------------------------------------------------------
+x6 <- as.xts(nXsma_trend[,c(2,6)])
+x6[,1] <- 1
+names(x6)[1] <- "SMA"
+# ------------------------------------------------------------------------------
+# Remove duplicates dates from rbin keeping entry with largest absolute value (1) 
+# https://tinyurl.com/y738qcsc
+# ------------------------------------------------------------------------------
+y6 <- nXsma_sig
+z6 <- rbind(x6,y6)
+nXsma_sig <-as.xts(as.data.table(z6)[, .SD[which.max(abs(SMA))], by=index])
 # ------------------------------------------------------------------------------
 nXema_open <- (open * nXema_sig[nXema_sig$EMA == 1])
 nXsma_open <- (open * nXsma_sig[nXsma_sig$SMA == 1])
