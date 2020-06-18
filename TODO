@@ -202,3 +202,7 @@ Return.annualized(trendReturnsDaily[,3], scale=252)
 monthly2annual(daily2monthly.zoo(trendReturnsDaily, FUN = sum, na.rm = TRUE), FUN = sum, na.rm = TRUE)
 daily2monthly.zoo(trendReturnsDaily[,3]['2003-11-03/2003-11-28'], FUN = sum, na.rm = TRUE,)
 daily2monthly.zoo(trendReturnsDaily[,3]['2003'], FUN = sum, na.rm = TRUE,)
+
+
+
+https://quantstrattrader.wordpress.com/2018/02/20/creating-a-table-of-monthly-returns-with-r-and-a-volatility-trading-interview/

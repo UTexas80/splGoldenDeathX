@@ -10,7 +10,7 @@ libraries: animation, billboarder, checkpoint, curl, d3heatmap, data.table, data
                DiagrammeR, DT, dygraphs, ezknitr, FinancialInstrument, flexdashboard, flextable, forecast, foreach, formatR, formattable,
                futile.logger, GetDFPData, gt, here, highcharter, Hmisc, hydroTSM, janitor, knitr, kableExtra, lintr, logger, lubridate, naniar, openxlsx, orca,
                packagefinder, pacman, parallel, parallelMap, pbapply, pdftools, PerformanceAnalytics, plotly, plyr, PortfolioEffectHFT,
-               ProjectTemplate, quantmod, quantstrat, r2d3, readxl, repurrrsive, renv, reprex, repo, reshape2, rio,rmarkdown,
+               ProjectTemplate, Quandl, quantmod, quantstrat, r2d3, readxl, repurrrsive, renv, reprex, repo, reshape2, rio,rmarkdown,
                RVerbalExpressions, rvest, scales, shiny, shinydashboard, shinydashboardPlus, shinyEffects, shinyjqui, SIT, statar,
                stringr, styler, summarytools, tibble, tibbletime, tidyquant, tidyverse, timetk, timeSeries, treemap, tryCatchLog,
                TSstudio, TTR, xaringan, xlsx, xtable, xts, zoo
