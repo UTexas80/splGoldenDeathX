@@ -65,3 +65,104 @@ $ low      <dbl> 0.76, 0.77, 0.78, 0.78, 0.78, 0.77, 0.76, 0.77, 0.78, 0.78, 0.7
 $ close    <dbl> 0.76, 0.77, 0.79, 0.78, 0.78, 0.77, 0.77, 0.80, 0.79, 0.78, 0.76, 0.78, 0.79, 0.75, 0.75, 0.81, 0.80, 0.78, 0.80, 0.80, ...
 $ volume   <dbl> 21000, 4749, 35151, 10000, 21000, 44090, 21750, 21930, 53200, 31000, 54000, 71750, 37350, 96834, 21362, 189250, 122558, ...
 $ adjusted <dbl> 0.76, 0.77, 0.79, 0.78, 0.78, 0.77, 0.77, 0.80, 0.79, 0.78, 0.76, 0.78, 0.79, 0.75, 0.75, 0.81, 0.80, 0.78, 0.80, 0.80, ...
+
+
+quantstrat::get.strategy('gXema')
+file.copy(here::here("gXema.RData"),here::here("dashboard/rdata/", "gXema.RData"))aaaaa
+file.copy(here::here("gXema.RData"),here::here("dashboard/rdata/", "gXema.RData"))
+load.strategy(here::here("dashboard/rds","gXema"))
+load.strategy(here::here("dashboard/rdata","gXema"))
+gXema.rets.bh <- PortfReturns(Account = "gXema")
+View(gXema_rets)
+quantstrat::tradeOrderStats(gXema)
+quantmod::yearlyReturn(gXema.rets.bh,'yearly')
+quantmod::yearlyReturn(gXema.rets.bh,'yearly', '2003/2008')
+quantmod::yearlyReturn(gXema.rets.bh,'yearly', '2003/2008', 'log')
+quantmod::yearlyReturn(gXema.rets.bh,'yearly', '2003/2008', log)
+quantmod::yearlyReturn(gXema.rets.bh,'yearly', '2003/2008', 'arithmetic')
+quantmod::yearlyReturn(gXema.rets.bh,'yearly', '2003/2008', type='arithmetic', leading=TRUE)
+quantmod::yearlyReturn(gXema.rets.bh, period = 'yearly', '2003/2008', type='arithmetic', leading=TRUE)
+quantmod::yearlyReturn(gXema.rets.bh, period = 'yearly', subset=NULL, type='arithmetic', leading=TRUE)
+quantmod::periodReturn(gXema.rets.bh, period = 'yearly', subset=NULL, type='arithmetic', leading=TRUE)
+quantmod::periodReturn(gXema.rets.bh, period = 'monthly', subset=NULL, type='arithmetic', leading=TRUE)
+quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'monthly', subset=NULL, type='arithmetic', leading=TRUE)
+quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'yearly', subset=NULL, type='arithmetic', leading=TRUE)
+quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'daily', subset=NULL, type='arithmetic', leading=TRUE)
+quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'daily', subset='2008/2019', type='arithmetic', leading=TRUE)
+quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'monthly', subset='2008/2019', type='arithmetic', leading=TRUE)
+quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'monthly', subset='2009/2010', type='arithmetic', leading=TRUE)
+quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'annual', subset='2009/2010', type='arithmetic', leading=TRUE)
+quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'annualReturn', subset='2009/2010', type='arithmetic', leading=TRUE)
+quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'quarterlyReturn', subset='2009/2010', type='arithmetic', leading=TRUE)
+quantmod::allReturn(na.omit(gXema.rets.bh), period = 'monthly', subset='2009/2010', type='arithmetic', leading=TRUE)
+quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'annual', subset='2009/2010', type='arithmetic', leading=TRUE)
+quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'daily', subset='2008/2019', type='arithmetic', leading=TRUE)
+quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'quarterly', subset='2008/2019', type='arithmetic', leading=TRUE)
+quantmod::periodReturn(na.omit(gXsma.rets.bh), period = 'quarterly', subset='2008/2019', type='arithmetic', leading=TRUE)
+periodReturn(gXema,period='yearly',subset='2014::')  # returns years 2003 to present
+periodReturn(gXema.rets.bh, period='yearly',subset='2014::')  # returns years 2003 to present
+periodReturn(gXema.rets.bh, period='monthly',subset='2014::')  # returns years 2003 to present
+periodReturn(gXema.rets.bh, period='monthly',subset='2017::')  # returns years 2017 to present
+periodReturn(trendReturnsDaily[,3], period='monthly',subset='2017::')  # returns years 2017 to present
+trendReturnsDaily
+trendReturnsDaily[,3]
+na.omit(trendReturnsDaily[,3])
+periodReturn(na.omit(trendReturnsDaily[,3]), period='monthly',subset='2017::')  # returns years 2017 to present
+periodReturn(na.omit(trendReturnsDaily[,3]), period='yearly',subset='2017::')  # returns years 2017 to present
+periodReturn(na.omit(trendReturnsDaily[,3]), period='annualReturn',subset='2017::')  # returns years 2017 to present
+periodReturn(na.omit(trendReturnsDaily[,3]), period='annualReturn')  # returns years 2017 to present
+periodReturn(na.omit(trendReturnsDaily[,3]), period='yearly',subset='2017::')  # returns years 2017 to present
+periodReturn(na.omit(trendReturnsDaily[,3]), period='allReturns',subset='2017::')  # returns years 2017 to present
+periodReturn(na.omit(trendReturnsDaily[,3]), period='allReturns')  # returns years 2017 to present
+periodReturn(na.omit(trendReturnsDaily[,3]), period='annualReturn')  # returns years 2017 to present
+periodReturn(na.omit(trendReturnsDaily[,3]), period='yearly',subset='2017::')  # returns years 2017 to present
+periodReturn(na.omit(gXema.rets.bh, period='yearly',subset='2017::')  # returns years 2017 to present
+periodReturn(na.omit(gXema.rets.bh), period='yearly',subset='2017::')  # returns years 2017 to present
+periodReturn(gXema.rets.bh, period='yearly',subset='2017::')  # returns years 2017 to present
+View(gXema.rets.bh)
+View(trendReturnsDaily)
+AcctReturns(gXema)
+a<-AcctReturns(gXema)
+View(a)
+chart.Me(gXema.rets.bh)
+cchart.CumReturns(gXema.rets.bh)
+chart.CumReturns(gXema.rets.bh)
+chart.CumReturns(na.omit(trendReturnsDaily[,3]))
+chart.CumReturns(na.omit(trendReturnsDaily[,4]))
+chart.CumReturns(na.omit(trendReturnsDaily[,1]))
+chart.CumReturns(na.omit(trendReturnsDaily[,2]))
+chart.ME(gXema)
+chart.ME(gXema, "SPL.AX")
+chart.ME(gXsma, "SPL.AX")
+chart.Reconcile(gXema)
+chart.Reconcile(gXema, gXema)
+chart.RiskReturnScatter(na.omit(trendReturnsDaily[,2]))
+chart.SnailTrail(na.omit(trendReturnsDaily[,2]))
+PerformanceAnalytics::PainRatio(na.omit(trendReturnsDaily[,3]))
+PerformanceAnalytics::PainRatio(na.omit(trendReturnsDaily[,2]))
+PerformanceAnalytics::PainRatio(na.omit(trendReturnsDaily[,1]))
+PerformanceAnalytics::PainRatio(na.omit(trendReturnsDaily[,4]))
+PerformanceAnalytics::PainRatio(na.omit(trendReturnsDaily[,5]))
+PerformanceAnalytics::PainRatio(na.omit(trendReturnsDaily[,6]))
+PerformanceAnalytics::PainRatio(na.omit(trendReturnsDaily))
+PerformanceAnalytics::Return.portfolio(na.omit(trendReturnsDaily[,4]))
+data(edhec)
+edhec
+Return.portfolio(trendReturnsDaily["2017",1:5]
+Return.portfolio(trendReturnsDaily["2017",1:5])
+Return.portfolio(trendReturnsDaily["2017"])
+Return.portfolio(trendReturnsDaily["2018"])
+PerformanceAnalytics::Return.cumulative(trendReturnsDaily)
+PerformanceAnalytics::Return.cumulative(gXema.rets.bh)
+
+
+names(theAccount)
+names(theAccount$portfolios)
+names(theAccount$portfolios$bFaber)
+names(theAccount$summary)
+xyplot(theAccount$summary)
+
+
+Annualized Returns https://tinyurl.com/ya47rgez
+
+=(1+AVERAGE(D437:D495))-1

@@ -159,10 +159,12 @@ n <- trend[substr(trend$catName, 1, 1) %like% "N"]
 ```
 
 ```{r quantstratInput}
-# load.strategy(here::here("dashboard/rds","buyHold_strategy"))
+# load.strategy(here::here("dashboard/rdata","gXema"))
+# gXema.rets.bh <- PortfReturns(Account = "gXema")
+# gXemaAcct <- getAccount(gXema)
 # load.strategy(dXsma)
-dXsma.rets.bh <-PortfReturns(Account = "dXsma")
-gXsma.rets.bh <-PortfReturns(Account = "gXsma")
+dXsma.rets.bh <- PortfReturns(Account = "dXsma")
+gXsma.rets.bh <- PortfReturns(Account = "gXsma")
 # load(here::here("gXsma.RData"))
 # blot <- ls.str(.blotter)
 ```
@@ -312,9 +314,11 @@ DT::renderDataTable({
   DT::datatable(price(),
     rownames = FALSE,
     extensions = c("Scroller"),
+    filter = 'top',
     options = list(
-      pageLength = 20
-      ,order = list(list(1, "desc"))
+      dom = 'ltipr'
+      ,order = list(list(5, "desc"), list(0, 'asc'))
+      ,pageLength = 20
       ,scrollX = TRUE
       ,scrollY = 280
       ,scroller = TRUE)

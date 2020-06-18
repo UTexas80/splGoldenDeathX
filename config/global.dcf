@@ -8,7 +8,7 @@ data_ignore:
 load_libraries: TRUE
 libraries: animation, billboarder, checkpoint, curl, d3heatmap, data.table, dataMeta, datamodelr, datapasta, dataspice, devtools,
                DiagrammeR, DT, dygraphs, ezknitr, FinancialInstrument, flexdashboard, flextable, forecast, foreach, formatR, formattable,
-               futile.logger, gt, here, highcharter, hydroTSM, janitor, knitr, kableExtra, lintr, logger, lubridate, naniar, openxlsx, orca,
+               futile.logger, GetDFPData, gt, here, highcharter, Hmisc, hydroTSM, janitor, knitr, kableExtra, lintr, logger, lubridate, naniar, openxlsx, orca,
                packagefinder, pacman, parallel, parallelMap, pbapply, pdftools, PerformanceAnalytics, plotly, plyr, PortfolioEffectHFT,
                ProjectTemplate, quantmod, quantstrat, r2d3, readxl, repurrrsive, renv, reprex, repo, reshape2, rio,rmarkdown,
                RVerbalExpressions, rvest, scales, shiny, shinydashboard, shinydashboardPlus, shinyEffects, shinyjqui, SIT, statar,
