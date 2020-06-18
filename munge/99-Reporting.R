@@ -236,8 +236,9 @@ colnames(nXsma)    <- c("nXsma", "Buy&Hold")
 colnames(nX)       <- c("nXema", "nXsma", "Buy&Hold")
 # ------------------------------------------------------------------------------
 # trendReturnsDaily <- cbind(death[,1:2], golden[,1:2], nX)
-trendReturnsDaily  <- cbind(death[,-c(3)],golden[,-c(3)],nX)
-trendReturnsAnnual <- daily2annual.zoo(trendReturnsDaily, FUN = sum, na.rm = TRUE)
+trendReturnsDaily   <- cbind(death[,-c(3)],golden[,-c(3)],nX)
+trendReturnsMonthly <- daily2monthly.zoo(trendReturnsDaily, FUN = sum, na.rm = TRUE,)
+trendReturnsAnnual  <- daily2annual.zoo(trendReturnsDaily, FUN = sum, na.rm = TRUE)
 Return.annualized(trendReturnsAnnual)
 Return.cumulative(trendReturnsAnnual)
 ################################################################################
