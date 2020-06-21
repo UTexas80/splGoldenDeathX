@@ -1,3 +1,51 @@
+Mission/Objective: utilize Machine Learning & Fintech analytics to vette the ASX for compelling Small Cap Biotech risk adverse trading opportunities
+
+
+updateEndEq(account.st) over entire .xts for each trend  # p.158 quantitative trading with R
+
+DeathX ROI to Return.cumulative multipy by -1
+
+price
+trend
+trenReturns
+dt_trade_stats
+tren
+trendRturnsAnnualized
+trendSummaryGroup
+trend
+
+
+Error in eval(x, envir = envir) : object 'price' not found
+Error in eval(x, envir = envir) : object 'trend' not found
+Error in eval(x, envir = envir) : object 'trend' not found
+Error in eval(x, envir = envir) : object 'trend' not found
+Error in eval(x, envir = envir) : object 'trend' not found
+Error in eval(x, envir = envir) : object 'trend' not found
+Error in eval(x, envir = envir) : object 'trend' not found
+Error in eval(x, envir = envir) : object 'trend' not found
+Error in eval(x, envir = envir) : object 'trendReturns' not found
+Error in eval(x, envir = envir) : object 'trendReturns' not found
+Error in eval(x, envir = envir) : object 'trend' not found
+Error in eval(x, envir = envir) : object 'trend' not found
+Error in eval(x, envir = envir) : object 'trend' not found
+Error in eval(x, envir = envir) : object 'trend' not found
+Error in eval(x, envir = envir) : object 'dt_trade_stats' not found
+Error in eval(x, envir = envir) : object 'trend' not found
+Error in eval(x, envir = envir) : 
+  object 'trendReturnsAnnualized' not found
+Error in eval(x, envir = envir) : object 'trendSummaryGroup' not found
+Error in eval(x, envir = envir) : object 'trend' not found
+
+https://www.r-bloggers.com/tactical-asset-allocation-using-blotter/
+for( i in 10:NROW(SPY) ) {
+  CurrentDate=time(SPY)[i]
+  equity = getEndEq(Account=’default’, CurrentDate)
+
+email to hydroTSM regarding annual date length can change to 252 from 360?
+
+
+https://www.markettraders.com/risk-disclaimer/
+
 Remove duplicates keeping entry with largest absolute value
 https://tinyurl.com/y738qcsc
 https://stackoverflow.com/questions/12805964/remove-duplicates-keeping-entry-with-largest-absolute-value
@@ -8,7 +56,7 @@ names(x)[1] <- "EMA"
 y <- golden_ma_sigEMA
 
 z <- rbind(x,y)
-a<-as.xts(as.data.table(z)[, .SD[which.max(abs(EMA))], by=index])  
+a<-as.xts(as.data.table(z)[, .SD[which.max(abs(EMA))], by=index]) 
 
 
 library(data.table)

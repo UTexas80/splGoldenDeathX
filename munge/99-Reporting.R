@@ -120,8 +120,12 @@ deathOpenSMA              <- (open * death_ma_sigSMA[death_ma_sigSMA$SMA == 1])
 # ------------------------------------------------------------------------------
 # dXema_ret                 <- (ret * death_ma_sigEMA[death_ma_sigEMA$EMA == 1])
 # dXsma_ret                 <- (ret * death_ma_sigSMA[death_ma_sigSMA$SMA == 1])
+# ------------------------------------------------------------------------------
 death_ma_retEMA           <- dailyReturn(deathOpenEMA)
 death_ma_retSMA           <- dailyReturn(deathOpenSMA)
+# ------------------------------------------------------------------------------
+death_ma_retEMA           <- death_ma_retEMA
+death_ma_retSMA           <- death_ma_retSMA
 # ------------------------------------------------------------------------------
 deathEMA                  <- cbind(death_ma_retEMA, ret)
 deathSMA                  <- cbind(death_ma_retSMA, ret)
