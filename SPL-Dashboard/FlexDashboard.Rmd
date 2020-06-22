@@ -1111,7 +1111,7 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 
     renderPlot({
       ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
-      chart.Posn(paste0("gX", ind),
+      blotter::chart.Posn(paste0("gX", ind),
        Symbol = "SPL.AX",
        Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
        TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
@@ -1604,7 +1604,7 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 
     renderPlot({
       ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),])
-      chart.Posn(paste0("nX", ind),
+      blotter::chart.Posn(paste0("nX", ind),
        Symbol = "SPL.AX",
        Dates  = paste(format(input$dateRange2.4[1]), format(input$dateRange2.4[2]),sep = "::"),
        TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")

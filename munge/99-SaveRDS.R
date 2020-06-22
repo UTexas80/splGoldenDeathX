@@ -1,12 +1,12 @@
 ################################################################################
 ## Step 99.01 Statistics                                                     ###
 ################################################################################
-saveRDS(getPortfolio("dXema"),     file  = here::here("/SPL-Dashboard/rds/", "dXema.rds"))
-saveRDS(getPortfolio("dXsma"),     file  = here::here("/SPL-Dashboard/rds/", "dXsma.rds"))
-saveRDS(getPortfolio("gXema"),     file  = here::here("/SPL-Dashboard/rds/", "gXema.rds"))
-saveRDS(getPortfolio("gXsma"),     file  = here::here("/SPL-Dashboard/rds/", "gXsma.rds"))
-saveRDS(getPortfolio("nXema"),     file  = here::here("/SPL-Dashboard/rds/", "nXema.rds"))
-saveRDS(getPortfolio("nXsma"),     file  = here::here("/SPL-Dashboard/rds/", "nXsma.rds"))
+saveRDS(getPortfolio("dXema"),     file  = here::here("SPL-Dashboard/rds/", "dXema.rds"))
+saveRDS(getPortfolio("dXsma"),     file  = here::here("SPL-Dashboard/rds/", "dXsma.rds"))
+saveRDS(getPortfolio("gXema"),     file  = here::here("SPL-Dashboard/rds/", "gXema.rds"))
+saveRDS(getPortfolio("gXsma"),     file  = here::here("SPL-Dashboard/rds/", "gXsma.rds"))
+saveRDS(getPortfolio("nXema"),     file  = here::here("SPL-Dashboard/rds/", "nXema.rds"))
+saveRDS(getPortfolio("nXsma"),     file  = here::here("SPL-Dashboard/rds/", "nXsma.rds"))
 # ------------------------------------------------------------------------------
 saveRDS(dXema_trade_stats,         file  = here::here("SPL-Dashboard/rds/", "dXema_trade_stats.rds"))
 saveRDS(dXsma_trade_stats,         file  = here::here("SPL-Dashboard/rds/", "dXsma_trade_stats.rds"))
