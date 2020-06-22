@@ -10,10 +10,10 @@
 ################################################################################
 suppressMessages(
     getSymbols(
-      Symbols = symbols, 
-      src = "yahoo", 
-      from = start_date, 
-      to = end_date, 
+      Symbols = symbols,
+      src = "yahoo",
+      from = start_date,
+      to = end_date,
       adjust = adjustment)
     )
 # ------------Replace missing values (NA)       https://tinyurl.com/y5etxh8x ###
@@ -107,37 +107,37 @@ add.indicator(strategy.st,
 ## 1.03.3.1 Add the 20-day SMA indicator
 ##------------------------------------------------------------------------------
 add.indicator(strategy.st,
-              name      = "EMA", 
+              name      = "EMA",
               arguments = list(
-                x       = quote(mktdata[,4]), 
-                n       = 20), 
+                x       = quote(mktdata[,4]),
+                n       = 20),
               label     = "020")
 ##------------------------------------------------------------------------------
 ## 1.03.3.2 Add the 50-day SMA indicator
 ##------------------------------------------------------------------------------
 add.indicator(strategy.st,
-              name      = "EMA", 
+              name      = "EMA",
               arguments = list(
-                x       = quote(mktdata[,4]), 
-                n       = 50), 
+                x       = quote(mktdata[,4]),
+                n       = 50),
               label     = "050")
 ##------------------------------------------------------------------------------
 ## 1.03.3.3 Add the 100-day SMA indicator
 ##------------------------------------------------------------------------------
 add.indicator(strategy.st,
-              name      = "EMA", 
+              name      = "EMA",
               arguments = list(
-                x       = quote(mktdata[,4]), 
-                n       = 100), 
+                x       = quote(mktdata[,4]),
+                n       = 100),
               label     = "100")
 ##------------------------------------------------------------------------------
 ## 1.03.3.4 Add the 200-day SMA indicator
 ##------------------------------------------------------------------------------
 add.indicator(strategy.st,
-              name      = "EMA", 
+              name      = "EMA",
               arguments = list(
-                x       = quote(mktdata[,4]), 
-                n       = 200), 
+                x       = quote(mktdata[,4]),
+                n       = 200),
               label     = "200")
 ################################################################################
 ## 1.04 apply indicator                                                       ###
@@ -153,21 +153,21 @@ mktdata_ind[is.na(mktdata_ind)] = 0
 # ------------------------------------------------------------------------------
 # i. RSI_7 greater than 50
 # ------------------------------------------------------------------------------
-add.signal(strategy.st, 
-            name             = "sigThreshold", 
+add.signal(strategy.st,
+            name             = "sigThreshold",
             arguments        = list(
                 column       = "rsi.RSI_7",
                 threshold    = 50,
-                relationship = "gt"), 
+                relationship = "gt"),
             label            = "RSI_gt_50")
 # ------------------------------------------------------------------------------
 # ii. macd histogram crosses zero line from below
 # ------------------------------------------------------------------------------
-add.signal(strategy.st, 
-            name             = "sigCrossover", 
+add.signal(strategy.st,
+            name             = "sigCrossover",
             arguments        = list(
                 columns      = c("macd.MACD","signal.MACD"),
-                relationship = "gt"), 
+                relationship = "gt"),
                 label        = "macd_gt_0")
 # ------------------------------------------------------------------------------
 # iii. Generate a long signal
@@ -175,34 +175,34 @@ add.signal(strategy.st,
 # when RSI_gt_50 & macd_gt_0 are True. To generate the signal use sigFormula
 # function as we are evaluating a logical expression to generate a signal.
 # ------------------------------------------------------------------------------
-add.signal(strategy.st, 
+add.signal(strategy.st,
             name             = "sigFormula",
             arguments        = list(
                 formula      = "RSI_gt_50 & macd_gt_0",
-                cross        = FALSE), 
+                cross        = FALSE),
             label            = "Long")
 # ------------------------------------------------------------------------------
-# iv. RSI_7 less than 50 
+# iv. RSI_7 less than 50
 # Using add.signal function add a signal RSI_lt_50 to the strategy which returns
 # TRUE when rsi.RSI_7 is less than 50. To generate the signal use sigThreshold 
 # function as we are comparing indicator to a threshold value.
 # ------------------------------------------------------------------------------
-add.signal(strategy.st, 
-            name             = "sigThreshold", 
+add.signal(strategy.st,
+            name             = "sigThreshold",
             arguments        = list(
                column        = "rsi.RSI_7",
                threshold     = 50,
-               relationship  = "lt"), 
+               relationship  = "lt"),
             label            = "RSI_lt_50")
 # ------------------------------------------------------------------------------
 # v. macd histogram crosses zero line from above
 # ------------------------------------------------------------------------------
 add.signal(strategy.st,
-            name             = "sigCrossover", 
+            name             = "sigCrossover",
             arguments        = list(
                 columns      = c("macd.MACD","signal.MACD"),
                 relationship = "lt"),
-                cross        = TRUE, 
+                cross        = TRUE,
             label            = "macd_lt_0")
 
 # ------------------------------------------------------------------------------
@@ -277,13 +277,13 @@ knitr::kable(tail(mktdata_sig))
 ## 1.07.3 Exit Long 2-----------------------------------------------------------
 ##------------------------------------------------------------------------------
 # add.rule(strategy.st,
-#        name            = 'ruleSignal', 
+#        name            = 'ruleSignal',
 #        arguments       = list(
 #            sigcol      = "RSI_lt_50",
-#            sigval      = TRUE, 
-#            orderqty    = 'all', 
-#            ordertype   = 'market', 
-#            orderside   = 'long', 
+#            sigval      = TRUE,
+#            orderqty    = 'all',
+#            ordertype   = 'market',
+#            orderside   = 'long',
 #            prefer      = "Open",
 #            TxnFees     = -75,
 #            orderset    = 'ocolong',
@@ -328,8 +328,8 @@ add.rule(strategy.st,
 ## 1.08  set the position limits                                             ###
 ################################################################################
 addPosLimit(portfolio.st,
-            symbols, 
-            timestamp <- initDate, 
+            symbols,
+            timestamp <- initDate,
             maxpos    <- 100,
             minpos    <- 0)
 ################################################################################
@@ -337,7 +337,7 @@ addPosLimit(portfolio.st,
 ################################################################################
 t1 <- Sys.time()
 applyStrategy(strategy = strategy.st,portfolios = portfolio.st)
-# save.strategy(here::here("dashboard/rds", strategy.st))
+# save.strategy(here::here("SPL-Dashboard/rds", strategy.st))
 checkBlotterUpdate(portfolio.st, account.st, verbose = TRUE)
 t2 <- Sys.time()
 print(t2-t1)
@@ -362,8 +362,8 @@ ptsGoldenXema <-blotter::perTradeStats(portfolio.st, symbol = symbols)
 ################################################################################
 ## Step 1.12: Save portfolio strategy to .rds                                ###
 ################################################################################
-saveRDS(portfolio.st, 
-  file = here::here("dashboard/rds/", 
+saveRDS(portfolio.st,
+  file = here::here("SPL-Dashboard/rds/",
   paste0(portfolio.st, ".", "rds")))
 ################################################################################
 ## Step 00.99: VERSION HISTORY                                               ###

@@ -137,7 +137,7 @@ t2 <- Sys.time()
 print(t2 - t1)
 # ------------------------------------------------------------------------------
 # cwd             <- getwd()
-gXsma_results   <- here::here("dashboard/rds", "gXsma_results.RData")
+gXsma_results   <- here::here("SPL-Dashboard/rds", "gXsma_results.RData")
 # ------------------------------------------------------------------------------
 # if(file.exists(gXsma_results)) {
 #   base::load(gXsma_results)
@@ -148,9 +148,9 @@ gXsma_results   <- here::here("dashboard/rds", "gXsma_results.RData")
 
 #       save(
 #         list = "gXsma_strategy", 
-#         file = here::here("dashboard/rds/", paste0(gXsma, "_", "results.RData")))
+#         file = here::here("SPL-Dashboard/rds/", paste0(gXsma, "_", "results.RData")))
 
-#     setwd("./dashboard/rds")
+#     setwd("./SPL-Dashboard/rds")
 #     save.strategy(strategy.st)
 # #   save.strategy(paste0(strategy.st, "_", "strategy"))
 #     setwd(cwd)
@@ -169,7 +169,7 @@ updateAcct(account.st, dateRange)
 # ------------------------------------------------------------------------------
 updateEndEq(account.st)
 save.strategy(strategy.st)
-# save.strategy(here::here("dashboard/rds", strategy.st))
+# save.strategy(here::here("SPL-Dashboard/rds", strategy.st))
 ################################################################################
 # 9.0	Trade Stats - create dashboard trade statistics
 ################################################################################

@@ -136,7 +136,7 @@ t2 <- Sys.time()
 print(t2 - t1)
 # ------------------------------------------------------------------------------
 # cwd             <- getwd()
-gXema_results   <- here::here("dashboard/rds", "gXema_results.RData")
+gXema_results   <- here::here("SPL-Dashboard/rds", "gXema_results.RData")
 # ------------------------------------------------------------------------------
 # if(file.exists(gXema_results)) {
 #   base::load(gXema_results)
@@ -147,9 +147,9 @@ gXema_results   <- here::here("dashboard/rds", "gXema_results.RData")
 
 #       save(
 #         list = "gXema_strategy", 
-#         file = here::here("dashboard/rds/", paste0(gXema, "_", "results.RData")))
+#         file = here::here("SPL-Dashboard/rds/", paste0(gXema, "_", "results.RData")))
 
-#     setwd("./dashboard/rds")
+#     setwd("./SPL-Dashboard/rds")
 #     save.strategy(strategy.st)
 # #   save.strategy(paste0(strategy.st, "_", "strategy"))
 #     setwd(cwd)

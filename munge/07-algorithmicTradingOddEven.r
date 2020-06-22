@@ -60,11 +60,11 @@ ENPH_mktdata_ind[is.na(mktdata_ind)] = 0
 add.signal(strategy.st, name = sigThreshold, 
            arguments = list(column = "nonDerivedIndicator", threshold = 0.5, relationship = "gte", cross = TRUE),
            label = "longEntry")
- 
+
 add.signal(strategy.st, name = sigThreshold, 
            arguments = list(column = "nonDerivedIndicator", threshold = 0.5, relationship = "lte", cross = TRUE),
            label = "longExit")
- 
+
 ################################################################################
 ## 1.06 apply signals
 ################################################################################
@@ -115,7 +115,7 @@ ptsGoldenXema <-blotter::perTradeStats(portfolio.st, symbol = symbols)
 ## Step 1.12: Save portfolio strategy to .rds                                ###
 ################################################################################
 saveRDS(portfolio.st, 
-  file = here::here("dashboard/rds/", 
+  file = here::here("SPL-Dashboard/rds/", 
   paste0(portfolio.st, ".", "rds")))
 ################################################################################
 ## Step 00.99: VERSION HISTORY                                               ###

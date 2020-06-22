@@ -7,8 +7,9 @@ output:
     vertical_layout: fill
 date: "`r params$reportdate`"
 resource_files:
-- rds/calendarDays.rds
+- rdata/gXema.RData
 - rds/dtEMA.rds
+- rds/dt_trade_stats.rds
 - rds/golden.rds
 - rds/goldenX_EMA.RData
 - rds/goldenX_EMA_strategy.RData
@@ -17,16 +18,24 @@ resource_files:
 - rds/trendSummaryGroup.rds
 - rds/trendReturns.rds
 - rds/trendReturnsSMA.rds
-- rdata/gXema.RData
 - rds/trend.rds
 - rds/trendReturnsAnnualized.rds
+- rdata/buyhold_strat.RData
+- rds/calendarDays.rds
+- rds/dt_trade_stats.rds
+- rds/dtEMA.rds
+- rds/golden.rds
+- rds/dXema_trade_stats.rds
+- rds/dXsma_trade_stats.rds
+- rds/gXema_trade_stats.rds
+- rds/gXsma_trade_stats.rds
 runtime: shiny
 theme: spacelab
 params:
   dateEnd: !r Sys.Date()
   dateStart: '2002-01-02'
   dynamictitle: My report
-  reportdate: !r Sys.Date()
+  reportdate: '!r Sys.Date()'
   symbols: SPL.AX
   ticker: SPL.AX
 ---
@@ -35,6 +44,7 @@ params:
 # load data in 'global' chunk so it can be shared by all users of the dashboard
 knitr::opts_knit$set(root.dir = "..", echo = FALSE)
 # library(d3heatmap)
+library(blotter)
 library(data.table)
 library(dplyr)
 library(DT)
@@ -118,37 +128,48 @@ xprices <- function() {
 ```
 
 ```{r rdsInput}
-# buyHold_results         <- readRDS(here::here("dashboard/rds", "buyHold_results.rds"))
-calendarDays              <- readRDS(here::here("dashboard/rds", "calendarDays.rds"))
-dtEMA                     <- readRDS(here::here("dashboard/rds", "dtEMA.rds"))
-golden                    <- readRDS(here::here("dashboard/rds", "golden.rds"))
+# buyHold_results         <- readRDS(here::here("rds", "buyHold_results.rds"))
+calendarDays              <- readRDS(here::here("rds", "calendarDays.rds"))
+dtEMA                     <- readRDS(here::here("rds", "dtEMA.rds"))
+golden                    <- readRDS(here::here("rds", "golden.rds"))
 # ------------------------------------------------------------------------------
-dt_trade_stats            <- readRDS(here::here("dashboard/rds", "dt_trade_stats.rds"))
-dXema_trade_stats         <- readRDS(here::here("dashboard/rds", "dXema_trade_stats.rds"))
-dXsma_trade_stats         <- readRDS(here::here("dashboard/rds", "dXsma_trade_stats.rds"))
-gXema_trade_stats         <- readRDS(here::here("dashboard/rds", "gXema_trade_stats.rds"))
-gXsma_trade_stats         <- readRDS(here::here("dashboard/rds", "gXsma_trade_stats.rds"))
-# goldenX_EMA_results     <- readRDS(here::here("dashboard/rds", "goldenX_EMA_results.rds"))
-tradeDays                 <- readRDS(here::here("dashboard/rds", "tradeDays.rds"))
-trend                     <- data.table(readRDS(here::here("dashboard/rds", "trend.rds")))
-# trendClose                <- readRDS(here::here("dashboard/rds", "trendClose.rds"))
-trendDraw                 <- data.table(readRDS(here::here("dashboard/rds", "trendDraw.rds")))
-# trendEMA                  <- data.table(readRDS(here::here("dashboard/rds", "trendEMA.rds")))
-trendReturns              <- data.table(readRDS(here::here("dashboard/rds", "trendReturns.rds")))
-trendReturnsAnnualized    <- data.table(readRDS(here::here("dashboard/rds", "trendReturnsAnnualized.rds")))
-trendReturnsDaily         <- readRDS(here::here("dashboard/rds", "trendReturnsDaily.rds"))
-trendReturnsEMAlong       <- data.table(readRDS(here::here("dashboard/rds", "trendReturnsEMAlong.rds")))
-trendReturnsSMA           <- data.table(readRDS(here::here("dashboard/rds", "trendReturnsSMA.rds")))
-trendReturnsSMAlong       <- data.table(readRDS(here::here("dashboard/rds", "trendReturnsSMAlong.rds")))
-# trendSMA                  <- data.table(readRDS(here::here("dashboard/rds", "trendSMA.rds")))
-# trendSummary            <- data.table(readRDS(here::here("dashboard/rds", "trendSummary.rds")))
+dt_trade_stats            <- readRDS(here::here("rds", "dt_trade_stats.rds"))
+dXema_trade_stats         <- readRDS(here::here("rds", "dXema_trade_stats.rds"))
+dXsma_trade_stats         <- readRDS(here::here("rds", "dXsma_trade_stats.rds"))
+gXema_trade_stats         <- readRDS(here::here("rds", "gXema_trade_stats.rds"))
+gXsma_trade_stats         <- readRDS(here::here("rds", "gXsma_trade_stats.rds"))
+# goldenX_EMA_results     <- readRDS(here::here("rds", "goldenX_EMA_results.rds"))
+tradeDays                 <- readRDS(here::here("rds", "tradeDays.rds"))
+trend                     <- data.table(readRDS(here::here("rds", "trend.rds")))
+# trendClose                <- readRDS(here::here("rds", "trendClose.rds"))
+trendDraw                 <- data.table(readRDS(here::here("rds", "trendDraw.rds")))
+# trendEMA                  <- data.table(readRDS(here::here("rds", "trendEMA.rds")))
+trendReturns              <- data.table(readRDS(here::here("rds", "trendReturns.rds")))
+trendReturnsAnnualized    <- data.table(readRDS(here::here("rds", "trendReturnsAnnualized.rds")))
+trendReturnsDaily         <- readRDS(here::here("rds", "trendReturnsDaily.rds"))
+trendReturnsEMAlong       <- data.table(readRDS(here::here("rds", "trendReturnsEMAlong.rds")))
+trendReturnsSMA           <- data.table(readRDS(here::here("rds", "trendReturnsSMA.rds")))
+trendReturnsSMAlong       <- data.table(readRDS(here::here("rds", "trendReturnsSMAlong.rds")))
+# trendSMA                  <- data.table(readRDS(here::here("rds", "trendSMA.rds")))
+# trendSummary            <- data.table(readRDS(here::here("rds", "trendSummary.rds")))
 
-emaPct                    <- data.table(readRDS(here::here("dashboard/rds", "emaPct.rds")))
-smaPct                    <- data.table(readRDS(here::here("dashboard/rds", "smaPct.rds")))  
-trendSummaryGroup         <- data.table(readRDS(here::here("dashboard/rds", "trendSummaryGroup.rds")))
+emaPct                    <- data.table(readRDS(here::here("rds", "emaPct.rds")))
+smaPct                    <- data.table(readRDS(here::here("rds", "smaPct.rds")))  
+trendSummaryGroup         <- data.table(readRDS(here::here("rds", "trendSummaryGroup.rds")))
 
-xtsEMA                    <- as.xts(readRDS(here::here("dashboard/rds", "xtsEMA.rds")))
+xtsEMA                    <- as.xts(readRDS(here::here("rds", "xtsEMA.rds")))
 ```
+
+
+```{r blotter-portfoliios}
+dXema                     <- readRDS(here::here("rds", "dXema.rds"))
+dXsma                     <- readRDS(here::here("rds", "dXsma.rds"))
+gXema                     <- readRDS(here::here("rds", "gXema.rds"))
+gXsma                     <- readRDS(here::here("rds", "gXsma.rds"))
+nXema                     <- readRDS(here::here("rds", "nXema.rds"))
+nXsma                     <- readRDS(here::here("rds", "nXsma.rds"))
+```
+
 
 ```{r processing}
 trendname    <- str_sub(tail(trend[indicator=='SMA'][order(endDate)], 1)[, 1], end = -4)
@@ -162,12 +183,12 @@ n <- trend[substr(trend$catName, 1, 1) %like% "N"]
 ```
 
 ```{r quantstratInput}
-# load.strategy(here::here("dashboard/rdata","gXema"))
-# gXema.rets.bh <- PortfReturns(Account = "gXema")
 # gXemaAcct <- getAccount(gXema)
+# load.strategy(here::here("rdata","gXema"))
+# gXema.rets.bh <- PortfReturns(Account = "gXema")
 # load.strategy(dXsma)
-dXsma.rets.bh <- PortfReturns(Account = "dXsma")
-gXsma.rets.bh <- PortfReturns(Account = "gXsma")
+# dXsma.rets.bh <- PortfReturns(Account = "dXsma")
+# gXema.rets.bh <- PortfReturns(Account = "gXema")
 # load(here::here("gXsma.RData"))
 # blot <- ls.str(.blotter)
 ```
@@ -320,30 +341,31 @@ Row {data-height=200}
 
 ```{r 1.1.2.1-table-Price}
 DT::renderDataTable({
-  DT::datatable(price(),
+  DT::datatable(price()[,-c(8:9)],
     rownames = FALSE,
     extensions = c("Scroller"),
     filter = 'top',
     options = list(
       dom = 'ltipr'
-      ,order = list(list(1, "asc"), list(5, 'asc'))
+      ,order = list(list(2, "desc"))
       ,pageLength = 20
       ,scrollX = TRUE
       ,scrollY = 280
       ,scroller = TRUE)
     ) %>%
     formatCurrency(c(
-      "open", "high", "low", "close", "adjusted", "change",
+      "open", "high", "low", "close",
       "ema020", "ema050", "ema100", "ema200", "sma020", "sma050", "sma100", "sma200"
     )) %>%
     formatDate(c("date")) %>%
     formatStyle("volume",
       background = styleColorBar(price()$volume, "steelblue")
-    ) %>%
-    formatStyle(
-      "change",
-      color = styleInterval(c(0), c("maroon", "darkgreen"))
-    )
+    ) 
+  # %>%
+  #   formatStyle(
+  #     "change",
+  #     color = styleInterval(c(0), c("maroon", "darkgreen"))
+  #   )
 })
 ```
 
@@ -1355,7 +1377,7 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 
     renderPlot({
       ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.3) - 0),])
-      chart.Posn(paste0("dX", ind),
+      blotter::chart.Posn(paste0("dX", ind),
        Symbol = "SPL.AX",
        Dates  = paste(format(input$dateRange2.3[1]), format(input$dateRange2.3[2]),sep = "::"),
        TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")

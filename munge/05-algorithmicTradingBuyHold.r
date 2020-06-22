@@ -117,7 +117,7 @@ blotter::getPortfolio(portfolio.st)
 ## Step 04.12: sSave portfolio strategy to .rds                              ###
 ################################################################################
 saveRDS(portfolio.st, 
-  file = here::here("dashboard/rds/", 
+  file = here::here("SPL-Dashboard/rds/",
   paste0(portfolio.st, ".", "rds")))
 ################################################################################
 ## Step 00.99: VERSION HISTORY                                               ###
