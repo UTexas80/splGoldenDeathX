@@ -183,14 +183,17 @@ n <- trend[substr(trend$catName, 1, 1) %like% "N"]
 ```
 
 ```{r quantstratInput}
-# gXemaAcct <- getAccount(gXema)
+a1 <- base::load(here::here("a.RData"))
+# a2 <- load.Rdata2("a.RData", path=getwd())
+p1 <- base::load(here::here("p.RData"))
+# p2 <- load.Rdata2("p.RData", path=getwd())
+blot <- ls.str(.blotter)
+# gXemaAcct <- getAccount(paste("gXema"))
 # load.strategy(here::here("rdata","gXema"))
 # gXema.rets.bh <- PortfReturns(Account = "gXema")
 # load.strategy(dXsma)
 # dXsma.rets.bh <- PortfReturns(Account = "dXsma")
 # gXema.rets.bh <- PortfReturns(Account = "gXema")
-# load(here::here("gXsma.RData"))
-# blot <- ls.str(.blotter)
 ```
 
 ```{R daydiff functions, include=FALSE, warning=FALSE, cache=FALSE}
@@ -1107,11 +1110,13 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 -------------------------------------
 
 ### Price & Transactions Chart
-```{r 2.2.2.1-viz-goldenx-posn-chartstats}
+```{r 2.2.2.1-viz-goldenx-posn-chartstats, eval=gXema}
 
     renderPlot({
       ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
-      blotter::chart.Posn(paste0("gX", ind),
+#      blotter::getPortfolio(paste0("gX", ind))
+#      blotter::chart.Posn(paste0("gX", ind),
+      blotter::chart.Posn(p1,                          
        Symbol = "SPL.AX",
        Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
        TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
@@ -1377,6 +1382,7 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 
     renderPlot({
       ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.3) - 0),])
+      blotter::getPortfolio(paste0("dX", ind))
       blotter::chart.Posn(paste0("dX", ind),
        Symbol = "SPL.AX",
        Dates  = paste(format(input$dateRange2.3[1]), format(input$dateRange2.3[2]),sep = "::"),
@@ -1604,6 +1610,7 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 
     renderPlot({
       ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),])
+      blotter::getPortfolio(paste0("nX", ind))      
       blotter::chart.Posn(paste0("nX", ind),
        Symbol = "SPL.AX",
        Dates  = paste(format(input$dateRange2.4[1]), format(input$dateRange2.4[2]),sep = "::"),

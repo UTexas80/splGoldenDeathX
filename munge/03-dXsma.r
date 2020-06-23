@@ -239,3 +239,9 @@ dXsma_risk <- table.Arbitrary(dXsma_rets,
   )
 )
 
+p = getPortfolio("dXsma") # make a local copy of the portfolio object
+a = getAccount("dXsma") # make a local copy of the account object
+
+save("portfolio.dXsma", file = "p.RData", envir=.blotter)
+save("account.dXsma",   file = "a.RData", envir=.blotter)
+
