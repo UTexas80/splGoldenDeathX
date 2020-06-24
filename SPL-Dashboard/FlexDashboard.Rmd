@@ -125,6 +125,7 @@ xprices <- function() {
     to = input$dateRange[2]
   )
 }
+
 ```
 
 ```{r rdsInput}
@@ -194,6 +195,63 @@ blot <- ls.str(.blotter)
 # load.strategy(dXsma)
 # dXsma.rets.bh <- PortfReturns(Account = "dXsma")
 # gXema.rets.bh <- PortfReturns(Account = "gXema")
+```
+
+```{R blotterFunctions, include=FALSE, warning=FALSE, cache=FALSE}    
+# log chart in blotter https://tinyurl.com/yaqbe2yw
+
+log.chart.Posn <- function(Portfolio, Symbol, Dates = NULL, env = .blotter) {
+  pname<-Portfolio
+  # Portfolio<-getPortfolio(pname)
+  Portfolio<-getPortfolio(p1)
+#  x <- get(Symbol, env)
+  x <- tk_xts(price())
+  Prices <- log(x)
+  chart_Series(Prices)
+  #browser()
+  if(is.null(Dates)) Dates<-paste(first(index(Prices)),last(index(Prices)),sep='::')
+
+  #scope the data by Dates
+  Portfolio$symbols[[Symbol]]$txn<-Portfolio$symbols[[Symbol]]$txn[Dates]
+  Portfolio$symbols[[Symbol]]$posPL<-Portfolio$symbols[[Symbol]]$posPL[Dates]
+
+  Trades = Portfolio$symbols[[Symbol]]$txn$Txn.Qty
+
+  Buys = log(Portfolio$symbols[[Symbol]]$txn$Txn.Price[which(Trades>0)])
+  Sells = log(Portfolio$symbols[[Symbol]]$txn$Txn.Price[which(Trades<0)])
+
+  Position = Portfolio$symbols[[Symbol]]$txn$Pos.Qty
+
+  if(nrow(Position)<1) stop ('no transactions/positions to chart')
+
+  if(as.POSIXct(first(index(Prices)))<as.POSIXct(first(index(Position)))) Position<-rbind(xts(0,order.by=first(index(Prices)-1)),Position)
+  Positionfill = na.locf(merge(Position,index(Prices)))
+
+  CumPL = cumsum(Portfolio$symbols[[Symbol]]$posPL$Net.Trading.PL)
+  if(length(CumPL)>1)
+    CumPL = na.omit(na.locf(merge(CumPL,index(Prices))))
+  else
+    CumPL = NULL
+
+  if(!is.null(CumPL)) {
+    CumMax <- cummax(CumPL)
+    Drawdown <- -(CumMax - CumPL)
+    Drawdown<-rbind(xts(-max(CumPL),order.by=first(index(Drawdown)-1)),Drawdown)
+  } else {
+    Drawdown <- NULL
+  }
+
+  if(!is.null(nrow(Buys)) && nrow(Buys) >=1 ) (add_TA(Buys,pch=2,type='p',col='green', on=1));
+  if(!is.null(nrow(Sells)) && nrow(Sells) >= 1) (add_TA(Sells,pch=6,type='p',col='red', on=1));
+  if(nrow(Position)>=1) {
+    (add_TA(Positionfill,type='h',col='blue', lwd=2))
+    (add_TA(Position,type='p',col='orange', lwd=2, on=2))
+  }
+  if(!is.null(CumPL))  (add_TA(CumPL, col='darkgreen', lwd=2))
+  if(!is.null(Drawdown)) (add_TA(Drawdown, col='darkred', lwd=2, yaxis=c(0,-max(CumMax))))
+  plot(current.chob())
+
+}
 ```
 
 ```{R daydiff functions, include=FALSE, warning=FALSE, cache=FALSE}
@@ -1159,6 +1217,17 @@ DT::renderDataTable({
 })
 ```
 
+### Price & Transactions Chart Part II
+```{r 2.2.2.4-viz-goldenx-posn-chartstats, eval=gXema}
+    portfolio.st = "gXema"
+    renderPlot({
+        log.chart.Posn(Portfolio = portfolio.st, Sym = "SPL.AX", Dates = NULL, env = .blotter)
+#        add_MACD() 
+    })
+```
+
+
+
 ```{r 2.2.2.3-table-goldenX-tradestats}
 
 # DT::renderDataTable({
@@ -1382,7 +1451,7 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 
     renderPlot({
       ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.3) - 0),])
-      blotter::getPortfolio(paste0("dX", ind))
+#      blotter::getPortfolio(paste0("dX", ind))
       blotter::chart.Posn(paste0("dX", ind),
        Symbol = "SPL.AX",
        Dates  = paste(format(input$dateRange2.3[1]), format(input$dateRange2.3[2]),sep = "::"),
@@ -1610,7 +1679,7 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 
     renderPlot({
       ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),])
-      blotter::getPortfolio(paste0("nX", ind))      
+ #     blotter::getPortfolio(paste0("nX", ind))      
       blotter::chart.Posn(paste0("nX", ind),
        Symbol = "SPL.AX",
        Dates  = paste(format(input$dateRange2.4[1]), format(input$dateRange2.4[2]),sep = "::"),
