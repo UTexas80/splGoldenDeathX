@@ -35,7 +35,7 @@ params:
   dateEnd: !r Sys.Date()
   dateStart: '2002-01-02'
   dynamictitle: My report
-  reportdate: '!r Sys.Date()'
+  reportdate: 'r Sys.Date()'
   symbols: SPL.AX
   ticker: SPL.AX
 ---
@@ -222,7 +222,7 @@ log.chart.Posn <- function(Portfolio, Symbol, Dates = NULL, env = .blotter) {
 
   Position = Portfolio$symbols[[Symbol]]$txn$Pos.Qty
 
-  if(nrow(Position)<1) stop ('no transactions/positions to chart')
+  if(nrow(Position) < 1) stop ('no transactions/positions to chart')
 
   if(as.POSIXct(first(index(Prices)))<as.POSIXct(first(index(Position)))) Position<-rbind(xts(0,order.by=first(index(Prices)-1)),Position)
   Positionfill = na.locf(merge(Position,index(Prices)))
@@ -430,6 +430,32 @@ DT::renderDataTable({
 })
 ```
 
+### Testing 1.2..3...4....
+
+```{r 1.1.2.2-table-portfolio}
+
+pname <- "dXsma"
+dXsma_port_rds                    <- readRDS(here::here("dXsma_port_rds.rds"))
+dxsma_summary                     <- dXsma_port_rds$summary
+
+DT::renderDataTable({
+  DT::datatable(dxsma_summary,
+    rownames = FALSE,
+    extensions = c("Scroller"),
+    filter = 'top',
+    options = list(
+      dom = 'ltipr'
+      ,order = list(list(2, "desc"))
+      ,pageLength = 20
+      ,scrollX = TRUE
+      ,scrollY = 280
+      ,scroller = TRUE)
+    ) 
+})  
+
+  
+```
+
 Row {data-height=200}
 -------------------------------------
 
@@ -447,7 +473,6 @@ renderHighchart({
   #    hc_add_series(y, type = "ohlc")
 })
 ```
-
 
 ### Distribution
 
@@ -1170,15 +1195,15 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 ### Price & Transactions Chart
 ```{r 2.2.2.1-viz-goldenx-posn-chartstats, eval=gXema}
 
-    renderPlot({
-      ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
+#    renderPlot({
+#      ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
 #      blotter::getPortfolio(paste0("gX", ind))
 #      blotter::chart.Posn(paste0("gX", ind),
-      blotter::chart.Posn(p1,                          
-       Symbol = "SPL.AX",
-       Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
-       TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
-    })
+#      blotter::chart.Posn(p1,                          
+#       Symbol = "SPL.AX",
+#       Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
+#       TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
+#    })
 ```
 
 ### Golden Crossing Table
@@ -1219,11 +1244,11 @@ DT::renderDataTable({
 
 ### Price & Transactions Chart Part II
 ```{r 2.2.2.4-viz-goldenx-posn-chartstats, eval=gXema}
-    portfolio.st = "gXema"
-    renderPlot({
-        log.chart.Posn(Portfolio = portfolio.st, Sym = "SPL.AX", Dates = NULL, env = .blotter)
+#    portfolio.st = "gXema"
+#    renderPlot({
+#        log.chart.Posn(Portfolio = portfolio.st, Sym = "SPL.AX", Dates = NULL, env = .blotter)
 #        add_MACD() 
-    })
+#    })
 ```
 
 
@@ -1449,14 +1474,14 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 ### Price & Transactions Chart
 ```{r 2.3.2.1-viz-deathX-posn-chartstats}
 
-    renderPlot({
-      ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.3) - 0),])
+#    renderPlot({
+#      ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.3) - 0),])
 #      blotter::getPortfolio(paste0("dX", ind))
-      blotter::chart.Posn(paste0("dX", ind),
-       Symbol = "SPL.AX",
-       Dates  = paste(format(input$dateRange2.3[1]), format(input$dateRange2.3[2]),sep = "::"),
-       TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
-    })
+#      blotter::chart.Posn(paste0("dX", ind),
+#       Symbol = "SPL.AX",
+#       Dates  = paste(format(input$dateRange2.3[1]), format(input$dateRange2.3[2]),sep = "::"),
+#       TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
+#    })
 
 ```
 
@@ -1677,14 +1702,14 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 ### Price & Transactions Chart
 ```{r 2.4.2.1-viz-nox-posn-chartstats}
 
-    renderPlot({
-      ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),])
- #     blotter::getPortfolio(paste0("nX", ind))      
-      blotter::chart.Posn(paste0("nX", ind),
-       Symbol = "SPL.AX",
-       Dates  = paste(format(input$dateRange2.4[1]), format(input$dateRange2.4[2]),sep = "::"),
-       TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
-    })
+#    renderPlot({
+#      ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),])
+#      blotter::getPortfolio(paste0("nX", ind))      
+#      blotter::chart.Posn(paste0("nX", ind),
+#       Symbol = "SPL.AX",
+#       Dates  = paste(format(input$dateRange2.4[1]), format(input$dateRange2.4[2]),sep = "::"),
+#       TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
+#    })
 
 ```
 

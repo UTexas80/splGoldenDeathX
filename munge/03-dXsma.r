@@ -245,3 +245,7 @@ a = getAccount("dXsma") # make a local copy of the account object
 save("portfolio.dXsma", file = "p.RData", envir=.blotter)
 save("account.dXsma",   file = "a.RData", envir=.blotter)
 
+save("portfolio.dXsma", file="dXsma_port_rdata.RData", envir=.blotter)
+e <- getPortfolio("dXsma")
+saveRDS(e, "dXsma_port_rds.rds")
+
