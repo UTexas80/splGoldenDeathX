@@ -1,6 +1,6 @@
 Mission/Objective: utilize Machine Learning & Fintech analytics to vette the ASX for compelling Small Cap Biotech risk adverse trading opportunities
 
-
+Warning: Error in initPortf: Portfolio dXsma already exists, use updatePortf() or addPortfInstr() to update it.
 updateEndEq(account.st) over entire .xts for each trend  # p.158 quantitative trading with R
 
 DeathX ROI to Return.cumulative multipy by -1

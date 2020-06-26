@@ -29,13 +29,17 @@ resource_files:
 - rds/dXsma_trade_stats.rds
 - rds/gXema_trade_stats.rds
 - rds/gXsma_trade_stats.rds
+- dXsma_port_rdata.RData
 runtime: shiny
 theme: spacelab
 params:
-  dateEnd: !r Sys.Date()
+  dateEnd: '!r Sys.Date()'
   dateStart: '2002-01-02'
   dynamictitle: My report
-  reportdate: 'r Sys.Date()'
+  reportDate:
+    input: date
+    label: 'Report Date:'
+    value: as.POSIXct(Sys.Date())
   symbols: SPL.AX
   ticker: SPL.AX
 ---
@@ -161,7 +165,6 @@ trendSummaryGroup         <- data.table(readRDS(here::here("rds", "trendSummaryG
 xtsEMA                    <- as.xts(readRDS(here::here("rds", "xtsEMA.rds")))
 ```
 
-
 ```{r blotter-portfoliios}
 dXema                     <- readRDS(here::here("rds", "dXema.rds"))
 dXsma                     <- readRDS(here::here("rds", "dXsma.rds"))
@@ -170,7 +173,6 @@ gXsma                     <- readRDS(here::here("rds", "gXsma.rds"))
 nXema                     <- readRDS(here::here("rds", "nXema.rds"))
 nXsma                     <- readRDS(here::here("rds", "nXsma.rds"))
 ```
-
 
 ```{r processing}
 trendname    <- str_sub(tail(trend[indicator=='SMA'][order(endDate)], 1)[, 1], end = -4)
@@ -195,20 +197,28 @@ blot <- ls.str(.blotter)
 # load.strategy(dXsma)
 # dXsma.rets.bh <- PortfReturns(Account = "dXsma")
 # gXema.rets.bh <- PortfReturns(Account = "gXema")
+# ------------------------------------------------------------------------------
+if(!exists(".blotter"))    .blotter    <<- new.env()
+if(!exists(".instrument")) .instrument <<- new.env()
+if(!exists(".portfolio"))  .portfolio  <<- new.env()
+if(!exists(".strategy"))   .strategy   <<- new.env()
+# ------------------------------------------------------------------------------
 ```
 
-```{R blotterFunctions, include=FALSE, warning=FALSE, cache=FALSE}    
+```{R blotterFunctions, include=FALSE, warning=FALSE, cache=FALSE}
 # log chart in blotter https://tinyurl.com/yaqbe2yw
 
 log.chart.Posn <- function(Portfolio, Symbol, Dates = NULL, env = .blotter) {
   pname<-Portfolio
   # Portfolio<-getPortfolio(pname)
-  Portfolio<-getPortfolio(p1)
+  #Portfolio<-getPortfolio(p1)
+  # Portfolio                         <- na.omit(readRDS(here::here("dXsma_port_rds.rds")))
+  Portfolio                         <- gXema
 #  x <- get(Symbol, env)
   x <- tk_xts(price())
   Prices <- log(x)
-  chart_Series(Prices)
-  #browser()
+  chart_Series(na.omit(Prices))
+
   if(is.null(Dates)) Dates<-paste(first(index(Prices)),last(index(Prices)),sep='::')
 
   #scope the data by Dates
@@ -255,7 +265,7 @@ log.chart.Posn <- function(Portfolio, Symbol, Dates = NULL, env = .blotter) {
 ```
 
 ```{R daydiff functions, include=FALSE, warning=FALSE, cache=FALSE}
- 
+
 dayDifff <- function(X)
 {
     as.numeric(as.Date(index(X))) - c(NA, as.numeric(as.Date(index(X[-nrow(X)]))))
@@ -263,7 +273,7 @@ dayDifff <- function(X)
 ```
 
 1.1 Summary {data-navmenu="1-Performance" data-icon="fa-list" data-orientation=rows}
-=====================================  
+=====================================
 
 Input {.sidebar}
 -------------------------------------
@@ -277,8 +287,11 @@ dateRangeInput("dateRange",
   max = Sys.Date()
 )
 ```
+Welcome to the SPL Golden Crossing Dashboard!
 
-This purpose of this dashboard is twofold. 
+Mission: utilize Machine Learning & Fintech analytics to vette the ASX for compelling Small Cap Biotech risk adverse trading opportunities.
+
+Objective: The purpose of this dashboard is twofold.
 
 1. To provide a glimpse of Starpharma's performance circa 2002-01-02.
 2. To examine the Golden Cross, Death Cross and No Cross Trading Strategies to discern their viability.
@@ -309,8 +322,8 @@ tqPrices <- eventReactive(input$go, {
 
 #  date        open  high   low close volume adjusted   change
 price <- reactive({
-  tidyquant::tq_get("SPL.AX", 
-    from = format(input$dateRange[1]), 
+  tidyquant::tq_get("SPL.AX",
+    from = format(input$dateRange[1]),
     to = format(input$dateRange[2])) %>%
     mutate(
       change = close - open,
@@ -421,7 +434,7 @@ DT::renderDataTable({
     formatDate(c("date")) %>%
     formatStyle("volume",
       background = styleColorBar(price()$volume, "steelblue")
-    ) 
+    )
   # %>%
   #   formatStyle(
   #     "change",
@@ -429,6 +442,7 @@ DT::renderDataTable({
   #   )
 })
 ```
+
 
 ### Testing 1.2..3...4....
 
@@ -450,10 +464,9 @@ DT::renderDataTable({
       ,scrollX = TRUE
       ,scrollY = 280
       ,scroller = TRUE)
-    ) 
-})  
+    )
+})
 
-  
 ```
 
 Row {data-height=200}
@@ -552,7 +565,7 @@ renderHighchart({
   highchart(type = "stock") %>%
     hc_add_series(quarterlyRet, type = "column")
 })
-```  
+```
 
 ### Annual Returns
 
@@ -609,14 +622,14 @@ trendnameEMA    <- tail(trend[indicator == 'EMA'][order(endDate)], 1)[, 2]
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
     paste("EMA Current Trend:", " ", trendnameEMA),
-    actionButton("button3", " ", 
-    style = "background-color:rgba(0, 0, 0, 0.0); 
-      border-color:rgba(0, 0, 0, 0.0); 
-      position: absolute; 
-      overflow: hidden; 
-      left: 0px; 
-      top: 0px; 
-      right: 0px; 
+    actionButton("button3", " ",
+    style = "background-color:rgba(0, 0, 0, 0.0);
+      border-color:rgba(0, 0, 0, 0.0);
+      position: absolute;
+      overflow: hidden;
+      left: 0px;
+      top: 0px;
+      right: 0px;
       bottom: 0px;
       width:100%"),
     color = ifelse(trendname1 == "D", "black",
@@ -651,7 +664,7 @@ flexdashboard::renderValueBox({
       left: 0px;
       top: 0px;
       right: 0px;
-      bottom: 0px;    
+      bottom: 0px;
       width:100%"),
     color = ifelse(trendname1 == "D", "black",
       ifelse(trendname1 == "G", "teal",
@@ -996,7 +1009,7 @@ renderPlotly({
             , size = 8
             , hjust = 1
             , face = "bold")
-          ) 
+          )
   )
 })
 ```
@@ -1042,12 +1055,12 @@ renderPlotly({
 renderPlotly({
     p <- plot_ly(type = "bar") %>%
       add_bars( x = emaPct$catName, y = emaPct$tradeDaysPct, text = ~emaPct$indicator, textposition = 'auto',
-                marker = list(color = 
+                marker = list(color =
                   c('rgba(0,0,0,1)'
                     ,'teal'
                     ,'purple'))) %>%
       add_bars( x = smaPct$catName, y = smaPct$tradeDaysPct, text = ~smaPct$indicator, textposition = 'auto',
-                marker = list(color = 
+                marker = list(color =
                   c('rgba(0,0,0,1)'
                     ,'teal'
                     ,'purple'))) %>%
@@ -1195,15 +1208,14 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 ### Price & Transactions Chart
 ```{r 2.2.2.1-viz-goldenx-posn-chartstats, eval=gXema}
 
-#    renderPlot({
-#      ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
-#      blotter::getPortfolio(paste0("gX", ind))
-#      blotter::chart.Posn(paste0("gX", ind),
-#      blotter::chart.Posn(p1,                          
-#       Symbol = "SPL.AX",
-#       Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
-#       TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
-#    })
+   renderPlot({
+     ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
+     blotter::chart.Posn(paste0("portfolio.", "gX", ind),
+      Symbol = "SPL.AX",
+      Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
+      TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
+   })
+
 ```
 
 ### Golden Crossing Table
@@ -1244,14 +1256,12 @@ DT::renderDataTable({
 
 ### Price & Transactions Chart Part II
 ```{r 2.2.2.4-viz-goldenx-posn-chartstats, eval=gXema}
-#    portfolio.st = "gXema"
-#    renderPlot({
-#        log.chart.Posn(Portfolio = portfolio.st, Sym = "SPL.AX", Dates = NULL, env = .blotter)
-#        add_MACD() 
-#    })
+   portfolio.st = "dXsma"
+   renderPlot({
+       log.chart.Posn(Portfolio = portfolio.st, Sym = "SPL.AX", Dates = NULL, env = .GlobalEnv)
+#      add_MACD()
+   })
 ```
-
-
 
 ```{r 2.2.2.3-table-goldenX-tradestats}
 
@@ -1327,7 +1337,7 @@ ybpG <- list(title = g$catName, titlefont = F)
 renderPlotly({
   ind <- unique(trend[,1])[(as.numeric(input$radio2.2) - 2),]
   g <- g[indicator == ind]
-  g <- g[(startDate >= input$dateRange2.2[1] & 
+  g <- g[(startDate >= input$dateRange2.2[1] &
           endDate   <= input$dateRange2.2[2])]
 
   histogramG <- plot_ly(g, x = g$tradeDays, type = "histogram", marker = list(color = "teal")) %>%
@@ -1474,14 +1484,14 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 ### Price & Transactions Chart
 ```{r 2.3.2.1-viz-deathX-posn-chartstats}
 
-#    renderPlot({
-#      ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.3) - 0),])
-#      blotter::getPortfolio(paste0("dX", ind))
-#      blotter::chart.Posn(paste0("dX", ind),
-#       Symbol = "SPL.AX",
-#       Dates  = paste(format(input$dateRange2.3[1]), format(input$dateRange2.3[2]),sep = "::"),
-#       TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
-#    })
+   renderPlot({
+     ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.3) - 0),])
+ #    blotter::getPortfolio(paste0("dX", ind))
+     blotter::chart.Posn(paste0("dX", ind),
+      Symbol = "SPL.AX",
+      Dates  = paste(format(input$dateRange2.3[1]), format(input$dateRange2.3[2]),sep = "::"),
+      TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
+   })
 
 ```
 
@@ -1510,7 +1520,7 @@ DT::renderDataTable({
     formatDate(c("startDate", "endDate")) %>%
     formatRound("tradeDays", 0) %>%
     formatCurrency(c("startOpen", "endOpen")) %>%
-    formatCurrency("Net.Trading.PL", digits = 0) %>%  
+    formatCurrency("Net.Trading.PL", digits = 0) %>%
     formatPercentage("return", 1) %>%
     formatStyle("return",
       background = styleColorBar(range(trend$return), "lightblue")
@@ -1537,7 +1547,7 @@ renderPlotly({
 
   histogramD <- plot_ly(d, x = d$return, type = "histogram", marker = list(color = "black")) %>%
     layout(xaxis = xhpD, yaxis = yhpD)
-  boxplotD <- plot_ly(d, x = d$return, type = "box", boxpoints = "all", jitter = 0.3, marker =   
+  boxplotD <- plot_ly(d, x = d$return, type = "box", boxpoints = "all", jitter = 0.3, marker =
     list(color = "black", outliercolor = "blue")) %>%
     layout(yaxis = ybpD)
   subplot(boxplotD, histogramD, nrows = 2, shareX = TRUE) %>%
@@ -1559,9 +1569,9 @@ ybp <- list(title = d$catName, titlefont = F)
 renderPlotly({
   ind <- unique(trend[,1])[(as.numeric(input$radio2.3) - 0),]
   d <- d[indicator == ind]
-  d <- d[(startDate >= input$dateRange2.3[1] & 
+  d <- d[(startDate >= input$dateRange2.3[1] &
           endDate   <= input$dateRange2.3[2])]
-  
+
   histogramD <- plot_ly(d, x = d$tradeDays, type = "histogram", marker = list(color = "Black")) %>%
     layout(xaxis = xhp, yaxis = yhp)
 
@@ -1641,7 +1651,7 @@ flexdashboard::renderValueBox({
     color = ifelse(Return.annualized(
         na.omit(
           trendReturnsDaily[,as.numeric(input$radio2.4)])[paste(format(input$dateRange2.4[1]),
-            format(input$dateRange2.4[2]),sep = "::")]) > 0, 
+            format(input$dateRange2.4[2]),sep = "::")]) > 0,
               "teal", "red"),
     icon = "ion-cash"
   )
@@ -1670,7 +1680,7 @@ flexdashboard::renderValueBox({
       Return.cumulative(
         na.omit(
           trendReturnsDaily[,as.numeric(input$radio2.4)])[paste(format(input$dateRange2.4[1]),
-            format(input$dateRange2.4[2]),sep = "::")]) > 0, 
+            format(input$dateRange2.4[2]),sep = "::")]) > 0,
               "teal", "red"),
     icon = "ion-cash"
   )
@@ -1702,14 +1712,14 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 ### Price & Transactions Chart
 ```{r 2.4.2.1-viz-nox-posn-chartstats}
 
-#    renderPlot({
-#      ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),])
-#      blotter::getPortfolio(paste0("nX", ind))      
-#      blotter::chart.Posn(paste0("nX", ind),
-#       Symbol = "SPL.AX",
-#       Dates  = paste(format(input$dateRange2.4[1]), format(input$dateRange2.4[2]),sep = "::"),
-#       TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
-#    })
+   renderPlot({
+     ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),])
+#     blotter::getPortfolio(paste0("nX", ind))
+     blotter::chart.Posn(paste0("nX", ind),
+      Symbol = "SPL.AX",
+      Dates  = paste(format(input$dateRange2.4[1]), format(input$dateRange2.4[2]),sep = "::"),
+      TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
+   })
 
 ```
 
@@ -1765,7 +1775,7 @@ renderPlotly({
 
   histogram <- plot_ly(n, x = n$return, type = "histogram", marker = list(color = "purple")) %>%
     layout(xaxis = xhp, yaxis = yhp)
-  boxplot <- plot_ly(n, x = n$return, type = "box", boxpoints = "all", jitter = 0.3, marker =   
+  boxplot <- plot_ly(n, x = n$return, type = "box", boxpoints = "all", jitter = 0.3, marker =
     list(color = "purple", outliercolor = "blue")) %>%
     layout(yaxis = ybp)
   subplot(boxplot, histogram, nrows = 2, shareX = TRUE) %>%
