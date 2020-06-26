@@ -172,6 +172,9 @@ gXema                     <- readRDS(here::here("rds", "gXema.rds"))
 gXsma                     <- readRDS(here::here("rds", "gXsma.rds"))
 nXema                     <- readRDS(here::here("rds", "nXema.rds"))
 nXsma                     <- readRDS(here::here("rds", "nXsma.rds"))
+
+
+gXema                     <- blotter::put.portfolio("gXema", gXema, envir = .blotter)
 ```
 
 ```{r processing}
