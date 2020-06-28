@@ -23,6 +23,7 @@ saveRDS(calendarDays,              file  = here::here("SPL-Dashboard/rds/", "cal
 saveRDS(dtEMA,                     file  = here::here("SPL-Dashboard/rds/", "dtEMA.rds"))
 saveRDS(goldenEMA,                 file  = here::here("SPL-Dashboard/rds/", "golden.rds"))
 # ------------------------------------------------------------------------------
+saveRDS(SPL.AX,                    file  = here::here("SPL-Dashboard/rds/", "SPL.AX.rds"))
 saveRDS(spl_month_close,           file  = here::here("SPL-Dashboard/rds/", "spl_month_close.rds"))
 saveRDS(SPL.AX.yearly,             file  = here::here("SPL-Dashboard/rds/", "spl_yearly.rds"))
 saveRDS(tradeDays,                 file  = here::here("SPL-Dashboard/rds/", "tradeDays.rds"))

@@ -30,10 +30,11 @@ resource_files:
 - rds/gXema_trade_stats.rds
 - rds/gXsma_trade_stats.rds
 - dXsma_port_rdata.RData
+- rds/dXema.rds
 runtime: shiny
 theme: spacelab
 params:
-  dateEnd: '!r Sys.Date()'
+  dateEnd: !r Sys.Date()
   dateStart: '2002-01-02'
   dynamictitle: My report
   reportDate:
@@ -139,11 +140,13 @@ dtEMA                     <- readRDS(here::here("rds", "dtEMA.rds"))
 golden                    <- readRDS(here::here("rds", "golden.rds"))
 # ------------------------------------------------------------------------------
 dt_trade_stats            <- readRDS(here::here("rds", "dt_trade_stats.rds"))
+# ------------------------------------------------------------------------------
 dXema_trade_stats         <- readRDS(here::here("rds", "dXema_trade_stats.rds"))
 dXsma_trade_stats         <- readRDS(here::here("rds", "dXsma_trade_stats.rds"))
 gXema_trade_stats         <- readRDS(here::here("rds", "gXema_trade_stats.rds"))
 gXsma_trade_stats         <- readRDS(here::here("rds", "gXsma_trade_stats.rds"))
-# goldenX_EMA_results     <- readRDS(here::here("rds", "goldenX_EMA_results.rds"))
+# ------------------------------------------------------------------------------
+SPL.AX                    <- tk_xts(readRDS(here::here("rds", "SPL.AX.rds")))
 tradeDays                 <- readRDS(here::here("rds", "tradeDays.rds"))
 trend                     <- data.table(readRDS(here::here("rds", "trend.rds")))
 # trendClose                <- readRDS(here::here("rds", "trendClose.rds"))
@@ -157,11 +160,11 @@ trendReturnsSMA           <- data.table(readRDS(here::here("rds", "trendReturnsS
 trendReturnsSMAlong       <- data.table(readRDS(here::here("rds", "trendReturnsSMAlong.rds")))
 # trendSMA                  <- data.table(readRDS(here::here("rds", "trendSMA.rds")))
 # trendSummary            <- data.table(readRDS(here::here("rds", "trendSummary.rds")))
-
+# ------------------------------------------------------------------------------
 emaPct                    <- data.table(readRDS(here::here("rds", "emaPct.rds")))
 smaPct                    <- data.table(readRDS(here::here("rds", "smaPct.rds")))  
 trendSummaryGroup         <- data.table(readRDS(here::here("rds", "trendSummaryGroup.rds")))
-
+# ------------------------------------------------------------------------------
 xtsEMA                    <- as.xts(readRDS(here::here("rds", "xtsEMA.rds")))
 ```
 
@@ -172,9 +175,17 @@ gXema                     <- readRDS(here::here("rds", "gXema.rds"))
 gXsma                     <- readRDS(here::here("rds", "gXsma.rds"))
 nXema                     <- readRDS(here::here("rds", "nXema.rds"))
 nXsma                     <- readRDS(here::here("rds", "nXsma.rds"))
-
-
+# ------------------------------------------------------------------------------
+dXema                     <- blotter::put.portfolio("dXema", gXema, envir = .blotter)
+dXsma                     <- blotter::put.portfolio("dXsma", gXema, envir = .blotter)
+# ------------------------------------------------------------------------------
 gXema                     <- blotter::put.portfolio("gXema", gXema, envir = .blotter)
+gXsma                     <- blotter::put.portfolio("gXsma", gXema, envir = .blotter)
+# ------------------------------------------------------------------------------
+nXema                     <- blotter::put.portfolio("nXema", gXema, envir = .blotter)
+nXsma                     <- blotter::put.portfolio("nXsma", gXema, envir = .blotter)
+# ------------------------------------------------------------------------------
+
 ```
 
 ```{r processing}
@@ -1211,10 +1222,9 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 ### Price & Transactions Chart
 ```{r 2.2.2.1-viz-goldenx-posn-chartstats, eval=gXema}
 
-   renderPlot({
-     ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
-     blotter::chart.Posn(paste0("portfolio.", "gX", ind),
-      Symbol = "SPL.AX",
+  renderPlot({
+    ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
+    blotter::chart.Posn(paste0("portfolio.", "gX", ind),
       Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
       TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
    })
@@ -1259,9 +1269,10 @@ DT::renderDataTable({
 
 ### Price & Transactions Chart Part II
 ```{r 2.2.2.4-viz-goldenx-posn-chartstats, eval=gXema}
-   portfolio.st = "dXsma"
-   renderPlot({
-       log.chart.Posn(Portfolio = portfolio.st, Sym = "SPL.AX", Dates = NULL, env = .GlobalEnv)
+  
+  portfolio.st = "gXsma"
+  renderPlot({
+    log.chart.Posn(Portfolio = portfolio.st, Sym = "SPL.AX", Dates = NULL, env = .GlobalEnv)
 #      add_MACD()
    })
 ```
