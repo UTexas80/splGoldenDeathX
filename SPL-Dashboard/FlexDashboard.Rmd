@@ -146,7 +146,8 @@ dXsma_trade_stats         <- readRDS(here::here("rds", "dXsma_trade_stats.rds"))
 gXema_trade_stats         <- readRDS(here::here("rds", "gXema_trade_stats.rds"))
 gXsma_trade_stats         <- readRDS(here::here("rds", "gXsma_trade_stats.rds"))
 # ------------------------------------------------------------------------------
-SPL.AX                    <- tk_xts(readRDS(here::here("rds", "SPL.AX.rds")))
+SPL.AX                    <- na.omit(as.xts(readRDS(here::here("rds", "SPL.AX.rds"))),keep.rownames = TRUE)
+# ------------------------------------------------------------------------------
 tradeDays                 <- readRDS(here::here("rds", "tradeDays.rds"))
 trend                     <- data.table(readRDS(here::here("rds", "trend.rds")))
 # trendClose                <- readRDS(here::here("rds", "trendClose.rds"))
@@ -179,13 +180,13 @@ nXsma                     <- readRDS(here::here("rds", "nXsma.rds"))
 dXema                     <- blotter::put.portfolio("dXema", gXema, envir = .blotter)
 dXsma                     <- blotter::put.portfolio("dXsma", gXema, envir = .blotter)
 # ------------------------------------------------------------------------------
+gXema                     <- blotter::put.account  ("gXema", gXema, envir = .blotter)
 gXema                     <- blotter::put.portfolio("gXema", gXema, envir = .blotter)
 gXsma                     <- blotter::put.portfolio("gXsma", gXema, envir = .blotter)
 # ------------------------------------------------------------------------------
 nXema                     <- blotter::put.portfolio("nXema", gXema, envir = .blotter)
 nXsma                     <- blotter::put.portfolio("nXsma", gXema, envir = .blotter)
 # ------------------------------------------------------------------------------
-
 ```
 
 ```{r processing}
@@ -201,21 +202,17 @@ n <- trend[substr(trend$catName, 1, 1) %like% "N"]
 
 ```{r quantstratInput}
 a1 <- base::load(here::here("a.RData"))
-# a2 <- load.Rdata2("a.RData", path=getwd())
 p1 <- base::load(here::here("p.RData"))
-# p2 <- load.Rdata2("p.RData", path=getwd())
-blot <- ls.str(.blotter)
-# gXemaAcct <- getAccount(paste("gXema"))
-# load.strategy(here::here("rdata","gXema"))
-# gXema.rets.bh <- PortfReturns(Account = "gXema")
-# load.strategy(dXsma)
-# dXsma.rets.bh <- PortfReturns(Account = "dXsma")
-# gXema.rets.bh <- PortfReturns(Account = "gXema")
 # ------------------------------------------------------------------------------
 if(!exists(".blotter"))    .blotter    <<- new.env()
 if(!exists(".instrument")) .instrument <<- new.env()
 if(!exists(".portfolio"))  .portfolio  <<- new.env()
 if(!exists(".strategy"))   .strategy   <<- new.env()
+if(!exists(".FinancialInstrument"))   .FinancialInstrument   <<- new.env()
+# ------------------------------------------------------------------------------
+
+blot   <- ls.str(.blotter)
+fi     <- ls.str(.FinancialInstrument)
 # ------------------------------------------------------------------------------
 ```
 
@@ -1224,9 +1221,11 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 
   renderPlot({
     ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
-    blotter::chart.Posn(paste0("portfolio.", "gX", ind),
+    blotter::getPortfolio(paste0("gX", ind), envir = .blotter)
+    blotter::chart.Posn(paste0("gX", ind),
+      Symbol = "SPL.AX",
       Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
-      TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
+      TA     = "add_SMA(n = 20, col = 2); add_SMA(n = 50, col = 4)")
    })
 
 ```
@@ -1270,29 +1269,11 @@ DT::renderDataTable({
 ### Price & Transactions Chart Part II
 ```{r 2.2.2.4-viz-goldenx-posn-chartstats, eval=gXema}
   
-  portfolio.st = "gXsma"
+  portfolio.st = "gXema"
   renderPlot({
     log.chart.Posn(Portfolio = portfolio.st, Sym = "SPL.AX", Dates = NULL, env = .GlobalEnv)
 #      add_MACD()
    })
-```
-
-```{r 2.2.2.3-table-goldenX-tradestats}
-
-# DT::renderDataTable({
-#   goldenX_EMA_tradestats <- blotter::tradeStats("gXema", paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"))
-#   DT::datatable(goldenX_EMA_tradestats,
-#     rownames = FALSE,
-#     extensions = c("Scroller"),
-#     options = list(
-#       order = list(list(3, "desc")),
-#       pageLength = 10,
-#       scrollX = TRUE,
-#       scrollY = 280,
-#       scroller = TRUE
-#     )
-#   )
-# })
 ```
 
 Column {data-height=33%}
@@ -1500,11 +1481,10 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 
    renderPlot({
      ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.3) - 0),])
- #    blotter::getPortfolio(paste0("dX", ind))
      blotter::chart.Posn(paste0("dX", ind),
       Symbol = "SPL.AX",
       Dates  = paste(format(input$dateRange2.3[1]), format(input$dateRange2.3[2]),sep = "::"),
-      TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
+      TA     = "add_SMA(n = 20, col = 2); add_SMA(n = 50, col = 4)")
    })
 
 ```
@@ -1728,7 +1708,6 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 
    renderPlot({
      ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),])
-#     blotter::getPortfolio(paste0("nX", ind))
      blotter::chart.Posn(paste0("nX", ind),
       Symbol = "SPL.AX",
       Dates  = paste(format(input$dateRange2.4[1]), format(input$dateRange2.4[2]),sep = "::"),
