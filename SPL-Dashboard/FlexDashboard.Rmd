@@ -211,19 +211,21 @@ if(!exists(".strategy"))   .strategy   <<- new.env()
 # ------------------------------------------------------------------------------
 # curr   <- get("USD", envir=FinancialInstrument:::.instrument)
 # SPL.AX <- get("SPL.AX", envir=FinancialInstrument:::.instrument)
-Sys.setenv(TZ = 'America/New_York')
 # ------------------------------------------------------------------------------
 # SPL.AX <- na.omit(getSymbols('SPL.AX', auto.assign = FALSE, from = '2002-01-02', env = .blotter, warnings = FALSE))
 # SPL.AX <-
 #   SPL.AX %>%
 #   na.omit() 
 # ------------------------------------------------------------------------------
+Sys.setenv(TZ = 'America/New_York')
+FinancialInstrument::loadInstruments(here::here("m.RData"))
+# ------------------------------------------------------------------------------
 curr     <- FinancialInstrument::currency("USD")
 get_curr <- FinancialInstrument::getInstrument("USD")
 # ------------------------------------------------------------------------------
 stk      <- FinancialInstrument::stock("SPL.AX", "USD")
 SPL.AX   <- FinancialInstrument::getInstrument("SPL.AX")
-SPL.AX   <- get("SPL.AX", envir=FinancialInstrument:::.instrument)
+SPL.AX   <- get("SPL.AX", envir  = FinancialInstrument:::.instrument)
 # ------------------------------------------------------------------------------
 blot   <- ls.str(.blotter)
 # ------------------------------------------------------------------------------

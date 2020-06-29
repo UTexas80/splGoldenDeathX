@@ -1,6 +1,10 @@
 ################################################################################
 ## Step 99.01 Statistics                                                     ###
 ################################################################################
+FinancialInstrument::currency("AUD")
+FinancialInstrument::stock("SPL.AX", currency("AUD"), 1)
+saveInstruments("MyInstruments.RData", dir=here::here("SPL-Dashboard/rdata/"))
+# ------------------------------------------------------------------------------
 saveRDS(getPortfolio("dXema"),     file  = here::here("SPL-Dashboard/rds/", "dXema.rds"))
 saveRDS(getPortfolio("dXsma"),     file  = here::here("SPL-Dashboard/rds/", "dXsma.rds"))
 saveRDS(getPortfolio("gXema"),     file  = here::here("SPL-Dashboard/rds/", "gXema.rds"))
