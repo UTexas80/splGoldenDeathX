@@ -122,7 +122,7 @@ monthly_stock_returns <- function(ticker, dateStart) {
 # merge(xts_price, xts_ma, join = 'inner')[,c(6:10)][paste(format(input$dateRange[1]),format(input$dateRange[2]),sep="::")]
 
 xprices <- function() {
-  symbols <- ("^IRX")
+  symbols <- ("SPL.AX")
 
   tidyquant::tq_get(symbols,
     get = "stock.prices",
@@ -146,7 +146,7 @@ dXsma_trade_stats         <- readRDS(here::here("rds", "dXsma_trade_stats.rds"))
 gXema_trade_stats         <- readRDS(here::here("rds", "gXema_trade_stats.rds"))
 gXsma_trade_stats         <- readRDS(here::here("rds", "gXsma_trade_stats.rds"))
 # ------------------------------------------------------------------------------
-SPL.AX                    <- na.omit(as.xts(readRDS(here::here("rds", "SPL.AX.rds"))),keep.rownames = TRUE)
+# SPL.AX                    <- na.omit(as.xts(readRDS(here::here("rds",            "SPL.AX.rds"))),keep.rownames = TRUE)
 # ------------------------------------------------------------------------------
 tradeDays                 <- readRDS(here::here("rds", "tradeDays.rds"))
 trend                     <- data.table(readRDS(here::here("rds", "trend.rds")))
@@ -208,6 +208,22 @@ if(!exists(".blotter"))    .blotter    <<- new.env()
 if(!exists(".instrument")) .instrument <<- new.env()
 if(!exists(".portfolio"))  .portfolio  <<- new.env()
 if(!exists(".strategy"))   .strategy   <<- new.env()
+# ------------------------------------------------------------------------------
+# curr   <- get("USD", envir=FinancialInstrument:::.instrument)
+# SPL.AX <- get("SPL.AX", envir=FinancialInstrument:::.instrument)
+Sys.setenv(TZ = 'America/New_York')
+# ------------------------------------------------------------------------------
+# SPL.AX <- na.omit(getSymbols('SPL.AX', auto.assign = FALSE, from = '2002-01-02', env = .blotter, warnings = FALSE))
+# SPL.AX <-
+#   SPL.AX %>%
+#   na.omit() 
+# ------------------------------------------------------------------------------
+curr     <- FinancialInstrument::currency("USD")
+get_curr <- FinancialInstrument::getInstrument("USD")
+# ------------------------------------------------------------------------------
+stk      <- FinancialInstrument::stock("SPL.AX", "USD")
+SPL.AX   <- FinancialInstrument::getInstrument("SPL.AX")
+SPL.AX   <- get("SPL.AX", envir=FinancialInstrument:::.instrument)
 # ------------------------------------------------------------------------------
 blot   <- ls.str(.blotter)
 # ------------------------------------------------------------------------------
@@ -1220,6 +1236,7 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
     ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
     blotter::getPortfolio(paste0("gX", ind), envir = .blotter)
     blotter::chart.Posn(paste0("gX", ind),
+                            
       Symbol = "SPL.AX",
       Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
       env    = .blotter,
@@ -1481,14 +1498,14 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 ### Price & Transactions Chart
 ```{r 2.3.2.1-viz-deathX-posn-chartstats}
 
-   renderPlot({
-     ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.3) - 0),])
-     blotter::chart.Posn(paste0("dX", ind),
-      Symbol = "SPL.AX",
-      Dates  = paste(format(input$dateRange2.3[1]), format(input$dateRange2.3[2]),sep = "::"),
-      env    = .GlobalEnv,
-      TA     = "add_SMA(n = 20, col = 2); add_SMA(n = 50, col = 4)")
-   })
+   # renderPlot({
+   #   ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.3) - 0),])
+   #   blotter::chart.Posn(paste0("dX", ind),
+   #    Symbol = "SPL.AX",
+   #    Dates  = paste(format(input$dateRange2.3[1]), format(input$dateRange2.3[2]),sep = "::"),
+   #    env    = .GlobalEnv,
+   #    TA     = "add_SMA(n = 20, col = 2); add_SMA(n = 50, col = 4)")
+   # })
 
 ```
 
@@ -1709,13 +1726,13 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 ### Price & Transactions Chart
 ```{r 2.4.2.1-viz-nox-posn-chartstats}
 
-   renderPlot({
-     ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),])
-     blotter::chart.Posn(paste0("nX", ind),
-      Symbol = "SPL.AX",
-      Dates  = paste(format(input$dateRange2.4[1]), format(input$dateRange2.4[2]),sep = "::"),
-      TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
-   })
+   # renderPlot({
+   #   ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),])
+   #   blotter::chart.Posn(paste0("nX", ind),
+   #    Symbol = "SPL.AX",
+   #    Dates  = paste(format(input$dateRange2.4[1]), format(input$dateRange2.4[2]),sep = "::"),
+   #    TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
+   # })
 
 ```
 
