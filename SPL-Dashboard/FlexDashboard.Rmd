@@ -1240,12 +1240,13 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
   renderPlot({
     ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
     blotter::getPortfolio(paste0("gX", ind), envir = .blotter)
-    load.strategy("gXema")
-    quantstrat::get.strategy(paste0("gX", ind), envir = .strategy)
-    FinancialInstrument::stock("SPL.AX", "USD")
-    FinancialInstrument::getInstrument("SPL.AX")
-    get("AUD", envir=FinancialInstrument:::.instrument)
-    get("SPL.AX", envir=FinancialInstrument:::.instrument)
+#    load.strategy("gXema")
+#    quantstrat::get.strategy(paste0("gX", ind), envir = .strategy)
+#    FinancialInstrument::stock("SPL.AX", "USD")
+#    FinancialInstrument::getInstrument("SPL.AX")
+#    get("AUD", envir=FinancialInstrument:::.instrument)
+#    get("SPL.AX", envir=FinancialInstrument:::.instrument)
+    getSymbols("SPL.AX", src='FI', dir=".", split_method='common')
     blotter::chart.Posn(paste0("portfolio.", "gX", ind),
       Symbol = "SPL.AX",
       Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),

@@ -32,7 +32,9 @@
 			"activityBar.background": "#243600",
 			"titleBar.activeBackground": "#020300",
 			"titleBar.activeForeground": "#e7e7e7",
-			"activityBar.foreground": "#e7e7e7"
+			"activityBar.foreground": "#e7e7e7",
+			"statusBar.background": "#020300",
+			"statusBar.foreground": "#e7e7e7"
 		},
 		"terminal.integrated.cursorStyle": "underline",
 		"editor.suggest.localityBonus": true,
