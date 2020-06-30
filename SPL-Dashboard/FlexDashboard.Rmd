@@ -32,6 +32,7 @@ resource_files:
 - dXsma_port_rdata.RData
 - rds/dXema.rds
 - gXema.RData
+- SPL.AX/SPL.AX.rda
 runtime: shiny
 theme: spacelab
 params:
@@ -1246,7 +1247,7 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 #    FinancialInstrument::getInstrument("SPL.AX")
 #    get("AUD", envir=FinancialInstrument:::.instrument)
 #    get("SPL.AX", envir=FinancialInstrument:::.instrument)
-    getSymbols("SPL.AX", src='FI', dir=".", split_method='common')
+    na.omit(getSymbols("SPL.AX", src='FI', dir=".", split_method='common'))
     blotter::chart.Posn(paste0("portfolio.", "gX", ind),
       Symbol = "SPL.AX",
       Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
