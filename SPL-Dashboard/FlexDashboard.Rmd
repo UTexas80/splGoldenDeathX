@@ -31,6 +31,7 @@ resource_files:
 - rds/gXsma_trade_stats.rds
 - dXsma_port_rdata.RData
 - rds/dXema.rds
+- gXema.RData
 runtime: shiny
 theme: spacelab
 params:
@@ -1241,7 +1242,7 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
     blotter::getPortfolio(paste0("gX", ind), envir = .blotter)
     load.strategy("gXema")
     quantstrat::get.strategy(paste0("gX", ind), envir = .strategy)
-    FinancialInstrument::stock("SPL.AX", "AUD")
+    FinancialInstrument::stock("SPL.AX", "USD")
     FinancialInstrument::getInstrument("SPL.AX")
     get("AUD", envir=FinancialInstrument:::.instrument)
     get("SPL.AX", envir=FinancialInstrument:::.instrument)
@@ -1342,8 +1343,30 @@ DT::renderDataTable({
 
 ```
 
+### Instruments
+```{r 2.2.2.7-table-financial-instruments}
+  
+DT::renderDataTable({
+  i <- as.list(FinancialInstrument:::.instrument, all.names=TRUE)
+  DT::datatable(matrix(unlist(i)),
+    rownames = FALSE,
+    extensions = c("Scroller"),
+    options = list(
+      pageLength = 10,
+      scrollX = TRUE,
+      scrollY = 280,
+      scroller = TRUE
+    )
+  )
+})
+
+```
+
+
+
+
 ### Symbols
-```{r 2.2.2.7-table-portfolio-symbols}
+```{r 2.2.2.8-table-portfolio-symbols}
   
 DT::renderDataTable({
   ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),]
@@ -1366,7 +1389,7 @@ DT::renderDataTable({
 ```
 
 ### Strategy
-```{r 2.2.2.8-table-portfolio-strategy}
+```{r 2.2.2.9-table-portfolio-strategy}
   
 DT::renderDataTable({
   load.strategy("gXema")
