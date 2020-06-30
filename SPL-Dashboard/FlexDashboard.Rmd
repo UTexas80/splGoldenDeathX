@@ -145,8 +145,8 @@ dXema_trade_stats         <- readRDS(here::here("rds", "dXema_trade_stats.rds"))
 dXsma_trade_stats         <- readRDS(here::here("rds", "dXsma_trade_stats.rds"))
 gXema_trade_stats         <- readRDS(here::here("rds", "gXema_trade_stats.rds"))
 gXsma_trade_stats         <- readRDS(here::here("rds", "gXsma_trade_stats.rds"))
-# ------------------------------------------------------------------------------
-# SPL.AX                    <- na.omit(as.xts(readRDS(here::here("rds",            "SPL.AX.rds"))),keep.rownames = TRUE)
+# ------------------------------------------------------------------------------This is what feeds log.chart.Posn
+SPL.AX                    <- na.omit(as.xts(readRDS(here::here("rds", "SPL.AX.rds"))),keep.rownames = TRUE)
 # ------------------------------------------------------------------------------
 tradeDays                 <- readRDS(here::here("rds", "tradeDays.rds"))
 trend                     <- data.table(readRDS(here::here("rds", "trend.rds")))
@@ -182,6 +182,8 @@ dXsma                     <- blotter::put.portfolio("dXsma", gXema, envir = .blo
 # ------------------------------------------------------------------------------
 gXema                     <- blotter::put.account  ("gXema", gXema, envir = .blotter)
 gXema                     <- blotter::put.portfolio("gXema", gXema, envir = .blotter)
+# ------------------------------------------------------------------------------
+gXsma                     <- blotter::put.account  ("gXsma", gXsma, envir = .blotter)
 gXsma                     <- blotter::put.portfolio("gXsma", gXema, envir = .blotter)
 # ------------------------------------------------------------------------------
 nXema                     <- blotter::put.portfolio("nXema", gXema, envir = .blotter)
@@ -218,7 +220,7 @@ if(!exists(".strategy"))   .strategy   <<- new.env()
 #   na.omit() 
 # ------------------------------------------------------------------------------
 Sys.setenv(TZ = 'America/New_York')
-FinancialInstrument::loadInstruments(here::here("m.RData"))
+m<- FinancialInstrument::loadInstruments(here::here("m.RData"))
 # ------------------------------------------------------------------------------
 curr     <- FinancialInstrument::currency("USD")
 get_curr <- FinancialInstrument::getInstrument("USD")
@@ -1237,8 +1239,13 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
   renderPlot({
     ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
     blotter::getPortfolio(paste0("gX", ind), envir = .blotter)
-    blotter::chart.Posn(paste0("gX", ind),
-                            
+    load.strategy("gXema")
+    quantstrat::get.strategy(paste0("gX", ind), envir = .strategy)
+    FinancialInstrument::stock("SPL.AX", "AUD")
+    FinancialInstrument::getInstrument("SPL.AX")
+    get("AUD", envir=FinancialInstrument:::.instrument)
+    get("SPL.AX", envir=FinancialInstrument:::.instrument)
+    blotter::chart.Posn(paste0("portfolio.", "gX", ind),
       Symbol = "SPL.AX",
       Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
       env    = .blotter,
@@ -1294,6 +1301,87 @@ DT::renderDataTable({
                    env = .GlobalEnv)
 #      add_MACD()
    })
+
+```
+
+### Blotter
+```{r 2.2.2.5-table-blotter}
+  
+DT::renderDataTable({
+  fi <- data.table(ls(envir = .blotter))
+  DT::datatable(fi,
+    rownames = FALSE,
+    extensions = c("Scroller"),
+    options = list(
+      pageLength = 10,
+      scrollX = TRUE,
+      scrollY = 280,
+      scroller = TRUE
+    )
+  )
+})
+
+```
+
+### Financial Instruments
+```{r 2.2.2.6-table-financial-instruments}
+  
+DT::renderDataTable({
+  fi <- data.table(ls(envir=FinancialInstrument:::.instrument))
+  DT::datatable(fi,
+    rownames = FALSE,
+    extensions = c("Scroller"),
+    options = list(
+      pageLength = 10,
+      scrollX = TRUE,
+      scrollY = 280,
+      scroller = TRUE
+    )
+  )
+})
+
+```
+
+### Symbols
+```{r 2.2.2.7-table-portfolio-symbols}
+  
+DT::renderDataTable({
+  ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),]
+  p  <- blotter::getPortfolio(paste0("gXema"), envir = .blotter)
+  get("AUD", envir=FinancialInstrument:::.instrument)
+  get("SPL.AX", envir=FinancialInstrument:::.instrument)
+  s <- data.table(ls(p$symbols$SPL.AX$txn))
+  DT::datatable(s,
+    rownames = FALSE,
+    extensions = c("Scroller"),
+    options = list(
+      pageLength = 10,
+      scrollX = TRUE,
+      scrollY = 280,
+      scroller = TRUE
+    )
+  )
+})
+
+```
+
+### Strategy
+```{r 2.2.2.8-table-portfolio-strategy}
+  
+DT::renderDataTable({
+  load.strategy("gXema")
+  strat <- data.table(ls(envir = .strategy))
+  DT::datatable(strat,
+    rownames = FALSE,
+    extensions = c("Scroller"),
+    options = list(
+      pageLength = 10,
+      scrollX = TRUE,
+      scrollY = 280,
+      scroller = TRUE
+    )
+  )
+})
 
 ```
 
@@ -1804,7 +1892,7 @@ renderPlotly({
 
 ### No X Trade Days
 
-```{r 2.4.3.2-viz-noX-trade-days, eval=trend}
+```{r 2.4.3.2-viz-noX-trade-days}
 xhp <- list(title = n$catName, titlefont = F)
 yhp <- list(title = "Counts", titlefont = F)
 ybp <- list(title = n$catName, titlefont = F)

@@ -1,8 +1,12 @@
 ################################################################################
 ## Step 99.01 Statistics                                                     ###
 ################################################################################
-FinancialInstrument::currency("AUD")
-FinancialInstrument::stock("SPL.AX", currency("AUD"), 1)
+FinancialInstrument::currency(c("AUD", "USD"))                  # Set the currency  ###
+FinancialInstrument::getInstrument("AUD","USD")
+# ------------------------------------------------------------------------------
+FinancialInstrument::stock(c("SPL.AX"), currency ="AUD") # Define the stocks  ###
+FinancialInstrument::getInstrument("SPL.AX")
+exchange_rate("USDAUD")
 saveInstruments("MyInstruments.RData", dir=here::here("SPL-Dashboard/rdata/"))
 # ------------------------------------------------------------------------------
 saveRDS(getPortfolio("dXema"),     file  = here::here("SPL-Dashboard/rds/", "dXema.rds"))
