@@ -174,22 +174,30 @@ xtsEMA                    <- as.xts(readRDS(here::here("rds", "xtsEMA.rds")))
 ```{r blotter-portfoliios}
 dXema                     <- readRDS(here::here("rds", "dXema.rds"))
 dXsma                     <- readRDS(here::here("rds", "dXsma.rds"))
+# ------------------------------------------------------------------------------
 gXema                     <- readRDS(here::here("rds", "gXema.rds"))
 gXsma                     <- readRDS(here::here("rds", "gXsma.rds"))
+# ------------------------------------------------------------------------------
 nXema                     <- readRDS(here::here("rds", "nXema.rds"))
 nXsma                     <- readRDS(here::here("rds", "nXsma.rds"))
 # ------------------------------------------------------------------------------
-dXema                     <- blotter::put.portfolio("dXema", gXema, envir = .GlobalEnv)
-dXsma                     <- blotter::put.portfolio("dXsma", gXema, envir = .blotter)
+dXema                     <- blotter::put.account  ("dXema", dXema, envir = .blotter)
+dXema                     <- blotter::put.portfolio("dXema", dXema, envir = .blotter)
+# ------------------------------------------------------------------------------
+dXsma                     <- blotter::put.account  ("dXsma", dXsma, envir = .blotter)
+dXsma                     <- blotter::put.portfolio("dXsma", dXsma, envir = .blotter)
 # ------------------------------------------------------------------------------
 gXema                     <- blotter::put.account  ("gXema", gXema, envir = .blotter)
 gXema                     <- blotter::put.portfolio("gXema", gXema, envir = .blotter)
 # ------------------------------------------------------------------------------
 gXsma                     <- blotter::put.account  ("gXsma", gXsma, envir = .blotter)
-gXsma                     <- blotter::put.portfolio("gXsma", gXema, envir = .blotter)
+gXsma                     <- blotter::put.portfolio("gXsma", gXsma, envir = .blotter)
 # ------------------------------------------------------------------------------
-nXema                     <- blotter::put.portfolio("nXema", gXema, envir = .blotter)
-nXsma                     <- blotter::put.portfolio("nXsma", gXema, envir = .blotter)
+nXema                     <- blotter::put.account  ("nXema", nXema, envir = .blotter)
+nXema                     <- blotter::put.portfolio("nXema", nXema, envir = .blotter)
+# ------------------------------------------------------------------------------
+nXsma                     <- blotter::put.account  ("nXsma", nXsma, envir = .blotter)
+nXsma                     <- blotter::put.portfolio("nXsma", nXsma, envir = .blotter)
 # ------------------------------------------------------------------------------
 ```
 
@@ -205,24 +213,13 @@ n <- trend[substr(trend$catName, 1, 1) %like% "N"]
 ```
 
 ```{r quantstratInput}
-a1 <- base::load(here::here("a.RData"))
-p1 <- base::load(here::here("p.RData"))
 # ------------------------------------------------------------------------------
 if(!exists(".blotter"))    .blotter    <<- new.env()
 if(!exists(".instrument")) .instrument <<- new.env()
 if(!exists(".portfolio"))  .portfolio  <<- new.env()
 if(!exists(".strategy"))   .strategy   <<- new.env()
 # ------------------------------------------------------------------------------
-# curr   <- get("USD", envir=FinancialInstrument:::.instrument)
-# SPL.AX <- get("SPL.AX", envir=FinancialInstrument:::.instrument)
-# ------------------------------------------------------------------------------
-# SPL.AX <- na.omit(getSymbols('SPL.AX', auto.assign = FALSE, from = '2002-01-02', env = .blotter, warnings = FALSE))
-# SPL.AX <-
-#   SPL.AX %>%
-#   na.omit() 
-# ------------------------------------------------------------------------------
 Sys.setenv(TZ = 'America/New_York')
-m<- FinancialInstrument::loadInstruments(here::here("m.RData"))
 # ------------------------------------------------------------------------------
 curr     <- FinancialInstrument::currency("USD")
 get_curr <- FinancialInstrument::getInstrument("USD")
@@ -231,67 +228,6 @@ stk      <- FinancialInstrument::stock("SPL.AX", "USD")
 SPL.AX   <- FinancialInstrument::getInstrument("SPL.AX")
 SPL.AX   <- get("SPL.AX", envir  = FinancialInstrument:::.instrument)
 # ------------------------------------------------------------------------------
-blot   <- ls.str(.blotter)
-# ------------------------------------------------------------------------------
-```
-
-```{R blotterFunctions, include=FALSE, warning=FALSE, cache=FALSE}
-# log chart in blotter https://tinyurl.com/yaqbe2yw
-
-log.chart.Posn <- function(Portfolio, Symbol, Dates = NULL, env = .blotter) {
-  pname<-Portfolio
-  # Portfolio<-getPortfolio(pname)
-  #Portfolio<-getPortfolio(p1)
-  # Portfolio                         <- na.omit(readRDS(here::here("dXsma_port_rds.rds")))
-  Portfolio                         <- gXema
-#  x <- get(Symbol, env)
-  x <- tk_xts(price())
-  Prices <- log(x)
-  chart_Series(na.omit(Prices))
-
-  if(is.null(Dates)) Dates<-paste(first(index(Prices)),last(index(Prices)),sep='::')
-
-  #scope the data by Dates
-  Portfolio$symbols[[Symbol]]$txn<-Portfolio$symbols[[Symbol]]$txn[Dates]
-  Portfolio$symbols[[Symbol]]$posPL<-Portfolio$symbols[[Symbol]]$posPL[Dates]
-
-  Trades = Portfolio$symbols[[Symbol]]$txn$Txn.Qty
-
-  Buys = log(Portfolio$symbols[[Symbol]]$txn$Txn.Price[which(Trades>0)])
-  Sells = log(Portfolio$symbols[[Symbol]]$txn$Txn.Price[which(Trades<0)])
-
-  Position = Portfolio$symbols[[Symbol]]$txn$Pos.Qty
-
-  if(nrow(Position) < 1) stop ('no transactions/positions to chart')
-
-  if(as.POSIXct(first(index(Prices)))<as.POSIXct(first(index(Position)))) Position<-rbind(xts(0,order.by=first(index(Prices)-1)),Position)
-  Positionfill = na.locf(merge(Position,index(Prices)))
-
-  CumPL = cumsum(Portfolio$symbols[[Symbol]]$posPL$Net.Trading.PL)
-  if(length(CumPL)>1)
-    CumPL = na.omit(na.locf(merge(CumPL,index(Prices))))
-  else
-    CumPL = NULL
-
-  if(!is.null(CumPL)) {
-    CumMax <- cummax(CumPL)
-    Drawdown <- -(CumMax - CumPL)
-    Drawdown<-rbind(xts(-max(CumPL),order.by=first(index(Drawdown)-1)),Drawdown)
-  } else {
-    Drawdown <- NULL
-  }
-
-  if(!is.null(nrow(Buys)) && nrow(Buys) >=1 ) (add_TA(Buys,pch=2,type='p',col='green', on=1));
-  if(!is.null(nrow(Sells)) && nrow(Sells) >= 1) (add_TA(Sells,pch=6,type='p',col='red', on=1));
-  if(nrow(Position)>=1) {
-    (add_TA(Positionfill,type='h',col='blue', lwd=2))
-    (add_TA(Position,type='p',col='orange', lwd=2, on=2))
-  }
-  if(!is.null(CumPL))  (add_TA(CumPL, col='darkgreen', lwd=2))
-  if(!is.null(Drawdown)) (add_TA(Drawdown, col='darkred', lwd=2, yaxis=c(0,-max(CumMax))))
-  plot(current.chob())
-
-}
 ```
 
 ```{R daydiff functions, include=FALSE, warning=FALSE, cache=FALSE}
@@ -445,13 +381,13 @@ Row {data-height=200}
 
 ```{r 1.1.2.1-table-Price}
 DT::renderDataTable({
-  DT::datatable(price()[,-c(8:9)],
+  DT::datatable(price()[,-c(1,8:9)],
     rownames = FALSE,
     extensions = c("Scroller"),
     filter = 'top',
     options = list(
       dom = 'ltipr'
-      ,order = list(list(2, "desc"))
+      ,order = list(list(0, "desc"))
       ,pageLength = 20
       ,scrollX = TRUE
       ,scrollY = 280
@@ -465,38 +401,7 @@ DT::renderDataTable({
     formatStyle("volume",
       background = styleColorBar(price()$volume, "steelblue")
     )
-  # %>%
-  #   formatStyle(
-  #     "change",
-  #     color = styleInterval(c(0), c("maroon", "darkgreen"))
-  #   )
 })
-```
-
-
-### Testing 1.2..3...4....
-
-```{r 1.1.2.2-table-portfolio}
-
-pname <- "dXsma"
-dXsma_port_rds                    <- readRDS(here::here("dXsma_port_rds.rds"))
-dxsma_summary                     <- dXsma_port_rds$summary
-
-DT::renderDataTable({
-  DT::datatable(dxsma_summary,
-    rownames = FALSE,
-    extensions = c("Scroller"),
-    filter = 'top',
-    options = list(
-      dom = 'ltipr'
-      ,order = list(list(2, "desc"))
-      ,pageLength = 20
-      ,scrollX = TRUE
-      ,scrollY = 280
-      ,scroller = TRUE)
-    )
-})
-
 ```
 
 Row {data-height=200}
@@ -504,16 +409,12 @@ Row {data-height=200}
 
 ### Stock Price Over Time (Chart)
 ```{r  1.1.2.2-viz-Price, eval=price}
-# y <- getSymbols("CSL.AX", auto.assign = FALSE)
 
 renderHighchart({
   xts_price <- tk_xts(price())
   colnames(xts_price) <- paste0(input$ticker, ".", colnames(xts_price))
   highchart(type = "stock") %>%
     hc_add_series(xts_price, type = "candlestick")
-  #    hc_add_series(RSI.BuyLevel, color = hex_to_rgba("blue", 0.7),
-  #                yAxis = 2, name = "Buy level")
-  #    hc_add_series(y, type = "ohlc")
 })
 ```
 
@@ -552,7 +453,6 @@ Column {data-width=500 .tabset .tabset-fade}
 renderHighchart({
   xts_price <- tk_xts(price())
   dailyRet <- periodReturn(xts_price[, 6], period = "daily") * 100
-  #  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
   highchart(type = "stock") %>%
     hc_add_series(dailyRet, type = "column")
 })
@@ -565,7 +465,6 @@ renderHighchart({
 renderHighchart({
   xts_price <- tk_xts(price())
   weeklyRet <- periodReturn(xts_price[, 6], period = "weekly") * 100
-  #  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
   highchart(type = "stock") %>%
     hc_add_series(weeklyRet, type = "column")
 })
@@ -578,7 +477,6 @@ renderHighchart({
 renderHighchart({
   xts_price <- tk_xts(price())
   monthlyRet <- periodReturn(xts_price[, 6], period = "monthly") * 100
-  #  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
   highchart(type = "stock") %>%
     hc_add_series(monthlyRet, type = "column")
 })
@@ -591,7 +489,6 @@ renderHighchart({
 renderHighchart({
   xts_price <- tk_xts(price())
   quarterlyRet <- periodReturn(xts_price[, 6], period = "quarterly") * 100
-  #  colnames(xts_price) <- paste0(input$ticker,'.', colnames(xts_price))
   highchart(type = "stock") %>%
     hc_add_series(quarterlyRet, type = "column")
 })
@@ -1236,20 +1133,12 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 -------------------------------------
 
 ### Price & Transactions Chart
-```{r 2.2.2.0-viz-goldenx-posn-chartstats, eval=gXema}
+```{r 2.2.2.1-viz-goldenx-posn-chartstats}
 
   renderPlot({
     ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
     blotter::getPortfolio(paste0("gX", ind), envir = .blotter)
-#    load.strategy("gXema")
-#    quantstrat::get.strategy(paste0("gX", ind), envir = .strategy)
-#    FinancialInstrument::stock("SPL.AX", "USD")
-#    FinancialInstrument::getInstrument("SPL.AX")
-#    get("AUD", envir=FinancialInstrument:::.instrument)
-#    get("SPL.AX", envir=FinancialInstrument:::.instrument)
-    na.omit(getSymbols("SPL.AX", src='FI', dir=".", split_method='common', env=.blotter))
-    
-    
+    na.omit(getSymbols("SPL.AX", src = 'FI', dir = ".", split_method = 'common', env = .blotter))
     blotter::chart.Posn(paste0("gX", ind),
       Symbol = "SPL.AX",
       Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
@@ -1259,53 +1148,10 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 
 ```
 
-
-### Price & Transactions Chart - tk_xts
-```{r 2.2.2.1-viz-goldenx-posn-chartstats, eval=gXema}
-
-  renderPlot({
-    ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
-    blotter::getPortfolio(paste0("gX", ind), envir = .blotter)
-#    load.strategy("gXema")
-#    quantstrat::get.strategy(paste0("gX", ind), envir = .strategy)
-#    FinancialInstrument::stock("SPL.AX", "USD")
-#    FinancialInstrument::getInstrument("SPL.AX")
-#    get("AUD", envir=FinancialInstrument:::.instrument)
-#    get("SPL.AX", envir=FinancialInstrument:::.instrument)
-    na.omit(getSymbols("SPL.AX", src='FI', dir=".", split_method='common', env=.instrument))
-    
-    SPL.AX <- tk_xts(price())[,1:7]
-    blotter::chart.Posn(paste0("portfolio.", "gX", ind),
-      Symbol = "SPL.AX",
-      Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
-      env    = .instrument,
-      TA     = "add_SMA(n = 20, col = 2); add_SMA(n = 50, col = 4)")
-   })
-
-```
-
-### SPL Table
-```{r 2.2.2.1-viz-table-spl-ax}
-
-DT::renderDataTable({
-  spl <- data.table(getSymbols("SPL.AX", src='FI', dir=".", split_method='common', env=.instrument), keep.rownames = TRUE)
-  xts_price <- data.table(tk_xts(price()), keep.rownames = TRUE)[,1:7]
-  DT::datatable(xts_price,
-    rownames = FALSE,
-    extensions = c("Scroller"),
-    options = list(
-      pageLength = 10,
-      scrollX = TRUE,
-      scrollY = 280,
-      scroller = TRUE
-    )
-  )
-})
-```
-
 ### Golden Crossing Table
 
 ```{r 2.2.2.2-table-goldenx, eval=trend}
+
 DT::renderDataTable({
     ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),]
     trendTable <- trend[indicator == ind]
@@ -1337,123 +1183,6 @@ DT::renderDataTable({
       color = styleInterval(c(0), c("maroon", "darkgreen"))
     )
 })
-```
-
-### Price & Transactions Chart Part II
-```{r 2.2.2.4-viz-goldenx-posn-chartstats}
-  
-  renderPlot({
-    ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
-    log.chart.Posn(Portfolio = paste0("gX", ind), 
-                   Sym = "SPL.AX", 
-                   Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
-                   env = .GlobalEnv)
-#      add_MACD()
-   })
-
-```
-
-### Blotter
-```{r 2.2.2.5-table-blotter}
-  
-DT::renderDataTable({
-  fi <- data.table(ls(envir = .blotter))
-  DT::datatable(fi,
-    rownames = FALSE,
-    extensions = c("Scroller"),
-    options = list(
-      pageLength = 10,
-      scrollX = TRUE,
-      scrollY = 280,
-      scroller = TRUE
-    )
-  )
-})
-
-```
-
-### Financial Instruments
-```{r 2.2.2.6-table-financial-instruments}
-  
-DT::renderDataTable({
-  fi <- data.table(ls(envir=FinancialInstrument:::.instrument))
-  DT::datatable(fi,
-    rownames = FALSE,
-    extensions = c("Scroller"),
-    options = list(
-      pageLength = 10,
-      scrollX = TRUE,
-      scrollY = 280,
-      scroller = TRUE
-    )
-  )
-})
-
-```
-
-### Instruments
-```{r 2.2.2.7-table-financial-instruments}
-  
-DT::renderDataTable({
-  i <- as.list(FinancialInstrument:::.instrument, all.names=TRUE)
-  DT::datatable(matrix(unlist(i)),
-    rownames = FALSE,
-    extensions = c("Scroller"),
-    options = list(
-      pageLength = 10,
-      scrollX = TRUE,
-      scrollY = 280,
-      scroller = TRUE
-    )
-  )
-})
-
-```
-
-
-
-
-### Symbols
-```{r 2.2.2.8-table-portfolio-symbols}
-  
-DT::renderDataTable({
-  ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),]
-  p  <- blotter::getPortfolio(paste0("gXema"), envir = .blotter)
-  get("AUD", envir=FinancialInstrument:::.instrument)
-  get("SPL.AX", envir=FinancialInstrument:::.instrument)
-  s <- data.table(ls(p$symbols$SPL.AX$txn))
-  DT::datatable(s,
-    rownames = FALSE,
-    extensions = c("Scroller"),
-    options = list(
-      pageLength = 10,
-      scrollX = TRUE,
-      scrollY = 280,
-      scroller = TRUE
-    )
-  )
-})
-
-```
-
-### Strategy
-```{r 2.2.2.9-table-portfolio-strategy}
-  
-DT::renderDataTable({
-  load.strategy("gXema")
-  strat <- data.table(ls(envir = .strategy))
-  DT::datatable(strat,
-    rownames = FALSE,
-    extensions = c("Scroller"),
-    options = list(
-      pageLength = 10,
-      scrollX = TRUE,
-      scrollY = 280,
-      scroller = TRUE
-    )
-  )
-})
-
 ```
 
 Column {data-height=33%}
@@ -1659,14 +1388,16 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 ### Price & Transactions Chart
 ```{r 2.3.2.1-viz-deathX-posn-chartstats}
 
-   # renderPlot({
-   #   ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.3) - 0),])
-   #   blotter::chart.Posn(paste0("dX", ind),
-   #    Symbol = "SPL.AX",
-   #    Dates  = paste(format(input$dateRange2.3[1]), format(input$dateRange2.3[2]),sep = "::"),
-   #    env    = .GlobalEnv,
-   #    TA     = "add_SMA(n = 20, col = 2); add_SMA(n = 50, col = 4)")
-   # })
+  renderPlot({
+    ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.3) - 0),])
+    blotter::getPortfolio(paste0("dX", ind), envir = .blotter)
+    na.omit(getSymbols("SPL.AX", src = 'FI', dir = ".", split_method = 'common', env = .blotter))
+    blotter::chart.Posn(paste0("dX", ind),
+      Symbol = "SPL.AX",
+      Dates  = paste(format(input$dateRange2.3[1]), format(input$dateRange2.3[2]),sep = "::"),
+      env    = .blotter,
+      TA     = "add_SMA(n = 20, col = 2); add_SMA(n = 50, col = 4)")
+   })
 
 ```
 
@@ -1887,13 +1618,16 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 ### Price & Transactions Chart
 ```{r 2.4.2.1-viz-nox-posn-chartstats}
 
-   # renderPlot({
-   #   ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),])
-   #   blotter::chart.Posn(paste0("nX", ind),
-   #    Symbol = "SPL.AX",
-   #    Dates  = paste(format(input$dateRange2.4[1]), format(input$dateRange2.4[2]),sep = "::"),
-   #    TA     = "add_SMA(n = 10, col = 2); add_SMA(n = 30, col = 4)")
-   # })
+  renderPlot({
+    ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),])
+    blotter::getPortfolio(paste0("nX", ind), envir = .blotter)
+    na.omit(getSymbols("SPL.AX", src = 'FI', dir = ".", split_method = 'common', env = .blotter))
+    blotter::chart.Posn(paste0("nX", ind),
+     Symbol = "SPL.AX",
+     Dates  = paste(format(input$dateRange2.4[1]), format(input$dateRange2.4[2]),sep = "::"),
+     env    = .blotter,
+     TA     = "add_SMA(n = 20, col = 2); add_SMA(n = 50, col = 4)")
+  })
 
 ```
 
