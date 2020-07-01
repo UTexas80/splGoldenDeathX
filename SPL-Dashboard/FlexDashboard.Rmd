@@ -1236,6 +1236,31 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 -------------------------------------
 
 ### Price & Transactions Chart
+```{r 2.2.2.0-viz-goldenx-posn-chartstats, eval=gXema}
+
+  renderPlot({
+    ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
+    blotter::getPortfolio(paste0("gX", ind), envir = .blotter)
+#    load.strategy("gXema")
+#    quantstrat::get.strategy(paste0("gX", ind), envir = .strategy)
+#    FinancialInstrument::stock("SPL.AX", "USD")
+#    FinancialInstrument::getInstrument("SPL.AX")
+#    get("AUD", envir=FinancialInstrument:::.instrument)
+#    get("SPL.AX", envir=FinancialInstrument:::.instrument)
+    na.omit(getSymbols("SPL.AX", src='FI', dir=".", split_method='common', env=.blotter))
+    
+    
+    blotter::chart.Posn(paste0("gX", ind),
+      Symbol = "SPL.AX",
+      Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
+      env    = .blotter,
+      TA     = "add_SMA(n = 20, col = 2); add_SMA(n = 50, col = 4)")
+   })
+
+```
+
+
+### Price & Transactions Chart - tk_xts
 ```{r 2.2.2.1-viz-goldenx-posn-chartstats, eval=gXema}
 
   renderPlot({
@@ -1247,14 +1272,35 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 #    FinancialInstrument::getInstrument("SPL.AX")
 #    get("AUD", envir=FinancialInstrument:::.instrument)
 #    get("SPL.AX", envir=FinancialInstrument:::.instrument)
-    na.omit(getSymbols("SPL.AX", src='FI', dir=".", split_method='common'))
+    na.omit(getSymbols("SPL.AX", src='FI', dir=".", split_method='common', env=.instrument))
+    
+    SPL.AX <- tk_xts(price())[,1:7]
     blotter::chart.Posn(paste0("portfolio.", "gX", ind),
       Symbol = "SPL.AX",
       Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
-      env    = .blotter,
+      env    = .instrument,
       TA     = "add_SMA(n = 20, col = 2); add_SMA(n = 50, col = 4)")
    })
 
+```
+
+### SPL Table
+```{r 2.2.2.1-viz-table-spl-ax}
+
+DT::renderDataTable({
+  spl <- data.table(getSymbols("SPL.AX", src='FI', dir=".", split_method='common', env=.instrument), keep.rownames = TRUE)
+  xts_price <- data.table(tk_xts(price()), keep.rownames = TRUE)[,1:7]
+  DT::datatable(xts_price,
+    rownames = FALSE,
+    extensions = c("Scroller"),
+    options = list(
+      pageLength = 10,
+      scrollX = TRUE,
+      scrollY = 280,
+      scroller = TRUE
+    )
+  )
+})
 ```
 
 ### Golden Crossing Table
