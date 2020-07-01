@@ -760,7 +760,7 @@ renderPlotly({
 ### Returns by MA Type
 ```{r 2.1.1.e-viz-box-returns, eval=trend}
 gSMA = g[indicator == 'SMA']
-# nSMA = n[indicator == 'SMA']
+nSMA = n[indicator == 'SMA']
 
 renderPlotly({
   p <- plot_ly(type = "box") %>%
@@ -798,16 +798,16 @@ renderPlotly({
       line = list(color = "rgb(7,40,89)"),
       name = "No X-EMA"
     ) %>%
-    # add_boxplot(
-    #   y = nSMA$return, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
-    #   marker = list(color = "rgb(7,40,89)"),
-    #   line = list(color = "rgb(7,40,89)"),
-    #   name = "No X-SMA"
-    # ) %>%
-      layout(title = "Returns by Moving Average Type",
-          yaxis = list(
-          title = 'Return Percentage ',
-          tickformat = "%")
+    add_boxplot(
+      y = nSMA$return, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
+      marker = list(color = "rgb(7,40,89)"),
+      line = list(color = "rgb(7,40,89)"),
+      name = "No X-SMA"
+    ) %>%
+    layout(title = "Returns by Moving Average Type",
+      yaxis = list(
+      title = 'Return Percentage ',
+      tickformat = "%")
     )
 })
 ```
@@ -850,7 +850,6 @@ nSMA = n[indicator == 'SMA']
 renderPlotly({
   p <- plot_ly(type = "box") %>%
     add_boxplot(
-#      x = d[indicator == 'EMA'],
       y = dEMA$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
       marker = list(color = "rgb(7,40,89)"),
       line = list(color = "rgb(7,40,89)"),
@@ -883,12 +882,12 @@ renderPlotly({
       line = list(color = "rgb(7,40,89)"),
       name = "No X-EMA"
     ) %>%
-    # add_boxplot(
-    #   y = nSMA$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
-    #   marker = list(color = "rgb(7,40,89)"),
-    #   line = list(color = "rgb(7,40,89)"),
-    #   name = "No X-SMA"
-    # ) %>%
+    add_boxplot(
+      y = nSMA$tradeDays, jitter = 0.3, pointpos = -1.8, boxpoints = "all",
+      marker = list(color = "rgb(7,40,89)"),
+      line = list(color = "rgb(7,40,89)"),
+      name = "No X-SMA"
+    ) %>%
       layout(title = "Trade Days by Moving Average Type",
           yaxis = list(
           title = 'Trade Days')
