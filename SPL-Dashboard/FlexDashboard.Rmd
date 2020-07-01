@@ -895,7 +895,7 @@ renderPlotly({
 })
 ```
 
-### Trade Stats
+### Composite Trade Stats
 ```{r 2.1.1.h-table-tradestats, eval=dt_trade_stats}
 # goldenX_EMA_tradestats <- blotter::tradeStats(
 #   "goldenX_EMA_portfolio",
