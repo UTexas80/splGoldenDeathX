@@ -171,7 +171,8 @@ trendSummaryGroup         <- data.table(readRDS(here::here("rds", "trendSummaryG
 xtsEMA                    <- as.xts(readRDS(here::here("rds", "xtsEMA.rds")))
 ```
 
-```{r blotter-portfoliios}
+```{r blotter-rds}
+# ------------------------------------------------------------------------------
 dXema                     <- readRDS(here::here("rds", "dXema.rds"))
 dXsma                     <- readRDS(here::here("rds", "dXsma.rds"))
 # ------------------------------------------------------------------------------
@@ -181,22 +182,30 @@ gXsma                     <- readRDS(here::here("rds", "gXsma.rds"))
 nXema                     <- readRDS(here::here("rds", "nXema.rds"))
 nXsma                     <- readRDS(here::here("rds", "nXsma.rds"))
 # ------------------------------------------------------------------------------
-dXema                     <- blotter::put.account  ("dXema", dXema, envir = .blotter)
-dXema                     <- blotter::put.portfolio("dXema", dXema, envir = .blotter)
+```
+
+```{r blotter-accounts}
 # ------------------------------------------------------------------------------
+dXema                     <- blotter::put.account  ("dXema", dXema, envir = .blotter)
 dXsma                     <- blotter::put.account  ("dXsma", dXsma, envir = .blotter)
-dXsma                     <- blotter::put.portfolio("dXsma", dXsma, envir = .blotter)
 # ------------------------------------------------------------------------------
 gXema                     <- blotter::put.account  ("gXema", gXema, envir = .blotter)
-gXema                     <- blotter::put.portfolio("gXema", gXema, envir = .blotter)
-# ------------------------------------------------------------------------------
 gXsma                     <- blotter::put.account  ("gXsma", gXsma, envir = .blotter)
-gXsma                     <- blotter::put.portfolio("gXsma", gXsma, envir = .blotter)
 # ------------------------------------------------------------------------------
 nXema                     <- blotter::put.account  ("nXema", nXema, envir = .blotter)
-nXema                     <- blotter::put.portfolio("nXema", nXema, envir = .blotter)
-# ------------------------------------------------------------------------------
 nXsma                     <- blotter::put.account  ("nXsma", nXsma, envir = .blotter)
+# ------------------------------------------------------------------------------
+```
+
+```{r blotter-portfoliios}
+# ------------------------------------------------------------------------------
+dXema                     <- blotter::put.portfolio("dXema", dXema, envir = .blotter)
+dXsma                     <- blotter::put.portfolio("dXsma", dXsma, envir = .blotter)
+# ------------------------------------------------------------------------------
+gXema                     <- blotter::put.portfolio("gXema", gXema, envir = .blotter)
+gXsma                     <- blotter::put.portfolio("gXsma", gXsma, envir = .blotter)
+# ------------------------------------------------------------------------------
+nXema                     <- blotter::put.portfolio("nXema", nXema, envir = .blotter)
 nXsma                     <- blotter::put.portfolio("nXsma", nXsma, envir = .blotter)
 # ------------------------------------------------------------------------------
 ```
@@ -212,12 +221,16 @@ g <- trend[substr(trend$catName, 1, 1) %like% "G"]
 n <- trend[substr(trend$catName, 1, 1) %like% "N"]
 ```
 
-```{r quantstratInput}
+```{r quantstrat-environment}
 # ------------------------------------------------------------------------------
 if(!exists(".blotter"))    .blotter    <<- new.env()
 if(!exists(".instrument")) .instrument <<- new.env()
 if(!exists(".portfolio"))  .portfolio  <<- new.env()
 if(!exists(".strategy"))   .strategy   <<- new.env()
+# ------------------------------------------------------------------------------
+```
+
+```{r quantstrat-input}
 # ------------------------------------------------------------------------------
 Sys.setenv(TZ = 'America/New_York')
 # ------------------------------------------------------------------------------
@@ -397,6 +410,7 @@ DT::renderDataTable({
       "open", "high", "low", "close",
       "ema020", "ema050", "ema100", "ema200", "sma020", "sma050", "sma100", "sma200"
     )) %>%
+    formatCurrency('volume', currency = "", interval = 3, mark = ",", digits=0)  %>%
     formatDate(c("date")) %>%
     formatStyle("volume",
       background = styleColorBar(price()$volume, "steelblue")
@@ -497,7 +511,6 @@ renderHighchart({
 ### Annual Returns
 
 ```{r 1.2.1.e-viz-ret-annual, eval=price}
-
 renderHighchart({
   xts_price <- tk_xts(price())
   annualRet <- periodReturn(xts_price[, 6], period = "yearly") * 100
@@ -711,6 +724,51 @@ DT::renderDataTable({
 })
 ```
 
+### Composite Trade Stats
+```{r 2.1.1.h-table-tradestats, eval=dt_trade_stats}
+# goldenX_EMA_tradestats <- blotter::tradeStats(
+#   "goldenX_EMA_portfolio",
+#     Dates =
+#       paste(format(input$dateRange2.2[1]),format(input$dateRange2.2[2]),sep = "::"))
+
+DT::renderDataTable({
+  DT::datatable(dt_trade_stats[,-2],
+    rownames = FALSE,
+    extensions = c("Scroller"),
+#    filter = 'top',
+    options = list(
+      dom = 'ltipr',
+      order = list(list(3, "desc")),
+      pageLength = 10,
+      scrollX = TRUE,
+      scrollY = 280,
+      scroller = TRUE
+    )
+  ) %>%
+    formatCurrency(
+      c("Net.Trading.PL", "Avg.Trade.PL", "Med.Trade.PL",
+        "Largest.Winner", "Largest.Loser",
+        "Gross.Profits", "Gross.Losses",
+        "Avg.Win.Trade", "Med.Win.Trade", 
+        "Avg.Losing.Trade", "Med.Losing.Trade",
+        "Avg.Daily.PL", "Med.Daily.PL",
+        "Max.Drawdown", "Max.Equity", "Min.Equity", "End.Equity"
+       ),
+        digits = 0
+    ) %>%
+    formatPercentage(
+      c("Percent.Positive", "Percent.Negative")
+    ) %>%
+    formatRound(
+      c("Std.Dev.Trade.PL",   "Std.Err.Trade.PL", "Profit.Factor",
+        "Std.Dev.Daily.PL",   "Std.Err.Daily.PL", "Ann.Sharpe",
+        "Profit.To.Max.Draw", "Avg.WinLoss.Ratio", "Med.WinLoss.Ratio"
+      ),
+        digits = 2
+    )
+})
+```
+
 ### EMA Trend Return Distribution
 ```{r 2.1.1.b-viz-box-returns, eval=trendReturns}
 chart.Boxplot(data.table(trendReturns) %>% select(starts_with("D")) %>% select(ends_with("EMA")))
@@ -892,28 +950,6 @@ renderPlotly({
           yaxis = list(
           title = 'Trade Days')
     )
-})
-```
-
-### Composite Trade Stats
-```{r 2.1.1.h-table-tradestats, eval=dt_trade_stats}
-# goldenX_EMA_tradestats <- blotter::tradeStats(
-#   "goldenX_EMA_portfolio",
-#     Dates =
-#       paste(format(input$dateRange2.2[1]),format(input$dateRange2.2[2]),sep = "::"))
-
-DT::renderDataTable({
-  DT::datatable(dt_trade_stats,
-    rownames = FALSE,
-    extensions = c("Scroller"),
-    options = list(
-      order = list(list(3, "desc")),
-      pageLength = 10,
-      scrollX = TRUE,
-      scrollY = 280,
-      scroller = TRUE
-    )
-  )
 })
 ```
 

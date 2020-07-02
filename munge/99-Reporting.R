@@ -61,8 +61,8 @@ trendReturns      <- data.table(t(trend[, c(3,8)]))                             
 trendReturns      <- setnames(trendReturns, as.character(trendReturns[1,]))[-1,] %>%
                      mutate_if(is.character,as.numeric)
 # ------------------------------------------------------------------------------
-# [1] "indicator"         "catName"           "subcatName"        "startDate"         "startOpen"         "endDate"           "endOpen"    
-# [8] "return"            "Max.Notional.Cost" "Net.Trading.PL"    "tradeDays"         "calendarDays" 
+# [1] "indicator"         "catName"           "subcatName"        "startDate"         "startOpen"         "endDate"           "endOpen"
+# [8] "return"            "Max.Notional.Cost" "Net.Trading.PL"    "tradeDays"         "calendarDays"
 # ------------------------------------------------------------------------------
 dt_trade_stats    <- rbind.data.frame(dXema_trade_stats,
                                    dXsma_trade_stats,
@@ -71,6 +71,14 @@ dt_trade_stats    <- rbind.data.frame(dXema_trade_stats,
                                    nXema_trade_stats,
                                    nXsma_trade_stats
                                    )
+# ------------------------------------------------------------------------------
+# Converting column from character to numeric       https://tinyurl.com/ycn9yuun
+# ------------------------------------------------------------------------------
+dt_trade_stats_num <- dt_trade_stats[,-c(1:2)] %>%
+                      mutate_if(is.character,as.numeric)
+dt_trade_stats     <- cbind(dt_trade_stats[,1], dt_trade_stats_num)
+dt_trade_stats[, Percent.Positive := Percent.Positive/100][,
+                 Percent.Negative := Percent.Negative/100]
 ################################################################################
 ## Step 99.01 Daily Trend Returns                                  quantmod  ###
 ################################################################################
