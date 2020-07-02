@@ -1230,9 +1230,9 @@ yhpG <- list(title = "Counts", titlefont = F)
 ybpG <- list(title = g$catName, titlefont = F)
 
 renderPlotly({
-  ind <- unique(trend[,1])[(as.numeric(input$radio2.2) - 2),]
+  ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),]
   g <- g[indicator == ind]
-  g <- g[(startDate >= input$dateRange2.2[1] & 
+  g <- g[(startDate >= input$dateRange2.2[1] &
           endDate   <= input$dateRange2.2[2])]
 
   histogramG <- plot_ly(g, x = g$return, type = "histogram", marker = list(color = "teal")) %>%
@@ -1274,7 +1274,7 @@ yhpG <- list(title = "Counts", titlefont = F)
 ybpG <- list(title = g$catName, titlefont = F)
 
 renderPlotly({
-  ind <- unique(trend[,1])[(as.numeric(input$radio2.2) - 2),]
+  ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),]
   g <- g[indicator == ind]
   g <- g[(startDate >= input$dateRange2.2[1] &
           endDate   <= input$dateRange2.2[2])]
@@ -1482,7 +1482,7 @@ yhpD <- list(title = "Counts", titlefont = F)
 ybpD <- list(title = d$catName, titlefont = F)
 
 renderPlotly({
-  ind <- unique(trend[,1])[(as.numeric(input$radio2.3) - 0),]
+  ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.3)),]
   d   <- d[indicator == ind]
   d   <- d[(startDate >= input$dateRange2.3[1] & endDate <= input$dateRange2.3[2])]
 
@@ -1508,7 +1508,7 @@ yhp <- list(title = "Counts", titlefont = F)
 ybp <- list(title = d$catName, titlefont = F)
 
 renderPlotly({
-  ind <- unique(trend[,1])[(as.numeric(input$radio2.3) - 0),]
+  ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.3)),]
   d <- d[indicator == ind]
   d <- d[(startDate >= input$dateRange2.3[1] &
           endDate   <= input$dateRange2.3[2])]
@@ -1672,8 +1672,8 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 DT::renderDataTable({
     ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),]
     trendTable <- trend[indicator == ind]
-    trendTable <- trendTable[catName == "NoX" & 
-                        (startDate >= input$dateRange2.4[1] & 
+    trendTable <- trendTable[catName == "NoX" &
+                        (startDate >= input$dateRange2.4[1] &
                          endDate <= input$dateRange2.4[2])][,-c(9,13:16)]
     DT::datatable(trendTable,
     rownames = FALSE,
@@ -1712,7 +1712,7 @@ yhp <- list(title = "Counts", titlefont = F)
 ybp <- list(title = n$catName, titlefont = F)
 
 renderPlotly({
-  ind <- unique(trend[,1])[(as.numeric(input$radio2.4) - 4),]
+  ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),]
   n   <- n[indicator == ind]
   n   <- n[(startDate >= input$dateRange2.4[1] & endDate <= input$dateRange2.4[2])]
 
@@ -1738,11 +1738,11 @@ yhp <- list(title = "Counts", titlefont = F)
 ybp <- list(title = n$catName, titlefont = F)
 
 renderPlotly({
-  ind <- unique(trend[,1])[(as.numeric(input$radio2.4) - 4),]
+  ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),]
   n <- n[indicator == ind]
   n <- n[(startDate >= input$dateRange2.4[1] & 
           endDate   <= input$dateRange2.4[2])]
-  
+
   histogramN <- plot_ly(n, x = n$tradeDays, type = "histogram", marker = list(color = "purple")) %>%
     layout(xaxis = xhp, yaxis = yhp)
 
