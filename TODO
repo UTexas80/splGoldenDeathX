@@ -1,256 +1,45 @@
-Mission/Objective: utilize Machine Learning & Fintech analytics to vette the ASX for compelling Small Cap Biotech risk adverse trading opportunities
+# Mission/Objective: utilize Machine Learning & Fintech analytics to vette the ASX for compelling Small Cap Biotech risk adverse trading opportunities
+# Strategy: apply Golden Cross, Death Cross, RSI, Bollinger Band Dispersion and Chalkin Money Flow tactics to uncover profitable trades
+# Objective: 100% annualized return
 
-Warning: Error in initPortf: Portfolio dXsma already exists, use updatePortf() or addPortfInstr() to update it.
-updateEndEq(account.st) over entire .xts for each trend  # p.158 quantitative trading with R
+# Documentation:
+  * Methodology:
+    * Quantstrat basic
+      * Number of shares bought / sold
+      * Buy / Sell
+  * Update:
+    - [] ReadMe.md
+    - [] [Glen C. Falk](http://glencfalk.rbind.io)
+    
+# Review:
+  - [] Annualized / Cumulative Returns
+  - [] DeathX ROI to Return.cumulative multipy by -1
 
-DeathX ROI to Return.cumulative multipy by -1
+# Dashboard:
+  - [] Change color of Golden Death from Green to Gold 
+  - [] Combine Calendar Days / Trade Days vbox's
+  - [] Add Max / Min ROI
+  - [] Add Chart combining all strategies to show the sequence of events
 
-price
-trend
-trenReturns
-dt_trade_stats
-tren
-trendRturnsAnnualized
-trendSummaryGroup
-trend
+# Clean up:
+  - [] Files: Remove extraneous files in code and directories
+    - [] .RData
+  - [] Folders:
+  
+# email to hydroTSM regarding annual date length can change to 252 from 360?  
 
-
-Error in eval(x, envir = envir) : object 'price' not found
-Error in eval(x, envir = envir) : object 'trend' not found
-Error in eval(x, envir = envir) : object 'trend' not found
-Error in eval(x, envir = envir) : object 'trend' not found
-Error in eval(x, envir = envir) : object 'trend' not found
-Error in eval(x, envir = envir) : object 'trend' not found
-Error in eval(x, envir = envir) : object 'trend' not found
-Error in eval(x, envir = envir) : object 'trend' not found
-Error in eval(x, envir = envir) : object 'trendReturns' not found
-Error in eval(x, envir = envir) : object 'trendReturns' not found
-Error in eval(x, envir = envir) : object 'trend' not found
-Error in eval(x, envir = envir) : object 'trend' not found
-Error in eval(x, envir = envir) : object 'trend' not found
-Error in eval(x, envir = envir) : object 'trend' not found
-Error in eval(x, envir = envir) : object 'dt_trade_stats' not found
-Error in eval(x, envir = envir) : object 'trend' not found
-Error in eval(x, envir = envir) : 
-  object 'trendReturnsAnnualized' not found
-Error in eval(x, envir = envir) : object 'trendSummaryGroup' not found
-Error in eval(x, envir = envir) : object 'trend' not found
-
-https://www.r-bloggers.com/tactical-asset-allocation-using-blotter/
-for( i in 10:NROW(SPY) ) {
-  CurrentDate=time(SPY)[i]
-  equity = getEndEq(Account=’default’, CurrentDate)
-
-email to hydroTSM regarding annual date length can change to 252 from 360?
-
-
-https://www.markettraders.com/risk-disclaimer/
-
-Remove duplicates keeping entry with largest absolute value
-https://tinyurl.com/y738qcsc
-https://stackoverflow.com/questions/12805964/remove-duplicates-keeping-entry-with-largest-absolute-value
-x <- as.xts(gXema_trend[,c(2,6)])
-x[,1] <- 1
-names(x)[1] <- "EMA"
-
-y <- golden_ma_sigEMA
-
-z <- rbind(x,y)
-a<-as.xts(as.data.table(z)[, .SD[which.max(abs(EMA))], by=index]) 
-
-
-library(data.table)
-aDT <- as.data.table(z, keep.rownames = TRUE)
-setkey(aDT,"index")
-aDT[J(unique(index)), list(value = value[which.max(abs(value))])]
-
-Or a not as fast, but still fast, alternative :
-library(data.table)
-as.data.table(a)[, .SD[which.max(abs(value))], by=index]
-
-
-https://datascienceplus.com/automated-data-report-storytelling-in-r/
-
-# modify TrendReturnsDaily
-# daily2annual.zoo(golden, FUN = sum, na.rm = TRUE)
-
-glimpse(dXema_trend)
-Rows: 30
-Columns: 25
-$ Start               <dttm> 2003-04-24 20:00:00, 2005-04-19 20:00:00, 2005-11-30 19:00:00, 2006-04-09 20:00:00, 2006-05-07 20:00:00, 200...
-$ End                 <dttm> 2003-05-13 20:00:00, 2005-09-28 20:00:00, 2006-03-28 19:00:00, 2006-04-26 20:00:00, 2006-07-18 20:00:00, 200...
-$ Init.Qty            <dbl> -10000, -10000, -10000, -10000, -10000, -10000, -10000, -10000, -10000, -10000, -10000, -10000, -10000, -1000...
-$ Init.Pos            <dbl> -10000, -10000, -10000, -10000, -10000, -10000, -10000, -10000, -10000, -10000, -10000, -10000, -10000, -1000...
-$ Max.Pos             <dbl> -10000, -10000, -10000, -10000, -10000, -10000, -10000, -10000, -10000, -10000, -10000, -10000, -10000, -1000...
-$ End.Pos             <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-$ Closing.Txn.Qty     <dbl> 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 1000...
-$ Num.Txns            <int> 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
-$ Max.Notional.Cost   <dbl> -2800, -6500, -5500, -4950, -4900, -4550, -4700, -4600, -3900, -3600, -3100, -3300, -3400, -3300, -2550, -270...
-$ Net.Trading.PL      <dbl> -400, 400, 250, -100, 150, -550, -600, 600, -400, 0, -400, 50, -150, 500, -200, 200, -400, 1500, 850, -1500, ...
-$ MAE                 <dbl> -450, 0, -200, -250, 0, -950, -600, 0, -400, -400, -450, -200, -150, 0, -400, 0, -650, -2300, -100, -1500, -3...
-$ MFE                 <dbl> 300, 2200, 1150, 150, 1300, 300, 300, 950, 700, 350, 400, 50, 0, 1000, 150, 1050, 300, 3500, 2350, 1600, 2300...
-$ Pct.Net.Trading.PL  <dbl> -0.14285714, 0.06153846, 0.04545455, -0.02020202, 0.03061224, -0.12087912, -0.12765957, 0.13043478, -0.102564...
-$ Pct.MAE             <dbl> -0.16071429, 0.00000000, -0.03636364, -0.05050505, 0.00000000, -0.20879121, -0.12765957, 0.00000000, -0.10256...
-$ Pct.MFE             <dbl> 0.10714286, 0.33846154, 0.20909091, 0.03030303, 0.26530612, 0.06593407, 0.06382979, 0.20652174, 0.17948718, 0...
-$ tick.Net.Trading.PL <dbl> -4.0, 4.0, 2.5, -1.0, 1.5, -5.5, -6.0, 6.0, -4.0, 0.0, -4.0, 0.5, -1.5, 5.0, -2.0, 2.0, -4.0, 15.0, 8.5, -15....
-$ tick.MAE            <dbl> -45000, 0, -20000, -25000, 0, -95000, -60000, 0, -40000, -40000, -45000, -20000, -15000, 0, -40000, 0, -65000...
-$ tick.MFE            <dbl> 30000, 220000, 115000, 15000, 130000, 30000, 30000, 95000, 70000, 35000, 40000, 5000, 0, 100000, 15000, 10500...
-$ duration            <drtn> 1641600 secs, 13996800 secs, 10195200 secs, 1468800 secs, 6220800 secs, 2073600 secs, 4665600 secs, 12009600...
-$ tradeDays           <dbl> 14, 115, 81, 11, 52, 19, 37, 96, 56, 54, 47, 2, 2, 72, 14, 94, 25, 146, 114, 77, 108, 34, 23, 10, 7, 25, 55, ...
-$ calendarDays        <dbl> 19, 162, 118, 17, 72, 24, 54, 139, 77, 81, 69, 1, 1, 102, 17, 135, 35, 213, 165, 112, 155, 49, 30, 11, 10, 34...
-$ catName             <chr> "DeathX", "DeathX", "DeathX", "DeathX", "DeathX", "DeathX", "DeathX", "DeathX", "DeathX", "DeathX", "DeathX",...
-$ indicator           <chr> "EMA", "EMA", "EMA", "EMA", "EMA", "EMA", "EMA", "EMA", "EMA", "EMA", "EMA", "EMA", "EMA", "EMA", "EMA", "EMA...
-$ grp                 <int> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
-$ subcatName          <chr> "DeathX001EMA", "DeathX002EMA", "DeathX003EMA", "DeathX004EMA", "DeathX005EMA", "DeathX006EMA", "DeathX007EMA...
-
-glimpse(SPL)
-Rows: 4,675
-Columns: 7
-$ date     <dttm> 2002-01-01 19:00:00, 2002-01-02 19:00:00, 2002-01-03 19:00:00, 2002-01-06 19:00:00, 2002-01-07 19:00:00, 2002-01-08 19:...
-$ open     <dbl> 0.770, 0.770, 0.780, 0.780, 0.790, 0.780, 0.780, 0.770, 0.790, 0.790, 0.780, 0.770, 0.780, 0.790, 0.750, 0.800, 0.800, 0...
-$ high     <dbl> 0.770, 0.770, 0.790, 0.780, 0.790, 0.780, 0.780, 0.800, 0.790, 0.810, 0.780, 0.780, 0.790, 0.790, 0.760, 0.810, 0.800, 0...
-$ low      <dbl> 0.76, 0.77, 0.78, 0.78, 0.78, 0.77, 0.76, 0.77, 0.78, 0.78, 0.75, 0.76, 0.78, 0.75, 0.75, 0.79, 0.80, 0.78, 0.80, 0.80, ...
-$ close    <dbl> 0.76, 0.77, 0.79, 0.78, 0.78, 0.77, 0.77, 0.80, 0.79, 0.78, 0.76, 0.78, 0.79, 0.75, 0.75, 0.81, 0.80, 0.78, 0.80, 0.80, ...
-$ volume   <dbl> 21000, 4749, 35151, 10000, 21000, 44090, 21750, 21930, 53200, 31000, 54000, 71750, 37350, 96834, 21362, 189250, 122558, ...
-$ adjusted <dbl> 0.76, 0.77, 0.79, 0.78, 0.78, 0.77, 0.77, 0.80, 0.79, 0.78, 0.76, 0.78, 0.79, 0.75, 0.75, 0.81, 0.80, 0.78, 0.80, 0.80, ...
-
-
-quantstrat::get.strategy('gXema')
-file.copy(here::here("gXema.RData"),here::here("dashboard/rdata/", "gXema.RData"))aaaaa
-file.copy(here::here("gXema.RData"),here::here("dashboard/rdata/", "gXema.RData"))
-load.strategy(here::here("dashboard/rds","gXema"))
-load.strategy(here::here("dashboard/rdata","gXema"))
-gXema.rets.bh <- PortfReturns(Account = "gXema")
-View(gXema_rets)
-quantstrat::tradeOrderStats(gXema)
-quantmod::yearlyReturn(gXema.rets.bh,'yearly')
-quantmod::yearlyReturn(gXema.rets.bh,'yearly', '2003/2008')
-quantmod::yearlyReturn(gXema.rets.bh,'yearly', '2003/2008', 'log')
-quantmod::yearlyReturn(gXema.rets.bh,'yearly', '2003/2008', log)
-quantmod::yearlyReturn(gXema.rets.bh,'yearly', '2003/2008', 'arithmetic')
-quantmod::yearlyReturn(gXema.rets.bh,'yearly', '2003/2008', type='arithmetic', leading=TRUE)
-quantmod::yearlyReturn(gXema.rets.bh, period = 'yearly', '2003/2008', type='arithmetic', leading=TRUE)
-quantmod::yearlyReturn(gXema.rets.bh, period = 'yearly', subset=NULL, type='arithmetic', leading=TRUE)
-quantmod::periodReturn(gXema.rets.bh, period = 'yearly', subset=NULL, type='arithmetic', leading=TRUE)
-quantmod::periodReturn(gXema.rets.bh, period = 'monthly', subset=NULL, type='arithmetic', leading=TRUE)
-quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'monthly', subset=NULL, type='arithmetic', leading=TRUE)
-quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'yearly', subset=NULL, type='arithmetic', leading=TRUE)
-quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'daily', subset=NULL, type='arithmetic', leading=TRUE)
-quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'daily', subset='2008/2019', type='arithmetic', leading=TRUE)
-quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'monthly', subset='2008/2019', type='arithmetic', leading=TRUE)
-quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'monthly', subset='2009/2010', type='arithmetic', leading=TRUE)
-quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'annual', subset='2009/2010', type='arithmetic', leading=TRUE)
-quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'annualReturn', subset='2009/2010', type='arithmetic', leading=TRUE)
-quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'quarterlyReturn', subset='2009/2010', type='arithmetic', leading=TRUE)
-quantmod::allReturn(na.omit(gXema.rets.bh), period = 'monthly', subset='2009/2010', type='arithmetic', leading=TRUE)
-quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'annual', subset='2009/2010', type='arithmetic', leading=TRUE)
-quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'daily', subset='2008/2019', type='arithmetic', leading=TRUE)
-quantmod::periodReturn(na.omit(gXema.rets.bh), period = 'quarterly', subset='2008/2019', type='arithmetic', leading=TRUE)
-quantmod::periodReturn(na.omit(gXsma.rets.bh), period = 'quarterly', subset='2008/2019', type='arithmetic', leading=TRUE)
-periodReturn(gXema,period='yearly',subset='2014::')  # returns years 2003 to present
-periodReturn(gXema.rets.bh, period='yearly',subset='2014::')  # returns years 2003 to present
-periodReturn(gXema.rets.bh, period='monthly',subset='2014::')  # returns years 2003 to present
-periodReturn(gXema.rets.bh, period='monthly',subset='2017::')  # returns years 2017 to present
-periodReturn(trendReturnsDaily[,3], period='monthly',subset='2017::')  # returns years 2017 to present
-trendReturnsDaily
-trendReturnsDaily[,3]
-na.omit(trendReturnsDaily[,3])
-periodReturn(na.omit(trendReturnsDaily[,3]), period='monthly',subset='2017::')  # returns years 2017 to present
-periodReturn(na.omit(trendReturnsDaily[,3]), period='yearly',subset='2017::')  # returns years 2017 to present
-periodReturn(na.omit(trendReturnsDaily[,3]), period='annualReturn',subset='2017::')  # returns years 2017 to present
-periodReturn(na.omit(trendReturnsDaily[,3]), period='annualReturn')  # returns years 2017 to present
-periodReturn(na.omit(trendReturnsDaily[,3]), period='yearly',subset='2017::')  # returns years 2017 to present
-periodReturn(na.omit(trendReturnsDaily[,3]), period='allReturns',subset='2017::')  # returns years 2017 to present
-periodReturn(na.omit(trendReturnsDaily[,3]), period='allReturns')  # returns years 2017 to present
-periodReturn(na.omit(trendReturnsDaily[,3]), period='annualReturn')  # returns years 2017 to present
-periodReturn(na.omit(trendReturnsDaily[,3]), period='yearly',subset='2017::')  # returns years 2017 to present
-periodReturn(na.omit(gXema.rets.bh, period='yearly',subset='2017::')  # returns years 2017 to present
-periodReturn(na.omit(gXema.rets.bh), period='yearly',subset='2017::')  # returns years 2017 to present
-periodReturn(gXema.rets.bh, period='yearly',subset='2017::')  # returns years 2017 to present
-View(gXema.rets.bh)
-View(trendReturnsDaily)
-AcctReturns(gXema)
-a<-AcctReturns(gXema)
-View(a)
-chart.Me(gXema.rets.bh)
-cchart.CumReturns(gXema.rets.bh)
-chart.CumReturns(gXema.rets.bh)
-chart.CumReturns(na.omit(trendReturnsDaily[,3]))
-chart.CumReturns(na.omit(trendReturnsDaily[,4]))
-chart.CumReturns(na.omit(trendReturnsDaily[,1]))
-chart.CumReturns(na.omit(trendReturnsDaily[,2]))
-chart.ME(gXema)
-chart.ME(gXema, "SPL.AX")
-chart.ME(gXsma, "SPL.AX")
-chart.Reconcile(gXema)
-chart.Reconcile(gXema, gXema)
-chart.RiskReturnScatter(na.omit(trendReturnsDaily[,2]))
-chart.SnailTrail(na.omit(trendReturnsDaily[,2]))
-PerformanceAnalytics::PainRatio(na.omit(trendReturnsDaily[,3]))
-PerformanceAnalytics::PainRatio(na.omit(trendReturnsDaily[,2]))
-PerformanceAnalytics::PainRatio(na.omit(trendReturnsDaily[,1]))
-PerformanceAnalytics::PainRatio(na.omit(trendReturnsDaily[,4]))
-PerformanceAnalytics::PainRatio(na.omit(trendReturnsDaily[,5]))
-PerformanceAnalytics::PainRatio(na.omit(trendReturnsDaily[,6]))
-PerformanceAnalytics::PainRatio(na.omit(trendReturnsDaily))
-PerformanceAnalytics::Return.portfolio(na.omit(trendReturnsDaily[,4]))
-data(edhec)
-edhec
-Return.portfolio(trendReturnsDaily["2017",1:5]
-Return.portfolio(trendReturnsDaily["2017",1:5])
-Return.portfolio(trendReturnsDaily["2017"])
-Return.portfolio(trendReturnsDaily["2018"])
-PerformanceAnalytics::Return.cumulative(trendReturnsDaily)
-PerformanceAnalytics::Return.cumulative(gXema.rets.bh)
-
-
-names(theAccount)
-names(theAccount$portfolios)
-names(theAccount$portfolios$bFaber)
-names(theAccount$summary)
-xyplot(theAccount$summary)
-
-
-Annualized Returns https://tinyurl.com/ya47rgez
-
-=(1+AVERAGE(D437:D495))-1
-
-
-monthly2annual(daily2monthly.zoo(trendReturnsDaily, FUN = sum, na.rm = TRUE), FUN = sum, na.rm = TRUE)
-daily2monthly.zoo(trendReturnsDaily[,3]['2003'], FUN = sum, na.rm = TRUE,)
-daily2annual.zoo(trendReturnsDaily, FUN = sum, na.rm = TRUE,)
-daily2annual.zoo(trendReturnsDaily, FUN = sum, na.rm = TRUE)
-View(gXema_stats)
-View(gXema_trade_stats)
-View(gXema_perf)
-View(gXema_profit)
-nrow(trendReturnsDaily[,3]['2003-11'])
-Return.calculate(SPL.AX[,2]['2003-11'])
-periodReturn(trendReturnsDaily[,3],period='monthly',subset='2003-11-04/2003-11-28')
-daily2monthly.zoo(trendReturnsDaily[,3]['2003-11-04/2003-11-28'], FUN = sum, na.rm = TRUE,)
-daily2monthly.zoo(trendReturnsDaily[,3]['2003-11-03/2003-11-28'], FUN = sum, na.rm = TRUE,)
-daily2monthly.zoo(trendReturnsDaily[,3]['2003-11-04/2003-12-03'], FUN = sum, na.rm = TRUE,)
-daily2monthly.zoo(trendReturnsDaily[,3]['2003-11-04/2003-12-01'], FUN = sum, na.rm = TRUE,)
-daily2monthly.zoo(trendReturnsDaily[,3]['2003-11-03/2003-11-28'], FUN = sum, na.rm = TRUE,)
-daily2monthly.zoo(trendReturnsDaily[,3]['2003-11-04/2003-11-28'], FUN = sum, na.rm = TRUE,)
-daily2monthly.zoo(trendReturnsDaily[,3]['2003'], FUN = sum, na.rm = TRUE,)
-daily2monthly.zoo(trendReturnsDaily['2003'], FUN = sum, na.rm = TRUE,)
-daily2monthly.zoo(trendReturnsDaily, FUN = sum, na.rm = TRUE,)
-monthly2annual(daily2monthly.zoo(trendReturnsDaily, FUN = sum, na.rm = TRUE,))
-monthly2annual(daily2monthly.zoo(trendReturnsDaily, FUN = sum, na.rm = TRUE), FUN = sum, na.rm = TRUE)
-daily2annual.zoo(trendReturnsDaily, FUN = sum, na.rm = TRUE,)
-mean(daily2annual.zoo(trendReturnsDaily, FUN = sum, na.rm = TRUE,)[,3])
-mean(daily2annual.zoo(trendReturnsDaily, FUN = sum, na.rm = TRUE,))
-mean(daily2annual.zoo(trendReturnsDaily, FUN = sum, na.rm = TRUE,)[,3])
-Return.annualized(trendReturnsDaily[,3])
-Return.annualized(trendReturnsDaily[,3], geometric = FALSE)
-Return.annualized(trendReturnsDaily[,3], geometric = TRUE)
-Return.annualized(na.omit(trendReturnsDaily[,3]), geometric = TRUE)
-Return.annualized(trendReturnsDaily[,3], scale=252)
-monthly2annual(daily2monthly.zoo(trendReturnsDaily, FUN = sum, na.rm = TRUE), FUN = sum, na.rm = TRUE)
-daily2monthly.zoo(trendReturnsDaily[,3]['2003-11-03/2003-11-28'], FUN = sum, na.rm = TRUE,)
-daily2monthly.zoo(trendReturnsDaily[,3]['2003'], FUN = sum, na.rm = TRUE,)
+# URL's:
+  * [Annualized Returns](https://tinyurl.com/ya47rgez)
+  * [Monthly Returns](https://quantstrattrader.wordpress.com/2018/02/20/creating-a-table-of-monthly-returns-with-r-and-a-volatility-trading-interview/)
+  * [Remove duplicates keeping entry with largest absolute value](https://tinyurl.com/y738qcsc)
+  * [Market Disclaimer](https://www.markettraders.com/risk-disclaimer/)
+  * [Asset Allocation Using Blotter- Ulrich](https://www.r-bloggers.com/tactical-asset-allocation-using-blotter/)
+      for( i in 10:NROW(SPY) ) {
+      CurrentDate=time(SPY)[i]
+      equity = getEndEq(Account=’default’, CurrentDate)
 
 
 
-https://quantstrattrader.wordpress.com/2018/02/20/creating-a-table-of-monthly-returns-with-r-and-a-volatility-trading-interview/
+
+
+

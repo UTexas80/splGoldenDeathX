@@ -713,9 +713,13 @@ DT::renderDataTable({
     )
   ) %>%
     formatCurrency(
-      c("startOpen", "endOpen", "Net.Trading.PL"),
+      c("startOpen", "endOpen"),
         digits = 2
     ) %>%
+    formatCurrency(
+      c("Net.Trading.PL"),
+        digits = 0
+    ) %>%    
     formatDate(c("startDate", "endDate")) %>%
     formatRound("tradeDays", 0) %>%
     formatPercentage("return",2) %>%
