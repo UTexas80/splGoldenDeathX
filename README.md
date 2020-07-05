@@ -2,16 +2,33 @@
 
 Welcome to the SPL Golden Crossing Dashboard!
 
-Mission: utilize Machine Learning & Fintech analytics to vette the ASX for compelling Small Cap Biotech risk adverse trading opportunities.
+Hypothesis: Discern whether the trend is truly your friend.
+
+Mission: utilize Machine Learning & Fintech analytics to vette the ASX for compelling Small Cap Biotech trading opportunities.
 
 Objective: The purpose of this dashboard is twofold.
 
 1. To provide a glimpse of Starpharma's performance circa 2002-01-02.
-2. To examine the Golden Cross, Death Cross and No Cross Trading Strategies to discern their viability.
+2. To examine the Golden Cross, Death Cross and No Cross Trading Strategies to discern their profitability.
 
-This site is developed using a reactive framework thereby allowing a dynamic interaction with any of the input variables. Therefore, whenever the date is updated the corresponding entries will be dynamically updated as well.
+Design: This site is developed using a reactive framework thereby allowing a dynamic interaction with any of the input variables. Therefore, whenever the date is updated the corresponding entries will be dynamically updated as well.
 
-As a side note, to formulate the Crossing Trading Systems, the annualized return and ROI formulas are based upon the 20, 50, 100- and 200-day moving averages. Hence any dates selected with a start date less than 200 trading days prior to today, i.e., in the range from  `` `r head(tail(index(xtsEMA),200),1)` `` to `` `r Sys.Date()` `` will generate an error. I am currently working on a solution.
+Layout: The dashboard is divided into two sections. 
+  - The first section provides a summary of Starpharma's performance and historical returns.
+    - The performance portion of the dashboard provides 
+      - A table of prices along with the Simple and Exponential 20, 50, 100 and 200 moving averages. 
+        - A filter is provided for each one of these components to help winnow down to a more granular level.
+    - The second section analyzes Startpharma's historical return circa 2001.
+      -Within this partitiion, Daily, Weekly, Monthly, Quarterly, and Yearly charts are displayed.        
+        - Each of these can be further segmented into 1 month, 3 month, 6 month, Year-to-Date, 1 year and Cumulative time. frames.
+      - In addition, a growth of $1 invested and Chaikan Money Flow chart are included. 
+  - The second part delves into the different trends starting with an overall trading history and results and continuing with a section highlighting each
+    trend.
+    - The first
+    
+Conclusion:    
+
+Caveat: As a side note, to formulate the Crossing Trading Systems, the annualized return and ROI formulas are based upon the 20, 50, 100- and 200-day moving averages. Hence any dates selected with a start date less than 200 trading days prior to today, i.e., in the range from  `` `r head(tail(index(xtsEMA),200),1)` `` to `` `r Sys.Date()` `` will generate an error. I am currently working on a solution.
 
 If you have any questions, or would like to provide feedback please: [email me](mailto:utexas80@gmail.com)
 

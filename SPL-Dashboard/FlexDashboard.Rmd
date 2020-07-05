@@ -275,7 +275,7 @@ Objective: The purpose of this dashboard is twofold.
 1. To provide a glimpse of Starpharma's performance circa 2002-01-02.
 2. To examine the Golden Cross, Death Cross and No Cross Trading Strategies to discern their viability.
 
-This site is developed using a reactive framework thereby allowing a dynamic interaction with any of the input variables. Therefore, whenever the date is updated the corresponding entries will be dynamically updated as well.
+Design; This site is developed using a reactive framework thereby allowing a dynamic interaction with any of the input variables. Therefore, whenever the date is updated the corresponding entries will be dynamically updated as well.
 
 As a side note, to formulate the Crossing Trading Systems, the annualized return and ROI formulas are based upon the 20, 50, 100- and 200-day moving averages. Hence any dates selected with a start date less than 200 trading days prior to today, i.e., in the range from  `` `r head(tail(index(xtsEMA),200),1)` `` to `` `r Sys.Date()` `` will generate an error. I am currently working on a solution.
 
@@ -547,6 +547,18 @@ renderHighchart({
 })
 ```
 
+
+### Chaikan Money Flow
+
+```{r 1.2.1.g-viz-chaikan-money-flow, eval=price}
+renderPlot({
+  x <- tk_xts(price())
+  # getSymbols("SPL.AX", src = "yahoo") # from yahoo finance
+  chartSeries(x, theme = 'black',subset='2001::', TA = "addBBands();addVo();addCMF();addZLEMA()")   #Year 2016 To Present
+})
+
+```
+  
 2.1 Summary {data-navmenu="2-Trends" data-icon="fa-list"}
 =====================================
 

@@ -16,10 +16,17 @@
   - [] DeathX ROI to Return.cumulative multipy by -1
 
 # Dashboard:
-  - [] Change color of Golden Death from Green to Gold 
-  - [] Combine Calendar Days / Trade Days vbox's
-  - [] Add Max / Min ROI
-  - [] Add Chart combining all strategies to show the sequence of events
+  - Section I:
+    - Add Technical Analysis Charts (to mimic PowerBI Dashboard):
+      - [] Bollinger Band Dispersion 
+      - [] Chalkin Money Flow and 
+      - [] RSI
+  - Section II: 
+    - [] Change color of Golden Death from Green to Gold 
+    - [] Combine Calendar Days / Trade Days vbox's
+    - [] Add Max / Min ROI
+    - [] Add Chart combining all strategies to show the sequence of events.
+    - [] Update # of shares.
 
 # Clean up:
   - [] Files: Remove extraneous files in code and directories
