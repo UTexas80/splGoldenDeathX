@@ -14,20 +14,21 @@ Objective: The purpose of this dashboard is twofold.
 Design: This site is developed using a reactive framework thereby allowing a dynamic interaction with any of the input variables. Therefore, whenever the date is updated the corresponding entries will be dynamically updated as
 well.
 
-Layout: The dashboard is divided into two sections. 
-  - The first section provides a summary of Starpharma's performance and historical returns.
-    - The performance portion of the dashboard provides: 
-      - The number of Calendar days, annualized return, ROI and trade days are dynamically displayed by date.
-      - A table of OHLC prices along with the Simple and Exponential 20, 50, 100 and 200 moving averages. 
+Layout: The dashboard is divided into two sections.
+
+- The first section provides a summary of Starpharma's performance and historical returns.
+  - The performance portion of the dashboard provides:
+    - The number of Calendar days, annualized return, ROI and trade days are dynamically displayed by date.
+      - A table of OHLC prices along with the Simple and Exponential 20, 50, 100 and 200 moving averages.
         - A filter is provided for each one of these components to help winnow down to a more granular level.
       - A candlestick chart detailing the historical stock prices.
       - A histogram of the closing price.
     - The second section analyzes Startpharma's historical returns circa 2001.
-      -Within this partitiion, Daily, Weekly, Monthly, Quarterly, and Annual charts are displayed.        
-        - Each of these can be further segmented into 1 month, 3 month, 6 month, Year-to-Date, 1 year and Cumulative
+      -Within this partitiion, Daily, Weekly, Monthly, Quarterly, and Annual charts are displayed.
+      - Each of these can be further segmented into 1 month, 3 month, 6 month, Year-to-Date, 1 year and Cumulative
           time frames.
-      - In addition, a growth of $1 invested and Chaikan Money Flow chart are included. 
-  - The second part delves into the different trends starting with an overall trading history and results and 
+      - In addition, a growth of $1 invested and Chaikan Money Flow chart are included.
+  - The second part delves into the different trends starting with an overall trading history and results and
     continuing with a section highlighting each trend.
     - The Trend Summary is subdivided into the following sections:
       - Visual Boxes are bifurcated by moving average type, i.e. Exponential or Simple.
@@ -54,10 +55,11 @@ Layout: The dashboard is divided into two sections.
         - Trade Days by Moving Average Type
       - In the bottom section a Composite Trend Return Distribution, Trend Returns Annualized and a distribution by
         Trades Days per Trend are provided..
-    - The Golden Cross section is preceded with information relating to  
-    
-# Conclusion:    
+    - The Golden Cross section is preceded with information relating to
 
+## Conclusion
+
+The two major uptrends commenced at the beginning of a fiscal year [2011, 2017]
 Caveat: As a side note, to formulate the Crossing Trading Systems, the annualized return and ROI formulas are based upon the 20, 50, 100- and 200-day moving averages. Hence any dates selected with a start date less than 200 trading days prior to today, i.e., in the range from  `` `r head(tail(index(xtsEMA),200),1)` `` to `` `r Sys.Date()` `` will generate an error. I am currently working on a solution.
 
 If you have any questions, or would like to provide feedback please: [email me](mailto:utexas80@gmail.com)
@@ -70,4 +72,4 @@ All investments involve risk, and the past performance of a security, industry, 
 
 Any opinions, news, research, analyses, prices, or other information offered is provided as general market commentary, and does not constitute investment advice. I will not accept liability for any loss or damage, including without limitation any loss of profit, which may arise directly or indirectly from use of or reliance on such information.
 
-For more details about me, see http://glencfalk.rbind.io
+For more details about me, see <http://glencfalk.rbind.io>
