@@ -11,8 +11,11 @@ Objective: The purpose of this dashboard is twofold.
 1. To provide a glimpse of Starpharma's performance circa 2002-01-02.
 2. To examine the Golden Cross, Death Cross and No Cross Trading Strategies to discern their profitability.
 
-Design: This site is developed using a reactive framework thereby allowing a dynamic interaction with any of the input variables. Therefore, whenever the date is updated the corresponding entries will be dynamically updated as
-well.
+Design: This site is developed using a reactive framework thereby allowing a dynamic interaction with any of the input variables. Therefore, whenever the date is updated the corresponding entries will be dynamically updated as well.
+
+Software: The dashboard was developed in R V 3.6.3 using RStudio 1.2.5042 as the IDE
+
+Packages: 
 
 Layout: The dashboard is divided into two sections.
 
@@ -59,14 +62,17 @@ Layout: The dashboard is divided into two sections.
 
 ## Conclusion
 
-The two major uptrends commenced at the beginning of a fiscal year [2011, 2017]
-Caveat: As a side note, to formulate the Crossing Trading Systems, the annualized return and ROI formulas are based upon the 20, 50, 100- and 200-day moving averages. Hence any dates selected with a start date less than 200 trading days prior to today, i.e., in the range from  `` `r head(tail(index(xtsEMA),200),1)` `` to `` `r Sys.Date()` `` will generate an error. I am currently working on a solution.
+The two major uptrends in 2011 and 2017 commenced at the beginning of a fiscal year .
+
+## Caveat
+
+As a side note, to formulate the Crossing Trading Systems, the annualized return and ROI formulas are based upon the 20, 50, 100- and 200-day moving averages. Hence any dates selected with a start date less than 200 trading days prior to today, i.e., in the range from  `` `r head(tail(index(xtsEMA),200),1)` `` to `` `r Sys.Date()` `` will generate an error. I am currently working on a solution.
 
 If you have any questions, or would like to provide feedback please: [email me](mailto:utexas80@gmail.com)
 
 Thank you for your time and consideration. I hope that you enjoy the site.
 
-RISKS ASSOCIATED WITH TRADING THE STOCK MARKET
+## RISKS ASSOCIATED WITH TRADING THE STOCK MARKET
 
 All investments involve risk, and the past performance of a security, industry, sector, market, financial product, trading strategy, or individual’s trading does not guarantee future results or returns. Investors are fully responsible for any investment decisions they make. Such decisions should be based solely on an evaluation of their financial circumstances, investment objectives, risk tolerance, and liquidity needs.
 
