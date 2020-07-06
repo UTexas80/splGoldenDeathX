@@ -72,4 +72,4 @@ All investments involve risk, and the past performance of a security, industry, 
 
 Any opinions, news, research, analyses, prices, or other information offered is provided as general market commentary, and does not constitute investment advice. I will not accept liability for any loss or damage, including without limitation any loss of profit, which may arise directly or indirectly from use of or reliance on such information.
 
-For more details about me, see <http://glencfalk.rbind.io>
+For more details about me, see <http://glencfalk.rbind.io> or <http://www.linkedin.com/in/glenfalk>
