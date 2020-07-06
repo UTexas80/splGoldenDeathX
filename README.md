@@ -1,23 +1,25 @@
 # splGoldenDeathX
 
-Welcome to the SPL Golden Crossing Dashboard!
+_Welcome to the SPL Golden Crossing Dashboard!_
 
-Hypothesis: Discern whether the trend is truly your friend.
+**Abstract**
 
-Mission: utilize Machine Learning & Fintech analytics to vette the ASX for compelling Small Cap Biotech trading opportunities.
+**Hypothesis**: Discern whether the trend is truly your friend.
 
-Objective: The purpose of this dashboard is twofold.
+**Mission**: utilize Machine Learning & Fintech analytics to vette the ASX for compelling Small Cap Biotech trading opportunities.
+
+**Objective**: The purpose of this dashboard is twofold.
 
 1. To provide a glimpse of Starpharma's performance circa 2002-01-02.
 2. To examine the Golden Cross, Death Cross and No Cross Trading Strategies to discern their profitability.
 
-Design: This site is developed using a reactive framework thereby allowing a dynamic interaction with any of the input variables. Therefore, whenever the date is updated the corresponding entries will be dynamically updated as well.
+**Design**: This site is developed using a reactive framework thereby allowing a dynamic interaction with any of the input variables. Therefore, whenever the date is updated the corresponding entries will be dynamically updated as well.
 
-Software: The dashboard was developed in R V 3.6.3 using RStudio 1.2.5042 as the IDE
+**Software**: The dashboard was developed in R V 3.6.3 using RStudio 1.2.5042 as the IDE
 
-Packages: 
+**Packages**:
 
-Layout: The dashboard is divided into two sections.
+**Layout**: The dashboard is divided into two sections.
 
 - The first section provides a summary of Starpharma's performance and historical returns.
   - The performance portion of the dashboard provides:
@@ -78,4 +80,8 @@ All investments involve risk, and the past performance of a security, industry, 
 
 Any opinions, news, research, analyses, prices, or other information offered is provided as general market commentary, and does not constitute investment advice. I will not accept liability for any loss or damage, including without limitation any loss of profit, which may arise directly or indirectly from use of or reliance on such information.
 
-For more details about me, see <http://glencfalk.rbind.io> or <http://www.linkedin.com/in/glenfalk>
+---
+
+- For more details about me, see [Glen C. Falk's website](http://glencfalk.rbind.io) or my [LinkedIn Profile](http://www.linkedin.com/in/glenfalk)
+
+---
