@@ -37,6 +37,8 @@
 		"terminal.integrated.cursorStyle": "underline",
 		"editor.suggest.localityBonus": true,
 		"peacock.color": "#020300",
-		"markdown-todo.sortByCount": false
+		"markdown-todo.sortByCount": false,
+		"markdown.previewFeatures": true,
+		"markdown.showToolbar": true
 	}
 }

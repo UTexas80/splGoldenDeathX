@@ -10,6 +10,7 @@
   * Update:
     - [] ReadMe.md
     - [] [Glen C. Falk](http://glencfalk.rbind.io)
+    - [] LinkedIn
     
 # Review:
   - [] Annualized / Cumulative Returns
@@ -26,7 +27,10 @@
     - [] Combine Calendar Days / Trade Days vbox's
     - [] Add Max / Min ROI
     - [] Add Chart combining all strategies to show the sequence of events.
-    - [] Update # of shares.
+    - [] Trend Summary Table
+      - []Add Export table feature 
+    - [] Add Update # of shares.
+      - [] updateEndEq()
 
 # Clean up:
   - [] Files: Remove extraneous files in code and directories
