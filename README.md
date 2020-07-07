@@ -2,11 +2,14 @@
 
 _Welcome to the SPL Golden Crossing Dashboard!_
 
-**Abstract**
+**Abstract** Binomial event.
 
 **Hypothesis**: Discern whether the trend is truly your friend.
 
 **Mission**: utilize Machine Learning & Fintech analytics to vette the ASX for compelling Small Cap Biotech trading opportunities.
+
+
+**Methodology**:
 
 **Objective**: The purpose of this dashboard is twofold.
 
@@ -35,10 +38,10 @@ This version of quantstrat includes the following packages, among others:
 
 - 1.0 The first section provides a summary of Starpharma's performance and historical returns.
   - 1.1 The performance portion of the dashboard provides:
-    - 1.1.1.0 Visual Boxes are dynamically displayed by date:
-      - 1.1.1.1 The number of Calendar days, 
+    - 1.1.1.0 Visual Boxes are dynamically displayed by date range:
+      - 1.1.1.1 Number of calendar days, 
       - 1.1.1.2 Annualized return.
-      - 1.1.1.3 ROI and 
+      - 1.1.1.3 Cumulative return.
       - 1.1.1.4 Number of trade days.
     - 1.1.2.1 Stock price table with a filter provided to help winnow the columns to a more granular level.
       - 1.1.2.1.a Date.
@@ -52,14 +55,14 @@ This version of quantstrat includes the following packages, among others:
       - 1.1.2.1.i ema 100 day price.
       - 1.1.2.1.j ema 200 day price.
       - 1.1.2.1.k sma 20 day price.
-      - 1.1.2.1.l Sma 50 day price.
+      - 1.1.2.1.l sma 50 day price.
       - 1.1.2.1.m sma 100 day price.
       - 1.1.2.1.n sma 200 day price.
-    - 1.1.3.1 A candlestick chart detailing the historical stock prices.
-    - 1.1.3.2 A histogram of the closing price.
+    - 1.1.3.1 Candlestick chart detailing the historical stock prices.
+    - 1.1.3.2 Histogram of the closing price.
   - 1.2 The second section analyzes Startpharma's historical returns circa 2001.
       - 1.2.1.0 Within this partitiion, each of the date-sensitive charts can be further segmented into 1 month, 3
-        month, 6 month, Year-to-Date, 1 year and Cumulative time frames. A date range can be entered as well
+        month, 6 month, YTD, 1 year and cumulative time frames. A date range can be entered as well.
         - 1.2.1.1 Daily Returns.
         - 1.2.1.2 Weekly Returns.
         - 1.2.1.3 Monthly Returns.
@@ -71,9 +74,15 @@ This version of quantstrat includes the following packages, among others:
   results and continuing with a section highlighting each trend.
   - 2.1 The Trend Summary is subdivided into the following sections:
     - 2.1.1.0 Visual Boxes are bifurcated by moving average type, i.e. Exponential or Simple.
-      - 2.1.1.1 The current trend, 
-      - 2.1.1.2 ROI and
-      - 2.1.1.3 Number of trade days are headligned.
+      - 2.1.1.1 Trend:
+        - 2.1.1.1.a EMA current trend.
+        - 2.1.1.1.b SMA current trend.
+      - 2.1.1.2 ROI:
+        - 2.1.1.2.a EMA ROI.
+        - 2.1.1.2.b SMA ROI.
+      - 2.1.1.3 Trade Days:
+        - 2.1.1.3.a EMA Trade Days.
+        - 2.1.1.3.b EMA Trade Days.        
     - 2.1.2.0 Tab bar comprised of the following modules:
       - 2.1.2.1 Trend Summary Table provides a trend synopsis which includes
         - 2.1.2.1.a Type of indicator: Exponential or Simple
@@ -96,7 +105,7 @@ This version of quantstrat includes the following packages, among others:
       - 2.1.2.8 Trade Days by Moving Average Type: Boxplot of the trade days broken down by each individual trend.
     - 2.1.3.0 The bottom third of the panel displays: 
       - 2.1.3.1 Composite Trend Return Distribution
-      - 2.1.3.2 Composite Trend Returns Annualized and 
+      - 2.1.3.2 Composite Trend Returns Annualized 
       - 2.1.3.3 Composite Trade Days per Trend.
   - 2.2 The Golden Cross section is divided into these three parts:
     - 2.2.1.0 Visual Boxes are dynamically controlled by the date range and the moving average type selected:
@@ -117,7 +126,7 @@ This version of quantstrat includes the following packages, among others:
         - 2.2.2.2.d Trend Start Date.
         - 2.2.2.2.e When a trend is triggered, the next day's open the position purchase price.
         - 2.2.2.2.f Trend End Date.
-        - 2.2.2.2.g When a trend is completed, the next day's open to close the position price.
+        - 2.2.2.2.g When a trend is completed, the next day's open price to close the position.
         - 2.2.2.2.h Trend's ROI.
         - 2.2.2.2.i Trend's Profit/Loss amount.
         - 2.2.2.2.j Number of trade days of the trend.
@@ -144,7 +153,7 @@ This version of quantstrat includes the following packages, among others:
         - 2.3.2.2.d Trend Start Date.
         - 2.3.2.2.e When a trend is triggered, the next day's open the position purchase price.
         - 2.3.2.2.f Trend End Date.
-        - 2.3.2.2.g When a trend is completed, the next day's open to close the position price.
+        - 2.3.2.2.g When a trend is completed, the next day's open price to close the position.
         - 2.3.2.2.h Trend's ROI.
         - 2.3.2.2.i Trend's Profit/Loss amount.
         - 2.3.2.2.j Number of trade days of the trend.
@@ -171,18 +180,19 @@ This version of quantstrat includes the following packages, among others:
         - 2.4.2.2.d Trend Start Date.
         - 2.4.2.2.e When a trend is triggered, the next day's open the position purchase price.
         - 2.4.2.2.f Trend End Date.
-        - 2.4.2.2.g When a trend is completed, the next day's open to close the position price.
+        - 2.4.2.2.g When a trend is completed, the next day's open price to close the position.
         - 2.4.2.2.h Trend's ROI.
         - 2.4.2.2.i Trend's Profit/Loss amount.
         - 2.4.2.2.j Number of trade days of the trend.
         - 2.4.2.2.k Number of trade days of the trend.
     - 2.4.3.0 In the bottom portion, there are two vizualizations:
       - 2.4.3.1 NoX Return: displays a Return on Investment histogram along with a boxplot of the outliers.
-      - 2.4.3.2 NoX Trade Days: displays a number of trade days histogram along with a boxplot of the outliers.      
-
-## Conclusion
+      - 2.4.3.2 NoX Trade Days: displays a number of trade days histogram along with a boxplot of the outliers.   
+      
+## Conclusion: My Opinion only and does not constitute investment advice!!!
 
 The two major uptrends in 2011 and 2017 commenced at the beginning of a fiscal year .
+DeathX: Final capitulation portends far worse things to come but not in SPL's case.
 
 ## Caveat
 
