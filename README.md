@@ -9,7 +9,65 @@ _Welcome to the SPL Golden Crossing Dashboard!_
 **Mission**: utilize Machine Learning & Fintech analytics to vette the ASX for compelling Small Cap Biotech trading opportunities.
 
 
-**Methodology**:
+**Methodology**: This backtest trading mechanism is based upon the Golden Cross and Death Cross technical indicator(s). These trends exist under the following conditions:
+
+---
+
+- For the Golden Cross, either of these two parameters must be true:
+
+    - EMA.020 > EMA.050 & EMA.050 > EMA.100 & EMA.100 > EMA.200 or
+  
+    - SMA.020 > SMA.050 & SMA.050 > SMA.100 & SMA.100 > SMA.200 
+  
+- Once all of either of these two conditions are met, a trading position is established the following day wherein: 
+  
+    - 10,000 shares are purchased at the open price.
+  
+- The position is held until one of the conditions are false. Then the trade is closed the next day.
+  
+    - 10,000 shares are sold at the opening price.
+  
+---
+
+---
+  
+- Conversely for a Death Cross to occur, either one of these conditions have to occur
+
+  - EMA.020 <= EMA.050 & EMA.050 <= EMA.100 & EMA.100 <= EMA.200 or
+  
+  - SMA.020 <= SMA.050 & SMA.050 <= SMA.100 & SMA.100 <= SMA.200
+  
+- Once all of either of these two conditions are met, a trading position is established the following day. 
+
+    - 10,000 shares are sold short at the opening price.
+  
+- The position is held until one of the conditions are false. Then the trade is closed the next day wherein:
+  
+    - 10,000 shares are purchased at the open price to close the position.
+
+---
+
+
+---
+
+- In regard to the No Cross indicator, it transpires when neither the Golden Cross or Death Cross are active.
+
+- In this case, a trade is established on the day either the Golden Cross or Death Cross have been closed thereby
+
+    - 10,000 shares are purchased at the open price.
+
+- If either a Golden Cross or Death Cross is initiated , a trade is established on that day whereby
+
+    - 10,000 shares are sold at the opening price.
+
+---
+
+
+---
+
+- In any of these strategies, the currency used is the US Dollar and Transcation Fees are assumed to be $0.
+
+---
 
 **Objective**: The purpose of this dashboard is twofold.
 
@@ -28,11 +86,11 @@ _Welcome to the SPL Golden Crossing Dashboard!_
 This version of quantstrat includes the following packages, among others:
 ```
 
-2. blotter 0.9.1741
-
-3. quantmod 0.4-5
-
-4. TTR 0.23-1
+    a. blotter 0.9.1741
+    
+    b. quantmod 0.4-5
+    
+    c. TTR 0.23-1
 
 **Layout**: The dashboard is divided into two sections.
 
