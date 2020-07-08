@@ -162,12 +162,12 @@ c. TTR 0.23-1
       - 2.1.3.3 Composite Trade Days per Trend.
   - 2.2 The Golden Cross section is divided into these three parts:
     - 2.2.1.0 Visual Boxes are dynamically controlled by the date range and the moving average type selected:
-      - 2.2.1.1
-        - 2.2.1.1.a Trend and Moving Average Type
-        - 2.2.1.1.b Number of calendar days.
+      - 2.2.1.1 Trend and Moving Average Type
       - 2.2.1.2 Annual Return.
       - 2.2.1.3 Cumulative Return.
-      - 2.2.1.4 Number of calendar days.
+      - 2.2.1.4 Number of Days
+        - 2.2.1.4.a Calendar Days.
+        - 2.2.1.4.b Trade Days.
     - 2.2.2.0 In the second section there is a tab bar consisting of the following elements:
       - 2.2.2.1 Price & Transaction Chart: a three-panel chart of time series charts that contains prices and
         transactions in the top panel, the resulting position in the second, and a cumulative profit-loss line chart
@@ -189,12 +189,12 @@ c. TTR 0.23-1
       - 2.2.3.2 GoldenX Trade Days: displays a number of trade days histogram along with a boxplot of the outliers.
   - 2.3 The Death Cross section is divided into these three parts:
     - 2.3.1.0 Visual Boxes are dynamically controlled by the date range and the moving average type selected:
-      - 2.3.1.1
-        - 2.3.1.1.a Trend and Moving Average Type
-        - 2.3.1.1.b Number of calendar days.
+      - 2.3.1.1 Trend and Moving Average Type
       - 2.3.1.2 Annual Return.
       - 2.3.1.3 Cumulative Return.
-      - 2.3.1.4 Number of calendar days.
+      - 2.3.1.4 Number of Days
+        - 2.3.1.4.a Calendar days.
+        - 2.3.1.4.b Trade days.
     - 2.3.2.0 In the second section there is a tab bar consisting of the following elements:
       - 2.3.2.1 Price & Transaction Chart: a three-panel chart of time series charts that contains prices and
         transactions in the top panel, the resulting position in the second, and a cumulative profit-loss line chart
@@ -216,12 +216,12 @@ c. TTR 0.23-1
       - 2.3.3.2 DeathX Trade Days: displays a number of trade days histogram along with a boxplot of the outliers.
   - 2.4 The No Cross section is divided into these three parts:
     - 2.4.1.0 Visual Boxes are dynamically controlled by the date range and the moving average type selected:
-      - 2.4.1.1
-        - 2.4.1.1.a Trend and Moving Average Type
-        - 2.4.1.1.b Number of calendar days.
+      - 2.4.1.1 Trend and Moving Average Type.
       - 2.4.1.2 Annual Return.
       - 2.4.1.3 Cumulative Return.
-      - 2.4.1.4 Number of calendar days.
+      - 2.4.1.4 Number of Days.
+        - 2.4.1.1.a Calendar days.
+        - 2.4.1.1.b Trade days.        
     - 2.4.2.0 In the second section there is a tab bar consisting of the following elements:
       - 2.4.2.1 Price & Transaction Chart: a three-panel chart of time series charts that contains prices and
         transactions in the top panel, the resulting position in the second, and a cumulative profit-loss line chart

@@ -1101,24 +1101,13 @@ Column {data-height=21%}
 
 ###
 
-```{r 2.2.1.1.a-vbox-goldenx-trend-name}
+```{r 2.2.1.1-vbox-goldenx-trend-name}
+
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
     paste("Golden Cross", toupper(str_sub(colnames(trendReturnsDaily[,as.numeric(input$radio2.2)]),-3, -1))),
     color = 'teal',
     icon = 'fa-cross'
-  )
-})
-```
-
-```{r 2.2.1.1.b-vbox-goldenx-calendar-days, eval=trend}
-flexdashboard::renderValueBox({
-
-  calendarDays <- format(input$dateRange2.2[2] - input$dateRange2.2[1], big.mark = ",")
-  calendarDays <- substr(calendarDays, 1, nchar(calendarDays) - 5)
-
-  flexdashboard::valueBox(
-    paste(calendarDays, " ", "Calendar Days"),
   )
 })
 ```
@@ -1183,15 +1172,30 @@ flexdashboard::renderValueBox({
 
 ###
 
-```{r 2.2.1.4-vbox-goldenx-trade-days}
+```{r 2.2.1.4.a-vbox-goldenx-calendar-days, eval=trend}
+
 flexdashboard::renderValueBox({
-  tradeDays <-   as.character(ndays(
-      na.omit(
-        trendReturnsDaily
-          [,as.numeric(input$radio2.2)])
-          [paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::")]
-    )
+
+  calendarDays <- format(input$dateRange2.2[2] - input$dateRange2.2[1], big.mark = ",")
+  calendarDays <- substr(calendarDays, 1, nchar(calendarDays) - 5)
+
+  flexdashboard::valueBox(
+    paste("Calendar Days: ", calendarDays)
   )
+})
+```
+
+```{r 2.2.1.4.b-vbox-goldenx-trade-days}
+
+flexdashboard::renderValueBox({
+  tradeDays <- format(
+      ndays(
+        na.omit(
+          trendReturnsDaily
+            [,as.numeric(input$radio2.2)])
+            [paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::")]
+        ),  
+      big.mark = ",")
 
   flexdashboard::valueBox(
     paste("Trade Days: ", "", tradeDays),
@@ -1367,24 +1371,12 @@ Row {data-height=21%}
 
 ###
 
-```{r 2.3.1.1.a-vbox-trend-name}
+```{r 2.3.1.1-vbox-trend-name}
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
     paste("Death Cross", toupper(str_sub(colnames(trendReturnsDaily[,as.numeric(input$radio2.3)]),-3, -1))),
     color = 'black',
     icon = 'fa-cross'
-  )
-})
-```
-
-```{r 2.3.1.1.b-vbox-deathx-calendar-days, eval=trend}
-flexdashboard::renderValueBox({
-
-  calendarDays <- format(input$dateRange2.3[2] - input$dateRange2.3[1], big.mark = ",")
-  calendarDays <- substr(calendarDays, 1, nchar(calendarDays) - 5)
-
-  flexdashboard::valueBox(
-    paste(calendarDays, " ", "Calendar Days"),
   )
 })
 ```
@@ -1449,16 +1441,30 @@ flexdashboard::renderValueBox({
 
 ###
 
-```{r 2.3.1.4-vbox-trade-days}
+```{r 2.3.1.4.a-vbox-deathx-calendar-days}
+
 flexdashboard::renderValueBox({
-  tradeDays <-   as.character(
+
+  calendarDays <- format(input$dateRange2.3[2] - input$dateRange2.3[1], big.mark = ",")
+  calendarDays <- substr(calendarDays, 1, nchar(calendarDays) - 5)
+
+  flexdashboard::valueBox(
+    paste("Calendar Days: ", calendarDays),
+  )
+})
+```
+
+```{r 2.3.1.4.b-vbox-trade-days}
+flexdashboard::renderValueBox({
+  tradeDays <- format(
     ndays(
       na.omit(
         trendReturnsDaily[,as.numeric(
           input$radio2.3)])[paste(format(input$dateRange2.3[1]),
             format(input$dateRange2.3[2]),sep = "::")]
-    )
-  )
+         ),  
+      big.mark = ",")
+
   flexdashboard::valueBox(
     paste("Trade Days: ", "", tradeDays),
     color = # 0000ff
@@ -1610,24 +1616,12 @@ Row {data-height=21%}
 
 ###
 
-```{r 2.4.1.1.a-vbox-noX-trend-name}
+```{r 2.4.1.1-vbox-noX-trend-name}
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
         paste("No Cross", toupper(str_sub(colnames(trendReturnsDaily[,as.numeric(input$radio2.4)]),-3, -1))),
           color = 'purple',
           icon = 'fa-cross'
-  )
-})
-```
-
-```{r 2.4.1.1.b-vbox-noX-calendar-days}
-flexdashboard::renderValueBox({
-
-  calendarDays <- format(input$dateRange2.4[2] - input$dateRange2.4[1], big.mark = ",")
-  calendarDays <- substr(calendarDays, 1, nchar(calendarDays) - 5)
-
-  flexdashboard::valueBox(
-    paste(calendarDays, " ", "Calendar Days"),
   )
 })
 ```
@@ -1689,15 +1683,30 @@ flexdashboard::renderValueBox({
 
 ###
 
-```{r 2.4.1.4-vbox-noX-trade-days, eval=trend}
+```{r 2.4.1.4.a-vbox-noX-calendar-days}
+
 flexdashboard::renderValueBox({
-  tradeDays <-   as.character(
+
+  calendarDays <- format(input$dateRange2.4[2] - input$dateRange2.4[1], big.mark = ",")
+  calendarDays <- substr(calendarDays, 1, nchar(calendarDays) - 5)
+
+  flexdashboard::valueBox(
+    paste("Calendar Days: ", calendarDays),
+  )
+})
+```
+
+```{r 2.4.1.4.b-vbox-noX-trade-days, eval=trend}
+
+flexdashboard::renderValueBox({
+  tradeDays <-   format(
     ndays(
       na.omit(
         trendReturnsDaily[,as.numeric(input$radio2.4)])[paste(format(input$dateRange2.4[1]),
           format(input$dateRange2.4[2]),sep = "::")]
-    )
-  )
+    ),
+  big.mark = ",")
+
   flexdashboard::valueBox(
     paste("Trade Days: ", "", tradeDays),
     color = # 0000ff
