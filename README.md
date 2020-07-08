@@ -221,7 +221,7 @@ c. TTR 0.23-1
       - 2.4.1.3 Cumulative Return.
       - 2.4.1.4 Number of Days.
         - 2.4.1.1.a Calendar days.
-        - 2.4.1.1.b Trade days.        
+        - 2.4.1.1.b Trade days.
     - 2.4.2.0 In the second section there is a tab bar consisting of the following elements:
       - 2.4.2.1 Price & Transaction Chart: a three-panel chart of time series charts that contains prices and
         transactions in the top panel, the resulting position in the second, and a cumulative profit-loss line chart
