@@ -1815,23 +1815,41 @@ renderPlotly({
   n   <- n[indicator == ind]
   n   <- n[(startDate >= input$dateRange2.4[1] & endDate <= input$dateRange2.4[2])]
 
-  histogram <- plot_ly(n, x = n$return, type = "histogram", marker = list(color = "#778899")) %>%
-    layout(xaxis = xhp, yaxis = yhp)
-  boxplot <- plot_ly(n, x = n$return, type = "box", boxpoints = "all", jitter = 0.3, marker =
-    list(color = "#000000", outliercolor = "#778899")) %>%
-    layout(yaxis = ybp)
-  subplot(boxplot, histogram, nrows = 2, shareX = TRUE) %>%
-    layout(
-      xaxis = list(tickformat = "%")
-      ,title = "ROI with Outliers"
-      ,bargap = 0.1
-      ,showlegend = FALSE)
+  histogram <- 
+    plot_ly(n, 
+            x = n$return, 
+            type = "histogram", 
+            marker = list(
+              color = "#778899")) %>%
+            layout(xaxis = xhp, 
+                   yaxis = yhp)
+  
+  boxplot <- 
+    plot_ly(n, 
+            x = n$return, 
+            type = "box", 
+            boxpoints = "all", 
+            jitter = 0.3, 
+            marker = list(
+              color = "steel blue")) %>%
+            layout(yaxis = ybp)
+            subplot(boxplot, 
+                    histogram, 
+                    nrows = 2, 
+                    shareX = TRUE) %>%
+            layout(
+              xaxis = list(
+                tickformat = "%")
+                ,title = "ROI with Outliers"
+                ,bargap = 0.1
+                ,showlegend = FALSE)
 })
 ```
 
 ### No X Trade Days
 
 ```{r 2.4.3.2-viz-noX-trade-days}
+
 xhp <- list(title = n$catName, titlefont = F)
 yhp <- list(title = "Counts", titlefont = F)
 ybp <- list(title = n$catName, titlefont = F)
@@ -1842,13 +1860,34 @@ renderPlotly({
   n <- n[(startDate >= input$dateRange2.4[1] &  
           endDate   <= input$dateRange2.4[2])]
 
-  histogramN <- plot_ly(n, x = n$tradeDays, type = "histogram", marker = list(color = "#778899")) %>%
-    layout(xaxis = xhp, yaxis = yhp)
+  histogramN <- 
+    plot_ly(n, 
+            x = n$tradeDays, 
+            type = "histogram", 
+            marker = list(
+              color = "#778899",
+              outliercolor = "#778899")) %>%
+            layout(xaxis = xhp, 
+                   yaxis = yhp)
 
-  boxplotN <- plot_ly(n, x = n$tradeDays, type = "box", boxpoints = "all", jitter = 0.3, marker = list(color = "#000000", outliercolor = "#D0A92C", line = list(outliercolor = "#D0A92C", outlierwidth = 5))) %>%
-    layout(yaxis = ybp)
-  subplot(boxplotN, histogramN, nrows = 2, shareX = TRUE) %>%
-    layout(showlegend = FALSE) %>%
-    layout(title = "# of Trade Days with Outliers", bargap = 0.1)
+  boxplotN <-
+    plot_ly(n, 
+            x = n$tradeDays, 
+            type = "box", 
+            boxpoints = "all", 
+            jitter = 0.3, 
+            marker = list(
+              color = "steel blue",
+              line = list(
+                outliercolor = "#D0A92C", 
+                outlierwidth = 5))
+            ) %>%
+            layout(yaxis = ybp)
+            subplot(boxplotN, 
+                    histogramN, 
+                    nrows = 2, 
+                    shareX = TRUE) %>%
+            layout(showlegend = FALSE) %>%
+            layout(title = "# of Trade Days with Outliers", bargap = 0.1)
 })
 ```

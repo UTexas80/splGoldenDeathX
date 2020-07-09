@@ -11,7 +11,7 @@
     - [] ReadMe.md
     - [] [Glen C. Falk](http://glencfalk.rbind.io)
     - [] LinkedIn
-    
+
 # Review:
   - [] Annualized / Cumulative Returns
   - [] DeathX ROI to Return.cumulative multipy by -1
@@ -19,11 +19,11 @@
 # Dashboard:
   - Section I:
     - Add Technical Analysis Charts (to mimic PowerBI Dashboard):
-      - [] Bollinger Band Dispersion 
-      - [] Chalkin Money Flow and 
+      - [] Bollinger Band Dispersion
+      - [] Chalkin Money Flow and
       - [] RSI
-  - Section II: 
-    - [] Change color of Golden Death from Green to Gold 
+  - Section II:
+    - [x] Change color of Golden Death from Green to Gold
     - [] Combine Calendar Days / Trade Days vbox's
     - [] Add Max / Min ROI
     - [] Add Chart combining all strategies to show the sequence of events.
@@ -36,7 +36,7 @@
   - [] Files: Remove extraneous files in code and directories
     - [] .RData
   - [] Folders:
-  
+
 # email to hydroTSM regarding annual date length can change to 252 from 360?  
 
 # URL's:
