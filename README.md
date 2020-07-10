@@ -2,11 +2,7 @@
 
 _Welcome to the SPL Golden Crossing Dashboard!_
 
-**Abstract** Binomial event.
-
-**Hypothesis**: Discern whether the trend is truly your friend.
-
-**Mission**: utilize Machine Learning & Fintech analytics to vette the ASX for compelling Small Cap Biotech trading opportunities.
+**Abstract** Biotechs are inherently predisposed to a binary event. Are there precursors, i.e. trends that can identify a successful outcome? By utilizing Machine Learning & Fintech analytics to vette the ASX for compelling Small Cap Biotech trading opportunities can we discern whether the trend is truly your friend.
 
 **Methodology**: This backtest trading mechanism is based upon the Golden Cross and Death Cross technical indicator(s). These trends exist under the following conditions:
 

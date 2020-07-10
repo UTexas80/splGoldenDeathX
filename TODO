@@ -24,7 +24,7 @@
       - [] RSI
   - Section II:
     - [x] Change color of Golden Death from Green to Gold
-    - [] Combine Calendar Days / Trade Days vbox's
+    - [x] Combine Calendar Days / Trade Days vbox's
     - [] Add Max / Min ROI
     - [] Add Chart combining all strategies to show the sequence of events.
     - [] Trend Summary Table
