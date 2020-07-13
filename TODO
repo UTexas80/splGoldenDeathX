@@ -16,6 +16,10 @@
   - [] Annualized / Cumulative Returns
   - [] DeathX ROI to Return.cumulative multipy by -1
 
+# R Code:
+  - Centralize code and deploy quantstrat.r as the default engine.
+  - Remove files not required by Flexdashboard.
+
 # Dashboard:
   - Section I:
     - Add Technical Analysis Charts (to mimic PowerBI Dashboard):
@@ -25,17 +29,22 @@
   - Section II:
     - [x] Change color of Golden Death from Green to Gold
     - [x] Combine Calendar Days / Trade Days vbox's
-    - [] Add Max / Min ROI
-    - [] Add Chart combining all strategies to show the sequence of events.
-    - [] Trend Summary Table
-      - []Add Export table feature 
-    - [] Add Update # of shares.
-      - [] updateEndEq()
-
+    - []  Beautify Plot_ly code
+    - []  Add Max / Min ROI
+    - []  Add Chart combining all strategies to show the sequence of events.
+    - []  Trend Summary Table
+      - []  Add Export table feature 
+    - []  Add Update # of shares.
+      - []  updateEndEq()
+  - Menu.md
+    - [x] sync up filenames with menu.md
+  
 # Clean up:
-  - [] Files: Remove extraneous files in code and directories
-    - [] .RData
-  - [] Folders:
+  - []  Files: Remove extraneous files in code and directories
+    - []  .RData
+  - Flexdashboard:
+    - eliminiate unecessary file imports.
+  - []  Folders:
 
 # email to hydroTSM regarding annual date length can change to 252 from 360?  
 

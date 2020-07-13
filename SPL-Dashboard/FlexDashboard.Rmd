@@ -513,6 +513,7 @@ renderHighchart({
 ### Annual Returns
 
 ```{r 1.2.1.5-viz-ret-annual, eval=price}
+
 renderHighchart({
   xts_price <- tk_xts(price())
   annualRet <- periodReturn(xts_price[, 6], period = "yearly") * 100
@@ -552,10 +553,10 @@ renderHighchart({
 ### Chaikan Money Flow
 
 ```{r 1.2.1.7-viz-chaikan-money-flow, eval=price}
+
 renderPlot({
   x <- tk_xts(price())
-  # getSymbols("SPL.AX", src = "yahoo") # from yahoo finance
-  chartSeries(x, theme = 'black',subset='2001::', TA = "addBBands();addVo();addCMF();addZLEMA()")   #Year 2016 To Present
+  chartSeries(x, theme = 'black',subset = '2001::', TA = "addBBands();addVo();addCMF();addZLEMA()")   #Year 2016 To Present
 })
 
 ```

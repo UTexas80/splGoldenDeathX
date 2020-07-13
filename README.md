@@ -85,42 +85,46 @@ c. TTR 0.23-1
 
 **Layout**: The dashboard is divided into two sections.
 
-- 1.0 The first section provides a summary of Starpharma's performance and historical returns.
+- 1.0 Performance: The first section provides a summary of Starpharma's performance and historical returns.
+  - 1.0.0 Sidebar
+      - 1.0.0.1 Date Range
   - 1.1 The performance portion of the dashboard provides:
-    - 1.1.1.0 Visual Boxes are dynamically displayed by date range:
-      - 1.1.1.1 Number of calendar days,  
-      - 1.1.1.2 Annualized return.
-      - 1.1.1.3 Cumulative return.
-      - 1.1.1.4 Number of trade days.
-    - 1.1.2.1 Stock price table with a filter provided to help winnow the columns to a more granular level.
-      - 1.1.2.1.a Date.
-      - 1.1.2.1.b Open Price.
-      - 1.1.2.1.c High Price.
-      - 1.1.2.1.d Low Price.
-      - 1.1.2.1.e Close Price.
-      - 1.1.2.1.f Volume.
-      - 1.1.2.1.g ema 20 day price.
-      - 1.1.2.1.h ema 50 day price.
-      - 1.1.2.1.i ema 100 day price.
-      - 1.1.2.1.j ema 200 day price.
-      - 1.1.2.1.k sma 20 day price.
-      - 1.1.2.1.l sma 50 day price.
-      - 1.1.2.1.m sma 100 day price.
-      - 1.1.2.1.n sma 200 day price.
+    - 1.1.0 Summary:
+      - 1.1.1.0 Visual Boxes are dynamically displayed by date range:
+        - 1.1.1.1 Number of calendar days.
+        - 1.1.1.2 Annualized return.
+        - 1.1.1.3 Cumulative return.
+        - 1.1.1.4 Number of trade days.
+      - 1.1.2.0 Stock price table with a filter provided to help winnow the columns to a more granular level.
+        - 1.1.2.1.a Date.
+        - 1.1.2.1.b Open Price.
+        - 1.1.2.1.c High Price.
+        - 1.1.2.1.d Low Price.
+        - 1.1.2.1.e Close Price.
+        - 1.1.2.1.f Volume.
+        - 1.1.2.1.g ema 20 day price.
+        - 1.1.2.1.h ema 50 day price.
+        - 1.1.2.1.i ema 100 day price.
+        - 1.1.2.1.j ema 200 day price.
+        - 1.1.2.1.k sma 20 day price.
+        - 1.1.2.1.l sma 50 day price.
+        - 1.1.2.1.m sma 100 day price.
+        - 1.1.2.1.n sma 200 day price.
     - 1.1.3.1 Candlestick chart detailing the historical stock prices.
     - 1.1.3.2 Histogram of the closing price.
   - 1.2 The second section analyzes Startpharma's historical returns circa 2001.
-    - 1.2.1.0 Within this partitiion, each of the date-sensitive charts can be further segmented into 1 month, 3
-        month, 6 month, YTD, 1 year and cumulative time frames. A date range can be entered as well.
+    - 1.2.0 Returns: Within this partitiion, each of the date-sensitive charts can be further segmented into 1
+            month, 3 month, 6 month, YTD, 1 year and cumulative time frames. A date range can be entered as
+            well.
     - 1.2.1.1 Daily Returns.
     - 1.2.1.2 Weekly Returns.
     - 1.2.1.3 Monthly Returns.
     - 1.2.1.4 Quarterly Returns.
     - 1.2.1.5 Annual Returns.
-    - 1.2.1.6 Growth of $1 invested
-    - 1.2.1.7 Chaikan Money Flow..
-- 2.0 The second part delves into the different trends starting with an overall trading history along with the
-  results and continuing with a section highlighting each trend.
+    - 1.2.1.6 Growth of $1 invested.
+    - 1.2.1.7 Chaikan Money Flow.
+- 2.0 Trends: The second part delves into the different trends starting with an overall trading history along with
+      the results and continuing with a section highlighting each trend.
   - 2.1 The Trend Summary is subdivided into the following sections:
     - 2.1.1.0 Visual Boxes are bifurcated by moving average type, i.e. Exponential or Simple.
       - 2.1.1.1 Trend:
