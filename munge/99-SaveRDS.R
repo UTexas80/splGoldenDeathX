@@ -59,7 +59,7 @@ saveRDS(xtsEMA[complete.cases(xtsEMA), ], file = here::here("SPL-Dashboard/rds/"
 ## Step 99.03 Copy .RData strategy files                                     ###
 ################################################################################
 file.copy(here::here("basic_strat.RData"),here::here("SPL-Dashboard/rdata/", "basic_strat.RData"))
-file.copy(here::here("buyhold_strat.RData"),here::here("SPL-Dashboard/rdata/", "buyhold_strat.RData"))
+# file.copy(here::here("buyhold_strat.RData"),here::here("SPL-Dashboard/rdata/", "buyhold_strat.RData"))
 file.copy(here::here("gXema.RData"),here::here("SPL-Dashboard/rdata/", "gXema.RData"))
 ################################################################################
 ## Step 99.04 Remove original .RData strategy files from the route           ###

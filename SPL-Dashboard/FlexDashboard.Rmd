@@ -20,7 +20,6 @@ resource_files:
 - rds/trendReturnsSMA.rds
 - rds/trend.rds
 - rds/trendReturnsAnnualized.rds
-- rdata/buyhold_strat.RData
 - rds/calendarDays.rds
 - rds/dt_trade_stats.rds
 - rds/dtEMA.rds
