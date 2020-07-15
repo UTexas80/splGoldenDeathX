@@ -5,46 +5,46 @@ add.config(
   currentYr4 = as.numeric(format(Sys.Date(), format="%Y")),
   lastYr = as.numeric(format(Sys.Date(), format="%y")) - 1,
   LastYr4 = as.numeric(format(Sys.Date(), format="%Y"))-1,
-  currentAY = as.numeric(paste(as.numeric(format(Sys.Date(), format="%y")) - 1, as.numeric(format(Sys.Date(), format="%y")), sep = "")),
   header = "SPL GoldenDeathX" # header in reports
 )
 ################################################################################
-# ascertain global environment to dynamically name data frames 
+## 0000Globals                                                               ###
 ################################################################################
+## rm(list = ls(.blotter), envir = .blotter)           # Do some house cleaning#
+Sys.setenv(TZ = "UTC")                                 # Set the timezone    ###
+# ------------------------------------------------------------------------------
+# ascertain global environment to dynamically name data frames 
+# ------------------------------------------------------------------------------
 g<-globalenv()                               # https://tinyurl.com/r3yrspv   ###
 ################################################################################
-# Repo Package: data management to build centralized metadata repository ------- https://github.com/franapoli/repo
-## Check existence of directory and create if doesn't exist                     ### https://tinyurl.com/y3adrqwa
+## 0100Setup getSymbols                                                      ###
 ################################################################################
-mainDir     <- (".")
-subDir      <- ("repo")
-rp_path     <- file.path(mainDir, subDir)
+adjustment  <- TRUE                       # Adjust for Dividends, Stock Splits #
 # ------------------------------------------------------------------------------
-# Check this out ----- "enph"
+from        <- "2002-01-01"
+to          <- Sys.Date()
+# ------------------------------------------------------------------------------
+end_date    <- Sys.Date()
+start_date  <- "2002-01-02"
+# ------------------------------------------------------------------------------
+options(getSymbols.warning4.0 = FALSE)                 # Suppresses warnings ###
+# ------------------------------------------------------------------------------
+src         <- "yahoo"
 symbols     <-c("CSL.AX", "SPL.AX")
 symbols     <- "SPL.AX"
-dateFrom    <-"2002-01-01"
 ################################################################################
 ## Dates needed for .xts lookup           https://tinyurl.com/y3h3jbt7       ###
 ################################################################################
 start.date  <-"2002-01-01"
 end.date    <-Sys.Date()
 ################################################################################
-## Quantstrat setup                                                          ###
-################################################################################
-options(getSymbols.warning4.0 = FALSE)                 # Suppresses warnings ###
-## rm(list = ls(.blotter), envir = .blotter)           # Do some house cleaning#
-Sys.setenv(TZ = "UTC")                                 # Set the timezone    ###
-################################################################################
 ## Date Parameters                                                           ###
 ################################################################################
 init_date   <- "1990-01-01"
-start_date  <- "2002-01-02"
-end_date    <- Sys.Date()
 # ------------------------------------------------------------------------------
 initDate    <- "1990-01-01"
-from        <- "2002-01-01"
-to          <- Sys.Date()
+# ------------------------------------------------------------------------------
+# 4.0	Signals - Formulas
 # ------------------------------------------------------------------------------
 ema_long    <- "(EMA.020 > EMA.050 & EMA.050 > EMA.100 & EMA.100 > EMA.200)"
 ema_short   <- "(EMA.020 < EMA.050 & EMA.050 < EMA.100 & EMA.100 < EMA.200)"
@@ -71,7 +71,6 @@ nXsma_close <- paste0(sma_short, " | ", sma_long)
 ################################################################################
 ## Equity Values                                                             ###
 ################################################################################
-adjustment  <- TRUE                       # Adjust for Dividends, Stock Splits #
 init_equity <- as.integer(1e4)            # $10,000                            #
 initEq      <- 1e6                        # $1,000,000                         #
 tradeSize   <- 10000

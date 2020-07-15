@@ -2,6 +2,23 @@
 # 1.0 Setup
 ################################################################################
 setup <- function(trendName) {
+# ------------------------------------------------------------------------------
+# Stock Symbol Initialization                               https://is.gd/RShki5
+# ------------------------------------------------------------------------------
+# symbols <- basic_symbols()
+# ------------------------------------------------------------------------------
+# options(getSymbols.warning4.0 = FALSE)                # Suppresses warnings ###
+# getSymbols(Symbols = symbols,
+#           src = "yahoo",
+#           index.class = "POSIXct",
+#           from = start_date,
+#           to = end_date,
+#           adjust = adjustment)
+# ------------------------------------------------------------------------------
+# FinancialInstrument::stock(symbols,
+#      currency = "USD",
+#      multiplier = 1)
+# ------------------------------------------------------------------------------
   strategy.st <<- portfolio.st <<- account.st <<- trendName
   rm.strat(strategy.st)
   rm.strat(account.st)

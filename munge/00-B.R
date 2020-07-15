@@ -13,7 +13,7 @@ setkey(SPL, "date")
 xtsPrices <-
   getSymbols(symbols,
     src = "yahoo",
-    from = dateFrom,
+    from = from,
     auto.assign = TRUE,
     warnings = FALSE
   ) %>%
