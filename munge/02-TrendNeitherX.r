@@ -22,12 +22,18 @@ dtGoldenDeathSMA <- data.table(xts::rbind.xts(death_ma_retSMA, golden_ma_retSMA)
 ################################################################################
 ## Step 00.03.neither Cross Indicator                                        ###
 ################################################################################
-neitherEMA <- ret * (tk_xts(anti_join(dtSPL, dtGoldenDeathEMA,
-    by = c("date" = "index")),date=t)[,4])
-
-neitherSMA <- ret * (tk_xts(anti_join(dtSPL, dtGoldenDeathSMA,
-    by = c("date" = "index")),date=t)[,4])
-
+# neitherEMA <- ret * (tk_xts(anti_join(dtSPL, dtGoldenDeathEMA,
+#     by = c("date" = "index")),date=t)[,4])
+# neitherSMA <- ret * (tk_xts(anti_join(dtSPL, dtGoldenDeathSMA,
+#     by = c("date" = "index")),date=t)[,4])
+# ------------------------------------------------------------------------------
+setkey(dtSPL,date)
+setkey(dtGoldenDeathEMA,index)
+setkey(dtGoldenDeathSMA,index)
+# ------------------------------------------------------------------------------
+neitherEMA <- ret * (tk_xts(dtSPL[!dtGoldenDeathEMA],date=t)[,4])   # anti-join
+neitherSMA <- ret * (tk_xts(dtSPL[!dtGoldenDeathSMA],date=t)[,4])   # anti-join
+# ------------------------------------------------------------------------------
 neither <- cbind(neitherEMA, neitherSMA, ret)
 # rename columns----------------------------------------------------------------
 colnames(neither) <- c("neitherCrossEMA", "neitherCrossSMA", "Buy&Hold")
@@ -49,16 +55,18 @@ trendReturnsDaily <- cbind(death[,1:2], golden[,1:2], neither)
 ################################################################################
 ## Step 00.06.Closing Price Table                                            ###
 ################################################################################
-neitherCloseEMA <- tk_xts(anti_join(dtSPL, dtGoldenDeathEMA,
-    by = c("date" = "index")),date=t)[,4]
-
-neitherCloseSMA <- tk_xts(anti_join(dtSPL, dtGoldenDeathSMA,
-    by = c("date" = "index")),date=t)[,4]
+# neitherCloseEMA <- tk_xts(anti_join(dtSPL, dtGoldenDeathEMA,
+#     by = c("date" = "index")),date=t)[,4]
+# neitherCloseSMA <- tk_xts(anti_join(dtSPL, dtGoldenDeathSMA,
+#     by = c("date" = "index")),date=t)[,4]
+# ------------------------------------------------------------------------------
+neitherCloseEMA <- tk_xts(dtSPL[!dtGoldenDeathEMA],date=t)[,4]    # anti-join
+neitherCloseSMA <- tk_xts(dtSPL[!dtGoldenDeathSMA],date=t)[,4]    # anti-join
 # ------------------------------------------------------------------------------
 trendClose <- merge(deathCloseEMA, deathCloseSMA,
                     goldenCloseEMA, goldenCloseSMA,
                     neitherCloseEMA, neitherCloseSMA)
-
+# ------------------------------------------------------------------------------
 colnames(trendClose) <- c("deathEMA", "deathSMA",
                           "goldenEMA", "goldenSMA",
                           "neitherEMA", "neitherSMA")

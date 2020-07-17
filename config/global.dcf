@@ -6,7 +6,7 @@ data_loading: TRUE
 data_loading_header: TRUE
 data_ignore:
 load_libraries: TRUE
-libraries:  animation, billboarder, checkpoint, curl, d3heatmap, data.table, dataMeta, datamodelr, datapasta, dataspice, devtools,
+libraries:  animation, billboarder, checkpoint, curl, d3heatmap, darklyplot, data.table, dataMeta, datamodelr, datapasta, dataspice, devtools,
             DiagrammeR, DT, dygraphs, ezknitr, FinancialInstrument, flexdashboard, flextable, forecast, foreach, formatR, formattable,
             futile.logger, GetDFPData, gt, here, highcharter, Hmisc, hydroTSM, janitor, knitr, kableExtra, lintr, logger, lubridate, naniar,
             openxlsx, orca, packagefinder, pacman, parallel, parallelMap, pbapply, pdftools, PerformanceAnalytics, plotly, plyr, poorman,
