@@ -7,7 +7,7 @@ setup <- function(trendName) {
 # ------------------------------------------------------------------------------
 # symbols <- basic_symbols()
 # ------------------------------------------------------------------------------
-# options(getSymbols.warning4.0 = FALSE)                # Suppresses warnings ###
+# options(getSymbols.warning4.0 = FALSE)               # Suppresses warnings ###
 # getSymbols(Symbols = symbols,
 #           src = "yahoo",
 #           index.class = "POSIXct",
