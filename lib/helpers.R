@@ -2,6 +2,11 @@ helper.function <- function()
 {
   return(1)
 }
+
+################################################################################
+# Passing data.table column names as function arguments https://tinyurl.com/y6suqtst
+################################################################################
+dtfunc <- function(dt, v) dt[,get(v)]
 ################################################################################
 # Cross initialization                              https://tinyurl.com/vvafxad
 ################################################################################
