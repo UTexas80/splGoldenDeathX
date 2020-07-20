@@ -33,6 +33,33 @@ src         <- "yahoo"
 symbols     <-c("CSL.AX", "SPL.AX")
 symbols     <- "SPL.AX"
 ################################################################################
+## 0300Indicators                                                            ###
+################################################################################
+xA        <- "020"
+xB        <- "050"
+xC        <- "100"
+xD        <- "200"
+# ------------------------------------------------------------------------------
+xcross     <- c(xA,xB,xC,xD)
+# ------------------------------------------------------------------------------
+crossEMA <- data.table(cbind(rep("EMA",length(xcross)),xcross))
+names(crossEMA)[1] <- "MA" # rename column name by index
+crossEMA[ , crossMA := do.call(paste, c(.SD, sep = "."))]
+signalEMA<-data.table(t(crossEMA[,3]))
+# names(signalEMA)[1:4] <- cross
+# ------------------------------------------------------------------------------
+crossSMA <- data.table(cbind(rep(SMA,length(cross)),cross))
+names(crossSMA)[1] <- "MA" # rename column name by index
+crossSMA[ , crossMA := do.call(paste, c(.SD, sep = "."))]
+signalSMA<-data.table(t(crossSMA[,3]))
+################################################################################
+## 0400Signals                                                      ###
+################################################################################
+sigFormula <- "sigFormula"
+# ------------------------------------------------------------------------------
+trigger      <- "trigger"
+cross        <- TRUE
+################################################################################
 ## Dates needed for .xts lookup           https://tinyurl.com/y3h3jbt7       ###
 ################################################################################
 start.date  <-"2002-01-01"
@@ -127,28 +154,6 @@ nxSMA       <- "nxSMA"
 # EMA       <- "EMA"
 SMA         <- "SMA"
 # ------------------------------------------------------------------------------
-xA        <- "020"
-xB        <- "050"
-xC        <- "100"
-xD        <- "200"
-# ------------------------------------------------------------------------------
-xcross     <- c(xA,xB,xC,xD)
-# ------------------------------------------------------------------------------
-crossEMA <- data.table(cbind(rep("EMA",length(xcross)),xcross))
-names(crossEMA)[1] <- "MA" # rename column name by index
-crossEMA[ , crossMA := do.call(paste, c(.SD, sep = "."))]
-signalEMA<-data.table(t(crossEMA[,3]))
-# names(signalEMA)[1:4] <- cross
-# ------------------------------------------------------------------------------
-crossSMA <- data.table(cbind(rep(SMA,length(cross)),cross))
-names(crossSMA)[1] <- "MA" # rename column name by index
-crossSMA[ , crossMA := do.call(paste, c(.SD, sep = "."))]
-signalSMA<-data.table(t(crossSMA[,3]))
-# ------------------------------------------------------------------------------
-nSMA020     <- 20
-nSMA050     <- 50
-nSMA100     <- 100
-nSMA200     <- 200
 ################################################################################
 ## Custom Theme                                                              ###
 ################################################################################

@@ -16,12 +16,16 @@ setup(nXema)
 # indicators(EMA, 4, 200, "200")
 # indEMA <- cbind(EMA,4,t(cross(20,50,100,200)),sprintf("%03d",t(cross(20,50,100,200))))
 # apply(crossEMA, 1, function(x)do.call(indicators, as.list(x)))
-apply(crossEMA, 1, function(x)
-  indicators(
+# ------------------------------------------------------------------------------
+# https://is.gd/NEjTM3 [Pass arguments to a function from each row of a matrix]
+# ------------------------------------------------------------------------------
+apply(crossEMA, 1, function(x) indicators(
     x[1],
     as.integer(x[2]),
     as.integer(x[3]),
-    x[4]))
+    x[4]
+    )
+  )
 str(getStrategy(nXema)$indicators)
 # ------------------------------------------------------------------------------
 # browser()
