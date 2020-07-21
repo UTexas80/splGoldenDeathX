@@ -67,9 +67,7 @@ add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list(
         columns             = c("EMA.020","EMA.050","EMA.100", "EMA.200"),
-        formula             = "(EMA.020 < EMA.050 &
-                                EMA.050 < EMA.100 &
-                                EMA.100 < EMA.200)",
+        formula             = dXema_open,
          label              = "trigger",
          cross              = TRUE),
     label                   = "dXema_shortEntry")
@@ -78,9 +76,7 @@ add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list
         (columns            = c("EMA.020","EMA.050","EMA.100", "EMA.200"),
-        formula             = "(EMA.020 > EMA.050  |
-                                EMA.050 > EMA.100  |
-                                EMA.100 > EMA.200)",
+        formula             = dXema_close,
          label              = "trigger",
          cross              = TRUE),
     label                   = "dXema_shortExit")

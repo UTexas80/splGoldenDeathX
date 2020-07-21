@@ -67,9 +67,7 @@ add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list(
         columns             = c("SMA.020","SMA.050","SMA.100", "SMA.200"),
-        formula             = "(SMA.020 < SMA.050 &
-                                SMA.050 < SMA.100 &
-                                SMA.100 < SMA.200)",
+        formula             = dXsma_open,
          label              = "trigger",
          cross              = TRUE),
     label                   = "dXsma_shortEntry")
@@ -78,10 +76,7 @@ add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list
         (columns            = c("SMA.020","SMA.050","SMA.100", "SMA.200"),
-        formula             = "(SMA.020 > SMA.050  |
-                                SMA.050 > SMA.100  |
-                                SMA.100 > SMA.200) &
-                               index(mktdata)  > '2002-12-02'",
+        formula             = dXsma_close,
          label              = "trigger",
          cross              = TRUE),
     label                   = "dXsma_shortExit")

@@ -66,9 +66,7 @@ add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list(
          columns            = c("SMA.020","SMA.050","SMA.100", "SMA.200"),
-         formula            = "(SMA.020 > SMA.050 &
-                                SMA.050 > SMA.100 &
-                                SMA.100 > SMA.200)",
+         formula            = gXsma_open,
          label              = "trigger",
          cross              = TRUE),
     label                   = "gXsma_open")
@@ -77,9 +75,7 @@ add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list
          (columns           = c("SMA.020","SMA.050","SMA.100", "SMA.200"),
-         formula            = "(SMA.020 < SMA.050 |
-                                SMA.050 < SMA.100 |
-                                SMA.100 < SMA.200)",
+         formula            = gXsma_close,
          label              = "trigger",
          cross              = TRUE),
     label                   = "gXsma_close")
