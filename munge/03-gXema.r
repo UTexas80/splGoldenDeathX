@@ -75,7 +75,7 @@ add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list
          (columns           = c("EMA.020","EMA.050","EMA.100", "EMA.200"),
-         formula            = gXema_close,
+         formula            = str_replace_all(gXema_close, "&", "|"),
          label              = "trigger",
          cross              = TRUE),
     label                   = "gXema_close")

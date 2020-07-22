@@ -75,7 +75,7 @@ add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list
          (columns           = c("SMA.020","SMA.050","SMA.100", "SMA.200"),
-         formula            = gXsma_close,
+         formula            = str_replace_all(gXsma_close, "&", "|"),
          label              = "trigger",
          cross              = TRUE),
     label                   = "gXsma_close")
