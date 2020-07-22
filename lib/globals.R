@@ -1,170 +1,180 @@
 # Add any project specific configuration here.
 add.config(
   apply.override = FALSE,
-  currentYr = as.numeric(format(Sys.Date(), format="%y")),
-  currentYr4 = as.numeric(format(Sys.Date(), format="%Y")),
-  lastYr = as.numeric(format(Sys.Date(), format="%y")) - 1,
-  LastYr4 = as.numeric(format(Sys.Date(), format="%Y"))-1,
-  header = "SPL GoldenDeathX" # header in reports
+  currentYr      = as.numeric(format(Sys.Date(), format = "%y")),
+  currentYr4     = as.numeric(format(Sys.Date(), format = "%Y")),
+  lastYr         = as.numeric(format(Sys.Date(), format = "%y")) - 1,
+  LastYr4        = as.numeric(format(Sys.Date(), format = "%Y")) - 1,
+  header         = "SPL GoldenDeathX" # header in reports
 )
 ################################################################################
 ## 0000Globals                                                               ###
 ################################################################################
 ## rm(list = ls(.blotter), envir = .blotter)           # Do some house cleaning#
 Sys.setenv(TZ = "UTC")                                 # Set the timezone    ###
+Sys.setenv(TZ = 'America/New_York')
 # ------------------------------------------------------------------------------
 # ascertain global environment to dynamically name data frames 
 # ------------------------------------------------------------------------------
-g <- globalenv()                               # https://tinyurl.com/r3yrspv   ###
+g <- globalenv()                             # https://tinyurl.com/r3yrspv   ###
 ################################################################################
 ## 0100Setup getSymbols                                                      ###
 ################################################################################
-adjustment  <- TRUE                       # Adjust for Dividends, Stock Splits #
+adjustment    <- TRUE                     # Adjust for Dividends, Stock Splits #
 # ------------------------------------------------------------------------------
-from        <- "2002-01-01"
-to          <- Sys.Date()
+from          <- "2002-01-01"
+to            <- Sys.Date()
 # ------------------------------------------------------------------------------
-end_date    <- Sys.Date()
-start_date  <- "2002-01-02"
+end_date      <- Sys.Date()
+start_date    <- "2002-01-02"
 # ------------------------------------------------------------------------------
 options(getSymbols.warning4.0 = FALSE)                 # Suppresses warnings ###
 # ------------------------------------------------------------------------------
-src         <- "yahoo"
-symbols     <- c("CSL.AX", "SPL.AX")
-symbols     <- "SPL.AX"
+src           <- "yahoo"
+################################################################################
+## 0200Initialization                                                        ###
+################################################################################
+symbols       <- c("CSL.AX", "SPL.AX")
+symbols       <- "SPL.AX"
+# ------------------------------------------------------------------------------
+initDate      <- "1990-01-01"
+initEq        <- 1e6                                              # $1,000,000 #
 ################################################################################
 ## 0300Indicators                                                            ###
 ################################################################################
-xA        <- "020"
-xB        <- "050"
-xC        <- "100"
-xD        <- "200"
+EMA           <- "EMA"
+SMA           <- "SMA"
 # ------------------------------------------------------------------------------
-xcross     <- c(xA,xB,xC,xD)
+xA            <- "020"
+xB            <- "050"
+xC            <- "100"
+xD            <- "200"
 # ------------------------------------------------------------------------------
-crossEMA <- data.table(cbind(rep("EMA",length(xcross)),xcross))
+xcross        <- c(xA,xB,xC,xD)
+# ------------------------------------------------------------------------------
+# Pass arguments to a function from each row of a matrix    https://is.gd/NEjTM3
+# ------------------------------------------------------------------------------
+crossEMA      <- data.table(cbind(rep("EMA",length(xcross)),xcross))
 names(crossEMA)[1] <- "MA" # rename column name by index
 crossEMA[ , crossMA := do.call(paste, c(.SD, sep = "."))]
-signalEMA <- data.table(t(crossEMA[,3]))
+signalEMA     <- data.table(t(crossEMA[,3]))
 # names(signalEMA)[1:4] <- cross
 # ------------------------------------------------------------------------------
-# https://is.gd/NEjTM3 [Pass arguments to a function from each row of a matrix]
-# EMA       <- "EMA"
-# ------------------------------------------------------------------------------
-SMA       <- "SMA"
-# ------------------------------------------------------------------------------
-crossSMA <- data.table(cbind(rep(SMA,length(xcross)),xcross))
+crossSMA      <- data.table(cbind(rep(SMA,length(xcross)),xcross))
 names(crossSMA)[1] <- "MA" # rename column name by index
 crossSMA[ , crossMA := do.call(paste, c(.SD, sep = "."))]
-signalSMA <- data.table(t(crossSMA[,3]))
+signalSMA     <- data.table(t(crossSMA[,3]))
 ################################################################################
-## 0400Signals                                                      ###
+## 0400Signals                                                               ###
 ################################################################################
-sigFormula <- "sigFormula"
+sigFormula    <- "sigFormula"
 # ------------------------------------------------------------------------------
-trigger      <- "trigger"
-cross        <- TRUE
+trigger       <- "trigger"
+cross         <- TRUE
 # ------------------------------------------------------------------------------
 # 4.0	Signals - Formulas
 # ------------------------------------------------------------------------------
-ema_long    <- "(EMA.020 > EMA.050 & EMA.050 > EMA.100 & EMA.100 > EMA.200)"
-ema_short   <- "(EMA.020 < EMA.050 & EMA.050 < EMA.100 & EMA.100 < EMA.200)"
+ema_long      <- "(EMA.020 > EMA.050 & EMA.050 > EMA.100 & EMA.100 > EMA.200)"
+ema_short     <- "(EMA.020 < EMA.050 & EMA.050 < EMA.100 & EMA.100 < EMA.200)"
 # ------------------------------------------------------------------------------
-sma_long    <- "(SMA.020 > SMA.050 & SMA.050 > SMA.100 & SMA.100 > SMA.200)"
-sma_short   <- "(SMA.020 < SMA.050 & SMA.050 < SMA.100 & SMA.100 < SMA.200)"
+sma_long      <- "(SMA.020 > SMA.050 & SMA.050 > SMA.100 & SMA.100 > SMA.200)"
+sma_short     <- "(SMA.020 < SMA.050 & SMA.050 < SMA.100 & SMA.100 < SMA.200)"
 # ------------------------------------------------------------------------------
-dXema_open  <- ema_short
-dXema_close <- ema_long
+dXema_open    <- ema_short
+dXema_close   <- ema_long
 # ------------------------------------------------------------------------------
-dXsma_open  <- sma_short
-dXsma_close <- sma_long
+dXsma_open    <- sma_short
+dXsma_close   <- sma_long
 # ------------------------------------------------------------------------------
-gXema_open  <- ema_long
-gXema_close <- ema_short
+gXema_open    <- ema_long
+gXema_close   <- ema_short
 # ------------------------------------------------------------------------------
-gXsma_open  <- sma_long
-gXsma_close <- sma_short
+gXsma_open    <- sma_long
+gXsma_close   <- sma_short
 # ------------------------------------------------------------------------------
-nXema_open  <- paste0("!", ema_short, "& !", ema_long)
-nXema_close <- paste0(ema_short, " | ", ema_long)
+nXema_open    <- paste0("!", ema_short, "& !", ema_long)
+nXema_close   <- paste0(ema_short, " | ", ema_long)
 # ------------------------------------------------------------------------------
-nXsma_open  <- paste0("!", sma_short, "& !", sma_long)
-nXsma_close <- paste0(sma_short, " | ", sma_long)
+nXsma_open    <- paste0("!", sma_short, "& !", sma_long)
+nXsma_close   <- paste0(sma_short, " | ", sma_long)
+################################################################################
+## 0500Rules                                                                 ###
+################################################################################
+ruleSignal    <- "ruleSignal"
+orderqty      <- as.integer(1e4)            # $10,000                          #
+all           <- "all"
+short         <- "short"
+# ------------------------------------------------------------------------------
+TxnFees       <- 0                          # Transaction Fees
 ################################################################################
 ## Dates needed for .xts lookup           https://tinyurl.com/y3h3jbt7       ###
 ################################################################################
-start.date  <- "2002-01-01"
-end.date    <- Sys.Date()
+start.date    <- "2002-01-01"
+end.date      <- Sys.Date()
 ################################################################################
 ## Date Parameters                                                           ###
 ################################################################################
-init_date   <- "1990-01-01"
-# ------------------------------------------------------------------------------
-initDate    <- "1990-01-01"
+init_date     <- "1990-01-01"
 ################################################################################
 ## Equity Values                                                             ###
 ################################################################################
-init_equity <- as.integer(1e4)            # $10,000                            #
-initEq      <- 1e6                        # $1,000,000                         #
-tradeSize   <- 10000
-orderqty    <- as.integer(1e4)            # $10,000                            #
+init_equity   <- as.integer(1e4)            # $10,000                          #
+tradeSize     <- 10000
 # ------------------------------------------------------------------------------
-maxpos      <- 100
-minpos      <- 0
-# ------------------------------------------------------------------------------
-TxnFees     <- 0                          # Transaction Fees
+maxpos        <- 100
+minpos        <- 0
 ################################################################################
 ## Financial Instruments Package setup    # https://is.gd/3K7mRp ##
 ## Initialize Currency And Instruments    # https://financetrain.com/?p=26386
 ################################################################################
 FinancialInstrument::currency(c("AUD"))                # Set the currency    ###
-stock(c("SPL.AX"), currency ="AUD")                    # Define the stocks   ###
-Sys.setenv(TZ = 'America/New_York')
+stock(c("SPL.AX"), currency = "AUD")                   # Define the stocks   ###
+# ------------------------------------------------------------------------------
 # FinancialInstrument::exchange_rate('AUDUSD')         # define an exchange rate
-
-usd_aud     <- Cl(getSymbols(
-              "AUD=X",
-              src="yahoo",
-              from = init_date,
-              auto.assign = FALSE))
-usd_aud     <- complete.cases(usd_aud)
+# ------------------------------------------------------------------------------
+usd_aud       <- Cl(getSymbols(
+                  "AUD=X",
+                  src = "yahoo",
+                  from = init_date,
+                  auto.assign = FALSE))
+# ------------------------------------------------------------------------------
+usd_aud       <- complete.cases(usd_aud)
 ################################################################################
 ## Parameters                                                                ###
 ################################################################################
-pctATR      <- .02
-period      <- 10
-atrOrder    <- TRUE
+pctATR        <- .02
+period        <- 10
+atrOrder      <- TRUE
 # ------------------------------------------------------------------------------
-nRSI        <- 2
-buyThresh   <- 20
-sellThresh  <- 80
+nRSI          <- 2
+buyThresh     <- 20
+sellThresh    <- 80
 # ------------------------------------------------------------------------------
-curr        <- 'AUD'
+curr          <- 'AUD'
 # ------------------------------------------------------------------------------
-dXema       <- "dXema"
-dXsma       <- "dXsma"
+dXema         <- "dXema"
+dXsma         <- "dXsma"
 # ------------------------------------------------------------------------------
-gXema       <- "gXema"
-gXsma       <- "gXsma"
+gXema         <- "gXema"
+gXsma         <- "gXsma"
 # ------------------------------------------------------------------------------
-gxEMA       <- "gxEMA"
-gxSMA       <- "gxSMA"
+gxEMA         <- "gxEMA"
+gxSMA         <- "gxSMA"
 # ------------------------------------------------------------------------------
-nXema       <- "nXema"
-nxEMA       <- "nxEMA"
+nXema         <- "nXema"
+nxEMA         <- "nxEMA"
 # ------------------------------------------------------------------------------
-nXsma       <- "nXsma"
-nxSMA       <- "nxSMA"
+nXsma         <- "nXsma"
+nxSMA         <- "nxSMA"
 ################################################################################
 ## Custom Theme                                                              ###
 ################################################################################
-myTheme<-chart_theme()
+myTheme       <- chart_theme()
 myTheme$col$dn.col    <- 'lightblue'
 myTheme$col$dn.border <- 'lightgray'
 myTheme$col$up.border <- 'lightgray'
 ################################################################################
 # Add project specific configuration that can be overridden from load.project()
-add.config(
-  apply.override = TRUE
-)
+################################################################################
+add.config(apply.override = TRUE)
 ################################################################################
