@@ -65,19 +65,21 @@ gXema_mktdata_ind <-  applyIndicators(               # apply indicators
 add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list(
-         columns            = c("EMA.020","EMA.050","EMA.100", "EMA.200"),
-         formula            = gXema_open,
-         label              = "trigger",
-         cross              = TRUE),
+        columns             = sig_ema_col,      
+#       columns             = c("EMA.020","EMA.050","EMA.100", "EMA.200"),
+        formula             = gXema_open,
+        label               = "trigger",
+        cross               = TRUE),
     label                   = "gXema_open")
 # ------------------------------------------------------------------------------
 add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list
-         (columns           = c("EMA.020","EMA.050","EMA.100", "EMA.200"),
-         formula            = gXema_close,
-         label              = "trigger",
-         cross              = TRUE),
+        (columns            = sig_ema_col,    
+#         (columns           = c("EMA.020","EMA.050","EMA.100", "EMA.200"),
+        formula             = gXema_close,
+        label               = "trigger",
+        cross               = TRUE),
     label                   = "gXema_close")
 # ------------------------------------------------------------------------------
 str(getStrategy(gXema)$signals)

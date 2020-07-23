@@ -12,8 +12,10 @@ ApplyIndicators(nXsma)                                        # apply indicators
 ################################################################################
 # 3.0	Signals
 ################################################################################
-AddSignals("sigFormula",c("SMA.020","SMA.050","SMA.100","SMA.200"), nXsma_open,  "trigger", TRUE , nXsma, "shortEntry")
-AddSignals("sigFormula",c("SMA.020","SMA.050","SMA.100","SMA.200"), nXsma_close, "trigger", TRUE , nXsma, "shortExit")
+AddSignals(sigFormula,sig_sma_col, nXsma_open,  trigger, TRUE , nXsma, "shortEntry")
+AddSignals(sigFormula,sig_sma_col, nXsma_close, trigger, TRUE , nXsma, "shortExit")
+# AddSignals("sigFormula",c("SMA.020","SMA.050","SMA.100","SMA.200"), nXsma_open,  "trigger", TRUE , nXsma, "shortEntry")
+# AddSignals("sigFormula",c("SMA.020","SMA.050","SMA.100","SMA.200"), nXsma_close, "trigger", TRUE , nXsma, "shortExit")
 # ------------------------------------------------------------------------------
 str(getStrategy(nXsma)$signals)
 ApplySignals(nXsma)
