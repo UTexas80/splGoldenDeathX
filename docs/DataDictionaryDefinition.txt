@@ -1,0 +1,6 @@
+(basic) Include a data dictionary that should have at least 5 columns:  [https://www.r-bloggers.com/?p=200012]
+    1| column name (point 2), 
+    2| Description, 
+    3| data type (e.g. dichotomous (yes/no, true/false), categorical (list the categories), numeric, text), 
+    4| valid ranges of data (for example, valid entries for age could be between 0 and 110 years, if 200 was entered then I know it’s likely an error), and 
+    5| if the value is numeric, provide the unit of measurement (e.g. years, days, cm, kg, …).

@@ -51,6 +51,8 @@ xC            <- "100"
 xD            <- "200"
 # ------------------------------------------------------------------------------
 xcross        <- c(xA,xB,xC,xD)
+sig_ema_col   <- paste(EMA, xcross, sep = ".")
+sig_sma_col   <- paste(SMA, xcross, sep = ".")
 # ------------------------------------------------------------------------------
 # Pass arguments to a function from each row of a matrix    https://is.gd/NEjTM3
 # ------------------------------------------------------------------------------
@@ -81,16 +83,16 @@ sma_long      <- "(SMA.020 > SMA.050 & SMA.050 > SMA.100 & SMA.100 > SMA.200)"
 sma_short     <- "(SMA.020 < SMA.050 & SMA.050 < SMA.100 & SMA.100 < SMA.200)"
 # ------------------------------------------------------------------------------
 dXema_open    <- ema_short
-dXema_close   <- ema_long
+dXema_close   <- str_replace_all(ema_long, "&", "|")
 # ------------------------------------------------------------------------------
 dXsma_open    <- sma_short
-dXsma_close   <- sma_long
+dXsma_close   <- str_replace_all(sma_long, "&", "|")
 # ------------------------------------------------------------------------------
 gXema_open    <- ema_long
-gXema_close   <- ema_short
+gXema_close   <- str_replace_all(ema_short, "&", "|")
 # ------------------------------------------------------------------------------
 gXsma_open    <- sma_long
-gXsma_close   <- sma_short
+gXsma_close   <- str_replace_all(sma_short, "&", "|")
 # ------------------------------------------------------------------------------
 nXema_open    <- paste0("!", ema_short, "& !", ema_long)
 nXema_close   <- paste0(ema_short, " | ", ema_long)

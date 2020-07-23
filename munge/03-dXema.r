@@ -66,7 +66,8 @@ dXema_mktdata_ind <-  applyIndicators(              # apply indicators
 add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list(
-        columns             = c("EMA.020","EMA.050","EMA.100", "EMA.200"),
+        columns             = sig_ema_col,
+#       columns             = c("EMA.020","EMA.050","EMA.100", "EMA.200"),
        formula              = dXema_open,
          label              = "trigger",
          cross              = TRUE),
@@ -76,7 +77,7 @@ add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list
         (columns            = c("EMA.020","EMA.050","EMA.100", "EMA.200"),
-        formula             = str_replace_all(dXema_close, "&", "|"),
+        formula             = dXema_close,
          label              = "trigger",
          cross              = TRUE),
     label                   = "dXema_shortExit")
