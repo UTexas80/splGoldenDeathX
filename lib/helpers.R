@@ -6,9 +6,9 @@ helper.function <- function()
 ################################################################################
 # Passing data.table column names as function arguments https://tinyurl.com/y6suqtst
 ################################################################################
-dtfunc  <- function(dt, v) dt[,get(v)]
+dtfunc  <- function(dt, v) dt[,get(v)]                      # dtfunc(dt, 'mpg')
 
-dt_func <- function(dt, v) {
+dt_func <- function(dt, v) {                                # dt_func(dt, mpg)
   v2 = deparse(substitute(v))
   dt[,v2, with = F][[1]] # [[1]] returns a vector instead of a data.table
 }
