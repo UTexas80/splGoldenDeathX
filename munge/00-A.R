@@ -100,7 +100,7 @@ class(trend_signal)     <- "setup"                     # add class to trend_name
 dt_strategy <<- 
     setorder(
         dT.strategy[dT.ind, allow.cartesian = T][
-        , strategy_name:= paste0(abbv,i.name)],
+        , strategy_name:= paste0(abbv,tolower(i.name))],
         strategy_name)[
         , id:=  .I[]][
         , formula:= paste0(formula, i.name)
