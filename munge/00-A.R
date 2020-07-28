@@ -1,8 +1,4 @@
-# Example preprocessing script.
 # How Do I in R?                                https://tinyurl.com/y9j67lfk ###
-############################################### https://tinyurl.com/yddh54gn ###
-## checkpoint ## or any date in YYYY-MM-DD format after 2014-09-17 
-## checkpoint("2015-01-15")
 ################################################################################
 ## Step 00.00 Processing Start Time - start the timer                        ###
 ################################################################################
@@ -41,7 +37,7 @@ trend_name <<-
     dT.strategy[                                   # https://tinyurl.com/vajvn48
       dT.ind, allow.cartesian = T][
               ,c(2,5,8)][
-              , tname:= paste0(abbv,i.name)], tname)[
+              , tname:= paste0(abbv,tolower(i.name))], tname)[
               , id:=  .I[]]                                     # add row number
 setcolorder(trend_name, c(5, 1:4))                              # column order
 # ------------------------------------------------------------------------------
@@ -55,7 +51,7 @@ trend_ind <<-
         ,c(1:2,5,4,7:9)][
       , id:=  .I[]]
   ,tname)
-trend_ind[, strategy_ind_id := rleid(tname)]          # group contiguous elements
+trend_ind[, strategy_ind_id := rleid(tname)]         # group contiguous elements
 # ------------------------------------------------------------------------------
 dt_ma <- setkey(
   data.table::dcast(
@@ -91,13 +87,18 @@ names(trend_signal)[10] <- c("strategy_name")
 # ------------------------------------------------------------------------------
 trend_rules             <- setkey(setDT(dT.rules),id)
 # ------------------------------------------------------------------------------
-class(trend_name)       <- "setup"                     # add class to trend_name
-class(trend_ind)        <- "setup"                     # add class to trend_name
-class(trend_rules)      <- "setup"                     # add class to trend_name
-class(trend_signal)     <- "setup"                     # add class to trend_name
+class(trend_name)       <- "setup"                    # add class to trend_name
+class(trend_ind)        <- "setup"                    # add class to trend_ind
+# class(trend_ind)      <- "ind"                      # add class to trend_ind
+class(trend_rules)      <- "setup"                    # add class to trend_rules
+class(trend_signal)     <- "setup"                    # add class to trend_signal
 # get_Strategy(trend_name, trend_ind, trend_signal)
+# get_Strategy.setup(trend_name)
+# get_Strategy.ind(trend_ind)
+# get_Strategy.signal(trend_signal)
+# get_Strategy.rules(trend_rules)
 # ------------------------------------------------------------------------------
-dt_strategy <<- 
+dt_strategy <<-
     setorder(
         dT.strategy[dT.ind, allow.cartesian = T][
         , strategy_name:= paste0(abbv,tolower(i.name))],
@@ -105,7 +106,7 @@ dt_strategy <<-
         , id:=  .I[]][
         , formula:= paste0(formula, i.name)
         ]
-# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------https://is.gd/YK6wAa
 stocks <- data.frame(
   time = as.Date('2009-01-01') + 0:9,
   X = rnorm(10, 0, 1),
@@ -115,6 +116,38 @@ stocks <- data.frame(
 # ------------------------------------------------------------------------------
 # add class to stock
 class(stocks) <- "stock"
+# ------------------------------------------------------------------------------
+# this has no class
+# or could be a class not named stock
+not_stocks <- data.frame(
+    time = as.Date('2009-01-01') + 0:9,
+    X = rnorm(10, 0, 1),
+    Y = rnorm(10, 0, 2),
+    Z = rnorm(10, 0, 4)
+)
+# ------------------------------------------------------------------------------
+# this is like an abstract base method
+getStockPlot <- function(stocks_df) {
+    UseMethod("getStockPlot")
+}
+# ------------------------------------------------------------------------------
+# this is the implementation for "stock" objects,
+# you could have more for other "class" objects
+getStockPlot.stock <- function(stocks_df){
+    print("Plot Stocks")
+}
+# ------------------------------------------------------------------------------
+# this captures unsupported objects
+getStockPlot.default <- function(stocks_df) {
+    stop("class not supported")
+}
+# ------------------------------------------------------------------------------
+# this calls getStockPlot.stock
+getStockPlot(stocks)
+#> [1] "Plot Stocks"
+#this calls getStockPlot.default
+# getStockPlot(not_stocks)
+#> Error in getStockPlot.default(not_stocks): class not supported
 ################################################################################
 ## Step 00.99: VERSION HISTORY                                               ###
 ################################################################################

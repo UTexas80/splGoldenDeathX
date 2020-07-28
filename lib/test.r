@@ -12,7 +12,7 @@
 get_Strategy <- function(trendName, trendInd, trendSig, trendRules) {
   UseMethod("get_Strategy")
 }
-
+browser()
 # this is the implementation for "trend" objects,
 # you could have more for other "class" objects
 get_Strategy.setup <- function(trendName, trendInd, trendSig, trendRules) {
@@ -23,7 +23,7 @@ get_Strategy.setup <- function(trendName, trendInd, trendSig, trendRules) {
   setupRules <<- setDT(trendRules)
 # ------------------------------------------------------------------------------ 1.0 Setup
   for (i in 1:nrow(setupTrend)) {
-    apply(setupTrend[i,5], 1, function(x) setup(x))
+    apply(setupTrend[i,5], 1, function(x) x0100_setup(x))
 # ------------------------------------------------------------------------------ 2.0 Indicators
     apply(setupInd[strategy_ind_id == i, c(4:7)], 1, 
       function (x) 
@@ -66,7 +66,7 @@ rows = function(x) lapply(seq_len(nrow(x)), function(i) lapply(x,function(c) c[i
 # you could have more for other "class" objects
 get_Strategy.ind <<- function(trendInd){
   print("setup Indicators")
-  z   <<- setDT(trendInd)
+    setupInd   <<- setDT(trendInd)
   print(class(z))
   for (i in 1:nrow(z)) {
     add.indicator(strategy.st,
