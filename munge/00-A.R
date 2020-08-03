@@ -90,8 +90,8 @@ trend_rules             <- setkey(setDT(dT.rules),id)
 class(trend_name)       <- "setup"                    # add class to trend_name
 class(trend_ind)        <- "setup"                    # add class to trend_ind
 # class(trend_ind)      <- "ind"                      # add class to trend_ind
-class(trend_rules)      <- "setup"                    # add class to trend_rules
-class(trend_signal)     <- "setup"                    # add class to trend_signal
+class(trend_rules)      <- "rules"                    # add class to trend_rules
+class(trend_signal)     <- "signal"                   # add class to trend_signal
 # get_Strategy(trend_name, trend_ind, trend_signal)
 # get_Strategy.setup(trend_name)
 # get_Strategy.ind(trend_ind)
@@ -107,6 +107,17 @@ dt_strategy <<-
         , formula:= paste0(formula, i.name)
         ]
 # ------------------------------------------------------------------------------https://is.gd/YK6wAa
+f <- dt_strategy$strategy_name
+a <- dt_strategy$strategy_name
+l <- dt_strategy$strategy_name
+k <- dt_strategy$strategy_name
+strategy_name <- dt_strategy$strategy_name
+class(f) <- "x0100_setup"
+class(a) <- "x0200_init"
+class(l) <- "x0300_ind"
+class(k) <- "x0400_signals"
+# ------------------------------------------------------------------------------
+
 stocks <- data.frame(
   time = as.Date('2009-01-01') + 0:9,
   X = rnorm(10, 0, 1),

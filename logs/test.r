@@ -213,10 +213,16 @@ getStockPlot.stock <- function(stocks_df){
   print("Plot Stocks")
 }
 
-# How to run multiple functions one after another?
-`%@%` <- function(x, f) eval.parent(as.call(append(as.list(substitute(f)), list(x), 1))) # https://tinyurl.com/qo443mb
+# How to run multiple functions one after another?    https://tinyurl.com/qo443mb
+`%@%` <- function(x, f) eval.parent(as.call(append(as.list(substitute(f)), list(x), 1)))
+x %@% mean %@% sqr # => 6.25
+c(1, 2, NA, 3, 4) %@% mean(na.rm=T) %@% sqr # => 6.25
+m %@% colMeans() %@% sum() # => 21
 # f(trend_ind); f(dT.metrics); f(dT.rules) # https://tinyurl.com/rkmef5n
 
+# Method Chaining in R                                      https://is.gd/2QIFNJ
+m <- matrix(c(1:10, 11:20), nrow = 10, ncol = 2)
 
+m %>% mean %>% sum
 
 
