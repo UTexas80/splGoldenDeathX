@@ -107,15 +107,15 @@ dt_strategy <<-
         , formula:= paste0(formula, i.name)
         ]
 # ------------------------------------------------------------------------------https://is.gd/YK6wAa
-f <- dt_strategy$strategy_name
-a <- dt_strategy$strategy_name
-l <- dt_strategy$strategy_name
-k <- dt_strategy$strategy_name
-strategy_name <- dt_strategy$strategy_name
-class(f) <- "x0100_setup"
-class(a) <- "x0200_init"
-class(l) <- "x0300_ind"
-class(k) <- "x0400_signals"
+a1 <- dt_strategy
+a2 <- dt_strategy$strategy_name
+a3 <- dt_strategy$strategy_name
+a4 <- dt_strategy$strategy_name
+# strategy_name <- dt_strategy$strategy_name
+class(a1) <- "x0100_setup"
+class(a2) <- "x0200_init"
+class(a3) <- "x0300_ind"
+class(a4) <- "x0400_signals"
 # ------------------------------------------------------------------------------
 
 stocks <- data.frame(

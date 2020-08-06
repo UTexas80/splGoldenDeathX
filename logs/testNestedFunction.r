@@ -1,3 +1,56 @@
+# The holy grail                              https://www.studytrails.com/?p=421
+by(dt_strategy[, 9],   dt_strategy[, 1:8], get_strategy.x0000_main)
+
+
+
+# by {base}	R Documentation
+# Apply a Function to a Data Frame Split by Factors
+# Description
+# Function by is an object-oriented wrapper for tapply applied to data frames.
+
+# Usage
+# by(data, INDICES, FUN, ..., simplify = TRUE)
+# Arguments
+# data	
+# an R object, normally a data frame, possibly a matrix.
+
+# INDICES	
+# a factor or a list of factors, each of length nrow(data).
+
+# FUN	
+# a function to be applied to (usually data-frame) subsets of data.
+
+# ...	
+# further arguments to FUN.
+
+# simplify	
+# logical: see tapply.
+
+# Details
+# A data frame is split by row into data frames subsetted by the values of one or more factors, and function FUN is applied to each subset in turn.
+
+# For the default method, an object with dimensions (e.g., a matrix) is coerced to a data frame and the data frame method applied. Other objects are also coerced to a data frame, but FUN is applied separately to (subsets of) each column of the data frame.
+
+# Value
+# An object of class "by", giving the results for each subset. This is always a list if simplify is false, otherwise a list or array (see tapply).
+
+# See Also
+# tapply, simplify2array. ave also applies a function block-wise.
+
+# Examples
+# require(stats)
+# by(warpbreaks[, 1:2], warpbreaks[,"tension"], summary)
+# by(warpbreaks[, 1],   warpbreaks[, -1],       summary)
+# by(warpbreaks, warpbreaks[,"tension"],
+#    function(x) lm(breaks ~ wool, data = x))
+
+# ## now suppose we want to extract the coefficients by group
+# tmp <- with(warpbreaks,
+#             by(warpbreaks, tension,
+#                function(x) lm(breaks ~ wool, data = x)))
+# sapply(tmp, coef)
+
+
 apply(z, 1, function(x)
     indicators(
         x[1], 
@@ -118,8 +171,8 @@ sapply(z$id, function(a) {
     })
 })
 
-# mapply and by functions in R      
-# tinyurl.com/vs7god7                                            https://tinyurl.com/vs7god7
+# mapply and by functions in R
+# tinyurl.com/vs7god7                                https://tinyurl.com/vs7god7
 mapply(function(x) {g[y[x,]][,c(9,11:13)]}, as.integer(rownames(y)), SIMPLIFY = FALSE)
 mapply(function(x) {indicators(g[y[x,]][,c(9,11:13)])}, as.integer(rownames(y)), SIMPLIFY = FALSE)
 
@@ -127,12 +180,12 @@ mapply(function(x) {indicators(g[y[x,]][,c(9,11:13)])}, as.integer(rownames(y)),
   # sindicators(x[1], as.integer(x[2]), as.integer(x[3]), x[4]))
 
 
-# Passing vector with multiple values into R function                           https://tinyurl.com/uy65emg 
+# Passing vector with multiple values into R function https://tinyurl.com/uy65emg 
 mapply(function(x) {table(g[y[x,]][,c(9,11:13)])}, as.integer(rownames(y)), SIMPLIFY = FALSE)
 dT.trend <- dT.strategy[
     dT.ind, allow.cartesian = T][,c(1:2,5,8)][, tname:= paste0(abbv,i.name)]
 
-# Nesting Functions in R with the Piping Operator                               https://tinyurl.com/vhap722
+# Nesting Functions in R with the Piping Operator    https://tinyurl.com/vhap722
 mapply(function(x) {g[y[x,]][,c(9,11:13)]} %>% {x}, as.integer(rownames(y)), SIMPLIFY = FALSE)
 mapply(function(x) {table(g[y[x,]][,c(9,11:13)])} %>% {g[y[x,]][,c(9,11:13)]}, as.integer(rownames(y)), SIMPLIFY = FALSE)
 
@@ -174,9 +227,6 @@ get_Strategy.ind <<- function(dt_ind){
   dt_ind[,1]
   x[,1]
 }
-
-
-
 
 
 # =----
@@ -237,3 +287,12 @@ for (i in 1:nrow(setupTrend)) {
     print (j)
   }
 }
+
+
+# THE PIPE OPERATOR : A BETTER WAY TO NEST FUNCTIONS IN R  https://liwaiwai.com/?p=1481
+
+get_strategy.x0000_main(dt_strategy[,9], dt_strategy) %>%
+  get_strategy.x0100_setup(strategy_name, test)       %>%
+    get_strategy.x0200_init(strategy_name)            %>%
+      get_strategy.x0300_ind(strategy_name)           %>%
+        get_strategy.x0400_signals(strategy_name)

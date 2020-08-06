@@ -3,27 +3,29 @@
 # sapply with custom function (series of if statements)
 # ------------------------------------------------------------------------------
 
-browser()
-
 # this is like an abstract base method
 get_strategy               <- function(strategy_name, ...) {
     UseMethod("get_strategy")
 }
 
-get_strategy.x0000_main   <- function(strategy_name, ...) {
-    print("x0000_main")
-    print(strategy_name)
-    #> [1] "x0100_setup"
-    get_strategy.x0100_setup(strategy_name)
-    get_strategy.x0200_init(strategy_name)
-    get_strategy.x0300_ind(strategy_name)
-    get_strategy.x0400_signals(strategy_name)
+get_strategy.x0000_main   <- function(strategy_name,test, ...) {
+
+  browser()
+
+  print("x0000_main")
+  print(strategy_name)
+  print(class(strategy_name))
+  
+  #> [1] "x0100_setup"
+
 }
 
-get_strategy.x0100_setup   <- function(strategy_name, ...) {
+get_strategy.x0100_setup   <- function(strategy_name, test, ...) {
+
     print("x0100_setup")
     print(strategy_name)
-    print(class(strategy_name))
+    print( test)
+    print(class(test))
     #> [1] "x0100_setup"
     # setupTrend <<- setDT(strategy_name)
     # get_Strategy.x0200_init(strategy_name)
