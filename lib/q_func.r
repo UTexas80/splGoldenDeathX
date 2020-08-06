@@ -67,3 +67,51 @@ getStockPlot.stock <- function(stocks_df){
 }
 
 getStockPlot(stocks)
+
+
+# ------------------------------------------------------------------------------
+# Nested loops with mapply                  https://www.r-bloggers.com/?p=64565
+# ------------------------------------------------------------------------------
+a = c("A", "B")
+b = c("L", "M")
+c = c("X", "Y")
+# ------------------------------------------------------------------------------
+var1 = rep(a, length(b))
+var1 = var1[order(var1)]
+var2 = rep(b, length(a))
+df = data.frame(a = var1, b = var2)
+# ------------------------------------------------------------------------------
+CartProduct = function(CurrentMatrix, NewElement)
+{
+  
+  if (length(dim(NewElement)) != 0 )
+  {
+    warning("New vector has more than one dimension.")
+    return (NULL)
+  }
+  
+  if (length(dim(CurrentMatrix)) == 0)
+  {
+    CurrentRows = length(CurrentMatrix)
+    CurrentMatrix = as.matrix(CurrentMatrix, nrow = CurrentRows, ncol = 1)
+  } else {
+    CurrentRows = nrow(CurrentMatrix)
+  }
+  
+  var1 = replicate(length(NewElement), CurrentMatrix, simplify=F)
+  var1 = do.call("rbind", var1)
+  
+  var2 = rep(NewElement, CurrentRows)
+  var2 = matrix(var2[order(var2)], nrow = length(var2), ncol = 1)
+  
+  CartProduct = cbind(var1, var2)
+  return (CartProduct)
+}
+# ------------------------------------------------------------------------------
+someFunction = function(a, b, c)
+{
+  aList = list(a = toupper(a), b = tolower(b), c = c)
+  return (aList)
+}
+mojo = CartProduct(a, b)
+mojo = CartProduct(mojo,c)
