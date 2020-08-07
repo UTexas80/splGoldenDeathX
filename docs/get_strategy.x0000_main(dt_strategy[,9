@@ -1,0 +1,5 @@
+  get_strategy.x0000_main(dt_strategy[,9], dt_strategy) %>%
+    get_strategy.x0100_setup(strategy_name, test)       %>%
+      get_strategy.x0200_init(strategy_name)            %>%
+        get_strategy.x0300_ind(strategy_name)           %>%
+          get_strategy.x0400_signals(strategy_name)

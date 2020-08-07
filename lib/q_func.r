@@ -8,8 +8,9 @@ get_strategy               <- function(strategy_name, ...) {
     UseMethod("get_strategy")
 }
 
-get_strategy.x0000_main   <- function(strategy_name,test, ...) {
+get_strategy.x0000_main   <- function(strategy_name, ...) {
 
+  
   browser()
 
   print("x0000_main")
@@ -20,12 +21,10 @@ get_strategy.x0000_main   <- function(strategy_name,test, ...) {
 
 }
 
-get_strategy.x0100_setup   <- function(strategy_name, test, ...) {
+get_strategy.x0100_setup   <- function(strategy_name, ...) {
 
     print("x0100_setup")
     print(strategy_name)
-    print( test)
-    print(class(test))
     #> [1] "x0100_setup"
     # setupTrend <<- setDT(strategy_name)
     # get_Strategy.x0200_init(strategy_name)
