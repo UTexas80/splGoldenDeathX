@@ -37,18 +37,18 @@ colnames(golden)           <- c("GoldenCrossEMA", "GoldenCrossSMA", "Buy&Hold")
 ################################################################################
 trendDrawGoldenEMA         <-as.data.table(maxDrawdown(goldenEMA))
 trendDrawGoldenSMA         <-as.data.table(maxDrawdown(goldenSMA))
-trendDrawGolden            <-as.data.table(cbind(trendDrawGoldenEMA, 
+trendDrawGolden            <-as.data.table(cbind(trendDrawGoldenEMA,
                                 trendDrawGoldenSMA))
 # ------------------------------------------------------------------------------
-trendSummaryGoldenEMA      <-as.data.table(table.AnnualizedReturns(goldenEMA, 
+trendSummaryGoldenEMA      <-as.data.table(table.AnnualizedReturns(goldenEMA,
     Rf = 0.02 / 252), keep.rownames = TRUE)
-trendSummaryGoldenSMA      <-as.data.table(table.AnnualizedReturns(goldenSMA, 
+trendSummaryGoldenSMA      <-as.data.table(table.AnnualizedReturns(goldenSMA,
     Rf = 0.02 / 252), keep.rownames = TRUE)
-trendSummaryGolden         <-as.data.table(table.AnnualizedReturns(golden, 
+trendSummaryGolden         <-as.data.table(table.AnnualizedReturns(golden,
     Rf = 0.02 / 252), keep.rownames = TRUE)
 
-trendClose                 <-merge(deathCloseEMA, deathCloseSMA, goldenCloseEMA, 
-                                goldenCloseSMA)   
+trendClose                 <-merge(deathCloseEMA, deathCloseSMA, goldenCloseEMA,
+                                goldenCloseSMA)
 colnames(trendClose)       <- c("deathEMA", "deathSMA", "goldenEMA", "goldenSMA")
 ################################################################################
 ## Step 00.99: VERSION HISTORY                                               ###
