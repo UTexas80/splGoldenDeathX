@@ -24,8 +24,6 @@
 			"titleBar.inactiveBackground": "#02030099",
 			"titleBar.inactiveForeground": "#e7e7e799",
 			"statusBarItem.hoverBackground": "#243600",
-			"statusBar.border": "#020300",
-			"titleBar.border": "#020300",
 			"activityBar.background": "#243600",
 			"titleBar.activeBackground": "#020300",
 			"titleBar.activeForeground": "#e7e7e7",

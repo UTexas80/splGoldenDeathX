@@ -11,6 +11,8 @@ add.config(
 ## 0000Globals                                                               ###
 ################################################################################
 ## rm(list = ls(.blotter), envir = .blotter)           # Do some house cleaning#
+.blotter <- new.env()                  # Guy Yollin's QuantStrat I lecture issue
+.strategy <- new.env()                 # https://is.gd/eaFrdm 
 Sys.setenv(TZ = "UTC")                                 # Set the timezone    ###
 Sys.setenv(TZ = 'America/New_York')
 # ------------------------------------------------------------------------------

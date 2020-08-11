@@ -19,7 +19,6 @@ x0100_setup <- function(trendName) {
 #      currency = "USD",
 #      multiplier = 1)
 # ------------------------------------------------------------------------------
-  browser()
   strategy.st <<- portfolio.st <<- account.st <<- trendName
   rm.strat(strategy.st)
   rm.strat(account.st)

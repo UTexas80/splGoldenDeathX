@@ -2,76 +2,87 @@
 # function accept a dataframe as an argument?     https://tinyurl.com/vajvn48
 # sapply with custom function (series of if statements)
 # ------------------------------------------------------------------------------
-
 # this is like an abstract base method
-get_strategy              <- function(strategy_name, ...) {
+get_strategy              <- function(strategyName, ...) {
     UseMethod("get_strategy")
 }
-
-get_strategy.x0000_main   <- function(strategy_name, ...) {
-
-    print("x0000_main")
-    print(strategy_name)
-    print(class(strategy_name))
-
-    get_strategy.x0100_setup(strategy_name)             %>%
-      get_strategy.x0200_init(dt_strategy[, 1])         %>%
-        get_strategy.x0300_ind(dt_strategy[, 1])        %>%
-          get_strategy.x0400_signals(dt_strategy[, 1])
-
-    #> [1] "x0100_setup"
-
-}
-
-get_strategy.x0100_setup   <- function(strategy_name, ...) {
+################################################################################
+# 0000 Main
+################################################################################
+get_strategy.x0000_main   <- function(strategyName, ...) {
 # ------------------------------------------------------------------------------
-    print("x0100_setup")
-    print(strategy_name)
-    #> [1] "x0100_setup"
-    # setupTrend <<- setDT(strategy_name)
-    # get_Strategy.x0200_init(strategy_name)
     browser()
+    print("x0000_main")
+    print(strategyName[,1])
+    print(strategyName[,2])
+    print(class(strategyName))
+    #> [0] "x0000_main"
 # ------------------------------------------------------------------------------
-    strategy.st <<- portfolio.st <<- account.st <<- strategy_name
-# ------------------------------------------------------------------------------ 
-    rm.strat(strategy.st)
-    rm.strat(account.st)
-    rm.strat(portfolio.st)
+    get_strategy.x0100_setup(strategyName[,1])         %>%
+      get_strategy.x0200_init(strategyName[,1])        %>%
+        get_strategy.x0300_ind(strategyName[,2])       %>%
+          get_strategy.x0400_signals(dt_strategy[, 1])
 # ------------------------------------------------------------------------------
 }
-
 ################################################################################
-# 2.0	Initialization
+# 0100 Setup
 ################################################################################
-
-
-get_strategy.x0200_init    <- function(strategy_name, ...) {
+get_strategy.x0100_setup   <- function(strategyName, ...) {
+# ------------------------------------------------------------------------------
+    browser()
+    print("x0100_setup")
+    print(strategyName)
+    print(class(strategyName))
+    #> [1] "x0100_setup"
+# ------------------------------------------------------------------------------
+    strategy.st <<- portfolio.st <<- account.st <<- strategyName[,1]
+# ------------------------------------------------------------------------------
+#     rm.strat(strategy.st)
+#     rm.strat(account.st)
+#     rm.strat(portfolio.st)
+# ------------------------------------------------------------------------------
+}
+################################################################################
+# 0200	Initialization
+################################################################################
+get_strategy.x0200_init    <- function(strategyName, ...) {
+# ------------------------------------------------------------------------------
+  browser()
   print("x0200_init")
-  #> [1] "x0200_initialization"
+  print(strategyName)
+  print(class(strategyName))
+  #> [2] "x0200_initialization"
 # ------------------------------------------------------------------------------
-initPortf(name              = portfolio.st,         # Portfolio Initialization
-          symbols           = symbols,
-          currency          = curr,
-          initDate          = initDate,
-          initEq            = initEq)
+  initPortf(name              = portfolio.st,         # Portfolio Initialization
+            symbols           = symbols,
+            currency          = curr,
+            initDate          = initDate,
+            initEq            = initEq)
 # ------------------------------------------------------------------------------
-initAcct(name               = account.st,           # Account Initialization
-         portfolios         = portfolio.st,
-         currency           = curr,
-         initDate           = initDate,
-         initEq             = initEq)
+  initAcct(name               = account.st,           # Account Initialization
+           portfolios         = portfolio.st,
+           currency           = curr,
+           initDate           = initDate,
+           initEq             = initEq)
 # ------------------------------------------------------------------------------
-initOrders(portfolio        = portfolio.st,         # Order Initialization
-           symbols          = symbols,
-           initDate         = initDate)
+  initOrders(portfolio        = unlist(portfolio.st), # Order Initialization
+             symbols          = symbols,
+             initDate         = initDate)
 # ------------------------------------------------------------------------------
-strategy(strategy.st, store = TRUE)                 # Strategy initialization
-
+  strategy(unlist(strategy.st), store = TRUE)         # Strategy initialization
+# ------------------------------------------------------------------------------
 }
-
-get_strategy.x0300_ind     <- function(strategy_name, ...) {
+################################################################################
+# 3.0	Indicators
+################################################################################
+get_strategy.x0300_ind     <- function(ind_name, ...) {
+# ------------------------------------------------------------------------------
+  browser()
   print("x0300_ind")
+  print(ind_name)
+  print(class(ind_name))
   #> [1] "x0300_Indicators"
+
 }
 
 get_strategy.x0400_signals <- function(strategy_name, ...) {
