@@ -106,19 +106,21 @@ dt_strategy <<-
         , id:=  .I[]][
         , formula:= paste0(formula, i.name)
         ]
-# ------------------------------------------------------------------------------https://is.gd/YK6wAa
-a1 <- dt_strategy
-a2 <- dt_strategy$strategy_name
-a3 <- dt_strategy$strategy_name
-a4 <- dt_strategy$strategy_name
-# strategy_name <- dt_strategy$strategy_name
-class(a1) <- "x0100_setup"
-class(a2) <- "x0200_init"
-class(a3) <- "x0300_ind"
-class(a4) <- "x0400_signals"
+names(dt_strategy)[8]  <- "strategy_ind"
+setkey(dt_strategy, id)
 # ------------------------------------------------------------------------------
-
-stocks <- data.frame(
+# function accept a dataframe as an argument                https://is.gd/YK6wAa
+# ------------------------------------------------------------------------------
+# a1 <- a2 <- a3 <- a4 <- dt_strategy
+# ------------------------------------------------------------------------------
+# strategy_name <- dt_strategy$strategy_name
+# class(dt_strategy) <- "x0000_main"
+# class(dt_strategy) <- "x0100_setup"
+# class(dt_strategy) <- "x0200_init"
+# class(dt_strategy) <- "x0300_ind"
+# class(a4) <- "x0400_signals"
+# ------------------------------------------------------------------------------
+ stocks <- data.frame(
   time = as.Date('2009-01-01') + 0:9,
   X = rnorm(10, 0, 1),
   Y = rnorm(10, 0, 2),

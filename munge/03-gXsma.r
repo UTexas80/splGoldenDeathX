@@ -65,7 +65,7 @@ gXsma_mktdata_ind <-  applyIndicators(               # apply indicators
 add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list(
-         columns            = sig_sma_col,      
+         columns            = sig_sma_col,
 #        columns            = c("SMA.020","SMA.050","SMA.100", "SMA.200"),
          formula            = gXsma_open,
          label              = "trigger",
@@ -75,7 +75,7 @@ add.signal(strategy.st,
 add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list
-         (columns          = sig_sma_col,    
+         (columns          = sig_sma_col,
 #        (columns           = c("SMA.020","SMA.050","SMA.100", "SMA.200"),
          formula            = gXsma_close,
          label              = "trigger",

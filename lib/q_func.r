@@ -3,39 +3,45 @@
 # sapply with custom function (series of if statements)
 # ------------------------------------------------------------------------------
 # this is like an abstract base method
-get_strategy              <- function(strategyName, ...) {
+get_strategy              <- function(strategy_id, ...) {
     UseMethod("get_strategy")
 }
 ################################################################################
 # 0000 Main
 ################################################################################
-get_strategy.x0000_main   <- function(strategyName, ...) {
+get_strategy.x0000_main   <- function(id, strategy_dt, ...) {
 # ------------------------------------------------------------------------------
     browser()
     print("x0000_main")
-    print(strategyName[,1])
-    print(strategyName[,2])
-    print(class(strategyName))
+    print(id)
+    print(class(id))    
+    print(strategy_dt)
+    print(class(strategy_dt))
+    # id <- strategy_dt[,1]
     #> [0] "x0000_main"
 # ------------------------------------------------------------------------------
-    get_strategy.x0100_setup(strategyName[,1])         %>%
-      get_strategy.x0200_init(strategyName[,1])        %>%
-        get_strategy.x0300_ind(strategyName[,2])       %>%
+    get_strategy.x0100_setup(id, strategy_dt)               %>%
+      get_strategy.x0200_init(id, strategy_dt)              %>%
+        get_strategy.x0300_ind(id, dt_strategy)       %>%
           get_strategy.x0400_signals(dt_strategy[, 1])
 # ------------------------------------------------------------------------------
 }
 ################################################################################
 # 0100 Setup
 ################################################################################
-get_strategy.x0100_setup   <- function(strategyName, ...) {
+get_strategy.x0100_setup   <- function(id, strategy_dt, ...) {
 # ------------------------------------------------------------------------------
     browser()
     print("x0100_setup")
-    print(strategyName)
-    print(class(strategyName))
+    print(id)
+    print(class(id))    
+    print(strategy_dt)
+    print(class(strategy_dt))
+    
     #> [1] "x0100_setup"
+
 # ------------------------------------------------------------------------------
-    strategy.st <<- portfolio.st <<- account.st <<- strategyName[,1]
+   strategy.st <<- portfolio.st <<- account.st <<- dt_strategy[id,9]
 # ------------------------------------------------------------------------------
 #     rm.strat(strategy.st)
 #     rm.strat(account.st)
@@ -45,12 +51,14 @@ get_strategy.x0100_setup   <- function(strategyName, ...) {
 ################################################################################
 # 0200	Initialization
 ################################################################################
-get_strategy.x0200_init    <- function(strategyName, ...) {
+get_strategy.x0200_init    <- function(id, strategy_dt, ...) {
 # ------------------------------------------------------------------------------
   browser()
   print("x0200_init")
-  print(strategyName)
-  print(class(strategyName))
+  print(id)
+  print(class(id))    
+  print(strategy_dt)
+  print(class(strategy_dt))
   #> [2] "x0200_initialization"
 # ------------------------------------------------------------------------------
   initPortf(name              = portfolio.st,         # Portfolio Initialization
@@ -73,20 +81,24 @@ get_strategy.x0200_init    <- function(strategyName, ...) {
 # ------------------------------------------------------------------------------
 }
 ################################################################################
-# 3.0	Indicators
+# 0300	Indicators
 ################################################################################
-get_strategy.x0300_ind     <- function(ind_name, ...) {
+get_strategy.x0300_ind     <- function(strategy_dt, ...) {
 # ------------------------------------------------------------------------------
   browser()
   print("x0300_ind")
-  print(ind_name)
-  print(class(ind_name))
+  print(strategy_dt)
+  dt_strategy <- data.table()
+  print(class(strategy_dt))
   #> [1] "x0300_Indicators"
-
 }
-
-get_strategy.x0400_signals <- function(strategy_name, ...) {
+################################################################################
+# 0400	Signals
+################################################################################
+get_strategy.x0400_signals <- function(y, ...) {
+  browser()
   print("x0400_signals")
+  print(y)
   #> [1] "x0400_Signals"
 }
 
