@@ -7,7 +7,7 @@
 # one input over a matrix or array. 
 # https://tinyurl.com/y5mkgrz4
 # ------------------------------------------------------------------------------
-by(dt_strategy[, 1], dt_strategy[, 1:9], x0000_main)
+by(dt_strategy[, c(1, 9:8)], dt_strategy[, 1:9], x0000_main)
 # ------------------------------------------------------------------------------
 # apply(dt_strategy, 1, function(x) x0000_main(x))
 # get_strategy.x0000_main()
