@@ -17,7 +17,7 @@ get_strategy.x0000_main   <- function(id, strategy_dt, ...) {
     print(class(id))    
     print(strategy_dt)
     print(class(strategy_dt))
-    # id <- strategy_dt[,1]
+    id <- strategy_dt[,1]
     #> [0] "x0000_main"
 # ------------------------------------------------------------------------------
     get_strategy.x0100_setup(id, strategy_dt)               %>%
