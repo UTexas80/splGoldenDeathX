@@ -13,8 +13,11 @@ cross(20,50,100,200)
 setkey(dT.formula, id)
 setkey(dT.ind, trend_id)
 setkey(dT.indMetrics, trend_id)
+setkey(dT.point, id)
+setkey(dT.position, id)
 setkey(dT.sig, id)
 setkey(dT.strategy, trend_id)
+setkey(dT.trade, id)
 setkey(dT.trend, id)
 # ------------------------------------------------------------------------------
 dT.test <-  dT.trend[
@@ -36,7 +39,7 @@ trend_name <<-
   setorder(
     dT.strategy[                                   # https://tinyurl.com/vajvn48
       dT.ind, allow.cartesian = T][
-              ,c(2,5,8)][
+              ,c(2,5,9)][
               , tname:= paste0(abbv,tolower(i.name))], tname)[
               , id:=  .I[]]                                     # add row number
 setcolorder(trend_name, c(5, 1:4))                              # column order
@@ -101,12 +104,13 @@ class(trend_signal)     <- "signal"                   # add class to trend_signa
 dt_strategy <<-
     setorder(
         dT.strategy[dT.ind, allow.cartesian = T][
+#        , i.name := tolower(i.name)][
         , strategy_name:= paste0(abbv,tolower(i.name))],
         strategy_name)[
         , id:=  .I[]][
-        , formula:= paste0(formula, i.name)
+        , formula:= paste0(abbv, i.name, sep = "_")
         ]
-names(dt_strategy)[8]  <- "strategy_ind"
+names(dt_strategy)[8:9]  <- c("ind_id", "strategy_ind")
 setkey(dt_strategy, id)
 # ------------------------------------------------------------------------------
 # function accept a dataframe as an argument                https://is.gd/YK6wAa
