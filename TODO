@@ -7,6 +7,8 @@
     * Quantstrat basic
       * Number of shares bought / sold
       * Buy / Sell
+    * Update dT.entry
+      "risk", "order", "rebalance", "exit", "enter", "chain", "pre", or "post"
   * Update:
     - [] ReadMe.md
     - [] [Glen C. Falk](http://glencfalk.rbind.io)

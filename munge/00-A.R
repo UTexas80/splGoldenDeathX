@@ -10,10 +10,10 @@ cross(20,50,100,200)
 ################################################################################
 ## Step 00.01 set data.table keys                                            ###
 ################################################################################
+setkey(dT.entry, id)
 setkey(dT.formula, id)
 setkey(dT.ind, trend_id)
 setkey(dT.indMetrics, trend_id)
-setkey(dT.point, id)
 setkey(dT.position, id)
 setkey(dT.sig, id)
 setkey(dT.strategy, trend_id)

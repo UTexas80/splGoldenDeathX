@@ -105,6 +105,7 @@ nXsma_close   <- paste0(sma_short, " | ", sma_long)
 ## 0500Rules                                                                 ###
 ################################################################################
 ruleSignal    <- "ruleSignal"
+market        <- "market"
 orderqty      <- as.integer(1e4)            # $10,000                          #
 all           <- "all"
 short         <- "short"
