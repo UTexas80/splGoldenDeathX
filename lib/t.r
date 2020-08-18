@@ -84,7 +84,7 @@ x0400_signals <- function(id, ...) {
   #> [1] "x0400_Signals"
 # ------------------------------------------------------------------------------
   setkey(dt_key, position)
-  apply(dT.entry, 1, function(x)
+  apply(dT.point, 1, function(x)
     AddSignals(
       sigFormula,
       paste("sig", tolower(dt_key[,3]),"col", sep = "_"),
@@ -118,7 +118,7 @@ x0500_rules <- function(id, ...) {
 # ------------------------------------------------------------------------------
 rules(paste(dXema, "shortentry", sep = "_"), TRUE, orderqty, "long", "market", "Open", "market", 0, "enter")
 rules(paste(dXema, "shortexit",  sep = "_"), TRUE,  "all",   "long", "market", "Open", "market", 0, "exit")
-#  apply(dT.entry, 1, function(x)
+#  apply(dT.point, 1, function(x)
 #    rules(
 # #      paste0(dt_key[,2], "_", dT.position[dt_key][, 2], x[2]),
 #       paste(dXema, "shortentry", sep = "_"),
