@@ -84,15 +84,17 @@ x0400_signals <- function(id, ...) {
 #    browser()
   #> [1] "x0400_Signals"
 # ------------------------------------------------------------------------------
+# (name, columns, formula, label, cross, trendName, Label)
+# ------------------------------------------------------------------------------
   setkey(dt_key, position)
   apply(dT.point, 1, function(x)                                                # dT.point = 'entry/exit'
     AddSignals(
-      sigFormula,
-      paste("sig", tolower(dt_key[,3]),"col", sep = "_"),                       # sig_ema_col
-      g[[paste(dt_key[,2], dT.trade[as.integer(x[1]),2], sep = "_")]],          # e.g., dXema_open...close
-      trigger,
-      TRUE,
-      dt_key[,2],                                                               # e.g., dXema
+      sigFormula,                                                               # name
+      paste("sig", tolower(dt_key[,3]),"col", sep = "_"),                       # sig_ema_col e.g., "SMA.020"
+      g[[paste(dt_key[,2], dT.trade[as.integer(x[1]),2], sep = "_")]],          # formula e.g., dXema_open...close
+      trigger,                                                                  # label
+      TRUE,                                                                     # cross
+      dt_key[,2],                                                               # trendName e.g., dXema
       paste0(dT.position[dt_key][, 2], x[2])                                    # short/Entry...Exit
       )
     )
@@ -149,7 +151,7 @@ x0600_limits <- function(id, ...) {
 #   print(id)
 #   print(class(id))
 # ------------------------------------------------------------------------------
-    browser()
+#   browser()
   #> [1] "x0600_Limits"
 # ------------------------------------------------------------------------------
     positionLimits(maxpos, minpos)
