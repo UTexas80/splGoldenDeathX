@@ -84,15 +84,15 @@ x0400_signals <- function(id, ...) {
   #> [1] "x0400_Signals"
 # ------------------------------------------------------------------------------
   setkey(dt_key, position)
-  apply(dT.point, 1, function(x)
+  apply(dT.point, 1, function(x)                                                # dT.point = 'entry/exit'
     AddSignals(
       sigFormula,
-      paste("sig", tolower(dt_key[,3]),"col", sep = "_"),
-      g[[paste(dt_key[,2], dT.trade[as.integer(x[1]),2], sep = "_")]],
+      paste("sig", tolower(dt_key[,3]),"col", sep = "_"),                       # sig_ema_col
+      g[[paste(dt_key[,2], dT.trade[as.integer(x[1]),2], sep = "_")]],          # e.g., dXema_open...close
       trigger,
       TRUE,
-      dt_key[,2],
-      paste0(dT.position[dt_key][, 2], x[2])
+      dt_key[,2],                                                               # e.g., dXema
+      paste0(dT.position[dt_key][, 2], x[2])                                    # short/Entry...Exit
       )
     )
 # ------------------------------------------------------------------------------
@@ -116,21 +116,23 @@ x0500_rules <- function(id, ...) {
    browser()
   #> [1] "x0500_Rules"
 # ------------------------------------------------------------------------------
-rules(paste(dXema, "shortentry", sep = "_"), TRUE, orderqty, "long", "market", "Open", "market", 0, "enter")
-rules(paste(dXema, "shortexit",  sep = "_"), TRUE,  "all",   "long", "market", "Open", "market", 0, "exit")
-#  apply(dT.point, 1, function(x)
-#    rules(
-# #      paste0(dt_key[,2], "_", dT.position[dt_key][, 2], x[2]),
-#       paste(dXema, "shortentry", sep = "_"),
-#       TRUE,
-#       orderqty,
-#       dT.position[dt_key][, 2],
-#       market,
-#       "Open",
-#       market,
-#       0,
-#       "enter"
-# #     x[2]
+  apply(dT.point, 1, function(x)
+    rules(paste0(dt_key[,2], "_", dT.position[dt_key][, 2], x[2]), TRUE, orderqty, dT.position[dt_key][, 2],  market, dT.trade[1,2], market, 0, x[2])
+  )
+#rules(paste(dXema, "shortenter", sep = "_"), TRUE, orderqty, "long", "market", "Open", "market", 0, "enter")
+# rules(paste(dXema, "shortexit",  sep = "_"), TRUE,  "all",   "long", "market", "Open", "market", 0, "exit")
+#  apply(dT.point, 1, function(x)                                                # dT.point    = 'entry/exit'
+#    rules(                                                                      # dT.position = 'long/short'
+#      paste0(dt_key[,2], "_", dT.position[dt_key][, 2], x[2]),                  # dXema_short...entry/exit
+#      paste(dXema, "shortenter", sep = "_"),
+#      TRUE,
+#      orderqty,
+#      dT.position[dt_key][, 2],                                                 # long
+#      market,
+#      "Open",
+#      market,
+#      0,
+#      x[2]                                                                      # enter/exit
 #    )
 #  )
 }
