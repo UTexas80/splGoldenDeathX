@@ -8,7 +8,8 @@ x0000_main   <- function(id, ...) {
         x0300_ind(id, i, ...)           %>%
           x0400_signals(id, i, ...)     %>%
             x0500_rules(id, i, ...)     %>%
-              x0600_limits(id, i, ...)
+              x0600_limits(id, i, ...)  %>%
+                x0700_strategy(id, i, ...)
 # ------------------------------------------------------------------------------
 }
 ################################################################################
@@ -113,28 +114,27 @@ x0500_rules <- function(id, ...) {
 #   print(id)
 #   print(class(id))
 # ------------------------------------------------------------------------------
-   browser()
+#   browser()
   #> [1] "x0500_Rules"
 # ------------------------------------------------------------------------------
-  apply(dT.point, 1, function(x)
-    rules(paste0(dt_key[,2], "_", dT.position[dt_key][, 2], x[2]), TRUE, orderqty, dT.position[dt_key][, 2],  market, dT.trade[1,2], market, 0, x[2])
-  )
-#rules(paste(dXema, "shortenter", sep = "_"), TRUE, orderqty, "long", "market", "Open", "market", 0, "enter")
+# rules(paste(dXema, "shortenter", sep = "_"), TRUE, orderqty, "long", "market", "Open", "market", 0, "enter")
 # rules(paste(dXema, "shortexit",  sep = "_"), TRUE,  "all",   "long", "market", "Open", "market", 0, "exit")
-#  apply(dT.point, 1, function(x)                                                # dT.point    = 'entry/exit'
-#    rules(                                                                      # dT.position = 'long/short'
-#      paste0(dt_key[,2], "_", dT.position[dt_key][, 2], x[2]),                  # dXema_short...entry/exit
-#      paste(dXema, "shortenter", sep = "_"),
-#      TRUE,
-#      orderqty,
-#      dT.position[dt_key][, 2],                                                 # long
-#      market,
-#      "Open",
-#      market,
-#      0,
-#      x[2]                                                                      # enter/exit
-#    )
-#  )
+# ------------------------------------------------------------------------------
+  apply(dT.point, 1, function(x)                                                # dT.point    = 'entry/exit'
+    rules(                                                                      # dT.position = 'long/short'
+      paste0(dt_key[,2], "_", dT.position[dt_key][, 2], x[2]),                  # sigcol: dXema_short...entry/exit
+      TRUE,                                                                     # sigval
+      orderqty,                                                                 # order qty
+      as.character(dT.position[dt_key][,2]),                                    # order side: long/short
+      "market",                                                                 # order type
+      stri_trans_general(dT.trade[1,2], id = "Title"),                          # prefer: Open (proper case)
+      "market",                                                                 # price method
+      0,                                                                        # transaction fees
+#     "enter"
+      x[2]                                                                      # type: enter/exit
+    )
+  )
+# ------------------------------------------------------------------------------
 }
 ################################################################################
 # 0600 Position Limits
@@ -157,6 +157,7 @@ x0600_limits <- function(id, ...) {
 ################################################################################
 # 0700	Strategy
 ################################################################################
-x0600_limits <- function(id, ...) {
+x0700_strategy <- function(id, ...) {
     Strategy(dt_key[,2])
+    browser()
 }

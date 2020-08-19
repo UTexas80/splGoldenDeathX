@@ -108,6 +108,7 @@ ruleSignal    <- "ruleSignal"
 market        <- "market"
 orderqty      <- as.integer(1e4)            # $10,000                          #
 all           <- "all"
+long          <- "long"
 short         <- "short"
 # ------------------------------------------------------------------------------
 TxnFees       <- 0                          # Transaction Fees
