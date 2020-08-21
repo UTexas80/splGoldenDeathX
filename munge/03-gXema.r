@@ -65,7 +65,7 @@ gXema_mktdata_ind <-  applyIndicators(               # apply indicators
 add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list(
-        columns             = sig_ema_col,      
+        columns             = sig_ema_col,
 #       columns             = c("EMA.020","EMA.050","EMA.100", "EMA.200"),
         formula             = gXema_open,
         label               = "trigger",
@@ -75,7 +75,7 @@ add.signal(strategy.st,
 add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list
-        (columns            = sig_ema_col,    
+        (columns            = sig_ema_col,
 #         (columns           = c("EMA.020","EMA.050","EMA.100", "EMA.200"),
         formula             = gXema_close,
         label               = "trigger",
@@ -195,7 +195,7 @@ gXema_trade_stats <- gXema_trade_stats[-1,]
 # 10.0	Trend - create dashboard dataset
 ################################################################################
 gXema_trend <- data.table(gXema_pts)
-gXema_trend[, `:=`(tradeDays, lapply(paste0(gXema_pts[, 1], "/", gXema_pts[, 2]), 
+gXema_trend[, `:=`(tradeDays, lapply(paste0(gXema_pts[, 1], "/", gXema_pts[, 2]),
   function(x) length(SPL.AX[, 6][x])+1))]
 gXema_trend[, calendarDays := as.numeric(duration/86400)]
 # ------------------------------------------------------------------------------
@@ -203,7 +203,7 @@ gXema_trend[, c("catName","indicator"):=list("GoldenX", "EMA")]
 gXema_trend[, grp := .GRP, by=Start] 
 gXema_trend[, subcatName := paste0(catName, paste0(sprintf("%03d", grp)))]
 # ------------------------------------------------------------------------------
-gXema_trend[, `:=`(tradeDays, lapply(paste0(gXema_pts[, 1], "/", gXema_pts[, 2]), 
+gXema_trend[, `:=`(tradeDays, lapply(paste0(gXema_pts[, 1], "/", gXema_pts[, 2]),
   function(x) length(SPL.AX[, 6][x])+1))][
 , calendarDays := as.numeric(duration/86400)][
 , c("catName","indicator"):=list("GoldenX", "EMA")][

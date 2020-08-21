@@ -129,7 +129,6 @@ addPosLimit(portfolio.st, symbols,
 ################################################################################
 # 7.0	Strategy
 ################################################################################
-# browser()
 t1      <- Sys.time()
 dXema_strategy <- applyStrategy(strategy.st, portfolio.st, mktdata, symbols)
 t2      <- Sys.time()
@@ -151,6 +150,7 @@ dXema_pts     <- blotter::perTradeStats(portfolio.st, symbols)
 dXema_stats   <- tradeStats(Portfolios = portfolio.st,
                            use="trades",
                            inclZeroDays=FALSE)
+# browser()
 # ------------------------------------------------------------------------------
 dXema_profit  <- dXema_stats %>%
 select(Net.Trading.PL, Gross.Profits, Gross.Losses, Profit.Factor)
@@ -173,7 +173,7 @@ dXema_trade_stats <- dXema_trade_stats[-1,]
 # 10.0	Trend - create dashboard dataset
 ################################################################################
 dXema_trend <- data.table(dXema_pts)
-# dXema_trend[, `:=`(tradeDays, lapply(paste0(dXema_pts[, 1], "/", dXema_pts[, 2]), 
+# dXema_trend[, `:=`(tradeDays, lapply(paste0(dXema_pts[, 1], "/", dXema_pts[, 2]),
 #   function(x) length(SPL.AX[, 6][x])+1))]
 # dXema_trend[, calendarDays := as.numeric(duration/86400)]
 # # ------------------------------------------------------------------------------
@@ -182,7 +182,7 @@ dXema_trend <- data.table(dXema_pts)
 # dXema_trend[, subcatName := paste0(catName, 
 #                              paste0(sprintf("%03d", grp)))]
 # ------------------------------------------------------------------------------
-dXema_trend[, `:=`(tradeDays, lapply(paste0(dXema_pts[, 1], "/", dXema_pts[, 2]), 
+dXema_trend[, `:=`(tradeDays, lapply(paste0(dXema_pts[, 1], "/", dXema_pts[, 2]),
   function(x) length(SPL.AX[, 6][x])+1))][
 , calendarDays := as.numeric(duration/86400)][
 , c("catName","indicator"):=list("DeathX", "EMA")][

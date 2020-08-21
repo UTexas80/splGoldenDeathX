@@ -174,7 +174,7 @@ dXsma_trade_stats <- dXsma_trade_stats[-1,]
 # 10.0	Trend - create dashboard dataset
 ################################################################################
 dXsma_trend <- data.table(dXsma_pts)
-dXsma_trend[, `:=`(tradeDays, lapply(paste0(dXsma_pts[, 1], "/", dXsma_pts[, 2]), 
+dXsma_trend[, `:=`(tradeDays, lapply(paste0(dXsma_pts[, 1], "/", dXsma_pts[, 2]),
   function(x) length(SPL.AX[, 6][x])+1))]
 dXsma_trend[, calendarDays := as.numeric(duration/86400)]
 # ------------------------------------------------------------------------------
@@ -183,7 +183,7 @@ dXsma_trend[, grp := .GRP, by=Start]
 dXsma_trend[, subcatName := paste0(catName,
                             paste0(sprintf("%03d", grp)))]
 # ------------------------------------------------------------------------------
-dXsma_trend[, `:=`(tradeDays, lapply(paste0(dXsma_pts[, 1], "/", dXsma_pts[, 2]), 
+dXsma_trend[, `:=`(tradeDays, lapply(paste0(dXsma_pts[, 1], "/", dXsma_pts[, 2]),
   function(x) length(SPL.AX[, 6][x])+1))][
 , calendarDays := as.numeric(duration/86400)][
 , c("catName","indicator"):=list("DeathX", "SMA")][

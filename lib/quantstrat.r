@@ -133,6 +133,7 @@ evaluation <- function() {
 # 9.0 Trend - create dynamic name dashboard dataset  https://tinyurl.com/r3yrspv
 ################################################################################
 report <- function(trendName) {
+    browser()  
     x  <- g[[paste(trendName, "pts", sep = "_")]] <-
         blotter::perTradeStats(portfolio.st, symbols)
 # ------------------------------------------------------------------------------
@@ -147,10 +148,11 @@ report <- function(trendName) {
                                function(x) length(SPL.AX[, 6][x])+1))]
     t[, calendarDays := as.numeric(duration/86400)]
 #   t[, c("catName","indicator"):=list("DeathX", "EMA")]
-    t[, catName      := dT.strategy[3,3]]
+#    t[, catName      := dT.strategy[3,3]]
+    t[, catName      := dt_strategy[strategy_name==trendName,3]]
     t[, indicator    := toupper(right(trendName,3))]
     t[, grp          := .GRP, by = Start]
-    t[, subcatName   := paste0(catName, 
+    t[, subcatName   := paste0(catName,
                         paste0(sprintf("%03d", grp),
                         paste0(indicator)))]
 # ------------------------------------------------------------------------------

@@ -163,12 +163,15 @@ x0600_limits <- function(id, ...) {
 ################################################################################
 x0700_strategy <- function(id, ...) {
     Strategy(dt_key[,2])
+    mktdata <<- tail(mktdata,-200) # select all but first n rows: https://is.gd/atVOj2
+      #> [1] "x0700_strategy"
 }
 ################################################################################
 # 0800	Evaluation - update P&L and generate transactional history
 ################################################################################
 x0800_evaluation <- function(id, ...) {
     evaluation()
+    #> [1] "x0800_evaluation"
 }
 ################################################################################
 # 0900	Report - create dashboard report

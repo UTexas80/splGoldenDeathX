@@ -197,7 +197,7 @@ gXsma_trade_stats <- gXsma_trade_stats[-1,]
 # 10.0	Trend - create dashboard dataset
 ################################################################################
 gXsma_trend <- data.table(gXsma_pts)
-gXsma_trend[, `:=`(tradeDays, lapply(paste0(gXsma_pts[, 1], "/", gXsma_pts[, 2]), 
+gXsma_trend[, `:=`(tradeDays, lapply(paste0(gXsma_pts[, 1], "/", gXsma_pts[, 2]),
   function(x) length(SPL.AX[, 6][x])+1))]
 gXsma_trend[, calendarDays := as.numeric(duration/86400)]
 # ------------------------------------------------------------------------------
@@ -207,7 +207,7 @@ gXsma_trend[, subcatName := paste0(catName,
                             paste0(sprintf("%03d", grp),
                             paste0(indicator)))]
 # ------------------------------------------------------------------------------
-gXsma_trend[, `:=`(tradeDays, lapply(paste0(gXsma_pts[, 1], "/", gXsma_pts[, 2]), 
+gXsma_trend[, `:=`(tradeDays, lapply(paste0(gXsma_pts[, 1], "/", gXsma_pts[, 2]),
   function(x) length(SPL.AX[, 6][x])+1))][
 , calendarDays := as.numeric(duration/86400)][
 , c("catName","indicator"):=list("GoldenX", "SMA")][
