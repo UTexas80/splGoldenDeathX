@@ -122,8 +122,9 @@ Strategy <- function(trendName) {
 # 8.0	Evaluation - update P&L and generate transactional history
 ################################################################################
 evaluation <- function() {
+    browser()
     updatePortf(portfolio.st)
-    dateRange  <- time(getPortfolio(portfolio.st)$summary)[-1]
+    dateRange  <- tail(time(getPortfolio(portfolio.st)$summary)[-1],-200)
     updateAcct(account.st, dateRange)
 # ------------------------------------------------------------------------------
     updateEndEq(account.st)
