@@ -79,7 +79,7 @@ rules(paste(nXema, "shortExit",  sep = "_"), TRUE,  "all",   "long", "market", "
 #         prefer              = "Open",
 #         pricemethod         = "market",
 #         TxnFees             = 0),
-  #      osFUN               = osMaxPos),
+#         osFUN               = osMaxPos),
 #   type                    = "enter",
 #    path.dep                = TRUE)
 # ------------------------------------------------------------------------------

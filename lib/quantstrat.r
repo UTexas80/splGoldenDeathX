@@ -3,6 +3,8 @@
 ################################################################################
 x0100_setup <- function(trendName) {
 # ------------------------------------------------------------------------------
+#   browser()
+# ------------------------------------------------------------------------------
 # Stock Symbol Initialization                               https://is.gd/RShki5
 # ------------------------------------------------------------------------------
 # symbols <- basic_symbols()
@@ -20,6 +22,7 @@ x0100_setup <- function(trendName) {
 #      multiplier = 1)
 # ------------------------------------------------------------------------------
   strategy.st <<- portfolio.st <<- account.st <<- trendName
+# ------------------------------------------------------------------------------
   rm.strat(strategy.st)
   rm.strat(account.st)
   rm.strat(portfolio.st)
@@ -87,7 +90,7 @@ rules <- function(sigcol, sigval, orderqty, orderside, ordertype, prefer, pricem
     add.rule(strategy.st,
         name                    = "ruleSignal",
         arguments               = list(
-            sigcol               = sigcol,
+            sigcol              = sigcol,
             sigval              = sigval,
             orderqty            = orderqty,
             orderside           = orderside,
@@ -95,7 +98,7 @@ rules <- function(sigcol, sigval, orderqty, orderside, ordertype, prefer, pricem
             prefer              = prefer,
             pricemethod         = pricemethod,
             TxnFees             = TxnFees),
-     #      osFUN                = dummy()),
+     #      osFUN               = dummy()),
         type                    = type,
         path.dep                = TRUE)
  }
@@ -112,29 +115,37 @@ positionLimits <- function(maxpos, minpos) {
 # 7.0	Strategy
 ################################################################################
 Strategy <- function(trendName) {
+# ------------------------------------------------------------------------------
+#    browser()
+# ------------------------------------------------------------------------------
     t1      <- Sys.time()
     strat   <- g[[paste(trendName, "strategy", sep = "_")]] <-
-        applyStrategy(strategy.st, portfolio.st, mktdata, symbols)
+        applyStrategy(strategy.st, portfolio.st,  mktdata , symbols)
     t2      <- Sys.time()
     print(t2 - t1)
 }
 ################################################################################
 # 8.0	Evaluation - update P&L and generate transactional history
 ################################################################################
-evaluation <- function() {
-    browser()
-    updatePortf(portfolio.st)
-    dateRange  <- tail(time(getPortfolio(portfolio.st)$summary)[-1],-200)
-    updateAcct(account.st, dateRange)
+evaluation <- function(trendName) {
 # ------------------------------------------------------------------------------
-    updateEndEq(account.st)
+    browser()
+# ------------------------------------------------------------------------------
+    updatePortf(portfolio.st, symbols)
+#   dateRange  <- tail(time(getPortfolio(trendName)$summary)[-1], 0)
+    dateRange  <- time(getPortfolio(portfolio.st)$summary)[-1]
+# ------------------------------------------------------------------------------
+    updateAcct(account.st, dateRange)
+    updateEndEq(account.st, dateRange)
+# ------------------------------------------------------------------------------
+#    save.strategy(trendName)
     save.strategy(strategy.st)
 }
 ################################################################################
 # 9.0 Trend - create dynamic name dashboard dataset  https://tinyurl.com/r3yrspv
 ################################################################################
 report <- function(trendName) {
-    browser()  
+#   browser()
     x  <- g[[paste(trendName, "pts", sep = "_")]] <-
         blotter::perTradeStats(portfolio.st, symbols)
 # ------------------------------------------------------------------------------

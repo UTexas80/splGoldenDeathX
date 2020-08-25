@@ -62,6 +62,7 @@ dXema_mktdata_ind <-  applyIndicators(              # apply indicators
     mktdata                 = SPL.AX)
 ################################################################################
 # 4.0	Signals
+# browser()
 ################################################################################
 add.signal(strategy.st,
     name                    = "sigFormula",
@@ -91,6 +92,7 @@ dXema_mktdata_sig  <- applySignals(
 ################################################################################
 # 5.0	Rules
 ################################################################################
+# browser()
 add.rule(strategy.st,
     name                    = "ruleSignal",
     arguments               = list(
@@ -119,6 +121,9 @@ add.rule(strategy.st,
         TxnFees             = 0),
     type                    = "exit",
     path.dep                = TRUE)
+
+str(getStrategy(dXema)$rules)
+# browser()
 ################################################################################
 # 6.0	Position Limits
 ################################################################################

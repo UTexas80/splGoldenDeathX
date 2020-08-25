@@ -12,7 +12,7 @@ add.config(
 ################################################################################
 ## rm(list = ls(.blotter), envir = .blotter)           # Do some house cleaning#
 .blotter <- new.env()                  # Guy Yollin's QuantStrat I lecture issue
-.strategy <- new.env()                 # https://is.gd/eaFrdm 
+.strategy <- new.env()                 # https://is.gd/eaFrdm
 Sys.setenv(TZ = "UTC")                                 # Set the timezone    ###
 Sys.setenv(TZ = 'America/New_York')
 # ------------------------------------------------------------------------------
@@ -106,7 +106,9 @@ nXsma_close   <- paste0(sma_short, " | ", sma_long)
 ################################################################################
 ruleSignal    <- "ruleSignal"
 market        <- "market"
-orderqty      <- as.integer(1e4)            # $10,000                          #
+orderqty      <- as.integer(1e4)                                       # $10,000
+orderqty_long <- as.integer(1e4)                                       # $10,000
+orderqty_short<- -as.integer(1e4)                                      # $10,000
 all           <- "all"
 long          <- "long"
 short         <- "short"
