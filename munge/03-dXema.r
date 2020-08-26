@@ -57,13 +57,16 @@ add.indicator(strategy.st,                          # 200-day EMA indicator
     label                   = "200")
 # ------------------------------------------------------------------------------
 str(getStrategy(dXema)$indicators)
+# ------------------------------------------------------------------------------
 dXema_mktdata_ind <-  applyIndicators(              # apply indicators
     strategy                = strategy.st,
     mktdata                 = SPL.AX)
 ################################################################################
 # 4.0	Signals
-# browser()
 ################################################################################
+# ------------------------------------------------------------------------------
+# browser()
+# ------------------------------------------------------------------------------
 add.signal(strategy.st,
     name                    = "sigFormula",
     arguments               = list(
@@ -141,6 +144,9 @@ print(t2 - t1)
 ################################################################################
 # 8.0	Evaluation - update P&L and generate transactional history
 ################################################################################
+# ------------------------------------------------------------------------------
+browser()
+# ------------------------------------------------------------------------------
 updatePortf(portfolio.st)
 dateRange  <- time(getPortfolio(portfolio.st)$summary)[-1]
 updateAcct(account.st, dateRange)
@@ -183,8 +189,8 @@ dXema_trend <- data.table(dXema_pts)
 # dXema_trend[, calendarDays := as.numeric(duration/86400)]
 # # ------------------------------------------------------------------------------
 # dXema_trend[, c("catName","indicator"):=list("DeathX", "EMA")]
-# dXema_trend[, grp := .GRP, by=Start] 
-# dXema_trend[, subcatName := paste0(catName, 
+# dXema_trend[, grp := .GRP, by=Start]
+# dXema_trend[, subcatName := paste0(catName,
 #                              paste0(sprintf("%03d", grp)))]
 # ------------------------------------------------------------------------------
 dXema_trend[, `:=`(tradeDays, lapply(paste0(dXema_pts[, 1], "/", dXema_pts[, 2]),

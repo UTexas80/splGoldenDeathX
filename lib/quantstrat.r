@@ -51,6 +51,9 @@ strategy(strategy.st, store = TRUE)                 # Strategy initialization
 # 3.0	Indicators
 ################################################################################
 indicators <- function(name, x, n, label) {
+# ------------------------------------------------------------------------------
+#    browser()
+# ------------------------------------------------------------------------------
       add.indicator(strategy.st,
         name                 = name,
         arguments            = list(
@@ -63,10 +66,16 @@ ApplyIndicators <- function(trendName) {
         applyIndicators(              # apply indicators
             strategy                = strategy.st,
             mktdata                 = SPL.AX)
+# ------------------------------------------------------------------------------
+    paste0("str(", getStrategy(trendName),"$indicators)")
+# ------------------------------------------------------------------------------
 }
 ################################################################################
 # 4.0	Signals
 ################################################################################
+# ------------------------------------------------------------------------------
+#   browser()
+# ------------------------------------------------------------------------------
 AddSignals <- function(name, columns, formula, label, cross, trendName, Label) {
     add.signal(strategy.st,
         name                    = name,

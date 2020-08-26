@@ -25,7 +25,7 @@ z0100_setup   <- function(id, ...) {
 # ------------------------------------------------------------------------------
     dt_key <<- id
 #   z0100_setup( dt_key[,2])
-    strategy.st <<- portfolio.st <<- account.st <<- dt_key[,2]   # strategy name
+    strategy.st <<- portfolio.st <<- account.st <<- unlist(dt_key[,2])   # strategy name
 # ------------------------------------------------------------------------------
     rm.strat(strategy.st)
     rm.strat(account.st)
@@ -59,7 +59,7 @@ x0200_init    <- function(id, ...) {
              symbols          = symbols,
              initDate         = initDate)
 # ------------------------------------------------------------------------------
-  strategy(unlist(strategy.st), store = TRUE)         # Strategy initialization
+  strategy(strategy.st, store = TRUE)                # Strategy initialization
 # ------------------------------------------------------------------------------
 }
 ################################################################################
@@ -91,7 +91,7 @@ x0300_ind     <- function(id, ...) {
 ################################################################################
 x0400_signals <- function(id, ...) {
 # ------------------------------------------------------------------------------
-#   browser()
+    browser()
 # ------------------------------------------------------------------------------
     print("x0400_signals")
 #   print(dt_key)
@@ -104,21 +104,26 @@ x0400_signals <- function(id, ...) {
 # ------------------------------------------------------------------------------
 # (name, columns, formula, label, cross, trendName, Label)
 # ------------------------------------------------------------------------------
-  setkey(dt_key, position)
-  apply(dT.point, 1, function(x)                                                # dT.point = 'entry/exit'
-    AddSignals(
-      sigFormula,                                                               # name
-      paste("sig", tolower(dt_key[,3]),"col", sep = "_"),                       # sig_ema_col e.g., "SMA.020"
-      g[[paste(dt_key[,2], dT.trade[as.integer(x[1]),2], sep = "_")]],          # formula e.g., dXema_open...close
-      trigger,                                                                  # label
-      TRUE,                                                                     # cross
-      dt_key[,2],                                                               # trendName e.g., dXema
-      paste0(dT.position[dt_key][, 2], x[2])                                    # short/Entry...Exit
+    setkey(dt_key, position)
+# ------------------------------------------------------------------------------  
+    apply(dT.point, 1, function(x)                                               # dT.point = 'entry/exit'
+      AddSignals(
+        sigFormula,                                                              # name
+        paste("sig", tolower(dt_key[,3]),"col", sep = "_"),                      # sig_ema_col e.g., "SMA.020"
+        g[[paste(dt_key[,2], dT.trade[as.integer(x[1]),2], sep = "_")]],         # formula e.g., dXema_open...close
+        trigger,                                                                 # label
+        TRUE,                                                                    # cross
+        dt_key[,2],                                                              # trendName e.g., dXema
+        paste0(dT.position[dt_key][, 2], x[2])                                   # short/Entry...Exit
+        )
       )
-    )
+# ------------------------------------------------------------------------------
+    Apply_Signals <<- g[[paste(dt_key[,2], "mktdata", "sig", sep = "_")]] <<-
+      applySignals(
+        strategy  = strategy.st, 
+        mktdata   = mktdata)
 # ------------------------------------------------------------------------------
     paste0("str(", getStrategy(dt_key[,2]),"$signals)")
-    ApplySignals(dt_key[,2])
 # ------------------------------------------------------------------------------
 }
 ################################################################################
@@ -135,9 +140,7 @@ x0500_rules <- function(id, ...) {
 # ------------------------------------------------------------------------------
 #   print(id)
 #   print(class(id))
-# ------------------------------------------------------------------------------
-#   browser()
-# ------------------------------------------------------------------------------
+
   #> [1] "x0500_Rules"
 # ------------------------------------------------------------------------------
 # rules(paste(dXema, "shortenter", sep = "_"), TRUE, orderqty, "long", "market", "Open", "market", 0, "enter")
@@ -148,7 +151,7 @@ x0500_rules <- function(id, ...) {
       paste0(dt_key[,2], "_", dT.position[dt_key][, 2], x[2]),                  # sigcol: dXema_short...entry/exit
       TRUE,                                                                     # sigval
 #     orderqty,                                                                 # order qty
-      paste("orderqty", dT.position[dt_key][,2], sep = "_"),                    # order qty
+      g[[paste("orderqty", dT.position[dt_key][,2], sep = "_")]],               # order qty
       as.character(dT.position[dt_key][,2]),                                    # order side: long/short
       "market",                                                                 # order type
       stri_trans_general(dT.trade[1,2], id = "Title"),                          # prefer: Open (proper case)
@@ -159,7 +162,7 @@ x0500_rules <- function(id, ...) {
     )
   )
 # ------------------------------------------------------------------------------
-str(getStrategy(dXema)$rules)
+    paste0("str(", getStrategy(dt_key[,2]),"$rules)")
 # ------------------------------------------------------------------------------
 }
 ################################################################################
@@ -194,7 +197,7 @@ x0700_strategy <- function(id, ...) {
 # ------------------------------------------------------------------------------
 # Here is where the strategy is created-----------------------------------------
 # ------------------------------------------------------------------------------
-    Strategy(dt_key[,2])
+    Strategy(strategy.st)
 
 #    mktdata <<- tail(mktdata,-200) # select all but first n rows: https://is.gd/atVOj2
 
@@ -207,7 +210,7 @@ x0800_evaluation <- function(id, ...) {
 # ------------------------------------------------------------------------------
     browser()
 # ------------------------------------------------------------------------------
-    evaluation(dt_key[,2])
+    evaluation(strategy.st)
     #> [1] "x0800_evaluation"
 }
 ################################################################################
