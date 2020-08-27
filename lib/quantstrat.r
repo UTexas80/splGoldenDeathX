@@ -123,22 +123,31 @@ positionLimits <- function(maxpos, minpos) {
 ################################################################################
 # 7.0	Strategy
 ################################################################################
-Strategy <- function(trendName) {
+Strategy <- function(strategy.st) {
 # ------------------------------------------------------------------------------
-#    browser()
+    browser()
+# ------------------------------------------------------------------------------
+    print(paste("strategy.st before apply strategy ", strategy.st))
+    print(strategy.st)
+    print(class(strategy.st))
 # ------------------------------------------------------------------------------
     t1      <- Sys.time()
-    strat   <- g[[paste(trendName, "strategy", sep = "_")]] <-
+    strat   <- g[[paste(strategy.st, "strategy", sep = "_")]] <-
         applyStrategy(strategy.st, portfolio.st,  mktdata , symbols)
     t2      <- Sys.time()
     print(t2 - t1)
+# ------------------------------------------------------------------------------
+    print(paste("strategy.st after apply strategy ", strategy.st))
+    print(strategy.st)
+    print(class(strategy.st))
+# ------------------------------------------------------------------------------
 }
 ################################################################################
 # 8.0	Evaluation - update P&L and generate transactional history
 ################################################################################
 evaluation <- function(trendName) {
 # ------------------------------------------------------------------------------
-    browser()
+#    browser()
 # ------------------------------------------------------------------------------
     updatePortf(portfolio.st, symbols)
 #   dateRange  <- tail(time(getPortfolio(trendName)$summary)[-1], 0)
@@ -197,12 +206,12 @@ report <- function(trendName) {
 #   t <- na.omit(t[m][, c(1:27)])
     t <- na.omit(t[SPL, nomatch = 0][, -c(27,29:33)])
     g[[paste(trendName, "trend", sep = "_")]] <- data.table(t)
-# ------------------------------------------------------------------------------   
+# ------------------------------------------------------------------------------
 # [1] "Start"               "End"                 "Init.Qty"            "Init.Pos"            "Max.Pos"             "End.Pos
-# [7] "Closing.Txn.Qty"     "Num.Txns"            "Max.Notional.Cost"   "Net.Trading.PL"      "MAE"                 "MFE"                
-# [13] "Pct.Net.Trading.PL"  "Pct.MAE"             "Pct.MFE"             "tick.Net.Trading.PL" "tick.MAE"            "tick.MFE"           
-# [19] "duration"            "tradeDays"           "calendarDays"        "catName"             "indicator"           "grp"                
-# [25] "subcatName"          "symbol"              "adjusted"            "volume"              "i.adjusted"   
+# [7] "Closing.Txn.Qty"     "Num.Txns"            "Max.Notional.Cost"   "Net.Trading.PL"      "MAE"                 "MFE"
+# [13] "Pct.Net.Trading.PL"  "Pct.MAE"             "Pct.MFE"             "tick.Net.Trading.PL" "tick.MAE"            "tick.MFE"
+# [19] "duration"            "tradeDays"           "calendarDays"        "catName"             "indicator"           "grp"
+# [25] "subcatName"          "symbol"              "adjusted"            "volume"              "i.adjusted"
 # ------------------------------------------------------------------------------
     p <- g[[paste(trendName, "profit", sep = "_")]] <- data.table(s)  %>%
     select(Net.Trading.PL, Gross.Profits, Gross.Losses, Profit.Factor)
@@ -212,13 +221,13 @@ report <- function(trendName) {
     select(Avg.Trade.PL, Avg.Win.Trade, Avg.Losing.Trade, Avg.WinLoss.Ratio)
     t(w)
 # ------------------------------------------------------------------------------
-    r <- g[[paste(trendName, "rets", sep = "_")]] <- 
+    r <- g[[paste(trendName, "rets", sep = "_")]] <-
         PortfReturns(Account =  account.st)
     rownames(r) <- NULL
     # names(r)[1] <- strategy.st
     # g[[paste(trendName, "rets", sep = "_")]] <- data.table(r)
 # ------------------------------------------------------------------------------
-    perf <- g[[paste(trendName, "perf", sep = "_")]] <- 
+    perf <- g[[paste(trendName, "perf", sep = "_")]] <-
             table.Arbitrary(r, metrics = c(
                                "Return.cumulative",
                                "Return.annualized",
