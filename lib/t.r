@@ -127,8 +127,8 @@ x0400_signals <- function(id, ...) {
         g[[paste(dt_key[,2], dT.trade[as.integer(x[1]),2], sep = "_")]],         # formula e.g., dXema_open...close
         trigger,                                                                 # label
         TRUE,                                                                    # cross
-        dt_key[,2],                                                              # trendName e.g., dXema
-        paste0(dT.position[dt_key][, 2], x[2])                                   # short/Entry...Exit
+        as.character(dt_key[,2]),                                                              # trendName e.g., dXema
+        as.character(paste0(dT.position[dt_key][, 2], x[2]))                                   # short/Entry...Exit
         )
       )
 # ------------------------------------------------------------------------------
