@@ -3,6 +3,8 @@
 ################################################################################
 x0000_main   <- function(id, ...) {
 # ------------------------------------------------------------------------------
+#   browser()
+# ------------------------------------------------------------------------------
     z0100_setup(id, ...)                        %>%
       x0200_init(id, i, ...)                    %>%
         x0300_ind(id, i, ...)                   %>%
@@ -92,9 +94,11 @@ x0300_ind     <- function(id, ...) {
               x[4])
          )
 # ------------------------------------------------------------------------------
-    paste0("str(", getStrategy(dt_key[,2]),"$indicators)")
+    apply_indicators <<-
+      g[[paste(dt_key[,2], "$ind", sep = "_")]] <<- 
+        paste0("str(", getStrategy(dt_key[,2]),"$indicators)")
 # ------------------------------------------------------------------------------
-    ApplyIndicators(dt_key[,2])            # apply indicators with strategy name
+    ApplyIndicators(as.character(dt_key[,2]))            # apply indicators with strategy name
 # ------------------------------------------------------------------------------
 }
 ################################################################################
@@ -102,7 +106,7 @@ x0300_ind     <- function(id, ...) {
 ################################################################################
 x0400_signals <- function(id, ...) {
 # ------------------------------------------------------------------------------
-#   browser()
+    browser()
 # ------------------------------------------------------------------------------
     print("x0400_signals")
 #   print(dt_key)
@@ -123,7 +127,7 @@ x0400_signals <- function(id, ...) {
     apply(dT.point, 1, function(x)                                               # dT.point = 'entry/exit'
       AddSignals(
         sigFormula,                                                              # name
-        paste("sig", tolower(dt_key[,3]),"col", sep = "_"),                      # sig_ema_col e.g., "SMA.020"
+        as.character(paste("sig", tolower(dt_key[,3]),"col", sep = "_")),                      # sig_ema_col e.g., "SMA.020"
         g[[paste(dt_key[,2], dT.trade[as.integer(x[1]),2], sep = "_")]],         # formula e.g., dXema_open...close
         trigger,                                                                 # label
         TRUE,                                                                    # cross
@@ -134,10 +138,11 @@ x0400_signals <- function(id, ...) {
 # ------------------------------------------------------------------------------
     Apply_Signals <<- g[[paste(dt_key[,2], "mktdata", "sig", sep = "_")]] <<-
       applySignals(
-        strategy  = strategy.st, 
+        strategy  = strategy.st,
         mktdata   = mktdata)
 # ------------------------------------------------------------------------------
-    paste0("str(", getStrategy(dt_key[,2]),"$signals)")
+      g[[paste(dt_key[,2], "$sig", sep = "_")]] <<-
+        paste0("str(", getStrategy(dt_key[,2]),"$signals)")
 # ------------------------------------------------------------------------------
 }
 ################################################################################
@@ -145,7 +150,7 @@ x0400_signals <- function(id, ...) {
 ################################################################################
 x0500_rules <- function(id, ...) {
 # ------------------------------------------------------------------------------
-#   browser()
+    browser()
 # ------------------------------------------------------------------------------
     print("x0500_rules")
 # ------------------------------------------------------------------------------
@@ -160,24 +165,24 @@ x0500_rules <- function(id, ...) {
 
   #> [1] "x0500_Rules"
 # ------------------------------------------------------------------------------
-# rules(paste(dXema, "shortenter", sep = "_"), TRUE, orderqty, "long", "market", "Open", "market", 0, "enter")
-# rules(paste(dXema, "shortexit",  sep = "_"), TRUE,  "all",   "long", "market", "Open", "market", 0, "exit")
-# ------------------------------------------------------------------------------
-  apply(dT.point, 1, function(x)                                                # dT.point    = 'entry/exit'
-    rules(                                                                      # dT.position = 'long/short'
-      paste0(dt_key[,2], "_", dT.position[dt_key][, 2], x[2]),                  # sigcol: dXema_short...entry/exit
-      TRUE,                                                                     # sigval
-#     orderqty,                                                                 # order qty
-      g[[paste("orderqty", dT.position[dt_key][,2], sep = "_")]],               # order qty
-      as.character(dT.position[dt_key][,2]),                                    # order side: long/short
-      "market",                                                                 # order type
-      stri_trans_general(dT.trade[1,2], id = "Title"),                          # prefer: Open (proper case)
-      "market",                                                                 # price method
-      0,                                                                        # transaction fees
-#     "enter"
-      x[2]                                                                      # type: enter/exit
-    )
-  )
+ rules(paste(dXema, "shortenter", sep = "_"), TRUE, orderqty, "long", "market", "Open", "market", 0, "enter")
+ rules(paste(dXema, "shortexit",  sep = "_"), TRUE,  "all",   "long", "market", "Open", "market", 0, "exit")
+# # ------------------------------------------------------------------------------
+#   apply(dT.point, 1, function(x)                                                # dT.point    = 'entry/exit'
+#     rules(                                                                      # dT.position = 'long/short'
+#       as.character(paste0(dt_key[,2], "_", dT.position[dt_key][, 2], x[2])),                  # sigcol: dXema_short...entry/exit
+#       TRUE,                                                                     # sigval
+# #     orderqty,                                                                 # order qty
+#       g[[paste("orderqty", dT.position[dt_key][,2], sep = "_")]],               # order qty
+#       as.character(dT.position[dt_key][,2]),                                    # order side: long/short
+#       "market",                                                                 # order type
+#       as.character(stri_trans_general(dT.trade[1,2], id = "Title")),                          # prefer: Open (proper case)
+#       "market",                                                                 # price method
+#       0,                                                                        # transaction fees
+# #     "enter"
+#       as.character(x[2])                                                                      # type: enter/exit
+#     )
+#   )
 # ------------------------------------------------------------------------------
     paste0("str(", getStrategy(dt_key[,2]),"$rules)")
 # ------------------------------------------------------------------------------
@@ -235,7 +240,7 @@ x0800_evaluation <- function(id, ...) {
 ################################################################################
 x0900_report <- function(id, ...) {
 # ------------------------------------------------------------------------------  
-#   browser()
+    browser()
 # ------------------------------------------------------------------------------  
    report(dt_key[,2])
 # ------------------------------------------------------------------------------

@@ -74,21 +74,24 @@ ApplyIndicators <- function(trendName) {
 # 4.0	Signals
 ################################################################################
 # ------------------------------------------------------------------------------
-#   browser()
+    browser()
 # ------------------------------------------------------------------------------
-AddSignals <- function(name, columns, formula, label, cross, trendName, Label) {
-    add.signal(strategy.st,
-        name                    = name,
-        arguments               = list(
-            columns             = columns,
-            formula             = formula,
-            label               = label,
-            cross               = cross),
-        label                   = paste(trendName, Label, sep = "_"))
-}
-ApplySignals <- function(trendName) {
+    AddSignals <- function(name, columns, formula, label, cross, trendName, Label) {
+        add.signal(strategy.st,
+            name                    = name,
+            arguments               = list(
+                columns             = columns,
+                formula             = formula,
+                label               = label,
+                cross               = cross),
+            label                   = paste(trendName, Label, sep = "_"))
+# ------------------------------------------------------------------------------
+    }
+# ------------------------------------------------------------------------------
+    ApplySignals <- function(trendName) {
 
-}
+# ------------------------------------------------------------------------------
+    }
 ################################################################################
 # 5.0	Rules                                       https://tinyurl.com/y93kc22r
 ################################################################################
@@ -96,6 +99,9 @@ ApplySignals <- function(trendName) {
 # rules <- function(sigcol, sigval, orderqty, orderside, ordertype, prefer, pricemethod, TxnFees, type)
 # , ...) {
 rules <- function(sigcol, sigval, orderqty, orderside, ordertype, prefer, pricemethod, TxnFees, type, ...) {
+# ------------------------------------------------------------------------------
+   browser()
+# ------------------------------------------------------------------------------    
     add.rule(strategy.st,
         name                    = "ruleSignal",
         arguments               = list(
@@ -115,6 +121,9 @@ rules <- function(sigcol, sigval, orderqty, orderside, ordertype, prefer, pricem
 # 6.0	Position Limits
 ################################################################################
 positionLimits <- function(maxpos, minpos) {
+# ------------------------------------------------------------------------------
+#    browser()
+# ------------------------------------------------------------------------------    
     addPosLimit(portfolio.st, symbols,
         timestamp   <- from,
         maxpos      <- maxpos,
@@ -147,7 +156,7 @@ Strategy <- function(strategy.st) {
 ################################################################################
 evaluation <- function(trendName) {
 # ------------------------------------------------------------------------------
-#    browser()
+    browser()
 # ------------------------------------------------------------------------------
     updatePortf(portfolio.st, symbols)
 #   dateRange  <- tail(time(getPortfolio(trendName)$summary)[-1], 0)
