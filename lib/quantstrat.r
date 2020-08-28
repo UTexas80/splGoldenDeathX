@@ -74,7 +74,7 @@ ApplyIndicators <- function(trendName) {
 # 4.0	Signals
 ################################################################################
 # ------------------------------------------------------------------------------
-    browser()
+#    browser()
 # ------------------------------------------------------------------------------
     AddSignals <- function(name, columns, formula, label, cross, trendName, Label) {
         add.signal(strategy.st,

@@ -106,7 +106,7 @@ x0300_ind     <- function(id, ...) {
 ################################################################################
 x0400_signals <- function(id, ...) {
 # ------------------------------------------------------------------------------
-    browser()
+#    browser()
 # ------------------------------------------------------------------------------
     print("x0400_signals")
 #   print(dt_key)
@@ -165,11 +165,22 @@ x0500_rules <- function(id, ...) {
 
   #> [1] "x0500_Rules"
 # ------------------------------------------------------------------------------
- rules(paste(dXema, "shortenter", sep = "_"), TRUE, orderqty, "long", "market", "Open", "market", 0, "enter")
- rules(paste(dXema, "shortexit",  sep = "_"), TRUE,  "all",   "long", "market", "Open", "market", 0, "exit")
+#    rules(paste(dXema, "shortenter", sep = "_"), TRUE, orderqty, "long", "market", "Open", "market", 0, "enter")
+# ------------------------------------------------------------------------------    
+    rules(as.character(paste0(dt_key[,2], "_", dT.position[dt_key][, 2], dT.point[1,2])),  
+          TRUE, 
+          orderqty, 
+          as.character(dT.position[dt_key][,2]),
+          "market", 
+          as.character(stri_trans_general(dT.trade[1,2], id = "Title")),  
+          "market", 
+          0, 
+          as.character(dT.point[1,2]))
+  # ------------------------------------------------------------------------------    
+    rules(paste(dXema, "shortexit",  sep = "_"), TRUE,  "all",   "long", "market", "Open", "market", 0, "exit")
 # # ------------------------------------------------------------------------------
-#   apply(dT.point, 1, function(x)                                                # dT.point    = 'entry/exit'
-#     rules(                                                                      # dT.position = 'long/short'
+#    apply(dT.point, 1, function(x)                                                # dT.point    = 'entry/exit'
+#      rules(                                                                      # dT.position = 'long/short'
 #       as.character(paste0(dt_key[,2], "_", dT.position[dt_key][, 2], x[2])),                  # sigcol: dXema_short...entry/exit
 #       TRUE,                                                                     # sigval
 # #     orderqty,                                                                 # order qty
