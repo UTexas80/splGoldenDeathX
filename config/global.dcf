@@ -6,14 +6,21 @@ data_loading: TRUE
 data_loading_header: TRUE
 data_ignore:
 load_libraries: TRUE
-libraries:  animation, billboarder, blotter, checkpoint, curl, d3heatmap, darklyplot, data.table, DataEditR, dataMeta, datamodelr, datapasta, dataspice, 
-            devtools,DiagrammeR, DT, dygraphs, excelR, ezknitr, FinancialInstrument, flexdashboard, flextable, forecast, foreach, formatR, formattable,
-            futile.logger, fuzzyjoin, GetDFPData, gt, here, highcharter, Hmisc, hydroTSM, janitor, knitr, kableExtra, lintr, logger, lubridate,
-            naniar, openxlsx, orca, packagefinder, pacman, paletteer, parallel, parallelMap, pbapply, pdftools, PerformanceAnalytics, plotly, plyr, 
-            poorman, PortfolioEffectHFT, ProjectTemplate, Quandl, quantmod, quantstrat, r2d3, readxl, RVerbalExpressions, repurrrsive, renv, reprex, 
-            repo, reshape2, rio, rmarkdown, RVerbalExpressions, rvest, scales, shiny, shinydashboard, shinydashboardPlus, shinyEffects, shinyjqui, 
-            SIT, statar, stringi, stringr, styler, summarytools, tibble, tibbletime, tidyquant, tidyverse, timetk, timeSeries, tracestack, treemap, 
-            tryCatchLog, TSstudio, TTR, xaringan, xlsx,xtable, xts, zoo
+libraries: animation, billboarder, blotter, checkpoint, curl, d3heatmap, darklyplot,
+         data.table, DataEditR, dataMeta, datamodelr, datapasta, dataspice,
+         devtools,DiagrammeR, DT, dygraphs, excelR, ezknitr, FinancialInstrument,
+         flexdashboard, flextable, forecast, foreach, formatR, formattable,
+         futile.logger, fuzzyjoin, GetDFPData, gt, here, highcharter, Hmisc,
+         hydroTSM, janitor, knitr, kableExtra, lintr, logger, lubridate, naniar,
+         openxlsx, orca, packagefinder, pacman, paletteer, parallel, parallelMap,
+         pbapply, pdftools, PerformanceAnalytics, plotly, plyr, poorman,
+         ProjectTemplate, Quandl, quantmod, quantstrat, r2d3,
+         readxl, RVerbalExpressions, repurrrsive, renv, reprex, repo, reshape2, rio,
+         rmarkdown, RVerbalExpressions, rvest, scales, shiny, shinydashboard,
+         shinydashboardPlus, shinyEffects, shinyjqui, SIT, statar, stringi, stringr,
+         styler, summarytools, tibble, tibbletime, tidyquant, tidyverse, timetk,
+         timeSeries, tracestack, treemap, tryCatchLog, TSstudio, TTR, xaringan,
+         xtable, xts, zoo
 logging: TRUE
 logging_level: INFO
 munging: TRUE

@@ -100,7 +100,7 @@ ApplyIndicators <- function(trendName) {
 # , ...) {
 rules <- function(sigcol, sigval, orderqty, orderside, ordertype, prefer, pricemethod, TxnFees, type, ...) {
 # ------------------------------------------------------------------------------
-   browser()
+#   browser()
 # ------------------------------------------------------------------------------    
     add.rule(strategy.st,
         name                    = "ruleSignal",
@@ -134,7 +134,7 @@ positionLimits <- function(maxpos, minpos) {
 ################################################################################
 Strategy <- function(strategy.st) {
 # ------------------------------------------------------------------------------
-    browser()
+# browser()
 # ------------------------------------------------------------------------------
     print(paste("strategy.st before apply strategy ", strategy.st))
     print(strategy.st)
@@ -156,7 +156,7 @@ Strategy <- function(strategy.st) {
 ################################################################################
 evaluation <- function(trendName) {
 # ------------------------------------------------------------------------------
-    browser()
+#  browser()
 # ------------------------------------------------------------------------------
     updatePortf(portfolio.st, symbols)
 #   dateRange  <- tail(time(getPortfolio(trendName)$summary)[-1], 0)
