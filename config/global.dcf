@@ -14,7 +14,7 @@ libraries: animation, billboarder, blotter, checkpoint, curl, d3heatmap, darklyp
          hydroTSM, janitor, knitr, kableExtra, lintr, logger, lubridate, naniar,
          openxlsx, orca, packagefinder, pacman, paletteer, parallel, parallelMap,
          pbapply, pdftools, PerformanceAnalytics, plotly, plyr, poorman,
-         ProjectTemplate, Quandl, quantmod, quantstrat, r2d3,
+         ProjectTemplate, Quandl, quantmod, quantstrat, r2d3, readr,
          readxl, RVerbalExpressions, repurrrsive, renv, reprex, repo, reshape2, rio,
          rmarkdown, RVerbalExpressions, rvest, scales, shiny, shinydashboard,
          shinydashboardPlus, shinyEffects, shinyjqui, SIT, statar, stringi, stringr,
