@@ -7,28 +7,28 @@ output:
     vertical_layout: fill
 date: "`r params$reportdate`"
 resource_files:
-- rds/dtEMA.rds
+# - rds/dtEMA.rds
 - rds/dt_trade_stats.rds
-- rds/golden.rds
+# - rds/golden.rds
 - rds/goldenX_EMA.RData
 - rds/goldenX_EMA_strategy.RData
 - rds/tradeDays.rds
 - rds/trend.rds
-- rds/trendSummaryGroup.rds
+# - rds/trendSummaryGroup.rds
 - rds/trendReturns.rds
-- rds/trendReturnsSMA.rds
+# - rds/trendReturnsSMA.rds
 - rds/trend.rds
 - rds/trendReturnsAnnualized.rds
-- rds/calendarDays.rds
+# - rds/calendarDays.rds
 - rds/dt_trade_stats.rds
-- rds/dtEMA.rds
-- rds/golden.rds
-- rds/dXema_trade_stats.rds
-- rds/dXsma_trade_stats.rds
-- rds/gXema_trade_stats.rds
-- rds/gXsma_trade_stats.rds
-- rds/dXema.rds
-- SPL.AX/SPL.AX.rda
+# - rds/dtEMA.rds
+# - rds/golden.rds
+# - rds/dXema_trade_stats.rds
+# - rds/dXsma_trade_stats.rds
+# - rds/gXema_trade_stats.rds
+# - rds/gXsma_trade_stats.rds
+# - rds/dXema.rds
+# - SPL.AX/SPL.AX.rda
 runtime: shiny
 theme: spacelab
 params:
@@ -72,7 +72,7 @@ library(PerformanceAnalytics)
 library(plotly)
 library(quantmod)
 library(quantstrat)
-library(readr)
+# library(readr)
 library(rmarkdown)
 library(scales)
 library(shiny)
@@ -135,16 +135,16 @@ xprices <- function() {
 
 ```{r rdsInput}
 # buyHold_results         <- readRDS(here::here("rds", "buyHold_results.rds"))
-calendarDays              <- readRDS(here::here("rds", "calendarDays.rds"))
-dtEMA                     <- readRDS(here::here("rds", "dtEMA.rds"))
-golden                    <- readRDS(here::here("rds", "golden.rds"))
+# calendarDays            <- readRDS(here::here("rds", "calendarDays.rds"))
+# dtEMA                     <- readRDS(here::here("rds", "dtEMA.rds"))
+# golden                    <- readRDS(here::here("rds", "golden.rds"))
 # ------------------------------------------------------------------------------
-dt_trade_stats            <- readRDS(here::here("rds", "dt_trade_stats.rds"))
+# dt_trade_stats            <- readRDS(here::here("rds", "dt_trade_stats.rds"))
 # ------------------------------------------------------------------------------
-dXema_trade_stats         <- readRDS(here::here("rds", "dXema_trade_stats.rds"))
-dXsma_trade_stats         <- readRDS(here::here("rds", "dXsma_trade_stats.rds"))
-gXema_trade_stats         <- readRDS(here::here("rds", "gXema_trade_stats.rds"))
-gXsma_trade_stats         <- readRDS(here::here("rds", "gXsma_trade_stats.rds"))
+# dXema_trade_stats         <- readRDS(here::here("rds", "dXema_trade_stats.rds"))
+# dXsma_trade_stats         <- readRDS(here::here("rds", "dXsma_trade_stats.rds"))
+# gXema_trade_stats         <- readRDS(here::here("rds", "gXema_trade_stats.rds"))
+# gXsma_trade_stats         <- readRDS(here::here("rds", "gXsma_trade_stats.rds"))
 # ------------------------------------------------------------------------------This is what feeds log.chart.Posn
 SPL.AX                    <- na.omit(as.xts(readRDS(here::here("rds", "SPL.AX.rds"))),keep.rownames = TRUE)
 # ------------------------------------------------------------------------------
@@ -154,31 +154,31 @@ trend                     <- data.table(readRDS(here::here("rds", "trend.rds")))
 trendDraw                 <- data.table(readRDS(here::here("rds", "trendDraw.rds")))
 # trendEMA                  <- data.table(readRDS(here::here("rds", "trendEMA.rds")))
 trendReturns              <- data.table(readRDS(here::here("rds", "trendReturns.rds")))
-trendReturnsAnnualized    <- data.table(readRDS(here::here("rds", "trendReturnsAnnualized.rds")))
-trendReturnsDaily         <- readRDS(here::here("rds", "trendReturnsDaily.rds"))
-trendReturnsEMAlong       <- data.table(readRDS(here::here("rds", "trendReturnsEMAlong.rds")))
-trendReturnsSMA           <- data.table(readRDS(here::here("rds", "trendReturnsSMA.rds")))
-trendReturnsSMAlong       <- data.table(readRDS(here::here("rds", "trendReturnsSMAlong.rds")))
+# trendReturnsAnnualized    <- data.table(readRDS(here::here("rds", "trendReturnsAnnualized.rds")))
+# trendReturnsDaily         <- readRDS(here::here("rds", "trendReturnsDaily.rds"))
+# trendReturnsEMAlong       <- data.table(readRDS(here::here("rds", "trendReturnsEMAlong.rds")))
+# trendReturnsSMA           <- data.table(readRDS(here::here("rds", "trendReturnsSMA.rds")))
+# trendReturnsSMAlong       <- data.table(readRDS(here::here("rds", "trendReturnsSMAlong.rds")))
 # trendSMA                  <- data.table(readRDS(here::here("rds", "trendSMA.rds")))
 # trendSummary            <- data.table(readRDS(here::here("rds", "trendSummary.rds")))
 # ------------------------------------------------------------------------------
-emaPct                    <- data.table(readRDS(here::here("rds", "emaPct.rds")))
-smaPct                    <- data.table(readRDS(here::here("rds", "smaPct.rds")))  
-trendSummaryGroup         <- data.table(readRDS(here::here("rds", "trendSummaryGroup.rds")))
+# emaPct                    <- data.table(readRDS(here::here("rds", "emaPct.rds")))
+# smaPct                    <- data.table(readRDS(here::here("rds", "smaPct.rds")))  
+# trendSummaryGroup         <- data.table(readRDS(here::here("rds", "trendSummaryGroup.rds")))
 # ------------------------------------------------------------------------------
-xtsEMA                    <- as.xts(readRDS(here::here("rds", "xtsEMA.rds")))
+# xtsEMA                    <- as.xts(readRDS(here::here("rds", "xtsEMA.rds")))
 ```
 
 ```{r blotter-rds}
 # ------------------------------------------------------------------------------
-dXema                     <- readRDS(here::here("rds", "dXema.rds"))
-dXsma                     <- readRDS(here::here("rds", "dXsma.rds"))
+# dXema                     <- readRDS(here::here("rds", "dXema.rds"))
+# dXsma                     <- readRDS(here::here("rds", "dXsma.rds"))
 # ------------------------------------------------------------------------------
-gXema                     <- readRDS(here::here("rds", "gXema.rds"))
-gXsma                     <- readRDS(here::here("rds", "gXsma.rds"))
+# gXema                     <- readRDS(here::here("rds", "gXema.rds"))
+# gXsma                     <- readRDS(here::here("rds", "gXsma.rds"))
 # ------------------------------------------------------------------------------
-nXema                     <- readRDS(here::here("rds", "nXema.rds"))
-nXsma                     <- readRDS(here::here("rds", "nXsma.rds"))
+# nXema                     <- readRDS(here::here("rds", "nXema.rds"))
+# nXsma                     <- readRDS(here::here("rds", "nXsma.rds"))
 # ------------------------------------------------------------------------------
 ```
 
