@@ -55,6 +55,7 @@ library(dygraphs)
 library(excelR)
 library(FinancialInstrument)
 library(flexdashboard)
+library(forecast)
 library(formattable)
 library(ggplot2)
 library(grid)
@@ -553,7 +554,17 @@ renderHighchart({
 
 renderPlot({
   x <- tk_xts(price())
-  chartSeries(x, theme = 'black',subset = '2001::', TA = "addBBands();addVo();addCMF();addZLEMA()")   #Year 2016 To Present
+  chartSeries(x, theme = 'black',subset = '2014::2020', TA = "addBBands();addVo();addCMF();addZLEMA()")   #Year 2014 To Present
+})
+
+```
+
+### Forecast ETS
+
+```{r 1.2.1.8-viz-forecast-ets, eval=price}
+renderPlot({
+  etsPrice <- tk_xts(price())
+  plot(forecast(etsPrice[,4]))
 })
 
 ```
@@ -1765,37 +1776,37 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 ### NoX Crossing Table
 
 ```{r 2.4.2.2-table-noX, eval=trend}
-# DT::renderDataTable({
-#     ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),]
-#     trendTable <- trend[indicator == ind]
-#     trendTable <- trendTable[catName == "NoX" &
-#                         (startDate >= input$dateRange2.4[1] &
-#                          endDate <= input$dateRange2.4[2])][,-c(9,13:16)]
-#     DT::datatable(trendTable,
-#     rownames = FALSE,
-#     extensions = c("Scroller"),
-#     filter = 'top',
-#     options = list(
-#       dom = 'ltipr',
-#       order = list(list(5, "desc"), list(0, 'asc')),
-#       pageLength = 10,
-#             scroller = TRUE,
-#       scrollX = 400,
-#       scrollY = 280
-#     )
-#   ) %>%
-#     formatDate(c("startDate", "endDate")) %>%
-#     formatRound("tradeDays", 0) %>%
-#     formatCurrency(c("startOpen", "endOpen")) %>%
-#     formatCurrency("Net.Trading.PL", digits = 0) %>%
-#     formatPercentage("return", 1) %>%
-#     formatStyle("return",
-#       background = styleColorBar(range(trend$return), "lightblue")
-#     ) %>%
-#     formatStyle("tradeDays",
-#       color = styleInterval(c(0), c("maroon", "darkgreen"))
-#     )
-# })
+DT::renderDataTable({
+    ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),]
+    trendTable <- trend[indicator == ind]
+    trendTable <- trendTable[catName == "NoX" &
+                        (startDate >= input$dateRange2.4[1] &
+                         endDate <= input$dateRange2.4[2])][,-c(9,13:16)]
+    DT::datatable(trendTable,
+    rownames = FALSE,
+    extensions = c("Scroller"),
+    filter = 'top',
+    options = list(
+      dom = 'ltipr',
+      order = list(list(5, "desc"), list(0, 'asc')),
+      pageLength = 10,
+            scroller = TRUE,
+      scrollX = 400,
+      scrollY = 280
+    )
+  ) %>%
+    formatDate(c("startDate", "endDate")) %>%
+    formatRound("tradeDays", 0) %>%
+    formatCurrency(c("startOpen", "endOpen")) %>%
+    formatCurrency("Net.Trading.PL", digits = 0) %>%
+    formatPercentage("return", 1) %>%
+    formatStyle("return",
+      background = styleColorBar(range(trend$return), "lightblue")
+    ) %>%
+    formatStyle("tradeDays",
+      color = styleInterval(c(0), c("maroon", "darkgreen"))
+    )
+})
 ```
 
 Row {data-height=33%}
