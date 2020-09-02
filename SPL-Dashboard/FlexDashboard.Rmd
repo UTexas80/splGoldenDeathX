@@ -20,6 +20,7 @@ resource_files:
 - rds/trendReturnsAnnualized.rds
 - rds/trendSummaryGroup.rds
 - rds/xtsEMA.rds
+- rds/trendReturnsDaily.rds
 runtime: shiny
 theme: spacelab
 params:
