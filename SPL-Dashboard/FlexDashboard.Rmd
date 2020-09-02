@@ -10,16 +10,16 @@ resource_files:
 - rds/dt_trade_stats.rds
 - rds/goldenX_EMA.RData
 - rds/goldenX_EMA_strategy.RData
+- rds/SPL.AX.rds
 - rds/tradeDays.rds
 - rds/trend.rds
 - rds/trendReturns.rds
 - rds/trend.rds
 - rds/trendReturnsAnnualized.rds
-- rds/dt_trade_stats.rds
 - rds/trendDraw.rds
-- rds/xtsEMA.rds
-- rds/dt_trade_stats.rds
 - rds/trendReturnsAnnualized.rds
+- rds/trendSummaryGroup.rds
+- rds/xtsEMA.rds
 runtime: shiny
 theme: spacelab
 params:
@@ -227,8 +227,8 @@ curr     <- FinancialInstrument::currency("USD")
 get_curr <- FinancialInstrument::getInstrument("USD")
 # ------------------------------------------------------------------------------
 stk      <- FinancialInstrument::stock("SPL.AX", "USD")
-# SPL.AX   <- FinancialInstrument::getInstrument("SPL.AX")
-# SPL.AX   <- get("SPL.AX", envir  = FinancialInstrument:::.instrument)
+SPL.AX   <- FinancialInstrument::getInstrument("SPL.AX")
+SPL.AX   <- get("SPL.AX", envir  = FinancialInstrument:::.instrument)
 # ------------------------------------------------------------------------------
 ```
 
