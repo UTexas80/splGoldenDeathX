@@ -84,6 +84,7 @@ ma_vol_10day    <- zoo::rollmean(SPL.AX[,5], 10)
 # etsPrice <- tk_xts(price())
 plot(forecast(SPL.AX[,4]))
 # ------------------------------------------------------------------------------
+<<<<<<< Updated upstream
 time_srs<- SPL.AX[,4]
 arimodel<-auto.arima(time_srs) 
 arimodel
@@ -121,3 +122,43 @@ p <-  %>%
                         zeroline = FALSE))
     p
 
+=======
+# time_srs<- SPL.AX[,4]
+# arimodel<-auto.arima(time_srs) 
+# arimodel
+# predictionfplot_ly() %>%
+#     add_trace(x = ~time(time_srs), y = ~time_srs, type = 'scatter', mode = 'markers',
+#               line = list(color='rgb(0,100,80)'),
+#               name = 'available_records')<-forecast(arimodel,h=24,level=c(80,95))
+# ------------------------------------------------------------------------------
+# p <-  
+#     # add_lines(x = time(time_srs), y = time_srs,
+#     #           color = I("blue"), name = "observed") %>%
+#     add_ribbons(x = time(predictionf$mean), ymin = predictionf$lower[, 2], ymax = predictionf$upper[, 2],
+#                 color = I('rgba(67,67,67,1)'), name = "95% confidence") %>%
+#     add_ribbons(x = time(predictionf$mean), ymin = predictionf$lower[, 1], ymax = predictionf$upper[, 1],
+#                 color = I('rgba(49,130,189, 1)'), name = "80% confidence") %>%
+#     add_lines(x = time(predictionf$mean), y = predictionf$mean, color = I("blue"), name = "prediction",hoveron = "points") %>% 
+# 
+#     layout(title = "forcasting for delivery records through arima model",
+#            paper_bgcolor='rgb(255,255,255)', plot_bgcolor='rgb(229,229,229)',
+#            xaxis = list(title = "delivery-years",
+#                         gridcolor = 'rgb(255,255,255)',
+#                         showgrid = TRUE,
+#                         showline = FALSE,
+#                         showticklabels = TRUE,
+#                         tickcolor = 'rgb(127,127,127)',
+#                         ticks = 'outside',
+#                         zeroline = FALSE),
+#            yaxis = list(title = "delivery records (thousands)",
+#                         gridcolor = 'rgb(255,255,255)',
+#                         showgrid = TRUE,
+#                         showline = FALSE,
+#                         showticklabels = TRUE,
+#                         tickcolor = 'rgb(127,127,127)',
+#                         ticks = 'outside',
+#                         zeroline = FALSE))
+# ------------------------------------------------------------------------------
+    # p
+# ------------------------------------------------------------------------------
+>>>>>>> Stashed changes

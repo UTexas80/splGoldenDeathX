@@ -16,11 +16,27 @@ resource_files:
 - rds/trendReturns.rds
 - rds/trend.rds
 - rds/trendReturnsAnnualized.rds
+<<<<<<< Updated upstream
 - rds/trendDraw.rds
 - rds/trendReturnsAnnualized.rds
 - rds/trendSummaryGroup.rds
 - rds/xtsEMA.rds
 - rds/trendReturnsDaily.rds
+=======
+- rds/calendarDays.rds
+- rds/dt_trade_stats.rds
+- rds/dtEMA.rds
+- rds/golden.rds
+- rds/dXema_trade_stats.rds
+- rds/dXsma_trade_stats.rds
+- rds/gXema_trade_stats.rds
+- rds/gXsma_trade_stats.rds
+- rds/dXema.rds
+- SPL.AX/SPL.AX.rda
+- rds/dXsma_trade_stats.rds
+- rds/trendReturnsDaily.rds
+- rds/SPL.AX.rds
+>>>>>>> Stashed changes
 runtime: shiny
 theme: spacelab
 params:
@@ -554,6 +570,16 @@ renderPlot({
 ```
 
 ### Forecast ETS
+
+```{r 1.2.1.8-viz-forecast-ets, eval=price}
+renderPlot({
+  etsPrice <- tk_xts(price())
+  plot(forecast(etsPrice[,4]))
+})
+
+```
+
+### Forecast ARIMA ETS
 
 ```{r 1.2.1.8-viz-forecast-ets, eval=price}
 renderPlot({
