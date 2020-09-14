@@ -36,6 +36,8 @@ resource_files:
 - rds/gXsma.rds
 - rds/gXema.rds
 - rds/gXsma.rds
+- rds/SPL.AX.rds
+- rds/SPL.AX.rds
 runtime: shiny
 theme: spacelab
 params:
