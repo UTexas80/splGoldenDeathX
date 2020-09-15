@@ -19,6 +19,20 @@
 		"peacock.color": "#020300",
 		"markdown-todo.sortByCount": false,
 		"markdown.previewFeatures": true,
-		"markdown.showToolbar": true
+		"markdown.showToolbar": true,
+		"workbench.colorCustomizations": {
+			"activityBar.background": "#243600",
+			"titleBar.activeBackground": "#020300",
+			"titleBar.activeForeground": "#e7e7e7",
+			"activityBar.activeBackground": "#243600",
+			"activityBar.activeBorder": "#006a9f",
+			"activityBar.foreground": "#e7e7e7",
+			"activityBar.inactiveForeground": "#e7e7e799",
+			"activityBarBadge.background": "#006a9f",
+			"activityBarBadge.foreground": "#e7e7e7",
+			"statusBarItem.hoverBackground": "#243600",
+			"titleBar.inactiveBackground": "#02030099",
+			"titleBar.inactiveForeground": "#e7e7e799"
+		}
 	}
 }
