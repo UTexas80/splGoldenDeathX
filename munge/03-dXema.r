@@ -138,7 +138,7 @@ addPosLimit(portfolio.st, symbols,
 # 7.0	Strategy
 ################################################################################
 # ------------------------------------------------------------------------------
-browser()
+#  browser()
 # ------------------------------------------------------------------------------
 t1      <- Sys.time()
 dXema_strategy <- applyStrategy(strategy.st, portfolio.st, mktdata, symbols)
@@ -148,7 +148,7 @@ print(t2 - t1)
 # 8.0	Evaluation - update P&L and generate transactional history
 ################################################################################
 # ------------------------------------------------------------------------------
-browser()
+#  browser()
 # ------------------------------------------------------------------------------
 updatePortf(portfolio.st)
 dateRange  <- time(getPortfolio(portfolio.st)$summary)[-1]

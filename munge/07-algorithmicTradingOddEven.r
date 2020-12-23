@@ -114,8 +114,8 @@ ptsGoldenXema <-blotter::perTradeStats(portfolio.st, symbol = symbols)
 ################################################################################
 ## Step 1.12: Save portfolio strategy to .rds                                ###
 ################################################################################
-saveRDS(portfolio.st, 
-  file = here::here("SPL-Dashboard/rds/", 
+saveRDS(portfolio.st,
+  file = here::here("SPL-Dashboard/rds/",
   paste0(portfolio.st, ".", "rds")))
 ################################################################################
 ## Step 00.99: VERSION HISTORY                                               ###

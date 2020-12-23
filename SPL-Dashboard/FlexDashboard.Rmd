@@ -7,28 +7,37 @@ output:
     vertical_layout: fill
 date: "`r params$reportdate`"
 resource_files:
-- rds/dtEMA.rds
-- rds/dt_trade_stats.rds
-- rds/golden.rds
-- rds/goldenX_EMA.RData
-- rds/goldenX_EMA_strategy.RData
-- rds/tradeDays.rds
-- rds/trend.rds
-- rds/trendSummaryGroup.rds
-- rds/trendReturns.rds
-- rds/trendReturnsSMA.rds
-- rds/trend.rds
-- rds/trendReturnsAnnualized.rds
 - rds/calendarDays.rds
 - rds/dt_trade_stats.rds
 - rds/dtEMA.rds
-- rds/golden.rds
 - rds/dXema_trade_stats.rds
-- rds/dXsma_trade_stats.rds
-- rds/gXema_trade_stats.rds
-- rds/gXsma_trade_stats.rds
 - rds/dXema.rds
+- rds/dXsma_trade_stats.rds
+- rds/golden.rds
+- rds/goldenX_EMA_strategy.RData
+- rds/goldenX_EMA.RData
+- rds/gXema_trade_stats.rds
+- rds/tradeDays.rds
+- rds/trend.rds
+- rds/trend.rds
+- rds/trendReturns.rds
+- rds/trendReturnsAnnualized.rds
+- rds/trendReturnsSMA.rds
+- rds/trendSummaryGroup.rds
 - SPL.AX/SPL.AX.rda
+- rds/gXema.rds
+- rds/gXsma.rds
+- rds/gXema.rds
+- rds/gXema.rds
+- rds/gXsma.rds
+- rds/gXema.rds
+- rds/gXsma.rds
+- rds/gXema.rds
+- rds/gXsma.rds
+- rds/gXema.rds
+- rds/gXsma.rds
+- rds/SPL.AX.rds
+- rds/SPL.AX.rds
 runtime: shiny
 theme: spacelab
 params:
@@ -168,6 +177,17 @@ trendSummaryGroup         <- data.table(readRDS(here::here("rds", "trendSummaryG
 xtsEMA                    <- as.xts(readRDS(here::here("rds", "xtsEMA.rds")))
 ```
 
+```{r quantstrat-environment}
+# ------------------------------------------------------------------------------
+rm(list = ls(.blotter), envir = .blotter)
+# ------------------------------------------------------------------------------
+if(!exists(".blotter"))    .blotter    <<- new.env()
+if(!exists(".instrument")) .instrument <<- new.env()
+if(!exists(".portfolio"))  .portfolio  <<- new.env()
+if(!exists(".strategy"))   .strategy   <<- new.env()
+# ------------------------------------------------------------------------------
+```
+
 ```{r blotter-rds}
 # ------------------------------------------------------------------------------
 dXema                     <- readRDS(here::here("rds", "dXema.rds"))
@@ -181,16 +201,31 @@ nXsma                     <- readRDS(here::here("rds", "nXsma.rds"))
 # ------------------------------------------------------------------------------
 ```
 
+```{r financial-instruments}
+# ------------------------------------------------------------------------------
+# Sys.setenv(TZ = 'America/New_York')
+# ------------------------------------------------------------------------------
+# curr       <- FinancialInstrument::currency("AUD")
+# get_curr   <- FinancialInstrument::getInstrument("AUD")
+# ------------------------------------------------------------------------------
+# stk        <- FinancialInstrument::stock("SPL.AX", "AUD")
+# sphrf      <- FinancialInstrument::getInstrument("SPL.AX")
+# sphry      <- get("SPL.AX", envir  = FinancialInstrument:::.instrument)
+# SPL.AX     <- FinancialInstrument::getInstrument("SPL.AX")
+# SPL.AX     <- get("SPL.AX", envir  = FinancialInstrument:::.instrument)
+# ------------------------------------------------------------------------------
+```
+
 ```{r blotter-accounts}
 # ------------------------------------------------------------------------------
-dXema                     <- blotter::put.account  ("dXema", dXema, envir = .blotter)
-dXsma                     <- blotter::put.account  ("dXsma", dXsma, envir = .blotter)
+dXema                     <- blotter::put.account("dXema", dXema, envir = .blotter)
+dXsma                     <- blotter::put.account("dXsma", dXsma, envir = .blotter)
 # ------------------------------------------------------------------------------
-gXema                     <- blotter::put.account  ("gXema", gXema, envir = .blotter)
-gXsma                     <- blotter::put.account  ("gXsma", gXsma, envir = .blotter)
+gXema                     <- blotter::put.account("gXema", gXema, envir = .blotter)
+gXsma                     <- blotter::put.account("gXsma", gXsma, envir = .blotter)
 # ------------------------------------------------------------------------------
-nXema                     <- blotter::put.account  ("nXema", nXema, envir = .blotter)
-nXsma                     <- blotter::put.account  ("nXsma", nXsma, envir = .blotter)
+nXema                     <- blotter::put.account("nXema", nXema, envir = .blotter)
+nXsma                     <- blotter::put.account("nXsma", nXsma, envir = .blotter)
 # ------------------------------------------------------------------------------
 ```
 
@@ -216,28 +251,6 @@ dEMA <- d[indicator == 'EMA']
 dSMA <- d[indicator == 'SMA']
 g <- trend[substr(trend$catName, 1, 1) %like% "G"]
 n <- trend[substr(trend$catName, 1, 1) %like% "N"]
-```
-
-```{r quantstrat-environment}
-# ------------------------------------------------------------------------------
-if(!exists(".blotter"))    .blotter    <<- new.env()
-if(!exists(".instrument")) .instrument <<- new.env()
-if(!exists(".portfolio"))  .portfolio  <<- new.env()
-if(!exists(".strategy"))   .strategy   <<- new.env()
-# ------------------------------------------------------------------------------
-```
-
-```{r quantstrat-input}
-# ------------------------------------------------------------------------------
-Sys.setenv(TZ = 'America/New_York')
-# ------------------------------------------------------------------------------
-curr     <- FinancialInstrument::currency("USD")
-get_curr <- FinancialInstrument::getInstrument("USD")
-# ------------------------------------------------------------------------------
-stk      <- FinancialInstrument::stock("SPL.AX", "USD")
-SPL.AX   <- FinancialInstrument::getInstrument("SPL.AX")
-SPL.AX   <- get("SPL.AX", envir  = FinancialInstrument:::.instrument)
-# ------------------------------------------------------------------------------
 ```
 
 ```{R daydiff functions, include=FALSE, warning=FALSE, cache=FALSE}
@@ -639,10 +652,7 @@ flexdashboard::renderValueBox({
 ###
 
 ```{r 2.1.1.2.a-vbox-returns-roi, eval=trend}
-trendROIema <- percent(tail(trend[order(endDate)][indicator == 'EMA'],1)[,8][[1]],
-  scale = 100, prefix = "", suffix = "%", big.mark = " ", decimal.mark = ".",
-  trim = TRUE
-)
+trendROIema <- percent(tail(trend[order(endDate)][indicator == 'EMA'],1)[,8][[1]])
 
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
@@ -662,10 +672,7 @@ flexdashboard::renderValueBox({
 ```
 
 ```{r 2.1.1.2.b-vbox-returns-roi, eval=trend}
-trendROI <- percent(tail(trend[order(endDate)][indicator == 'SMA'],1)[,8][[1]],
-  scale = 100, prefix = "", suffix = "%", big.mark = " ", decimal.mark = ".",
-  trim = TRUE
-)
+trendROI <- percent(tail(trend[order(endDate)][indicator == 'SMA'],1)[,8][[1]])
 
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
@@ -1209,7 +1216,7 @@ flexdashboard::renderValueBox({
           trendReturnsDaily
             [,as.numeric(input$radio2.2)])
             [paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::")]
-        ),  
+        ),
       big.mark = ",")
 
   flexdashboard::valueBox(
@@ -1231,11 +1238,13 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
     ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
     blotter::getPortfolio(paste0("gX", ind), envir = .blotter)
     na.omit(getSymbols("SPL.AX", src = 'FI', dir = ".", split_method = 'common', env = .blotter))
-    blotter::chart.Posn(paste0("gX", ind),
-      Symbol = "SPL.AX",
-      Dates  = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
-      env    = .blotter,
-      TA     = "add_SMA(n = 20, col = 2); add_SMA(n = 50, col = 4)")
+    blotter::chart.Posn(
+      Portfolio = paste0("gX", ind),
+#      Portfolio = "gXema",
+      Symbol    = "SPL.AX",
+      Dates     = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
+      env       = .blotter,
+      TA        = "add_SMA(n = 20, col = 2); add_SMA(n = 50, col = 4)")
    })
 
 ```
