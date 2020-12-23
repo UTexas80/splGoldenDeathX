@@ -639,7 +639,10 @@ flexdashboard::renderValueBox({
 ###
 
 ```{r 2.1.1.2.a-vbox-returns-roi, eval=trend}
-trendROIema <- percent(tail(trend[order(endDate)][indicator == 'EMA'],1)[,8][[1]])
+trendROIema <- percent(tail(trend[order(endDate)][indicator == 'EMA'],1)[,8][[1]],
+  scale = 100, prefix = "", suffix = "%", big.mark = " ", decimal.mark = ".",
+  trim = TRUE
+)
 
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
@@ -659,7 +662,10 @@ flexdashboard::renderValueBox({
 ```
 
 ```{r 2.1.1.2.b-vbox-returns-roi, eval=trend}
-trendROI <- percent(tail(trend[order(endDate)][indicator == 'SMA'],1)[,8][[1]])
+trendROI <- percent(tail(trend[order(endDate)][indicator == 'SMA'],1)[,8][[1]],
+  scale = 100, prefix = "", suffix = "%", big.mark = " ", decimal.mark = ".",
+  trim = TRUE
+)
 
 flexdashboard::renderValueBox({
   flexdashboard::valueBox(
