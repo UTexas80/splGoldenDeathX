@@ -24,21 +24,31 @@ saveRDS(gXsma_trade_stats,         file  = here::here("SPL-Dashboard/rds/", "gXs
 # ------------------------------------------------------------------------------
 saveRDS(dt_trade_stats,            file  = here::here("SPL-Dashboard/rds/", "dt_trade_stats.rds"))
 ################################################################################
+## Step 99.02 Save .rda files                                                ###
+################################################################################
+save(SPL.AX, file  = here::here("SPL.AX/", "SPL.AX.rda"))
+save(SPL.AX, file  = here::here("SPL-Dashboard/SPL.AX/", "SPL.AX.rda"))
+################################################################################
 ## Step 99.02 Save .rds files                                                ###
 ################################################################################
-
+save(SPL.AX, file  = here::here("SPL.AX/", "SPL.AX.rda"))
+save(SPL.AX, file  = here::here("SPL-Dashboard/SPL.AX/", "SPL.AX.rda"))
+# ------------------------------------------------------------------------------
+saveRDS(SPL.AX,                    file  = here::here("SPL-Dashboard/rds/", "SPL.AX.rds"))
 # ------------------------------------------------------------------------------
 saveRDS(a,                         file  = here::here("SPL-Dashboard/rds/", "trendReturns.rds"))
 saveRDS(calendarDays,              file  = here::here("SPL-Dashboard/rds/", "calendarDays.rds"))
 saveRDS(dtEMA,                     file  = here::here("SPL-Dashboard/rds/", "dtEMA.rds"))
 saveRDS(goldenEMA,                 file  = here::here("SPL-Dashboard/rds/", "golden.rds"))
 # ------------------------------------------------------------------------------
-saveRDS(SPL.AX,                    file  = here::here("SPL-Dashboard/rds/", "SPL.AX.rds"))
 saveRDS(spl_month_close,           file  = here::here("SPL-Dashboard/rds/", "spl_month_close.rds"))
 saveRDS(SPL.AX.yearly,             file  = here::here("SPL-Dashboard/rds/", "spl_yearly.rds"))
 saveRDS(tradeDays,                 file  = here::here("SPL-Dashboard/rds/", "tradeDays.rds"))
 # ------------------------------------------------------------------------------
+saveRDS(trend,                     file  = here::here("rds/", "trend.rds"))
+# ------------------------------------------------------------------------------
 saveRDS(trend,                     file  = here::here("SPL-Dashboard/rds/", "trend.rds"))
+# ------------------------------------------------------------------------------
 # saveRDS(trendClose,              file   = here::here("SPL-Dashboard/rds/", "trendClose.rds"))
 saveRDS(trendDrawEMA,              file  = here::here("SPL-Dashboard/rds/", "trendDraw.rds"))
 saveRDS(trendReturns,              file  = here::here("SPL-Dashboard/rds/", "trendReturns.rds"))

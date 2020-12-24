@@ -1,0 +1,79 @@
+
+
+Column {data-height=50%, data-width=500 .tabset .tabset-fade}
+-------------------------------------
+### Print Blotter ls(.blotter)
+
+```{r 2.2.2.a-txt-goldenx-posn-chartstats}
+renderText({
+  ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
+  p <- blotter::getPortfolio(paste0("gX", ind), envir = .blotter)
+  ls(.blotter)
+  }
+)
+```  
+
+
+### Print Blotter ls(p$symbols)
+
+```{r 2.2.2.b-txt-goldenx-posn-chartstats-symbols$SPL.AX}
+
+renderText({
+  ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
+  p <- blotter::getPortfolio(paste0("gX", ind), envir = .blotter)
+  ls(p$symbols)
+  }
+)
+``` 
+
+### Print Blotter ls(p$symbols$SPL.AX)
+
+```{r 2.2.2.c-txt-goldenx-posn-chartstats-symbols$SPL.AX}
+renderText({
+  ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
+  p <- blotter::getPortfolio(paste0("gX", ind), envir = .blotter)
+  ls(p$symbols$SPL.AX)
+  }
+)
+```  
+
+### Print Blotter head(p$symbols$SPL.AX$txn)
+
+```{r 2.2.2.d-txt-goldenx-posn-chartstats}
+renderText({
+  ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
+  p <- blotter::getPortfolio(paste0("gX", ind), envir = .blotter)
+  head(p$symbols$SPL.AX$txn)
+  }
+)
+```  
+
+### Print Blotter head(p$symbols$SPL.AX$PosLimit)
+
+```{r 2.2.2.e-txt-goldenx-posn-chartstats}
+renderText({
+  ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
+  p <- blotter::getPortfolio(paste0("gX", ind), envir = .blotter)
+  head(p$symbols$SPL.AX$PosLimit)
+  }
+)
+```  
+
+### Price & Transactions Chart
+
+```{r 2.2.2.1-viz-goldenx-posn-chartstats}
+
+  renderPlot({
+    ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
+    blotter::getPortfolio(paste0("gX", ind), envir = .blotter)
+ #   na.omit(getSymbols("SPL.AX", src = 'FI', dir = ".", split_method = 'common', env = .blotter))
+    blotter::chart.Posn(
+      Portfolio = paste0("gX", ind),
+#      Portfolio = "gXema",      
+#      Symbol    = "SPL.AX",
+      Dates     = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
+#      env       = .blotter,
+      TA        = "add_SMA(n = 20, col = 2); add_SMA(n = 50, col = 4)")
+   })
+
+```

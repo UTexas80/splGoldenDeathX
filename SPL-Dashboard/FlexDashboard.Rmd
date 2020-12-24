@@ -37,7 +37,6 @@ resource_files:
 - rds/gXema.rds
 - rds/gXsma.rds
 - rds/SPL.AX.rds
-- rds/SPL.AX.rds
 runtime: shiny
 theme: spacelab
 params:
@@ -1151,15 +1150,16 @@ flexdashboard::renderValueBox({
         )
       ), "", " Annual Return"
     ),
-    color = ifelse(Return.annualized(
-        na.omit(
-          trendReturnsDaily
-            [,as.numeric(input$radio2.2)])
-            [paste(format(input$dateRange2.2[1]),format(input$dateRange2.2[2]),sep = "::")]) > 0,  
-           "teal", "red"),
-    icon = "ion-cash"
-  )
-})
+      color = ifelse(Return.annualized(
+          na.omit(
+            trendReturnsDaily
+              [,as.numeric(input$radio2.2)])
+              [paste(format(input$dateRange2.2[1]),format(input$dateRange2.2[2]),sep = "::")]) > 0,  
+          "teal", "red"),
+      icon = "ion-cash"
+    )
+  }
+)
 ```
 
 ###
@@ -1234,19 +1234,19 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 
 ```{r 2.2.2.1-viz-goldenx-posn-chartstats}
 
-  renderPlot({
+renderPlot(
+  {
     ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
     blotter::getPortfolio(paste0("gX", ind), envir = .blotter)
-    na.omit(getSymbols("SPL.AX", src = 'FI', dir = ".", split_method = 'common', env = .blotter))
+    na.omit(quantmod::getSymbols("SPL.AX", src = 'FI', dir = ".", split_method = 'common', env = .blotter))
     blotter::chart.Posn(
       Portfolio = paste0("gX", ind),
-#      Portfolio = "gXema",
       Symbol    = "SPL.AX",
       Dates     = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
       env       = .blotter,
       TA        = "add_SMA(n = 20, col = 2); add_SMA(n = 50, col = 4)")
-   })
-
+   }
+)
 ```
 
 ### Golden Crossing Table
@@ -1532,8 +1532,8 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 DT::renderDataTable({
     ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.3)),]
     trendTable <- trend[indicator == ind]
-    trendTable <- trendTable[catName == "DeathX" &  
-                        (startDate >= input$dateRange2.3[1] &  
+    trendTable <- trendTable[catName == "DeathX" &
+                        (startDate >= input$dateRange2.3[1] &
                          endDate <= input$dateRange2.3[2])][,-c(9,13:16)]
     DT::datatable(trendTable,
     rownames = FALSE,
@@ -1761,7 +1761,7 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
   renderPlot({
     ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),])
     blotter::getPortfolio(paste0("nX", ind), envir = .blotter)
-    na.omit(getSymbols("SPL.AX", src = 'FI', dir = ".", split_method = 'common', env = .blotter))
+    na.omit(getSymbols("SPL.AX", src = 'RData', dir = ".", split_method = 'common', env = .blotter))
     blotter::chart.Posn(paste0("nX", ind),
      Symbol = "SPL.AX",
      Dates  = paste(format(input$dateRange2.4[1]), format(input$dateRange2.4[2]),sep = "::"),
@@ -1774,37 +1774,37 @@ Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 ### NoX Crossing Table
 
 ```{r 2.4.2.2-table-noX, eval=trend}
-# DT::renderDataTable({
-#     ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),]
-#     trendTable <- trend[indicator == ind]
-#     trendTable <- trendTable[catName == "NoX" &
-#                         (startDate >= input$dateRange2.4[1] &
-#                          endDate <= input$dateRange2.4[2])][,-c(9,13:16)]
-#     DT::datatable(trendTable,
-#     rownames = FALSE,
-#     extensions = c("Scroller"),
-#     filter = 'top',
-#     options = list(
-#       dom = 'ltipr',
-#       order = list(list(5, "desc"), list(0, 'asc')),
-#       pageLength = 10,
-#             scroller = TRUE,
-#       scrollX = 400,
-#       scrollY = 280
-#     )
-#   ) %>%
-#     formatDate(c("startDate", "endDate")) %>%
-#     formatRound("tradeDays", 0) %>%
-#     formatCurrency(c("startOpen", "endOpen")) %>%
-#     formatCurrency("Net.Trading.PL", digits = 0) %>%
-#     formatPercentage("return", 1) %>%
-#     formatStyle("return",
-#       background = styleColorBar(range(trend$return), "lightblue")
-#     ) %>%
-#     formatStyle("tradeDays",
-#       color = styleInterval(c(0), c("maroon", "darkgreen"))
-#     )
-# })
+DT::renderDataTable({
+    ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),]
+    trendTable <- trend[indicator == ind]
+    trendTable <- trendTable[catName == "NoX" &
+                        (startDate >= input$dateRange2.4[1] &
+                         endDate <= input$dateRange2.4[2])][,-c(9,13:16)]
+    DT::datatable(trendTable,
+    rownames = FALSE,
+    extensions = c("Scroller"),
+    filter = 'top',
+    options = list(
+      dom = 'ltipr',
+      order = list(list(5, "desc"), list(0, 'asc')),
+      pageLength = 10,
+      scrollX = TRUE,
+      scrollY = 280,
+      scroller = TRUE
+    )
+  ) %>%
+    formatDate(c("startDate", "endDate")) %>%
+    formatRound("tradeDays", 0) %>%
+    formatCurrency(c("startOpen", "endOpen")) %>%
+    formatCurrency("Net.Trading.PL", digits = 0) %>%
+    formatPercentage("return", 1) %>%
+    formatStyle("return",
+      background = styleColorBar(range(trend$return), "lightblue")
+    ) %>%
+    formatStyle("tradeDays",
+      color = styleInterval(c(0), c("maroon", "darkgreen"))
+    )
+})
 ```
 
 Row {data-height=33%}
@@ -1822,27 +1822,26 @@ renderPlotly({
   n   <- n[indicator == ind]
   n   <- n[(startDate >= input$dateRange2.4[1] & endDate <= input$dateRange2.4[2])]
 
-  histogram <-  
-    plot_ly(n,  
-            x = n$return,  
-            type = "histogram",  
+  histogram <-
+    plot_ly(n,
+            x = n$return,
+            type = "histogram",
             marker = list(
               color = "#778899")) %>%
-            layout(xaxis = xhp,  
+            layout(xaxis = xhp,
                    yaxis = yhp)
-  
-  boxplot <-  
-    plot_ly(n,  
-            x = n$return,  
-            type = "box",  
-            boxpoints = "all",  
-            jitter = 0.3,  
+  boxplot <-
+    plot_ly(n,
+            x = n$return,
+            type = "box",
+            boxpoints = "all",
+            jitter = 0.3,
             marker = list(
               color = "steel blue")) %>%
             layout(yaxis = ybp)
-            subplot(boxplot,  
-                    histogram,  
-                    nrows = 2,  
+            subplot(boxplot,
+                    histogram,
+                    nrows = 2,
                     shareX = TRUE) %>%
             layout(
               xaxis = list(
@@ -1864,35 +1863,35 @@ ybp <- list(title = n$catName, titlefont = F)
 renderPlotly({
   ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),]
   n <- n[indicator == ind]
-  n <- n[(startDate >= input$dateRange2.4[1] &  
+  n <- n[(startDate >= input$dateRange2.4[1] &
           endDate   <= input$dateRange2.4[2])]
 
-  histogramN <-  
-    plot_ly(n,  
-            x = n$tradeDays,  
-            type = "histogram",  
+  histogramN <-
+    plot_ly(n,
+            x = n$tradeDays,
+            type = "histogram",
             marker = list(
               color = "#778899",
               outliercolor = "#778899")) %>%
-            layout(xaxis = xhp,  
+            layout(xaxis = xhp,
                    yaxis = yhp)
 
   boxplotN <-
-    plot_ly(n,  
-            x = n$tradeDays,  
-            type = "box",  
-            boxpoints = "all",  
-            jitter = 0.3,  
+    plot_ly(n,
+            x = n$tradeDays,
+            type = "box",
+            boxpoints = "all",
+            jitter = 0.3,
             marker = list(
               color = "steel blue",
               line = list(
-                outliercolor = "#D0A92C",  
+                outliercolor = "#D0A92C",
                 outlierwidth = 5))
             ) %>%
             layout(yaxis = ybp)
-            subplot(boxplotN,  
-                    histogramN,  
-                    nrows = 2,  
+            subplot(boxplotN,
+                    histogramN,
+                    nrows = 2,
                     shareX = TRUE) %>%
             layout(showlegend = FALSE) %>%
             layout(title = "# of Trade Days with Outliers", bargap = 0.1)
