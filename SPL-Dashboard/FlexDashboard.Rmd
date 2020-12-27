@@ -1249,9 +1249,27 @@ renderPlot(
 )
 ```
 
+### Maximum Adverse Excursion Chart
+
+```{r 2.2.2.2-viz-goldenx-MAE}
+
+renderPlot(
+  {
+    ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
+    blotter::getPortfolio(paste0("gX", ind), envir = .blotter)
+    na.omit(quantmod::getSymbols("SPL.AX", src = 'FI', dir = ".", split_method = 'common', env = .blotter))
+    blotter::chart.ME(
+      Portfolio = paste0("gX", ind),
+      Symbol    = "SPL.AX",
+      type      =  "MAE"
+      )
+   }
+)
+```
+
 ### Golden Crossing Table
 
-```{r 2.2.2.2-table-goldenx, eval=trend}
+```{r 2.2.2.3-table-goldenx, eval=trend}
 
 DT::renderDataTable({
     ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),]
