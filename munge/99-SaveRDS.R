@@ -9,6 +9,9 @@ FinancialInstrument::getInstrument("SPL.AX")
 exchange_rate("USDAUD")
 saveInstruments("MyInstruments.RData", dir=here::here("SPL-Dashboard/rdata/"))
 # ------------------------------------------------------------------------------
+saveRDS(dt_bb20_disp,              file  = here::here("rds/", "dt_bb20_disp.rds"))
+saveRDS(dt_bb20_disp,              file  = here::here("SPL-Dashboard/rds/", "dt_bb20_disp.rds"))
+# ------------------------------------------------------------------------------
 saveRDS(getPortfolio("dXema"),     file  = here::here("SPL-Dashboard/rds/", "dXema.rds"))
 saveRDS(getPortfolio("dXsma"),     file  = here::here("SPL-Dashboard/rds/", "dXsma.rds"))
 saveRDS(getPortfolio("gXema"),     file  = here::here("SPL-Dashboard/rds/", "gXema.rds"))

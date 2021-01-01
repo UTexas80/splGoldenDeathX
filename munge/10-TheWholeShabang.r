@@ -12,6 +12,7 @@ bb.20           <- BBands(SPL$close,20,sd=2,maType=EMA)                         
 disp            <- Delt(bb.20[,"dn"],bb.20[,"up"])                              # Create Dispersion Column
 dispDiff        <- Delt(disp)                                                   # Create Daily Dispersion Difference Pct Column
 bb_20_disp_diff <- cbind(SPL.AX, bb.20,disp, dispDiff)[,c(7:12)]
+dt_bb20_disp <- data.table(bb_20_disp_diff, keep.rownames = TRUE)
 # ------------------------------------------------------------------------------
 # Bollinger Bands End
 # ------------------------------------------------------------------------------

@@ -177,10 +177,48 @@ nxSMA         <- "nxSMA"
 ################################################################################
 ## Custom Theme                                                              ###
 ################################################################################
-myTheme       <- chart_theme()
+myTheme               <- chart_theme()
 myTheme$col$dn.col    <- 'lightblue'
 myTheme$col$dn.border <- 'lightgray'
 myTheme$col$up.border <- 'lightgray'
+# ------------------------------------------------------------------------------
+# * Setup a ggplot theme ----
+clrs <- colorRampPalette(c("#00ff9f", "#00b8ff", "#001eff", "#bd00ff", "#d600ff"))(7)
+# ------------------------------------------------------------------------------
+clr_bg   <- "black"
+clr_bg2  <- "gray10"
+clr_grid <- "gray30"
+clr_text <- "#d600ff"
+# ------------------------------------------------------------------------------
+# scales::show_col(clrs)
+# ------------------------------------------------------------------------------
+theme_cyberpunk <- function() {
+    theme(
+        # Plot / Panel
+        plot.background = element_rect(fill = clr_bg, colour = clr_bg),
+        # plot.margin = margin(1.5, 2, 1.5, 1.5, "cm"),
+        panel.background = element_rect(fill = clr_bg, color = clr_bg),
+        # Grid
+        panel.grid = element_line(colour = clr_grid, size = 1),
+        panel.grid.major = element_line(colour = clr_grid, size = 1),
+        panel.grid.minor = element_line(colour = clr_grid, size = 1),
+        axis.ticks.x = element_line(colour = clr_grid, size = 1),
+        axis.line.y = element_line(colour = clr_grid, size = 0.5),
+        axis.line.x = element_line(colour = clr_grid, size = 0.5),
+        # Text
+        plot.title = element_text(colour = clr_text),
+        plot.subtitle = element_text(colour = clr_text),
+        axis.text = element_text(colour = clr_text),
+        axis.title = element_text(colour = clr_text),
+        # Legend
+        legend.background = element_blank(),
+        legend.key = element_blank(),
+        legend.title = element_text(colour = clr_text),
+        legend.text = element_text(colour = "gray80", size = 12, face = "bold"),
+        # Strip
+        strip.background = element_rect(fill = clr_bg2, color = clr_bg2)
+    )
+}
 ################################################################################
 # Add project specific configuration that can be overridden from load.project()
 ################################################################################

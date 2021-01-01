@@ -10,13 +10,19 @@ resource_files:
 - rds/calendarDays.rds
 - rds/dt_trade_stats.rds
 - rds/dtEMA.rds
-- rds/dXema_trade_stats.rds
 - rds/dXema.rds
+- rds/dXema_trade_stats.rds
+- rds/dXsma.rds
 - rds/dXsma_trade_stats.rds
 - rds/golden.rds
 - rds/goldenX_EMA_strategy.RData
 - rds/goldenX_EMA.RData
 - rds/gXema_trade_stats.rds
+- rds/gXema.rds
+- rds/gXsma.rds
+- rds/nXema.rds
+- rds/nXsma.rds
+- rds/SPL.AX.rds
 - rds/tradeDays.rds
 - rds/trend.rds
 - rds/trend.rds
@@ -25,18 +31,7 @@ resource_files:
 - rds/trendReturnsSMA.rds
 - rds/trendSummaryGroup.rds
 - SPL.AX/SPL.AX.rda
-- rds/gXema.rds
-- rds/gXsma.rds
-- rds/gXema.rds
-- rds/gXema.rds
-- rds/gXsma.rds
-- rds/gXema.rds
-- rds/gXsma.rds
-- rds/gXema.rds
-- rds/gXsma.rds
-- rds/gXema.rds
-- rds/gXsma.rds
-- rds/SPL.AX.rds
+- rdata/SPL.AX.rda
 runtime: shiny
 theme: spacelab
 params:
@@ -83,7 +78,6 @@ library(readr)
 library(rmarkdown)
 library(scales)
 library(shiny)
-# library(shinybusy)
 library(shinydashboard)
 library(shinyWidgets)
 # library(tidyquant)
@@ -138,6 +132,44 @@ xprices <- function() {
   )
 }
 
+# * Setup a ggplot cyberpunk theme ----
+
+theme_cyberpunk <- function() {
+  
+  clrs <- colorRampPalette(c("#00ff9f", "#00b8ff", "#001eff", "#bd00ff", "#d600ff"))(7)
+
+  clr_bg   <- "black"
+  clr_bg2  <- "gray10"
+  clr_grid <- "gray30"
+  clr_text <- "#d600ff"
+  
+    theme(
+        # Plot / Panel
+        plot.background = element_rect(fill = clr_bg, colour = clr_bg),
+        # plot.margin = margin(1.5, 2, 1.5, 1.5, "cm"),
+        panel.background = element_rect(fill = clr_bg, color = clr_bg),
+        # Grid
+        panel.grid = element_line(colour = clr_grid, size = 1),
+        panel.grid.major = element_line(colour = clr_grid, size = 1),
+        panel.grid.minor = element_line(colour = clr_grid, size = 1),
+        axis.ticks.x = element_line(colour = clr_grid, size = 1),
+        axis.line.y = element_line(colour = clr_grid, size = 0.5),
+        axis.line.x = element_line(colour = clr_grid, size = 0.5),
+        # Text
+        plot.title = element_text(colour = clr_text),
+        plot.subtitle = element_text(colour = clr_text),
+        axis.text = element_text(colour = clr_text),
+        axis.title = element_text(colour = clr_text),
+        # Legend
+        legend.background = element_blank(),
+        legend.key = element_blank(),
+        legend.title = element_text(colour = clr_text),
+        legend.text = element_text(colour = "gray80", size = 12, face = "bold"),
+        # Strip
+        strip.background = element_rect(fill = clr_bg2, color = clr_bg2)
+    )
+}
+
 ```
 
 ```{r rdsInput}
@@ -146,6 +178,7 @@ calendarDays              <- readRDS(here::here("rds", "calendarDays.rds"))
 dtEMA                     <- readRDS(here::here("rds", "dtEMA.rds"))
 golden                    <- readRDS(here::here("rds", "golden.rds"))
 # ------------------------------------------------------------------------------
+dt_bb20_disp              <- readRDS(here::here("rds", "dt_bb20_disp.rds"))
 dt_trade_stats            <- readRDS(here::here("rds", "dt_trade_stats.rds"))
 # ------------------------------------------------------------------------------
 dXema_trade_stats         <- readRDS(here::here("rds", "dXema_trade_stats.rds"))
@@ -213,6 +246,11 @@ nXsma                     <- readRDS(here::here("rds", "nXsma.rds"))
 # SPL.AX     <- FinancialInstrument::getInstrument("SPL.AX")
 # SPL.AX     <- get("SPL.AX", envir  = FinancialInstrument:::.instrument)
 # ------------------------------------------------------------------------------
+# FinancialInstrument::currency(c("AUD", "USD"))           # Set the currency  ###
+# exchange_rate("USDAUD")
+# ------------------------------------------------------------------------------
+# FinancialInstrument::stock(c("SPL.AX"), currency ="AUD") # Define the stocks ###
+# FinancialInstrument::getInstrument("SPL.AX")
 ```
 
 ```{r blotter-accounts}
@@ -567,6 +605,27 @@ renderPlot({
   x <- tk_xts(price())
   chartSeries(x, theme = 'black',subset = '2001::', TA = "addBBands();addVo();addCMF();addZLEMA()")   #Year 2016 To Present
 })
+
+```
+
+### Bollinger Band Dispersion
+
+```{r 1.2.1.8-viz-bollinger-band-dispersion, eval=dt_bb20_disp}
+
+renderPlotly(
+  {
+    ggplotly(
+            dt_bb20_disp %>%
+              plot_time_series(
+                .date_var    = index,
+                .value       = Delt.0.arithmetic,
+                .smooth      = TRUE,
+                .interactive = FALSE
+          ) + 
+            theme_cyberpunk()
+    )
+  }
+)
 
 ```
 
@@ -1230,46 +1289,9 @@ flexdashboard::renderValueBox({
 Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 -------------------------------------
 
-### Price & Transactions Chart
-
-```{r 2.2.2.1-viz-goldenx-posn-chartstats}
-
-renderPlot(
-  {
-    ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
-    blotter::getPortfolio(paste0("gX", ind), envir = .blotter)
-    na.omit(quantmod::getSymbols("SPL.AX", src = 'FI', dir = ".", split_method = 'common', env = .blotter))
-    blotter::chart.Posn(
-      Portfolio = paste0("gX", ind),
-      Symbol    = "SPL.AX",
-      Dates     = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
-      env       = .blotter,
-      TA        = "add_SMA(n = 20, col = 2); add_SMA(n = 50, col = 4)")
-   }
-)
-```
-
-### Maximum Adverse Excursion Chart
-
-```{r 2.2.2.2-viz-goldenx-MAE}
-
-renderPlot(
-  {
-    ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
-    blotter::getPortfolio(paste0("gX", ind), envir = .blotter)
-    na.omit(quantmod::getSymbols("SPL.AX", src = 'FI', dir = ".", split_method = 'common', env = .blotter))
-    blotter::chart.ME(
-      Portfolio = paste0("gX", ind),
-      Symbol    = "SPL.AX",
-      type      =  "MAE"
-      )
-   }
-)
-```
-
 ### Golden Crossing Table
 
-```{r 2.2.2.3-table-goldenx, eval=trend}
+```{r 2.2.2.1-table-goldenx, eval=trend}
 
 DT::renderDataTable({
     ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),]
@@ -1302,6 +1324,71 @@ DT::renderDataTable({
       color = styleInterval(c(0), c("maroon", "darkgreen"))
     )
 })
+```
+
+### Price & Transactions Chart
+
+```{r 2.2.2.2-viz-goldenx-posn-chartstats}
+
+renderPlot(
+  {
+    ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
+    blotter::getPortfolio(paste0("gX", ind), envir = .blotter)
+    na.omit(quantmod::getSymbols("SPL.AX", src = 'FI', dir = ".", split_method = 'common', env = .blotter))
+    blotter::chart.Posn(
+      Portfolio = paste0("gX", ind),
+      Symbol    = "SPL.AX",
+      Dates     = paste(format(input$dateRange2.2[1]), format(input$dateRange2.2[2]),sep = "::"),
+      env       = .blotter,
+      TA        = "add_SMA(n = 20, col = 2); add_SMA(n = 50, col = 4)")
+   }
+)
+```
+
+### Maximum Adverse Excursion Chart
+
+```{r 2.2.2.3-viz-goldenx-MAE}
+
+renderPlot(
+  {
+    FinancialInstrument::currency(c("AUD", "USD"))           # Set the currency  ###
+    FinancialInstrument::getInstrument("AUD","USD")
+# ------------------------------------------------------------------------------
+    FinancialInstrument::stock(c("SPL.AX"), currency ="AUD") # Define the stocks ###
+    FinancialInstrument::getInstrument("SPL.AX")
+# ------------------------------------------------------------------------------
+    ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
+    blotter::getPortfolio(paste0("gX", ind), envir = .blotter)
+    blotter::chart.ME(
+      Portfolio = paste0("gX", ind),
+      Symbol    = "SPL.AX",
+      type      =  "MAE"
+      )
+   }
+)
+```
+
+### Maximum Favorable Excursion Chart
+
+```{r 2.2.2.4-viz-goldenx-MFE}
+
+renderPlot(
+  {
+    FinancialInstrument::currency(c("AUD", "USD"))           # Set the currency  ###
+    FinancialInstrument::getInstrument("AUD","USD")
+# ------------------------------------------------------------------------------
+    FinancialInstrument::stock(c("SPL.AX"), currency ="AUD") # Define the stocks ###
+    FinancialInstrument::getInstrument("SPL.AX")
+# ------------------------------------------------------------------------------
+    ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.2) - 2),])
+    blotter::getPortfolio(paste0("gX", ind), envir = .blotter)
+    blotter::chart.ME(
+      Portfolio = paste0("gX", ind),
+      Symbol    = "SPL.AX",
+      type      =  "MFE"
+      )
+   }
+)
 ```
 
 Column {data-height=33%}
@@ -1527,26 +1614,9 @@ flexdashboard::renderValueBox({
 Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 -------------------------------------
 
-### Price & Transactions Chart
-
-```{r 2.3.2.1-viz-deathX-posn-chartstats}
-
-  renderPlot({
-    ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.3) - 0),])
-    blotter::getPortfolio(paste0("dX", ind), envir = .blotter)
-    na.omit(getSymbols("SPL.AX", src = 'FI', dir = ".", split_method = 'common', env = .blotter))
-    blotter::chart.Posn(paste0("dX", ind),
-      Symbol = "SPL.AX",
-      Dates  = paste(format(input$dateRange2.3[1]), format(input$dateRange2.3[2]),sep = "::"),
-      env    = .blotter,
-      TA     = "add_SMA(n = 20, col = 2); add_SMA(n = 50, col = 4)")
-   })
-
-```
-
 ### DeathX Crossing Table
 
-```{r 2.3.2.2-table-death, eval=trend}
+```{r 2.3.2.1-table-death, eval=trend}
 DT::renderDataTable({
     ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.3)),]
     trendTable <- trend[indicator == ind]
@@ -1578,6 +1648,69 @@ DT::renderDataTable({
       color = styleInterval(c(0), c("maroon", "darkgreen"))
     )
 })
+```
+
+### Price & Transactions Chart
+
+```{r 2.3.2.2-viz-deathX-posn-chartstats}
+
+  renderPlot({
+    ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.3) - 0),])
+    blotter::getPortfolio(paste0("dX", ind), envir = .blotter)
+    na.omit(getSymbols("SPL.AX", src = 'FI', dir = ".", split_method = 'common', env = .blotter))
+    blotter::chart.Posn(paste0("dX", ind),
+      Symbol = "SPL.AX",
+      Dates  = paste(format(input$dateRange2.3[1]), format(input$dateRange2.3[2]),sep = "::"),
+      env    = .blotter,
+      TA     = "add_SMA(n = 20, col = 2); add_SMA(n = 50, col = 4)")
+   })
+
+```
+
+### Maximum Adverse Excursion Chart
+
+```{r 2.3.2.3-viz-deathx-MAE}
+
+renderPlot(
+  {
+    FinancialInstrument::currency(c("AUD", "USD"))           # Set the currency  ###
+    FinancialInstrument::getInstrument("AUD","USD")
+# ------------------------------------------------------------------------------
+    FinancialInstrument::stock(c("SPL.AX"), currency ="AUD") # Define the stocks ###
+    FinancialInstrument::getInstrument("SPL.AX")
+# ------------------------------------------------------------------------------
+    ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.3) - 0),])
+    blotter::getPortfolio(paste0("dX", ind), envir = .blotter)
+    blotter::chart.ME(
+      Portfolio = paste0("dX", ind),
+      Symbol    = "SPL.AX",
+      type      =  "MAE"
+      )
+   }
+)
+```
+
+### Maximum Favorable Excursion Chart
+
+```{r 2.3.2.4-viz-deathx-MFE}
+
+renderPlot(
+  {
+    FinancialInstrument::currency(c("AUD", "USD"))           # Set the currency  ###
+    FinancialInstrument::getInstrument("AUD","USD")
+# ------------------------------------------------------------------------------
+    FinancialInstrument::stock(c("SPL.AX"), currency ="AUD") # Define the stocks ###
+    FinancialInstrument::getInstrument("SPL.AX")
+# ------------------------------------------------------------------------------
+    ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.3) - 0),])
+    blotter::getPortfolio(paste0("dX", ind), envir = .blotter)
+    blotter::chart.ME(
+      Portfolio = paste0("dX", ind),
+      Symbol    = "SPL.AX",
+      type      =  "MFE"
+      )
+   }
+)
 ```
 
 Row {data-height=33%}
@@ -1772,26 +1905,9 @@ flexdashboard::renderValueBox({
 Column {data-height=50%, data-width=500 .tabset .tabset-fade}
 -------------------------------------
 
-### Price & Transactions Chart
-
-```{r 2.4.2.1-viz-nox-posn-chartstats}
-
-  renderPlot({
-    ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),])
-    blotter::getPortfolio(paste0("nX", ind), envir = .blotter)
-    na.omit(getSymbols("SPL.AX", src = 'RData', dir = ".", split_method = 'common', env = .blotter))
-    blotter::chart.Posn(paste0("nX", ind),
-     Symbol = "SPL.AX",
-     Dates  = paste(format(input$dateRange2.4[1]), format(input$dateRange2.4[2]),sep = "::"),
-     env    = .blotter,
-     TA     = "add_SMA(n = 20, col = 2); add_SMA(n = 50, col = 4)")
-  })
-
-```
-
 ### NoX Crossing Table
 
-```{r 2.4.2.2-table-noX, eval=trend}
+```{r 2.4.2.1-table-noX, eval=trend}
 DT::renderDataTable({
     ind <- data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),]
     trendTable <- trend[indicator == ind]
@@ -1823,6 +1939,71 @@ DT::renderDataTable({
       color = styleInterval(c(0), c("maroon", "darkgreen"))
     )
 })
+```
+
+### Price & Transactions Chart
+
+```{r 2.4.2.2-viz-nox-posn-chartstats}
+
+  renderPlot({
+    ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),])
+    blotter::getPortfolio(paste0("nX", ind), envir = .blotter)
+    na.omit(getSymbols("SPL.AX", src = 'RData', dir = ".", split_method = 'common', env = .blotter))
+    blotter::chart.Posn(paste0("nX", ind),
+     Symbol = "SPL.AX",
+     Dates  = paste(format(input$dateRange2.4[1]), format(input$dateRange2.4[2]),sep = "::"),
+     env    = .blotter,
+     TA     = "add_SMA(n = 20, col = 2); add_SMA(n = 50, col = 4)")
+  })
+
+```
+
+### Maximum Adverse Excursion Chart
+
+```{r 2.4.2.3-viz-deathx-MAE}
+
+renderPlot(
+  {
+# ------------------------------------------------------------------------------    
+    FinancialInstrument::currency(c("AUD", "USD"))           # Set the currency  ###
+    FinancialInstrument::getInstrument("AUD","USD")
+# ------------------------------------------------------------------------------
+    FinancialInstrument::stock(c("SPL.AX"), currency ="AUD") # Define the stocks ###
+    FinancialInstrument::getInstrument("SPL.AX")
+# ------------------------------------------------------------------------------
+    ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),])
+    blotter::getPortfolio(paste0("nX", ind), envir = .blotter)
+    blotter::chart.ME(
+      Portfolio = paste0("nX", ind),
+      Symbol    = "SPL.AX",
+      type      =  "MAE"
+      )
+   }
+)
+```
+
+### Maximum Favorable Excursion Chart
+
+```{r 2.4.2.4-viz-deathx-MFE}
+
+renderPlot(
+  {
+# ------------------------------------------------------------------------------    
+    FinancialInstrument::currency(c("AUD", "USD"))           # Set the currency  ###
+    FinancialInstrument::getInstrument("AUD","USD")
+# ------------------------------------------------------------------------------
+    FinancialInstrument::stock(c("SPL.AX"), currency ="AUD") # Define the stocks ###
+    FinancialInstrument::getInstrument("SPL.AX")
+# ------------------------------------------------------------------------------
+    ind <- tolower(data.table::setorder(unique(trend[,1]))[(as.numeric(input$radio2.4) - 4),])
+    blotter::getPortfolio(paste0("nX", ind), envir = .blotter)
+    blotter::chart.ME(
+      Portfolio = paste0("nX", ind),
+      Symbol    = "SPL.AX",
+      type      =  "MFE"
+      )
+   }
+)
 ```
 
 Row {data-height=33%}

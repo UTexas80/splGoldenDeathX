@@ -6,7 +6,7 @@
 # An example of how to use mapply() to evaluate a function requiring more than
 # one input over a matrix or array. 
 # https://tinyurl.com/y5mkgrz4
-
+bb.20 <- BBands(SPL$close,20,sd=2,maType=EMA)                                   # BBands - 20 Day EMA
 # ------------------------------------------------------------------------------
 
 # by(dt_strategy[, c(1, 10:7)], dt_strategy[, 1:10], x0000_main)
