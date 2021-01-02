@@ -8,11 +8,14 @@ atr             <- ATR(SPL[,c("high","low","close")],n=14)                      
 # ------------------------------------------------------------------------------
 # Bollinger Bands Start
 # ------------------------------------------------------------------------------
-bb.20           <- BBands(SPL$close,20,sd=2,maType=EMA)                         # BBands - 20 Day EMA
-disp            <- Delt(bb.20[,"dn"],bb.20[,"up"])                              # Create Dispersion Column
-dispDiff        <- Delt(disp)                                                   # Create Daily Dispersion Difference Pct Column
-bb_20_disp_diff <- cbind(SPL.AX, bb.20,disp, dispDiff)[,c(7:12)]
-dt_bb20_disp <- data.table(bb_20_disp_diff, keep.rownames = TRUE)
+bb.20              <- BBands(SPL$close,20,sd=2,maType=EMA)                      # BBands - 20 Day EMA
+disp               <- Delt(bb.20[,"dn"],bb.20[,"up"])                           # Create Dispersion Column
+dispDiff           <- Delt(disp)                                                # Create Daily Dispersion Difference Pct Column
+xts_bb20_disp      <- cbind(SPL.AX, bb.20,disp, dispDiff)[,c(7:12)]
+dt_bb20_disp       <- data.table(xts_bb20_disp, keep.rownames = TRUE)
+# ------------------------------------------------------------------------------
+colnames(xts_bb20_disp)[5:6] <- c("pct", "delta")
+names(dt_bb20_disp)[c(1,6:7)] <- c("date", "pct", "delta")
 # ------------------------------------------------------------------------------
 # Bollinger Bands End
 # ------------------------------------------------------------------------------

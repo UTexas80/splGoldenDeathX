@@ -30,6 +30,7 @@ resource_files:
 - rds/trendReturnsAnnualized.rds
 - rds/trendReturnsSMA.rds
 - rds/trendSummaryGroup.rds
+- rds/xts_bb20_disp.rds
 - SPL.AX/SPL.AX.rda
 - rdata/SPL.AX.rda
 runtime: shiny
@@ -80,8 +81,9 @@ library(scales)
 library(shiny)
 library(shinydashboard)
 library(shinyWidgets)
-# library(tidyquant)
+library(stats)
 library(stringr)
+library(tidyquant)
 library(tidyverse)
 library(timetk)
 library(treemap)
@@ -178,7 +180,7 @@ calendarDays              <- readRDS(here::here("rds", "calendarDays.rds"))
 dtEMA                     <- readRDS(here::here("rds", "dtEMA.rds"))
 golden                    <- readRDS(here::here("rds", "golden.rds"))
 # ------------------------------------------------------------------------------
-dt_bb20_disp              <- readRDS(here::here("rds", "dt_bb20_disp.rds"))
+dt_bb20_disp              <- data.table(readRDS(here::here("rds", "dt_bb20_disp.rds")))
 dt_trade_stats            <- readRDS(here::here("rds", "dt_trade_stats.rds"))
 # ------------------------------------------------------------------------------
 dXema_trade_stats         <- readRDS(here::here("rds", "dXema_trade_stats.rds"))
@@ -206,6 +208,7 @@ emaPct                    <- data.table(readRDS(here::here("rds", "emaPct.rds"))
 smaPct                    <- data.table(readRDS(here::here("rds", "smaPct.rds")))  
 trendSummaryGroup         <- data.table(readRDS(here::here("rds", "trendSummaryGroup.rds")))
 # ------------------------------------------------------------------------------
+xts_bb20_disp             <- as.xts(readRDS(here::here("rds", "xts_bb20_disp.rds")))
 xtsEMA                    <- as.xts(readRDS(here::here("rds", "xtsEMA.rds")))
 ```
 
@@ -603,29 +606,8 @@ renderHighchart({
 
 renderPlot({
   x <- tk_xts(price())
-  chartSeries(x, theme = 'black',subset = '2001::', TA = "addBBands();addVo();addCMF();addZLEMA()")   #Year 2016 To Present
+  chartSeries(x, theme = 'black',subset = '2001::', TA = "addBBands();addVo();addCMF();addZLEMA()")   #Year 2001 To Present
 })
-
-```
-
-### Bollinger Band Dispersion
-
-```{r 1.2.1.8-viz-bollinger-band-dispersion, eval=dt_bb20_disp}
-
-renderPlotly(
-  {
-    ggplotly(
-            dt_bb20_disp %>%
-              plot_time_series(
-                .date_var    = index,
-                .value       = Delt.0.arithmetic,
-                .smooth      = TRUE,
-                .interactive = FALSE
-          ) + 
-            theme_cyberpunk()
-    )
-  }
-)
 
 ```
 
@@ -2095,4 +2077,319 @@ renderPlotly({
             layout(showlegend = FALSE) %>%
             layout(title = "# of Trade Days with Outliers", bargap = 0.1)
 })
+```
+
+3.1 Dispersion {data-navmenu="3-Technical Analysis" data-icon="fa-list"}
+=====================================
+
+Input {.sidebar}
+-------------------------------------
+
+```{r 3.0.0.1-sidebarInput}
+dateRangeInput("dateRange3.0",
+  "Dispersion data",
+  start = params$dateStart,
+  end = Sys.Date(),
+  min = params$dateStart,
+  max = Sys.Date()
+)
+```
+
+Column {data-height=21%}
+-------------------------------------
+
+###
+
+```{r 3.1.1.1.a-vbox-dispersion}
+
+flexdashboard::renderValueBox({
+  disp_last <-  percent(
+                  xts::last(dt_bb20_disp[,6])
+                )
+  flexdashboard::valueBox(
+        paste0("Dispersion: ", disp_last),
+        color = "#BF5700",
+        icon  = 'fa-cross'
+  )
+})
+
+```
+
+```{r 3.1.1.1.b-vbox-disp-delta}
+
+flexdashboard::renderValueBox({
+  disp_dlt_last <-  percent(
+                      xts::last(dt_bb20_disp[,7])
+                    )
+# ------------------------------------------------------------------------------
+  flexdashboard::valueBox(
+        paste0("Disp Delta: ", disp_dlt_last),
+        color = "#BF5700",
+        icon  = 'fa-cross'
+  )
+})
+
+```
+
+###
+
+```{r 3.1.1.2.a-vbox-max-disp}
+
+flexdashboard::renderValueBox({
+  disp_max <- percent(
+                max(
+                  na.omit(                  
+                    xts_bb20_disp[paste(format(input$dateRange3.0[1][+1]), format(input$dateRange3.0[2]),sep = "::")][,5]
+                    )
+                  )
+                )
+# ------------------------------------------------------------------------------
+  flexdashboard::valueBox(
+    paste0("Max Disp: ", as.character(disp_max)),
+    color = ifelse(disp_max > 0, "teal", "red"),
+    icon  = "ion-cash"
+  )
+})
+```
+
+```{r 3.1.1.2.b-vbox-max-delt}
+
+flexdashboard::renderValueBox({
+  delt_max <- percent(
+                max(
+                  na.omit(                  
+                    xts_bb20_disp[paste(format(input$dateRange3.0[1][+1]), format(input$dateRange3.0[2]),sep = "::")][,6]
+                    )
+                  )
+                )
+# ------------------------------------------------------------------------------
+  flexdashboard::valueBox(
+    paste0("Max Delta: ", as.character(delt_max)),
+    color = ifelse(delt_max > 0, "teal", "red"),
+    icon  = "ion-cash"
+  )
+})
+
+```
+
+###
+
+```{r 3.1.1.3.a-vbox-min-disp}
+
+flexdashboard::renderValueBox({
+  disp_min <- percent(
+                min(
+                  na.omit(                  
+                    xts_bb20_disp[paste(format(input$dateRange3.0[1][+1]), format(input$dateRange3.0[2]),sep = "::")][,5]
+                    )
+                  )
+                )
+# ------------------------------------------------------------------------------
+  flexdashboard::valueBox(
+    paste0("Min Disp: ", as.character(disp_min)),
+    color = ifelse(disp_min > 0, "teal", "red"),
+    icon  = "ion-cash"
+  )
+})
+
+```
+
+```{r 3.1.1.3.b-vbox-min-delt}
+
+flexdashboard::renderValueBox({
+  delt_min <- percent(
+                min(
+                  na.omit(                  
+                    xts_bb20_disp[paste(format(input$dateRange3.0[1][+1]), format(input$dateRange3.0[2]),sep = "::")][,6]
+                    )
+                  )
+                )
+# ------------------------------------------------------------------------------
+  flexdashboard::valueBox(
+    paste0("Min Delta: ", as.character(delt_min)),
+    color = ifelse(delt_min > 0, "teal", "red"),
+    icon  = "ion-cash"
+  )
+})
+
+```
+
+###
+
+```{r 3.1.1.4.a-vbox--med-disp}
+
+flexdashboard::renderValueBox({
+  disp_med <- percent(
+                median.zoo(
+                  na.omit(
+                    xts_bb20_disp[paste(format(input$dateRange3.0[1][+1]), format(input$dateRange3.0[2]),sep = "::")][,5]
+                    )
+                  )
+                )
+# ------------------------------------------------------------------------------
+  flexdashboard::valueBox(
+    paste0("Med Disp: ", as.character(disp_med)),
+    color = ifelse(disp_med > 0, "teal", "red"),
+    icon  = "ion-cash"
+  )
+})
+
+```
+
+```{r 3.1.1.4.b-vbox-med-delt}
+
+flexdashboard::renderValueBox({
+  delt_med <- percent(
+                median.zoo(
+                  na.omit(
+                    xts_bb20_disp[paste(format(input$dateRange3.0[1][+1]), format(input$dateRange3.0[2]),sep = "::")][,6]
+                    )
+                  )
+                )
+# ------------------------------------------------------------------------------
+  flexdashboard::valueBox(
+    paste0("Med Delta: ", as.character(delt_med)),
+    color = ifelse(delt_med > 0, "teal", "red"),
+    icon  = "ion-cash"
+  )
+})
+
+```
+
+###
+
+```{r 3.4.1.4.a-vbox-noX-calendar-days}
+
+flexdashboard::renderValueBox({
+
+  calendarDays <- format(input$dateRange3.0[2] - input$dateRange3.0[1], big.mark = ",")
+  calendarDays <- substr(calendarDays, 1, nchar(calendarDays) - 5)
+# ------------------------------------------------------------------------------
+  flexdashboard::valueBox(
+    paste("Cal Days: ", calendarDays),
+  )
+})
+```
+
+```{r 3.4.1.4.b-vbox-noX-trade-days, eval=trend}
+
+flexdashboard::renderValueBox({
+  tradeDays <-   format(
+    ndays(
+      na.omit(
+        trendReturnsDaily[,as.numeric(input$radio2.4)])[paste(format(input$dateRange3.0[1]),
+          format(input$dateRange3.0[2]),sep = "::")]
+    ),
+  big.mark = ",")
+# ------------------------------------------------------------------------------
+  flexdashboard::valueBox(
+    paste("Trade Days: ", "", tradeDays),
+    color = # 0000ff
+    , icon = "fa-calendar"
+  )
+})
+```
+
+Column {data-height=50%, data-width=500 .tabset .tabset-fade}
+-------------------------------------
+
+### Dispersion Table
+
+```{r 3.1.2.1-table-disp}
+
+DT::renderDataTable({
+    dt_disp <-  na.omit(
+                  data.table(
+                    merge(SPL.AX[,4:5], dt_bb20_disp)
+                    [paste(format(input$dateRange3.0[1][+1]), format(input$dateRange3.0[2]),sep = "::")],
+                  keep.rownames = TRUE)
+                )
+
+    DT::datatable(dt_disp,
+    rownames = FALSE,
+    extensions = c("Scroller"),
+    filter = 'top',
+    options = list(
+      dom = 'ltipr',
+      order = list(list(0, "desc")),
+      pageLength = 10,
+      scrollX = TRUE,
+      scrollY = 280,
+      scroller = TRUE
+    )
+  ) %>%
+    formatDate(c("index")) %>%
+    formatCurrency("SPL.AX.Close", digits = 2) %>%
+    formatRound("SPL.AX.Volume", mark = ",", digits = 0) %>%
+    formatPercentage(c("dn", "mavg", "up", "pctB", "pct", "delta"), 1) %>%
+    formatStyle("pct",
+      background = styleColorBar(range(trend$return), "lightblue")
+    ) %>%
+    formatStyle("delta",
+      color = styleInterval(c(0), c("maroon", "darkgreen"))
+    )
+})
+```
+
+Row {data-height=33%}
+-------------------------------------
+
+### Bollinger Band Dispersion
+
+```{r 3.1.3.1-viz-bollinger-band-disp, eval=dt_bb20_disp}
+
+renderPlotly(
+  {xts_bb20_disp
+    ggplotly(data.table(
+              xts_bb20_disp 
+                [paste(format(input$dateRange3.0[1][+1]), format(input$dateRange3.0[2]),sep = "::")],
+              keep.rownames = TRUE)
+              %>%
+              plot_time_series(
+                .date_var    = index,
+                .value       = pct,
+                .smooth      = TRUE,
+                .interactive = FALSE
+          ) + 
+            theme_cyberpunk()
+    )
+  }
+)
+```
+
+### Bollinger Band Dispersion Delta
+
+```{r 3.1.3.2-viz-bollinger-band-disp-delta, eval=dt_bb20_disp}
+
+renderPlotly(
+  {xts_bb20_disp
+    ggplotly(data.table(
+              xts_bb20_disp 
+                [paste(format(input$dateRange3.0[1][+1]), format(input$dateRange3.0[2]),sep = "::")],
+              keep.rownames = TRUE)
+              %>%
+              plot_time_series(
+                .date_var    = index,
+                .value       = delta,
+                .smooth      = TRUE,
+                .interactive = FALSE
+          ) + 
+            theme_cyberpunk()
+    )
+  }
+)
+```
+
+### Chaikan Money Flow
+
+```{r 3.1.3.1-viz-chaikan-money-flow, eval=price}
+
+renderPlot({
+  x <- tk_xts(price())
+  chartSeries(x, 
+              theme = 'black',
+              subset =  paste(format(input$dateRange3.0[1][+1]), format(input$dateRange3.0[2]),sep = "::"), 
+              TA = "addBBands();addVo();addCMF();addZLEMA()")   #Year 2016 To Present
+})
+
 ```

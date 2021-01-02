@@ -12,6 +12,9 @@ saveInstruments("MyInstruments.RData", dir=here::here("SPL-Dashboard/rdata/"))
 saveRDS(dt_bb20_disp,              file  = here::here("rds/", "dt_bb20_disp.rds"))
 saveRDS(dt_bb20_disp,              file  = here::here("SPL-Dashboard/rds/", "dt_bb20_disp.rds"))
 # ------------------------------------------------------------------------------
+saveRDS(xts_bb20_disp,             file  = here::here("rds/", "xts_bb20_disp.rds"))
+saveRDS(xts_bb20_disp,             file  = here::here("SPL-Dashboard/rds/", "xts_bb20_disp.rds"))
+# ------------------------------------------------------------------------------
 saveRDS(getPortfolio("dXema"),     file  = here::here("SPL-Dashboard/rds/", "dXema.rds"))
 saveRDS(getPortfolio("dXsma"),     file  = here::here("SPL-Dashboard/rds/", "dXsma.rds"))
 saveRDS(getPortfolio("gXema"),     file  = here::here("SPL-Dashboard/rds/", "gXema.rds"))
@@ -37,6 +40,7 @@ save(SPL.AX, file  = here::here("SPL-Dashboard/SPL.AX/", "SPL.AX.rda"))
 save(SPL.AX, file  = here::here("SPL.AX/", "SPL.AX.rda"))
 save(SPL.AX, file  = here::here("SPL-Dashboard/SPL.AX/", "SPL.AX.rda"))
 # ------------------------------------------------------------------------------
+saveRDS(SPL.AX,                    file  = here::here("rds/", "SPL.AX.rds"))
 saveRDS(SPL.AX,                    file  = here::here("SPL-Dashboard/rds/", "SPL.AX.rds"))
 # ------------------------------------------------------------------------------
 saveRDS(a,                         file  = here::here("SPL-Dashboard/rds/", "trendReturns.rds"))
