@@ -2100,15 +2100,14 @@ Column {data-height=21%}
 
 ###
 
-```{r 3.1.1.1.a-vbox-dispersion}
+```{r 3.1.1.1.a-vbox-disp-last}
 
 flexdashboard::renderValueBox({
-  disp_last <-  percent(
-                  xts::last(dt_bb20_disp[,6])
-                )
+  disp_last <-  format(as.character(percent(tail(na.omit(dt_bb20_disp[,6]), 1))))
+# ------------------------------------------------------------------------------
   flexdashboard::valueBox(
         paste0("Dispersion: ", disp_last),
-        color = "#BF5700",
+        color = "#bf5700",
         icon  = 'fa-cross'
   )
 })
@@ -2118,9 +2117,7 @@ flexdashboard::renderValueBox({
 ```{r 3.1.1.1.b-vbox-disp-delta}
 
 flexdashboard::renderValueBox({
-  disp_dlt_last <-  percent(
-                      xts::last(dt_bb20_disp[,7])
-                    )
+  disp_dlt_last <- format(as.character(percent(tail(na.omit(dt_bb20_disp[,7]), 1))))
 # ------------------------------------------------------------------------------
   flexdashboard::valueBox(
         paste0("Disp Delta: ", disp_dlt_last),
@@ -2258,7 +2255,7 @@ flexdashboard::renderValueBox({
 
 ###
 
-```{r 3.4.1.4.a-vbox-noX-calendar-days}
+```{r 3.1.1.5.a-vbox-noX-calendar-days}
 
 flexdashboard::renderValueBox({
 
@@ -2271,7 +2268,7 @@ flexdashboard::renderValueBox({
 })
 ```
 
-```{r 3.4.1.4.b-vbox-noX-trade-days, eval=trend}
+```{r 3.1.1.5.b-vbox-noX-trade-days, eval=trend}
 
 flexdashboard::renderValueBox({
   tradeDays <-   format(
@@ -2331,65 +2328,68 @@ DT::renderDataTable({
 })
 ```
 
-Row {data-height=33%}
--------------------------------------
 
 ### Bollinger Band Dispersion
 
-```{r 3.1.3.1-viz-bollinger-band-disp, eval=dt_bb20_disp}
+```{r 3.1.2.2-viz-bollinger-band-disp, eval=dt_bb20_disp}
 
-renderPlotly(
-  {xts_bb20_disp
-    ggplotly(data.table(
-              xts_bb20_disp 
-                [paste(format(input$dateRange3.0[1][+1]), format(input$dateRange3.0[2]),sep = "::")],
-              keep.rownames = TRUE)
-              %>%
-              plot_time_series(
-                .date_var    = index,
-                .value       = pct,
-                .smooth      = TRUE,
-                .interactive = FALSE
-          ) + 
-            theme_cyberpunk()
-    )
-  }
-)
+renderPlotly({
+  xts_bb20_disp
+  ggplotly(data.table(
+    xts_bb20_disp
+    [paste(format(input$dateRange3.0[1][+1]), format(input$dateRange3.0[2]), sep = "::")],
+    keep.rownames = TRUE
+  )
+  %>%
+    plot_time_series(
+      .date_var = index,
+      .value = pct,
+      .smooth = TRUE,
+      .interactive = FALSE
+    ) +
+    theme_cyberpunk() +
+    geom_line(size = 0.5, colour = "#bf5700"))
+})
 ```
 
 ### Bollinger Band Dispersion Delta
 
-```{r 3.1.3.2-viz-bollinger-band-disp-delta, eval=dt_bb20_disp}
+```{r 3.1.2.3-viz-bollinger-band-disp-delta, eval=dt_bb20_disp}
 
-renderPlotly(
-  {xts_bb20_disp
-    ggplotly(data.table(
-              xts_bb20_disp 
-                [paste(format(input$dateRange3.0[1][+1]), format(input$dateRange3.0[2]),sep = "::")],
-              keep.rownames = TRUE)
-              %>%
-              plot_time_series(
-                .date_var    = index,
-                .value       = delta,
-                .smooth      = TRUE,
-                .interactive = FALSE
-          ) + 
-            theme_cyberpunk()
-    )
-  }
-)
+renderPlotly({
+  xts_bb20_disp
+  ggplotly(data.table(
+    xts_bb20_disp
+    [paste(format(input$dateRange3.0[1][+1]), format(input$dateRange3.0[2]), sep = "::")],
+    keep.rownames = TRUE
+  )
+  %>%
+    plot_time_series(
+      .date_var = index,
+      .value = delta,
+      .smooth = TRUE,
+      .interactive = FALSE
+    ) +
+    theme_cyberpunk() +
+    geom_line(size = 0.5, colour = "#0c4c8a"))
+})
 ```
+
+
+Row {data-height=33%}
+-------------------------------------
 
 ### Chaikan Money Flow
 
-```{r 3.1.3.1-viz-chaikan-money-flow, eval=price}
+```{r 3.1.3.3-viz-chaikan-money-flow, eval=price}
 
 renderPlot({
   x <- tk_xts(price())
-  chartSeries(x, 
-              theme = 'black',
-              subset =  paste(format(input$dateRange3.0[1][+1]), format(input$dateRange3.0[2]),sep = "::"), 
-              TA = "addBBands();addVo();addCMF();addZLEMA()")   #Year 2016 To Present
+  chartSeries(x,
+    theme = "black",
+    subset = paste(format(input$dateRange3.0[1][+1]), format(input$dateRange3.0[2]), sep = "::"),
+    TA = "addBBands();addVo();addCMF();addZLEMA()"
+  )
 })
 
 ```
