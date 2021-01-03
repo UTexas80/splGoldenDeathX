@@ -181,6 +181,7 @@ dtEMA                     <- readRDS(here::here("rds", "dtEMA.rds"))
 golden                    <- readRDS(here::here("rds", "golden.rds"))
 # ------------------------------------------------------------------------------
 dt_bb20_disp              <- data.table(readRDS(here::here("rds", "dt_bb20_disp.rds")))
+dt_bb20_disp_last         <- as.character(percent(tail(dt_bb20_disp[, 6],1)))
 dt_trade_stats            <- readRDS(here::here("rds", "dt_trade_stats.rds"))
 # ------------------------------------------------------------------------------
 dXema_trade_stats         <- readRDS(here::here("rds", "dXema_trade_stats.rds"))
@@ -2100,15 +2101,23 @@ Column {data-height=21%}
 
 ###
 
-```{r 3.1.1.1.a-vbox-disp-last}
+```{r 3.1.1.1.a-vbox-disp-last, eval=dt_bb20_disp_last}
 
 flexdashboard::renderValueBox({
-  disp_last <-  format(as.character(percent(tail(na.omit(dt_bb20_disp[,6]), 1))))
+  disp_last <-  percent(
+                  max(
+                    xts::last(
+                      na.omit(                  
+                        xts_bb20_disp[,5]
+                      )
+                    )
+                  )
+                )
 # ------------------------------------------------------------------------------
   flexdashboard::valueBox(
-        paste0("Dispersion: ", disp_last),
-        color = "#bf5700",
-        icon  = 'fa-cross'
+    paste0("Disp: ", as.character(disp_last)),
+    color = ifelse(disp_last > 0, "#BF5700", "red"),
+    icon  = "ion-cash"
   )
 })
 
@@ -2117,12 +2126,20 @@ flexdashboard::renderValueBox({
 ```{r 3.1.1.1.b-vbox-disp-delta}
 
 flexdashboard::renderValueBox({
-  disp_dlt_last <- format(as.character(percent(tail(na.omit(dt_bb20_disp[,7]), 1))))
+  delt_last <-  percent(
+                  max(
+                    xts::last(
+                      na.omit(                  
+                        xts_bb20_disp[,6]
+                      )
+                    )
+                  )
+                )
 # ------------------------------------------------------------------------------
   flexdashboard::valueBox(
-        paste0("Disp Delta: ", disp_dlt_last),
-        color = "#BF5700",
-        icon  = 'fa-cross'
+    paste0("Delta: ", as.character(delt_last)),
+    color = ifelse(delt_last > 0, "#BF5700", "red"),
+    icon  = "ion-cash"
   )
 })
 
@@ -2162,7 +2179,10 @@ flexdashboard::renderValueBox({
 # ------------------------------------------------------------------------------
   flexdashboard::valueBox(
     paste0("Max Delta: ", as.character(delt_max)),
-    color = ifelse(delt_max > 0, "teal", "red"),
+    color = fcase(
+      delt_max > 0, "teal", 
+      delt_max < 0, "red", 
+      default  = "gray30"),
     icon  = "ion-cash"
   )
 })
