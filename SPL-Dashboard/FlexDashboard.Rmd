@@ -181,7 +181,6 @@ dtEMA                     <- readRDS(here::here("rds", "dtEMA.rds"))
 golden                    <- readRDS(here::here("rds", "golden.rds"))
 # ------------------------------------------------------------------------------
 dt_bb20_disp              <- data.table(readRDS(here::here("rds", "dt_bb20_disp.rds")))
-dt_bb20_disp_last         <- as.character(percent(tail(dt_bb20_disp[, 6],1)))
 dt_trade_stats            <- readRDS(here::here("rds", "dt_trade_stats.rds"))
 # ------------------------------------------------------------------------------
 dXema_trade_stats         <- readRDS(here::here("rds", "dXema_trade_stats.rds"))
@@ -2101,7 +2100,7 @@ Column {data-height=21%}
 
 ###
 
-```{r 3.1.1.1.a-vbox-disp-last, eval=dt_bb20_disp_last}
+```{r 3.1.1.1.a-vbox-disp-last}
 
 flexdashboard::renderValueBox({
   disp_last <-  percent(
