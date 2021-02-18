@@ -14,6 +14,7 @@ saveRDS(dt_bb20_disp,              file  = here::here("SPL-Dashboard/rds/", "dt_
 # ------------------------------------------------------------------------------
 saveRDS(xts_bb20_disp,             file  = here::here("rds/", "xts_bb20_disp.rds"))
 saveRDS(xts_bb20_disp,             file  = here::here("SPL-Dashboard/rds/", "xts_bb20_disp.rds"))
+saveRDS(xts_bb20_disp,             file  = here::here("SPL-Dashboard/", "xts_bb20_disp.rds"))
 # ------------------------------------------------------------------------------
 saveRDS(getPortfolio("dXema"),     file  = here::here("SPL-Dashboard/rds/", "dXema.rds"))
 saveRDS(getPortfolio("dXsma"),     file  = here::here("SPL-Dashboard/rds/", "dXsma.rds"))
@@ -54,6 +55,7 @@ saveRDS(tradeDays,                 file  = here::here("SPL-Dashboard/rds/", "tra
 # ------------------------------------------------------------------------------
 saveRDS(trend,                     file  = here::here("rds/", "trend.rds"))
 # ------------------------------------------------------------------------------
+saveRDS(trend,                     file  = here::here("SPL-Dashboard/", "trend.rds"))
 saveRDS(trend,                     file  = here::here("SPL-Dashboard/rds/", "trend.rds"))
 # ------------------------------------------------------------------------------
 # saveRDS(trendClose,              file   = here::here("SPL-Dashboard/rds/", "trendClose.rds"))
