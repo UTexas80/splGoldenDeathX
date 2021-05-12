@@ -23,6 +23,34 @@ rm(list = ls()[grepl("(SQL|metadata)", ls())])
 rmarkdown::run("./SPL-Dashboard/Flexdashboard.Rmd")
 # rmarkdown::render(input="./reports/dashboard.Rmd")
 # rmarkdown::render(input="./dashboard/Flexdashboard.Rmd")
+### . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
+### Step 99.02 Deploy to Shiny Server                                       ####
+### . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
+# rsconnect::deployApp(appDir = "~/GitHub/splGoldenDeathX/SPL-Dashboard",
+#                      appFileManifest = "C:/Users/gfalk/AppData/Local/Temp/4727-31b7-99eb-d3f2",
+#                      appPrimaryDoc = "FlexDashboard.Rmd",
+#                      appSourceDoc = "~/GitHub/splGoldenDeathX/SPL-Dashboard/FlexDashboard.Rmd",
+#                      account = "utexas80",
+#                      server = "shinyapps.io",
+#                      appName = "FlexDashboard",
+#                      appId = 2485642,
+#                      launch.browser = function(url) {message("Deployment completed: ", url)},
+#                      lint = FALSE,
+#                      metadata = list(asMultiple = FALSE, asStatic = FALSE),
+#                      logLevel = "verbose")
+
+#  rsconnect::deployApp(appDir = "~/GitHub/splGoldenDeathX/SPL-Dashboard",
+#                       appFileManifest = "C:/Users/gfalk/AppData/Local/Temp/2a6d-2e35-c5e7-3dab",
+#                       appPrimaryDoc = "FlexDashboard.Rmd",
+#                       appSourceDoc = "~/GitHub/splGoldenDeathX/SPL-Dashboard/FlexDashboard.Rmd",
+#                       account = "utexas80",
+#                       server = "shinyapps.io",
+#                       appName = "FlexDashboard",
+#                       appId = 2485642,
+#                       launch.browser = function(url) {message("Deployment completed: ", url)},
+#                       lint = FALSE,
+#                       metadata = list(asMultiple = FALSE, asStatic = FALSE),
+#                       logLevel = "verbose")
 ################################################################################
 ## Call rmarkdown::run() instead of render() because it is a shiny document  ### https://tinyurl.com/y2y2azny
 ## (http://rmarkdown.rstudio.com/authoring_shiny.html).                      ###

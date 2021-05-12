@@ -47,7 +47,7 @@ initOrders(portfolio="goldenX_EMA_portfolio",  # Order Initialization        ###
            symbols = symbols,
            initDate=init_date)
 # -------------------------------------------- # Strategy Initialization     ###
-goldenX_EMA_strategy <- strategy("GoldenX",  store = TRUE))
+goldenX_EMA_strategy <- strategy("GoldenX",  store = TRUE)
 ################################################################################
 ## Step 04.03: Add Indicators to the Strategy                                ###
 ################################################################################

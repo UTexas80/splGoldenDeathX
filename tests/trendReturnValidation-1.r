@@ -11,7 +11,7 @@ apply(X = xtsPrice, 2, FUN = function(Z)
 dtReturns <-data.table(apply(X = xtsPrice, 2, FUN = function(Z) na.omit(Delt(na.omit(as.numeric(Z)),k=length(na.omit(Z))-1))))
 
 
-dfReturns <- data.frame(matrix(unlist(apply(X = xtsPrice, 2, 
+dtReturns <- data.frame(matrix(unlist(apply(X = xtsPrice, 2,
   FUN = function(Z) na.omit(Delt(na.omit(as.numeric(Z)), k = length(na.omit(Z)) - 
     1)))), nrow = length(apply(X = xtsPrice, 2, FUN = function(Z) na.omit(Delt(na.omit(as.numeric(Z)), 
   k = length(na.omit(Z)) - 1))))), byrow = T)
