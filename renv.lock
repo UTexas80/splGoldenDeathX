@@ -637,10 +637,10 @@
     },
     "highr": {
       "Package": "highr",
-      "Version": "0.8",
+      "Version": "0.9",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "4dc5bb88961e347a0f4d8aad597cbfac"
+      "Hash": "8eb36c8125038e648e5d111c0d7b2ed4"
     },
     "hms": {
       "Package": "hms",
@@ -672,8 +672,8 @@
       "RemoteRepo": "htmlwidgets",
       "RemoteUsername": "ramnathv",
       "RemoteRef": "HEAD",
-      "RemoteSha": "31dd9451f454de75dac78dd9f2d1bd9e87c27a60",
-      "Hash": "a5f0f3772c27f81e291f4a0070087318"
+      "RemoteSha": "31aedb6c9e6fdac000b6a879164e549f4271348f",
+      "Hash": "9e1a473fbebeaaecaa0b526d3e789d0c"
     },
     "httpuv": {
       "Package": "httpuv",
@@ -745,10 +745,10 @@
     },
     "jquerylib": {
       "Package": "jquerylib",
-      "Version": "0.1.3",
+      "Version": "0.1.4",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "5ff50b36f7f0832f8421745af333e73c"
+      "Hash": "5aab57a3bd297eee1c1d862735972182"
     },
     "jsonlite": {
       "Package": "jsonlite",
@@ -766,10 +766,10 @@
     },
     "knitr": {
       "Package": "knitr",
-      "Version": "1.31",
+      "Version": "1.33",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "c3994c036d19fc22c5e2a209c8298bfb"
+      "Hash": "0bc1b5da1b0eb07cd4b727e95e9ff0b8"
     },
     "labeling": {
       "Package": "labeling",
@@ -780,10 +780,10 @@
     },
     "later": {
       "Package": "later",
-      "Version": "1.1.0.1",
+      "Version": "1.2.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "d0a62b247165aabf397fded504660d8a"
+      "Hash": "b61890ae77fea19fc8acadd25db70aa4"
     },
     "lattice": {
       "Package": "lattice",
@@ -963,7 +963,7 @@
       "RemoteUsername": "ropensci",
       "RemoteRef": "HEAD",
       "RemoteSha": "97096fc99b86a60e6b0f02546d8e4364cd4073f1",
-      "Hash": "8b10c1dfdb94f204a44e9208a427124d"
+      "Hash": "48cbb79bcbb50df3e3edd2da64679987"
     },
     "plyr": {
       "Package": "plyr",
@@ -1046,14 +1046,15 @@
       "Package": "quantstrat",
       "Version": "0.16.8",
       "Source": "GitHub",
-      "Remotes": "github::braverock/blotter",
       "RemoteType": "github",
+      "Remotes": "github::braverock/blotter",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "quantstrat",
       "RemoteUsername": "braverock",
       "RemoteRef": "HEAD",
       "RemoteSha": "11f7ebf7103d12badccddf50d4cee5f89a67c898",
-      "Hash": "238a767b1273f95e0b2a9e32c1dd0741"
+      "Remotes.1": "github::braverock/blotter",
+      "Hash": "bda3cc539b6c405862dd8be74a38bff6"
     },
     "rappdirs": {
       "Package": "rappdirs",
@@ -1148,16 +1149,16 @@
     },
     "rmarkdown": {
       "Package": "rmarkdown",
-      "Version": "2.7.5",
+      "Version": "2.8.1",
       "Source": "GitHub",
-      "Remotes": "yihui/tinytex",
+      "Remotes": "rstudio/sass, rstudio/bslib",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "rmarkdown",
       "RemoteUsername": "rstudio",
       "RemoteRef": "HEAD",
-      "RemoteSha": "c3a709ba369c039d7dd305124001da0f6f7e9fa8",
-      "Hash": "06971e2cdba32688dcb0e8384117a867"
+      "RemoteSha": "9e19405f3a75dd4d45419b60a3f4d5451e1c391a",
+      "Hash": "1e882aaa085c9a7fd01753ca86b3f8a1"
     },
     "rpart": {
       "Package": "rpart",
@@ -1258,7 +1259,7 @@
       "RemoteUsername": "ropensci",
       "RemoteRef": "HEAD",
       "RemoteSha": "840b6237597e3da7c8970a6581086ef73c561678",
-      "Hash": "adcd0a4c9d35438e5b49f8989324d253"
+      "Hash": "1de7d754fdef5c80305547d3f1bc61bd"
     },
     "slider": {
       "Package": "slider",
@@ -1304,10 +1305,10 @@
     },
     "stringi": {
       "Package": "stringi",
-      "Version": "1.5.3",
+      "Version": "1.6.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "a063ebea753c92910a4cca7b18bc1f05"
+      "Hash": "3b9a9c9454b864b08713715396689b9e"
     },
     "stringr": {
       "Package": "stringr",
@@ -1339,15 +1340,15 @@
     },
     "systemfonts": {
       "Package": "systemfonts",
-      "Version": "1.0.1.9000",
+      "Version": "1.0.2.9000",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "systemfonts",
       "RemoteUsername": "r-lib",
       "RemoteRef": "HEAD",
-      "RemoteSha": "bc0b76a57c1456522bb7d208acf45a2d2e87cfd7",
-      "Hash": "b04b1b3569887a9f971226c8b1faac52"
+      "RemoteSha": "963f3a67abd49f7329779d5c7d0406f71dd66bc2",
+      "Hash": "32301d203da687952e4525c93f667a89"
     },
     "tibble": {
       "Package": "tibble",
@@ -1407,15 +1408,15 @@
     },
     "tinytex": {
       "Package": "tinytex",
-      "Version": "0.31",
+      "Version": "0.31.6",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "tinytex",
       "RemoteUsername": "yihui",
       "RemoteRef": "HEAD",
-      "RemoteSha": "ab46c449edda4e1a3a49cdc3b239e454424703c4",
-      "Hash": "9b00fe4c1d4f7841047152fc3cd65988"
+      "RemoteSha": "4c262cbc4c52bb3c1fe892cf2448910dfbfb2d39",
+      "Hash": "60ce2f3464125cde03e5e2e925e701c9"
     },
     "treemap": {
       "Package": "treemap",
