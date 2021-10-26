@@ -45,6 +45,7 @@ saveRDS(SPL.AX,                    file  = here::here("rds/", "SPL.AX.rds"))
 saveRDS(SPL.AX,                    file  = here::here("SPL-Dashboard/rds/", "SPL.AX.rds"))
 # ------------------------------------------------------------------------------
 saveRDS(a,                         file  = here::here("SPL-Dashboard/rds/", "trendReturns.rds"))
+saveRDS(calendarDays,              file  = here::here("rds/", "calendarDays.rds"))
 saveRDS(calendarDays,              file  = here::here("SPL-Dashboard/rds/", "calendarDays.rds"))
 saveRDS(dtEMA,                     file  = here::here("SPL-Dashboard/rds/", "dtEMA.rds"))
 saveRDS(goldenEMA,                 file  = here::here("SPL-Dashboard/rds/", "golden.rds"))

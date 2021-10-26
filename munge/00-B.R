@@ -17,8 +17,8 @@ xtsPrices <-
     auto.assign = TRUE,
     warnings = FALSE
   ) %>%
-  map(~ Ad(get(.))) %>%
-  reduce(merge) %>%
+  purrr::map(~ Ad(get(.))) %>%
+  purrr::reduce(merge) %>%
   `colnames<-`(symbols)
 # ------------------------------------------------------------------------------
 SPL.AX <-
