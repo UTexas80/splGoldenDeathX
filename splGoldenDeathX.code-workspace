@@ -32,7 +32,12 @@
 			"activityBarBadge.foreground": "#e7e7e7",
 			"statusBarItem.hoverBackground": "#243600",
 			"titleBar.inactiveBackground": "#02030099",
-			"titleBar.inactiveForeground": "#e7e7e799"
+			"titleBar.inactiveForeground": "#e7e7e799",
+			"sash.hoverBorder": "#243600",
+			"statusBar.background": "#020300",
+			"statusBar.foreground": "#e7e7e7",
+			"statusBarItem.remoteBackground": "#020300",
+			"statusBarItem.remoteForeground": "#e7e7e7"
 		}
 	}
 }
