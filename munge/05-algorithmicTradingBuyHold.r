@@ -76,13 +76,13 @@ addTxn(portfolio.st,                            # buy transaction            ###
 ## Step 01.03b place an exit order                                           ###
 ################################################################################
 TxnDate              <- last(time(SPL.AX))
-TxnPrice             <- as.numeric(Cl(SPL.AX[TxnDate,]))
+TxnPrice             <- as.numeric(Cl(SPL.AX[TxnDate,]))[[1]]
 # ------------------------------------------------------------------------------
 addTxn(portfolio.st,                             # sell transaction          ### 
        Symbol        <- Symbol,
        TxnDate       <- TxnDate,
        TxnPrice      <- TxnPrice,
-       TxnQty        <- - TxnQty,
+       TxnQty        <- -TxnQty,
        TxnFees       <- TxnFees)
 ################################################################################
 ## Step 01.08: set the position limits                                       ###

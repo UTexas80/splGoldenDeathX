@@ -1,8 +1,14 @@
 ################################################################################
 ## Step 99.00 trade stats                                                    ###
 ################################################################################
-dtSPL$row <- dtSPL[, .I[1], by=date][,2]
-dtSPL$dayDiff <- dayDifff(SPL.AX)                 # https://tinyurl.com/ybcssoh8
+# browser()
+# dtSPL$row <- dtSPL[, .I[1], by = date][,2]
+#...............................................................................
+# Generate the row number to the dataframe          https://tinyurl.com/ykw6z8be
+#...............................................................................
+dtSPL         <- dtSPL[, row := .I]               # https://tinyurl.com/ykw6z8be
+# dtSPL$dayDiff <- dayDifff(SPL.AX)                 # https://tinyurl.com/ybcssoh8
+dtSPL$dayDiff <- dayDifff(dtSPL)
 # ------------------------------------------------------------------------------
 dtSPL[1,9] <- 1                                   # replace first na's with zero
 dtSPL[nrow(dtSPL),9] <- 0                         # replace last na's with zero
@@ -11,7 +17,8 @@ data.table::setkey(dtSPL, date)
 tRD <- cbind(dXema_rets,dXsma_rets,gXema_rets,gXsma_rets,nXema_rets,nXsma_rets)
 # ------------------------------------------------------------------------------
 l       <- list(dXema_trend, dXsma_trend, gXema_trend, gXsma_trend, nXema_trend, nXsma_trend)
-trend   <- rbindlist(l)
+trend   <- unique(rbindlist(l))
+# trend   <- unique(setorder(rbindlist(l),"subcatName"))
 # ------------------------------------------------------------------------------
 trendSummaryGroup <- trend[, .(count = .N,                  # .N is nb per group
                                tradeDays = sum(tradeDays),  # compute count
@@ -55,6 +62,7 @@ trend      <- trend[dtSPL, nomatch = 0][,-c(13:18)]
 # ------------------------------------------------------------------------------
 data.table::setkey(trend, endDate)
 trend      <- trend[dtSPL, nomatch = 0][,-c(15:20)]
+# trend      <- trend[dtSPL, nomatch = 0][i.dayDiff > 0,-c(15:20)]
 # trend$endDate = trend$endDate + trend$i.dayDiff
 # ------------------------------------------------------------------------------# https://tinyurl.com/tmmubbh
 trendReturns      <- data.table(t(trend[, c(3,8)]))                             # subcatName, return
@@ -261,3 +269,7 @@ a99.ModDate       <- as.Date("2020-05-19")
 # ------------------------------------------------------------------------------
 # 2020.05.19 - v.1.0.0
 # 1st release
+# ------------------------------------------------------------------------------
+# 2022.10.03 - v.1.0.1
+# Generate the row number to the dataframe          https://tinyurl.com/ykw6z8be
+# ------------------------------------------------------------------------------

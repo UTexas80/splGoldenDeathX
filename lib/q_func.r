@@ -11,7 +11,7 @@ get_strategy              <- function(strategy_id, ...) {
 ################################################################################
 get_strategy.x0000_main   <- function(id, strategy_dt, ...) {
 # ------------------------------------------------------------------------------
-    browser()
+#    browser()
     print("x0000_main")
     print(id)
     print(class(id))    

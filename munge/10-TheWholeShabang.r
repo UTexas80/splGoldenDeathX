@@ -8,12 +8,12 @@ atr             <- ATR(SPL[,c("high","low","close")],n=14)                      
 # ------------------------------------------------------------------------------
 # Bollinger Bands Start
 # ------------------------------------------------------------------------------
-bb.20              <- BBands(SPL$close,20,sd=2,maType=EMA)                      # BBands - 20 Day EMA
-disp               <- Delt(bb.20[,"dn"],bb.20[,"up"])                           # Create Dispersion Column
-dispDiff           <- Delt(disp)                                                # Create Daily Dispersion Difference Pct Column
-xts_bb20_disp      <- cbind(SPL.AX, bb.20,disp, dispDiff)[,c(7:12)]
-dt_bb20_disp       <- data.table(xts_bb20_disp, keep.rownames = TRUE)
-# ------------------------------------------------------------------------------
+bb.20          <- BBands(SPL$close,20,sd=2,maType=EMA)                      # BBands - 20 Day EMA
+disp           <- Delt(bb.20[,"dn"],bb.20[,"up"])                           # Create Dispersion Column
+dispDiff       <- Delt(disp)                                                # Create Daily Dispersion Difference Pct Column
+xts_bb20_disp  <- cbind(SPL.AX, bb.20,disp, dispDiff)[,c(7:12)]
+dt_bb20_disp   <- data.table(xts_bb20_disp, keep.rownames = TRUE)
+# --------------------------------------------------------------------------
 colnames(xts_bb20_disp)[5:6] <- c("pct", "delta")
 names(dt_bb20_disp)[c(1,6:7)] <- c("date", "pct", "delta")
 # ------------------------------------------------------------------------------
@@ -86,7 +86,7 @@ ma_vol_10day    <- zoo::rollmean(SPL.AX[,5], 10)
 # r prediction through r and shiny                          https://is.gd/qRjcCW
 # ------------------------------------------------------------------------------
 # etsPrice <- tk_xts(price())
-plot(forecast(SPL.AX[,4]))
+# plot(forecast(SPL.AX[,4]))
 # ------------------------------------------------------------------------------
 # time_srs<- SPL.AX[,4]
 # arimodel<-auto.arima(time_srs) 

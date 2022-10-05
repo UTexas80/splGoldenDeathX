@@ -11,7 +11,7 @@ resource_files:
 - xts_bb20_disp.rds
 - rds/calendarDays.rds
 - rds/dt_trade_stats.rds
-- rds/dtEMA.rds
+- SPL-Dashboard/rds/dtEMA.rds
 - rds/dXema.rds
 - rds/dXema_trade_stats.rds
 - rds/dXsma.rds
@@ -345,11 +345,14 @@ Any opinions, news, research, analyses, prices, or other information offered is 
 ```{r 1.0.0.1-sidebar-ActionGo}
 
 tqPrices <- eventReactive(input$go, {
-  tqPrices <- tidyquant::tq_get("SPL.AX",
+  tqPrices <- unique(
+    tidyquant::tq_get("SPL.AX",
     get = "stock.prices",
     from = format(input$dateRange[1]),
-    to = format(input$dateRange[2])
-  )
+    to = format(input$dateRange[2]),
+    complete_cases = TRUE
+    )
+  ) 
 })
 
 #  date        open  high   low close volume adjusted   change

@@ -2,6 +2,7 @@
 ## Step 00.00: Get TidyQuant Stock Prices     https://tinyurl.com/smvt3xt    ###
 ################################################################################
 SPL <- tq_get("SPL.AX", get = "stock.prices", from = "2002-01-01")
+# SPL <- unique(tq_get("SPL.AX", get = "stock.prices", from = "2002-01-01"))
 SPL <- data.table(SPL[complete.cases(SPL), ])       #  Delete NA             ###
 SPL$date <- as.POSIXct(SPL$date, format="%Y-%m-%d") # Convert Date to POSIXct###
 setkey(SPL, "date")
@@ -22,8 +23,16 @@ xtsPrices <-
   `colnames<-`(symbols)
 # ------------------------------------------------------------------------------
 SPL.AX <-
-  SPL.AX %>%
+  SPL.AX  %>% 
   na.omit() # Replace missing values (NA)       https://tinyurl.com/y5etxh8x ###
+# ------------------------------------------------------------------------------
+# Account for the situation of duplicate SPL.AX xts price entries
+# ------------------------------------------------------------------------------
+SPL.AX <- data.table::as.xts.data.table(
+            unique(
+              data.table::as.data.table(SPL.AX)
+            )
+          )
 ################################################################################
 ## Step 00.02 death Cross Trading System        https://tinyurl.com/y3sq4ond ###
 ## Baseline Return                                                           ###
@@ -169,3 +178,5 @@ a00.ModDate <- as.Date("2019-01-01")
 # ------------------------------------------------------------------------------
 # 2019.06.09 - v.1.0.0
 #  1st released
+# 2022.10.04 - v.1.0.1
+# Account for the situation of duplicate SPL.AX xts price entries
