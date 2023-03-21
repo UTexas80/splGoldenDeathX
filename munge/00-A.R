@@ -73,11 +73,11 @@ dt_ma <- cbind(
     paste(x, y, sep = "."))
   }, dt_ma[, 1], dt_ma[, c(2:5)])
 )
-names(dt_ma)[6:len(dt_ma)] <-  colnames(dt_ma[, 2:5])
+names(dt_ma)[6:length(dt_ma)] <-  colnames(dt_ma[, 2:5])
 dt_ma$sig <- as.character(interaction(dt_ma[,6:9],sep=", "))
 dt_ma$id <- as.numeric(row.names.data.frame(dt_ma))
 dt_ma$trend_id = 1
-setcolorder(dt_ma, c(len(dt_ma), 2:len(dt_ma)-1))                 # column order
+setcolorder(dt_ma, c(length(dt_ma), 2:length(dt_ma)-1))             # column order
 setkey(dt_ma,trend_id)
 # ------------------------------------------------------------------------------
 trend_signal <<-

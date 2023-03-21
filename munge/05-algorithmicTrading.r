@@ -8,14 +8,14 @@
 ################################################################################
 ## 0.1.0 Import Data
 ################################################################################
-suppressMessages(
-    getSymbols(
-      Symbols = symbols,
-      src = "yahoo",
-      from = start_date,
-      to = end_date,
-      adjust = adjustment)
-    )
+# suppressMessages(
+#     getSymbols(
+#       Symbols = symbols,
+#       src = "yahoo",
+#       from = start_date,
+#       to = end_date,
+#       adjust = adjustment)
+#     )
 # ------------Replace missing values (NA)       https://tinyurl.com/y5etxh8x ###
 SPL.AX <-
         SPL.AX %>%
