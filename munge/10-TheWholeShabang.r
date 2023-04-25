@@ -11,8 +11,10 @@ atr             <- ATR(SPL[,c("high","low","close")],n=14)                      
 bb.20          <- BBands(SPL$close,20,sd=2,maType=EMA)                      # BBands - 20 Day EMA
 disp           <- Delt(bb.20[,"dn"],bb.20[,"up"])                           # Create Dispersion Column
 dispDiff       <- Delt(disp)                                                # Create Daily Dispersion Difference Pct Column
-xts_bb20_disp  <- cbind(SPL.AX, bb.20,disp, dispDiff)[,c(7:12)]
-dt_bb20_disp   <- data.table(xts_bb20_disp, keep.rownames = TRUE)
+# xts_bb20_disp  <- cbind(SPL.AX, bb.20,disp, dispDiff)[,c(7:12)]
+xts_bb20_disp  <- cbind(SPL, bb.20,disp, dispDiff)[,c(2,9:14)]
+# dt_bb20_disp   <- data.table(xts_bb20_disp, keep.rownames = TRUE)
+dt_bb20_disp   <- data.table(xts_bb20_disp)
 # --------------------------------------------------------------------------
 colnames(xts_bb20_disp)[5:6] <- c("pct", "delta")
 names(dt_bb20_disp)[c(1,6:7)] <- c("date", "pct", "delta")
