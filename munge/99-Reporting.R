@@ -259,8 +259,8 @@ colnames(nX)       <- c("nXema", "nXsma", "Buy&Hold")
 trendReturnsDaily   <- cbind(death[,-c(3)],golden[,-c(3)],nX)
 trendReturnsMonthly <- daily2monthly.zoo(trendReturnsDaily, FUN = sum, na.rm = TRUE,)
 trendReturnsAnnual  <- daily2annual.zoo(trendReturnsDaily, FUN = sum, na.rm = TRUE)
-Return.annualized(trendReturnsAnnual)
-Return.cumulative(trendReturnsAnnual)
+# PerformanceAnalytics::Return.annualized(trendReturnsAnnual)
+# PerformanceAnalytics::Return.cumulative(trendReturnsAnnual)
 ################################################################################
 ## Step 99.99: VERSION HISTORY                                               ###
 ################################################################################
