@@ -239,26 +239,6 @@
       ],
       "Hash": "45f0398006e83a5b10b72a90663d8d8c"
     },
-    "ROCR": {
-      "Package": "ROCR",
-      "Version": "1.0-11",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteUsername": "ipa-tys",
-      "RemoteRepo": "ROCR",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "1a4a66f313115cf51082cb4a3e4d48038786b4f4",
-      "RemoteHost": "api.github.com",
-      "Requirements": [
-        "R",
-        "gplots",
-        "grDevices",
-        "graphics",
-        "methods",
-        "stats"
-      ],
-      "Hash": "886a678cf8323b61f50de50188ae8e5d"
-    },
     "Rcpp": {
       "Package": "Rcpp",
       "Version": "1.0.12",
@@ -2894,29 +2874,6 @@
         "xtable"
       ],
       "Hash": "54b26646816af9960a4c64d8ceec75d6"
-    },
-    "shinyWidgets": {
-      "Package": "shinyWidgets",
-      "Version": "0.8.6",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteUsername": "dreamRs",
-      "RemoteRepo": "shinyWidgets",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "c94c298dd063fb70df538c13d29805d4188ef860",
-      "RemoteHost": "api.github.com",
-      "Requirements": [
-        "R",
-        "anytime",
-        "bslib",
-        "grDevices",
-        "htmltools",
-        "jsonlite",
-        "rlang",
-        "sass",
-        "shiny"
-      ],
-      "Hash": "39c97f86102759f7b7d4a96f38fa3ae6"
     },
     "shinydashboard": {
       "Package": "shinydashboard",
