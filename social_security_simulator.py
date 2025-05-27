@@ -67,6 +67,62 @@ SCENARIOS = [
     },
 ]
 
+# --- Core Financial Calculation Functions ---
+
+def calculate_age(current_date, birth_date):
+    """Calculates age as a string in years and months."""
+    age = relativedelta(current_date, birth_date)
+    return f"{age.years} years, {age.months} months"
+
+def update_credit_card_balance(current_balance, monthly_interest_rate, base_payment, ss_income_for_month):
+    """
+    Updates the credit card balance for one month.
+    Returns: interest_paid_component, principal_paid_component, actual_payment, new_balance
+    """
+    if current_balance <= Decimal('0'):
+        return Decimal('0'), Decimal('0'), Decimal('0'), Decimal('0')
+
+    interest_due = (current_balance * monthly_interest_rate).quantize(Decimal('0.01'))
+    total_payment_available = base_payment + ss_income_for_month
+    
+    # Actual payment cannot exceed what's needed to clear the balance
+    actual_payment = min(total_payment_available, current_balance + interest_due)
+
+    interest_paid_component = min(actual_payment, interest_due)
+    principal_paid_component = actual_payment - interest_paid_component
+    
+    new_balance = current_balance + interest_due - actual_payment
+    return interest_paid_component, principal_paid_component, actual_payment, max(Decimal('0'), new_balance)
+
+def update_mortgage_balance(current_balance, monthly_interest_rate, fixed_payment):
+    """
+    Updates the mortgage balance for one month.
+    Returns: interest_paid_component, principal_paid_component, new_balance
+    """
+    if current_balance <= Decimal('0'):
+        return Decimal('0'), Decimal('0'), Decimal('0')
+
+    interest_on_balance = (current_balance * monthly_interest_rate).quantize(Decimal('0.01'))
+    
+    # Payment for the month is the fixed payment, unless the balance (plus interest) is less
+    payment_this_month = min(fixed_payment, current_balance + interest_on_balance)
+
+    interest_paid_component = min(payment_this_month, interest_on_balance)
+    principal_paid_component = payment_this_month - interest_paid_component
+    
+    new_balance = current_balance - principal_paid_component
+    return interest_paid_component, principal_paid_component, max(Decimal('0'), new_balance)
+
+def update_investment_balance(current_balance, monthly_return_rate, contribution_this_month):
+    """
+    Updates the investment balance for one month.
+    Returns: new_balance
+    """
+    growth = (current_balance * monthly_return_rate).quantize(Decimal('0.01'))
+    new_balance = current_balance + growth + contribution_this_month
+    return new_balance
+
+# --- Main Simulation Block ---
 if __name__ == "__main__":
     all_scenarios_data_frames = []
 
@@ -268,58 +324,3 @@ if __name__ == "__main__":
 
         else:
             print("No scenario-specific dataframes were processed for consolidation.")
-
-# --- Core Financial Calculation Functions ---
-
-def calculate_age(current_date, birth_date):
-    """Calculates age as a string in years and months."""
-    age = relativedelta(current_date, birth_date)
-    return f"{age.years} years, {age.months} months"
-
-def update_credit_card_balance(current_balance, monthly_interest_rate, base_payment, ss_income_for_month):
-    """
-    Updates the credit card balance for one month.
-    Returns: interest_paid_component, principal_paid_component, actual_payment, new_balance
-    """
-    if current_balance <= Decimal('0'):
-        return Decimal('0'), Decimal('0'), Decimal('0'), Decimal('0')
-
-    interest_due = (current_balance * monthly_interest_rate).quantize(Decimal('0.01'))
-    total_payment_available = base_payment + ss_income_for_month
-    
-    # Actual payment cannot exceed what's needed to clear the balance
-    actual_payment = min(total_payment_available, current_balance + interest_due)
-
-    interest_paid_component = min(actual_payment, interest_due)
-    principal_paid_component = actual_payment - interest_paid_component
-    
-    new_balance = current_balance + interest_due - actual_payment
-    return interest_paid_component, principal_paid_component, actual_payment, max(Decimal('0'), new_balance)
-
-def update_mortgage_balance(current_balance, monthly_interest_rate, fixed_payment):
-    """
-    Updates the mortgage balance for one month.
-    Returns: interest_paid_component, principal_paid_component, new_balance
-    """
-    if current_balance <= Decimal('0'):
-        return Decimal('0'), Decimal('0'), Decimal('0')
-
-    interest_on_balance = (current_balance * monthly_interest_rate).quantize(Decimal('0.01'))
-    
-    # Payment for the month is the fixed payment, unless the balance (plus interest) is less
-    payment_this_month = min(fixed_payment, current_balance + interest_on_balance)
-
-    interest_paid_component = min(payment_this_month, interest_on_balance)
-    principal_paid_component = payment_this_month - interest_paid_component
-    
-    new_balance = current_balance - principal_paid_component
-    return interest_paid_component, principal_paid_component, max(Decimal('0'), new_balance)
-
-def update_investment_balance(current_balance, monthly_return_rate, contribution_this_month):
-    """
-    Updates the investment balance for one month.
-    Returns: new_balance
-    """
-    growth = (current_balance * monthly_return_rate).quantize(Decimal('0.01'))
-    new_balance = current_balance + growth + contribution_this_month
-    return new_balance
