@@ -1,7 +1,42 @@
-Sys.setenv(RSTUDIO_PANDOC = "C:/PROGRA~3/CHOCOL~1/bin")
 library(data.table)
 # library(gdata) # For lsos() - Commented out due to issues
 library(rmarkdown) # For rmarkdown::run
+
+# --- New code block to set RSTUDIO_PANDOC dynamically ---
+pandoc_short_path <- "C:/PROGRA~3/CHOCOL~1/bin"
+pandoc_final_path <- pandoc_short_path # Default to short path
+
+message(paste("Attempting to normalize Pandoc path:", pandoc_short_path))
+tryCatch({
+    # normalizePath needs an existing file/dir to expand fully without warnings in some R versions.
+    # Let's assume pandoc.exe is the target within that directory.
+    pandoc_exe_full_short_path <- file.path(pandoc_short_path, "pandoc.exe")
+    
+    # Check if the presumed pandoc.exe exists at the short path
+    # Note: file.exists might not work reliably with short paths if R's working dir context is odd.
+    # but it's the best direct check we have.
+    # On non-Windows, this check will likely fail, which is fine for testing the logic.
+    if (file.exists(pandoc_exe_full_short_path)) {
+        normalized_exe_path <- normalizePath(pandoc_exe_full_short_path, mustWork = TRUE) # mustWork = TRUE to error if not found
+        pandoc_final_path <- dirname(normalized_exe_path)
+        message(paste("Normalized Pandoc directory to:", pandoc_final_path))
+    } else {
+        message(paste("pandoc.exe not found at the short path '", pandoc_exe_full_short_path, "'. Will proceed with the short path or other fallbacks if any."))
+        # Optional: Add more sophisticated fallbacks here if needed, e.g., checking common Program Files locations
+        # For now, if direct normalization fails, we rely on the initial pandoc_final_path (short path).
+    }
+}, warning = function(w) {
+    message(paste("Warning during normalizePath. Pandoc path may remain as short path. Warning:", conditionMessage(w)))
+}, error = function(e) {
+    message(paste("Error during normalizePath. Pandoc path may remain as short path. Error:", conditionMessage(e)))
+})
+
+Sys.setenv(RSTUDIO_PANDOC = pandoc_final_path)
+message(paste("RSTUDIO_PANDOC is now set to:", Sys.getenv("RSTUDIO_PANDOC")))
+
+# User's debug line that shows where the error occurs
+message("Next, rmarkdown::find_pandoc() will be called by the script (if rmarkdown functions are used that trigger it)...")
+# --- End of new code block ---
 
 # VERSION HISTORY
 z99.version <- "1.0.0"
@@ -26,7 +61,7 @@ z99.ModDate <- as.Date("2019-06-09")
 ################################################################################
 ## Step 99.02: Processing                                                    ###
 ################################################################################
-print(paste("RSTUDIO_PANDOC before rmarkdown::run:", Sys.getenv("RSTUDIO_PANDOC")))
+print(paste("RSTUDIO_PANDOC before rmarkdown::run:", Sys.getenv("RSTUDIO_PANDOC"))) # This will show the value set by new block
 print("Calling rmarkdown::find_pandoc():")
 print(rmarkdown::find_pandoc())
 print("Calling rmarkdown::pandoc_version():")
