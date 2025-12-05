@@ -498,7 +498,11 @@ renderPlot({
 
   # generate bins based on input$bins from ui.R
   x <- tk_xts(price())
-  y <- max(SPL.AX[,6])
+  y <- max(SPL.AX[,6], na.rm = TRUE)
+  
+  # Ensure breaks span the range of x
+  max_val <- max(x[,6], na.rm = TRUE)
+  upper_limit <- max(y, max_val)
   
   hist(x[,6],
     main = "Closing Price",
@@ -507,8 +511,8 @@ renderPlot({
     col = "blue",
     freq = TRUE,
     border = "white",
-    xlim = c(0.0, y),
-    seq(0.1, 2.5, by = 0.10)
+    xlim = c(0.0, upper_limit),
+    breaks = seq(0, upper_limit + 0.5, by = 0.10)
   )
 })
 ```
