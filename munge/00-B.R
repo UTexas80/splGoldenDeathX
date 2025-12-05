@@ -160,7 +160,7 @@ setkey(dtGoldenX, "date") # create data.table index
 ## Step 00.11 T/F: determine if a day meets the golden/death X criteria      ###
 ################################################################################
 # convert column from logical to character; xts doesn't recognize TRUE/FALSE ---
-dtGoldenX %>% mutate_if(is.logical, as.character) -> dtGoldenX
+dtGoldenX %>% dplyr::mutate_if(is.logical, as.character) -> dtGoldenX
 # converting data table to xts ---------------- https://tinyurl.com/y66xbu3h ---
 # goldenX.xts <- xts(dtGoldenX[, -1], order.by = dtGoldenX[, 1])
 # priceGoldenX.xts <- SPL.AX[index(goldenX.xts)]

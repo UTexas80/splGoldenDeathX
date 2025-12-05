@@ -3,8 +3,12 @@
 ## Step 00.00 Processing Start Time - start the timer                        ###
 ################################################################################
 start.time <- Sys.time()
-log_threshold(DEBUG)
-log_info('Script starting up...')
+if (requireNamespace("logger", quietly = TRUE)) {
+  logger::log_threshold(logger::DEBUG)
+  logger::log_info("Script starting up...")
+} else {
+  message("Script starting up...")
+}
 # ------------------------------------------------------------------------------
 cross(20,50,100,200)
 ################################################################################

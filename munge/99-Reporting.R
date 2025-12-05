@@ -67,7 +67,8 @@ trend      <- trend[dtSPL, nomatch = 0][,-c(15:20)]
 # ------------------------------------------------------------------------------# https://tinyurl.com/tmmubbh
 trendReturns      <- data.table(t(trend[, c(3,8)]))                             # subcatName, return
 trendReturns      <- setnames(trendReturns, as.character(trendReturns[1,]))[-1,] %>%
-                     mutate_if(is.character,as.numeric)
+                     dplyr::mutate_if(is.character,as.numeric) %>%
+                     dplyr::mutate_all(function(x) x/100)
 # ------------------------------------------------------------------------------
 # [1] "indicator"         "catName"           "subcatName"        "startDate"         "startOpen"         "endDate"           "endOpen"
 # [8] "return"            "Max.Notional.Cost" "Net.Trading.PL"    "tradeDays"         "calendarDays"
@@ -83,7 +84,7 @@ dt_trade_stats    <- rbind.data.frame(dXema_trade_stats,
 # Converting column from character to numeric       https://tinyurl.com/ycn9yuun
 # ------------------------------------------------------------------------------
 dt_trade_stats_num <- dt_trade_stats[,-c(1:2)] %>%
-                      mutate_if(is.character,as.numeric)
+                      dplyr::mutate_if(is.character,as.numeric)
 dt_trade_stats     <- cbind(dt_trade_stats[,1], dt_trade_stats_num)
 dt_trade_stats[, Percent.Positive := Percent.Positive/100][,
                  Percent.Negative := Percent.Negative/100]
@@ -258,7 +259,7 @@ colnames(nX)       <- c("nXema", "nXsma", "Buy&Hold")
 # trendReturnsDaily <- cbind(death[,1:2], golden[,1:2], nX)
 trendReturnsDaily   <- cbind(death[,-c(3)],golden[,-c(3)],nX)
 trendReturnsMonthly <- daily2monthly.zoo(trendReturnsDaily, FUN = sum, na.rm = TRUE,)
-trendReturnsAnnual  <- daily2annual.zoo(trendReturnsDaily, FUN = sum, na.rm = TRUE)
+trendReturnsAnnual  <- apply.yearly(trendReturnsDaily, FUN = colSums, na.rm = TRUE)
 # PerformanceAnalytics::Return.annualized(trendReturnsAnnual)
 # PerformanceAnalytics::Return.cumulative(trendReturnsAnnual)
 ################################################################################
