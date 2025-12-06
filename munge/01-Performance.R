@@ -39,8 +39,8 @@ ret               <- ROC(Cl(SPL.AX))
 golden_ma_sigEMA  <- ifelse(ema020 > ema050 & ema050 >
 ema100 & ema100 > ema200, 1, 0)
 # ------------------------------------------------------------------------------
-golden_ma_sigSMA  <- lag(ifelse(sma020 > sma050 & sma050 >
-sma100 & sma100 > sma200, 1, 0), -1)
+golden_ma_sigSMA  <- dplyr::lead(ifelse(sma020 > sma050 & sma050 >
+sma100 & sma100 > sma200, 1, 0), 1)
 # ------------------------------------------------------------------------------
 #golden_ma_sig    <- lag(ifelse(ema020 > ema050 & ema050 >
 #ema100 & ema100 > ema200, 1, 0), -1)  
