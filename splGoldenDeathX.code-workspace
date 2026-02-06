@@ -1,9 +1,15 @@
 {
 	"folders": [
 		{
+			"name": "splGoldenDeathX",
 			"path": "."
 		},
 		{
+			"name": "vl",
+			"path": "../vl"
+		},
+		{
+			"name": "ProjectTemplate",
 			"path": "../ProjectTemplate"
 		}
 	],

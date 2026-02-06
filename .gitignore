@@ -21,7 +21,7 @@
 /*.Rcheck/
 
 # RStudio files
-.Rproj.user/
+# .Rproj.user/
 
 # produced vignettes
 vignettes/*.html
@@ -47,7 +47,6 @@ rsconnect/
 
 # Bookdown
 _bookdown_files
-.Rproj.user
 
 # Packrat
 packrat/lib*/
@@ -55,3 +54,4 @@ packrat/src/
 
 # Packrat
 /spl.RData
+.Rproj.user
