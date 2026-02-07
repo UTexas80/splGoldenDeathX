@@ -747,8 +747,8 @@
     },
     "R6": {
       "Package": "R6",
-      "Version": "2.6.1",
-      "Source": "Repository",
+      "Version": "2.6.1.9000",
+      "Source": "GitHub",
       "Title": "Encapsulated Classes with Reference Semantics",
       "Authors@R": "c( person(\"Winston\", \"Chang\", , \"winston@posit.co\", role = c(\"aut\", \"cre\")), person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\")) )",
       "Description": "Creates classes with reference semantics, similar to R's built-in reference classes. Compared to reference classes, R6 classes are simpler and lighter-weight, and they are not built on S4 classes so they do not require the methods package. These classes allow public and private members, and they support inheritance, even when the classes are defined in different packages.",
@@ -766,10 +766,14 @@
       "Config/testthat/edition": "3",
       "Encoding": "UTF-8",
       "RoxygenNote": "7.3.2",
-      "NeedsCompilation": "no",
       "Author": "Winston Chang [aut, cre], Posit Software, PBC [cph, fnd]",
       "Maintainer": "Winston Chang <winston@posit.co>",
-      "Repository": "CRAN"
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "r-lib",
+      "RemoteRepo": "R6",
+      "RemoteRef": "main",
+      "RemoteSha": "2bced0f1354c08c3a34307bf0b62c50d97de36c0"
     },
     "RColorBrewer": {
       "Package": "RColorBrewer",
@@ -942,8 +946,8 @@
     },
     "RcppRoll": {
       "Package": "RcppRoll",
-      "Version": "0.3.1",
-      "Source": "Repository",
+      "Version": "0.3.1.9000",
+      "Source": "GitHub",
       "Type": "Package",
       "Title": "Efficient Rolling / Windowed Operations",
       "Author": "Kevin Ushey",
@@ -964,8 +968,12 @@
         "Rcpp"
       ],
       "RoxygenNote": "6.0.1",
-      "NeedsCompilation": "yes",
-      "Repository": "CRAN"
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "kevinushey",
+      "RemoteRepo": "RcppRoll",
+      "RemoteRef": "master",
+      "RemoteSha": "21f13e7898436dc7ee4b18e8a2ed12167fb20bb8"
     },
     "RcppTOML": {
       "Package": "RcppTOML",
@@ -1435,10 +1443,11 @@
     },
     "base64enc": {
       "Package": "base64enc",
-      "Version": "0.1-3",
+      "Version": "0.1-6",
       "Source": "Repository",
-      "Title": "Tools for base64 encoding",
-      "Author": "Simon Urbanek <Simon.Urbanek@r-project.org>",
+      "Title": "Tools for 'base64' Encoding",
+      "Author": "Simon Urbanek [aut, cre, cph] (https://urbanek.nz, ORCID: <https://orcid.org/0000-0003-2297-1732>)",
+      "Authors@R": "person(\"Simon\", \"Urbanek\", role=c(\"aut\",\"cre\",\"cph\"), email=\"Simon.Urbanek@r-project.org\", comment=c(\"https://urbanek.nz\", ORCID=\"0000-0003-2297-1732\"))",
       "Maintainer": "Simon Urbanek <Simon.Urbanek@r-project.org>",
       "Depends": [
         "R (>= 2.9.0)"
@@ -1446,9 +1455,10 @@
       "Enhances": [
         "png"
       ],
-      "Description": "This package provides tools for handling base64 encoding. It is more flexible than the orphaned base64 package.",
+      "Description": "Tools for handling 'base64' encoding. It is more flexible than the orphaned 'base64' package.",
       "License": "GPL-2 | GPL-3",
-      "URL": "http://www.rforge.net/base64enc",
+      "URL": "https://www.rforge.net/base64enc",
+      "BugReports": "https://github.com/s-u/base64enc/issues",
       "NeedsCompilation": "yes",
       "Repository": "CRAN"
     },
@@ -1535,7 +1545,7 @@
     "beeswarm": {
       "Package": "beeswarm",
       "Version": "0.4.0",
-      "Source": "Repository",
+      "Source": "GitHub",
       "Title": "The Bee Swarm Plot, an Alternative to Stripchart",
       "Description": "The bee swarm plot is a one-dimensional scatter plot like \"stripchart\", but with closely-packed, non-overlapping points.",
       "Date": "2021-05-07",
@@ -1552,7 +1562,12 @@
       "BugReports": "https://github.com/aroneklund/beeswarm/issues",
       "Author": "Aron Eklund [aut, cre] (<https://orcid.org/0000-0003-0861-1001>), James Trimble [aut] (<https://orcid.org/0000-0001-7282-8745>)",
       "Maintainer": "Aron Eklund <aroneklund@gmail.com>",
-      "Repository": "CRAN"
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "aroneklund",
+      "RemoteRepo": "beeswarm",
+      "RemoteRef": "master",
+      "RemoteSha": "d641db509e7a3f9c8e76147bf779fcb141cdba51"
     },
     "bigD": {
       "Package": "bigD",
@@ -2991,10 +3006,10 @@
     },
     "digest": {
       "Package": "digest",
-      "Version": "0.6.38",
+      "Version": "0.6.39",
       "Source": "Repository",
       "Authors@R": "c(person(\"Dirk\", \"Eddelbuettel\", role = c(\"aut\", \"cre\"), email = \"edd@debian.org\", comment = c(ORCID = \"0000-0001-6419-907X\")), person(\"Antoine\", \"Lucas\", role=\"ctb\", comment = c(ORCID = \"0000-0002-8059-9767\")), person(\"Jarek\", \"Tuszynski\", role=\"ctb\"), person(\"Henrik\", \"Bengtsson\", role=\"ctb\", comment = c(ORCID = \"0000-0002-7579-5165\")), person(\"Simon\", \"Urbanek\", role=\"ctb\", comment = c(ORCID = \"0000-0003-2297-1732\")), person(\"Mario\", \"Frasca\", role=\"ctb\"), person(\"Bryan\", \"Lewis\", role=\"ctb\"), person(\"Murray\", \"Stokely\", role=\"ctb\"), person(\"Hannes\", \"Muehleisen\", role=\"ctb\", comment = c(ORCID = \"0000-0001-8552-0029\")), person(\"Duncan\", \"Murdoch\", role=\"ctb\"), person(\"Jim\", \"Hester\", role=\"ctb\", comment = c(ORCID = \"0000-0002-2739-7082\")), person(\"Wush\", \"Wu\", role=\"ctb\", comment = c(ORCID = \"0000-0001-5180-0567\")), person(\"Qiang\", \"Kou\", role=\"ctb\", comment = c(ORCID = \"0000-0001-6786-5453\")), person(\"Thierry\", \"Onkelinx\", role=\"ctb\", comment = c(ORCID = \"0000-0001-8804-4216\")), person(\"Michel\", \"Lang\", role=\"ctb\", comment = c(ORCID = \"0000-0001-9754-0393\")), person(\"Viliam\", \"Simko\", role=\"ctb\"), person(\"Kurt\", \"Hornik\", role=\"ctb\", comment = c(ORCID = \"0000-0003-4198-9911\")), person(\"Radford\", \"Neal\", role=\"ctb\", comment = c(ORCID = \"0000-0002-2473-3407\")), person(\"Kendon\", \"Bell\", role=\"ctb\", comment = c(ORCID = \"0000-0002-9093-8312\")), person(\"Matthew\", \"de Queljoe\", role=\"ctb\"), person(\"Dmitry\", \"Selivanov\", role=\"ctb\", comment = c(ORCID = \"0000-0003-0492-6647\")), person(\"Ion\", \"Suruceanu\", role=\"ctb\", comment = c(ORCID = \"0009-0005-6446-4909\")), person(\"Bill\", \"Denney\", role=\"ctb\", comment = c(ORCID = \"0000-0002-5759-428X\")), person(\"Dirk\", \"Schumacher\", role=\"ctb\"), person(\"András\", \"Svraka\", role=\"ctb\", comment = c(ORCID = \"0009-0008-8480-1329\")), person(\"Sergey\", \"Fedorov\", role=\"ctb\", comment = c(ORCID = \"0000-0002-5970-7233\")), person(\"Will\", \"Landau\", role=\"ctb\", comment = c(ORCID = \"0000-0003-1878-3253\")), person(\"Floris\", \"Vanderhaeghe\", role=\"ctb\", comment = c(ORCID = \"0000-0002-6378-6229\")), person(\"Kevin\", \"Tappe\", role=\"ctb\"), person(\"Harris\", \"McGehee\", role=\"ctb\"), person(\"Tim\", \"Mastny\", role=\"ctb\"), person(\"Aaron\", \"Peikert\", role=\"ctb\", comment = c(ORCID = \"0000-0001-7813-818X\")), person(\"Mark\", \"van der Loo\", role=\"ctb\", comment = c(ORCID = \"0000-0002-9807-4686\")), person(\"Chris\", \"Muir\", role=\"ctb\", comment = c(ORCID = \"0000-0003-2555-3878\")), person(\"Moritz\", \"Beller\", role=\"ctb\", comment = c(ORCID = \"0000-0003-4852-0526\")), person(\"Sebastian\", \"Campbell\", role=\"ctb\", comment = c(ORCID = \"0009-0000-5948-4503\")), person(\"Winston\", \"Chang\", role=\"ctb\", comment = c(ORCID = \"0000-0002-1576-2126\")), person(\"Dean\", \"Attali\", role=\"ctb\", comment = c(ORCID = \"0000-0002-5645-3493\")), person(\"Michael\", \"Chirico\", role=\"ctb\", comment = c(ORCID = \"0000-0003-0787-087X\")), person(\"Kevin\", \"Ushey\", role=\"ctb\", comment = c(ORCID = \"0000-0003-2880-7407\")), person(\"Carl\", \"Pearson\", role=\"ctb\", comment = c(ORCID = \"0000-0003-0701-7860\")))",
-      "Date": "2025-11-09",
+      "Date": "2025-11-19",
       "Title": "Create Compact Hash Digests of R Objects",
       "Description": "Implementation of a function 'digest()' for the creation of hash digests of arbitrary R objects (using the 'md5', 'sha-1', 'sha-256', 'crc32', 'xxhash', 'murmurhash', 'spookyhash', 'blake3', 'crc32c', 'xxh3_64', and 'xxh3_128' algorithms) permitting easy comparison of R language objects, as well as functions such as 'hmac()' to create hash-based message authentication code. Please note that this package is not meant to be deployed for cryptographic purposes for which more comprehensive (and widely tested) libraries such as 'OpenSSL' should be used.",
       "URL": "https://github.com/eddelbuettel/digest, https://eddelbuettel.github.io/digest/, https://dirk.eddelbuettel.com/code/digest.html",
@@ -3522,7 +3537,7 @@
       "NeedsCompilation": "yes",
       "Author": "Thomas Lin Pedersen [cre, aut] (<https://orcid.org/0000-0002-5147-4711>), Berendea Nicolae [aut] (Author of the ColorSpace C++ library), Romain François [aut] (<https://orcid.org/0000-0002-2444-4226>), Posit, PBC [cph, fnd]",
       "Maintainer": "Thomas Lin Pedersen <thomas.pedersen@posit.co>",
-      "Repository": "RSM"
+      "Repository": "CRAN"
     },
     "fastmap": {
       "Package": "fastmap",
@@ -3546,8 +3561,8 @@
     },
     "flexdashboard": {
       "Package": "flexdashboard",
-      "Version": "0.6.2.9000",
-      "Source": "GitHub",
+      "Version": "0.6.3",
+      "Source": "Repository",
       "Type": "Package",
       "Title": "R Markdown Format for Flexible Dashboards",
       "Authors@R": "c( person(\"Garrick\", \"Aden-Buie\", , \"garrick@posit.co\", role = c(\"aut\", \"cre\"), comment = c(ORCID = \"0000-0002-7111-0077\")), person(\"Carson\", \"Sievert\", , \"carson@posit.co\", role = \"aut\", comment = c(ORCID = \"0000-0002-4958-2844\")), person(\"Richard\", \"Iannone\", , \"rich@posit.co\", role = \"aut\", comment = c(ORCID = \"0000-0003-3925-190X\")), person(\"JJ\", \"Allaire\", , \"jj@posit.co\", role = \"aut\"), person(\"Barbara\", \"Borges\", , \"barb.b.ribeiro@gmail.com\", role = \"aut\"), person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\")), person(, \"Keen IO\", role = c(\"ctb\", \"cph\"), comment = \"Dashboard CSS\"), person(\"Abdullah\", \"Almsaeed\", role = c(\"ctb\", \"cph\"), comment = \"Dashboard CSS\"), person(\"Jonas\", \"Mosbech\", role = c(\"ctb\", \"cph\"), comment = \"StickyTableHeaders\"), person(\"Noel\", \"Bossart\", role = c(\"ctb\", \"cph\"), comment = \"Featherlight\"), person(\"Lea\", \"Verou\", role = c(\"ctb\", \"cph\"), comment = \"Prism\"), person(\"Dmitry\", \"Baranovskiy\", role = c(\"ctb\", \"cph\"), comment = \"Raphael.js\"), person(, \"Sencha Labs\", role = c(\"ctb\", \"cph\"), comment = \"Raphael.js\"), person(\"Bojan\", \"Djuricic\", role = c(\"ctb\", \"cph\"), comment = \"JustGage\"), person(\"Tomas\", \"Sardyha\", role = c(\"ctb\", \"cph\"), comment = \"Sly\"), person(\"Bryan\", \"Lewis\", role = c(\"ctb\", \"cph\"), comment = \"Examples\"), person(\"Joshua\", \"Kunst\", role = c(\"ctb\", \"cph\"), comment = \"Examples\"), person(\"Ryan\", \"Hafen\", role = c(\"ctb\", \"cph\"), comment = \"Examples\"), person(\"Bob\", \"Rudis\", role = c(\"ctb\", \"cph\"), comment = \"Examples\"), person(\"Joe\", \"Cheng\", role = \"ctb\", comment = \"Examples\") )",
@@ -3579,15 +3594,11 @@
       "Config/Needs/website": "rstudio/quillt",
       "Config/testthat/edition": "3",
       "Encoding": "UTF-8",
-      "RoxygenNote": "7.2.3",
-      "Author": "Garrick Aden-Buie [aut, cre] (<https://orcid.org/0000-0002-7111-0077>), Carson Sievert [aut] (<https://orcid.org/0000-0002-4958-2844>), Richard Iannone [aut] (<https://orcid.org/0000-0003-3925-190X>), JJ Allaire [aut], Barbara Borges [aut], Posit Software, PBC [cph, fnd], Keen IO [ctb, cph] (Dashboard CSS), Abdullah Almsaeed [ctb, cph] (Dashboard CSS), Jonas Mosbech [ctb, cph] (StickyTableHeaders), Noel Bossart [ctb, cph] (Featherlight), Lea Verou [ctb, cph] (Prism), Dmitry Baranovskiy [ctb, cph] (Raphael.js), Sencha Labs [ctb, cph] (Raphael.js), Bojan Djuricic [ctb, cph] (JustGage), Tomas Sardyha [ctb, cph] (Sly), Bryan Lewis [ctb, cph] (Examples), Joshua Kunst [ctb, cph] (Examples), Ryan Hafen [ctb, cph] (Examples), Bob Rudis [ctb, cph] (Examples), Joe Cheng [ctb] (Examples)",
+      "RoxygenNote": "7.3.3",
+      "NeedsCompilation": "no",
+      "Author": "Garrick Aden-Buie [aut, cre] (ORCID: <https://orcid.org/0000-0002-7111-0077>), Carson Sievert [aut] (ORCID: <https://orcid.org/0000-0002-4958-2844>), Richard Iannone [aut] (ORCID: <https://orcid.org/0000-0003-3925-190X>), JJ Allaire [aut], Barbara Borges [aut], Posit Software, PBC [cph, fnd], Keen IO [ctb, cph] (Dashboard CSS), Abdullah Almsaeed [ctb, cph] (Dashboard CSS), Jonas Mosbech [ctb, cph] (StickyTableHeaders), Noel Bossart [ctb, cph] (Featherlight), Lea Verou [ctb, cph] (Prism), Dmitry Baranovskiy [ctb, cph] (Raphael.js), Sencha Labs [ctb, cph] (Raphael.js), Bojan Djuricic [ctb, cph] (JustGage), Tomas Sardyha [ctb, cph] (Sly), Bryan Lewis [ctb, cph] (Examples), Joshua Kunst [ctb, cph] (Examples), Ryan Hafen [ctb, cph] (Examples), Bob Rudis [ctb, cph] (Examples), Joe Cheng [ctb] (Examples)",
       "Maintainer": "Garrick Aden-Buie <garrick@posit.co>",
-      "RemoteType": "github",
-      "RemoteUsername": "rstudio",
-      "RemoteRepo": "flexdashboard",
-      "RemoteRef": "main",
-      "RemoteSha": "9620559532dcf104e69060cad553cdde76b6c55e",
-      "RemoteHost": "api.github.com"
+      "Repository": "CRAN"
     },
     "fontawesome": {
       "Package": "fontawesome",
@@ -5633,16 +5644,18 @@
     },
     "isoband": {
       "Package": "isoband",
-      "Version": "0.2.7",
+      "Version": "0.3.0",
       "Source": "Repository",
       "Title": "Generate Isolines and Isobands from Regularly Spaced Elevation Grids",
-      "Authors@R": "c( person(\"Hadley\", \"Wickham\", , \"hadley@posit.co\", role = c(\"aut\", \"cre\"), comment = c(ORCID = \"0000-0003-4757-117X\")), person(\"Claus O.\", \"Wilke\", , \"wilke@austin.utexas.edu\", role = \"aut\", comment = c(\"Original author\", ORCID = \"0000-0002-7470-9261\")), person(\"Thomas Lin\", \"Pedersen\", , \"thomasp85@gmail.com\", role = \"aut\", comment = c(ORCID = \"0000-0002-5147-4711\")) )",
+      "Authors@R": "c( person(\"Hadley\", \"Wickham\", , \"hadley@posit.co\", role = \"aut\", comment = c(ORCID = \"0000-0003-4757-117X\")), person(\"Claus O.\", \"Wilke\", , \"wilke@austin.utexas.edu\", role = \"aut\", comment = c(\"Original author\", ORCID = \"0000-0002-7470-9261\")), person(\"Thomas Lin\", \"Pedersen\", , \"thomas.pedersen@posit.co\", role = c(\"aut\", \"cre\"), comment = c(ORCID = \"0000-0002-5147-4711\")), person(\"Posit, PBC\", role = c(\"cph\", \"fnd\"), comment = c(ROR = \"03wc8by49\")) )",
       "Description": "A fast C++ implementation to generate contour lines (isolines) and contour polygons (isobands) from regularly spaced grids containing elevation data.",
       "License": "MIT + file LICENSE",
-      "URL": "https://isoband.r-lib.org",
+      "URL": "https://isoband.r-lib.org, https://github.com/r-lib/isoband",
       "BugReports": "https://github.com/r-lib/isoband/issues",
       "Imports": [
+        "cli",
         "grid",
+        "rlang",
         "utils"
       ],
       "Suggests": [
@@ -5650,21 +5663,25 @@
         "ggplot2",
         "knitr",
         "magick",
-        "microbenchmark",
+        "bench",
         "rmarkdown",
         "sf",
-        "testthat",
+        "testthat (>= 3.0.0)",
         "xml2"
       ],
       "VignetteBuilder": "knitr",
       "Config/Needs/website": "tidyverse/tidytemplate",
       "Config/testthat/edition": "3",
+      "Config/usethis/last-upkeep": "2025-12-05",
       "Encoding": "UTF-8",
-      "RoxygenNote": "7.2.3",
-      "SystemRequirements": "C++11",
+      "RoxygenNote": "7.3.3",
+      "Config/build/compilation-database": "true",
+      "LinkingTo": [
+        "cpp11"
+      ],
       "NeedsCompilation": "yes",
-      "Author": "Hadley Wickham [aut, cre] (<https://orcid.org/0000-0003-4757-117X>), Claus O. Wilke [aut] (Original author, <https://orcid.org/0000-0002-7470-9261>), Thomas Lin Pedersen [aut] (<https://orcid.org/0000-0002-5147-4711>)",
-      "Maintainer": "Hadley Wickham <hadley@posit.co>",
+      "Author": "Hadley Wickham [aut] (ORCID: <https://orcid.org/0000-0003-4757-117X>), Claus O. Wilke [aut] (Original author, ORCID: <https://orcid.org/0000-0002-7470-9261>), Thomas Lin Pedersen [aut, cre] (ORCID: <https://orcid.org/0000-0002-5147-4711>), Posit, PBC [cph, fnd] (ROR: <https://ror.org/03wc8by49>)",
+      "Maintainer": "Thomas Lin Pedersen <thomas.pedersen@posit.co>",
       "Repository": "CRAN"
     },
     "iterators": {
@@ -5746,8 +5763,8 @@
     },
     "jsonlite": {
       "Package": "jsonlite",
-      "Version": "2.0.0",
-      "Source": "Repository",
+      "Version": "2.0.1",
+      "Source": "GitHub",
       "Title": "A Simple and Robust JSON Parser and Generator for R",
       "License": "MIT + file LICENSE",
       "Depends": [
@@ -5770,9 +5787,14 @@
       ],
       "RoxygenNote": "7.3.2",
       "Encoding": "UTF-8",
-      "NeedsCompilation": "yes",
+      "Roxygen": "list(markdown = TRUE)",
       "Author": "Jeroen Ooms [aut, cre] (<https://orcid.org/0000-0002-4035-0289>), Duncan Temple Lang [ctb], Lloyd Hilaiel [cph] (author of bundled libyajl)",
-      "Repository": "CRAN"
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "jeroen",
+      "RemoteRepo": "jsonlite",
+      "RemoteRef": "master",
+      "RemoteSha": "3f41e9643cdd71663fa1e537016c8717698bb074"
     },
     "juicyjuice": {
       "Package": "juicyjuice",
@@ -8023,7 +8045,7 @@
     },
     "purrr": {
       "Package": "purrr",
-      "Version": "1.2.0",
+      "Version": "1.2.1",
       "Source": "Repository",
       "Title": "Functional Programming Tools",
       "Authors@R": "c( person(\"Hadley\", \"Wickham\", , \"hadley@posit.co\", role = c(\"aut\", \"cre\"), comment = c(ORCID = \"0000-0003-4757-117X\")), person(\"Lionel\", \"Henry\", , \"lionel@posit.co\", role = \"aut\"), person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"), comment = c(ROR = \"https://ror.org/03wc8by49\")) )",
@@ -8317,31 +8339,33 @@
     },
     "rappdirs": {
       "Package": "rappdirs",
-      "Version": "0.3.3",
+      "Version": "0.3.4",
       "Source": "Repository",
       "Type": "Package",
       "Title": "Application Directories: Determine Where to Save Data, Caches, and Logs",
-      "Authors@R": "c(person(given = \"Hadley\", family = \"Wickham\", role = c(\"trl\", \"cre\", \"cph\"), email = \"hadley@rstudio.com\"), person(given = \"RStudio\", role = \"cph\"), person(given = \"Sridhar\", family = \"Ratnakumar\", role = \"aut\"), person(given = \"Trent\", family = \"Mick\", role = \"aut\"), person(given = \"ActiveState\", role = \"cph\", comment = \"R/appdir.r, R/cache.r, R/data.r, R/log.r translated from appdirs\"), person(given = \"Eddy\", family = \"Petrisor\", role = \"ctb\"), person(given = \"Trevor\", family = \"Davis\", role = c(\"trl\", \"aut\")), person(given = \"Gabor\", family = \"Csardi\", role = \"ctb\"), person(given = \"Gregory\", family = \"Jefferis\", role = \"ctb\"))",
+      "Authors@R": "c( person(\"Hadley\", \"Wickham\", , \"hadley@posit.co\", role = c(\"trl\", \"cre\", \"cph\")), person(\"Sridhar\", \"Ratnakumar\", role = \"aut\"), person(\"Trent\", \"Mick\", role = \"aut\"), person(\"ActiveState\", role = \"cph\", comment = \"R/appdir.r, R/cache.r, R/data.r, R/log.r translated from appdirs\"), person(\"Eddy\", \"Petrisor\", role = \"ctb\"), person(\"Trevor\", \"Davis\", role = c(\"trl\", \"aut\"), comment = c(ORCID = \"0000-0001-6341-4639\")), person(\"Gabor\", \"Csardi\", role = \"ctb\"), person(\"Gregory\", \"Jefferis\", role = \"ctb\"), person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"), comment = c(ROR = \"03wc8by49\")) )",
       "Description": "An easy way to determine which directories on the users computer you should use to save data, caches and logs. A port of Python's 'Appdirs' (<https://github.com/ActiveState/appdirs>) to R.",
       "License": "MIT + file LICENSE",
       "URL": "https://rappdirs.r-lib.org, https://github.com/r-lib/rappdirs",
       "BugReports": "https://github.com/r-lib/rappdirs/issues",
       "Depends": [
-        "R (>= 3.2)"
+        "R (>= 4.1)"
       ],
       "Suggests": [
-        "roxygen2",
-        "testthat (>= 3.0.0)",
         "covr",
+        "roxygen2",
+        "testthat (>= 3.2.0)",
         "withr"
       ],
-      "Copyright": "Original python appdirs module copyright (c) 2010 ActiveState Software Inc. R port copyright Hadley Wickham, RStudio. See file LICENSE for details.",
-      "Encoding": "UTF-8",
-      "RoxygenNote": "7.1.1",
+      "Config/Needs/website": "tidyverse/tidytemplate",
       "Config/testthat/edition": "3",
+      "Config/usethis/last-upkeep": "2025-05-05",
+      "Copyright": "Original python appdirs module copyright (c) 2010 ActiveState Software Inc. R port copyright Hadley Wickham, Posit, PBC.  See file LICENSE for details.",
+      "Encoding": "UTF-8",
+      "RoxygenNote": "7.3.3",
       "NeedsCompilation": "yes",
-      "Author": "Hadley Wickham [trl, cre, cph], RStudio [cph], Sridhar Ratnakumar [aut], Trent Mick [aut], ActiveState [cph] (R/appdir.r, R/cache.r, R/data.r, R/log.r translated from appdirs), Eddy Petrisor [ctb], Trevor Davis [trl, aut], Gabor Csardi [ctb], Gregory Jefferis [ctb]",
-      "Maintainer": "Hadley Wickham <hadley@rstudio.com>",
+      "Author": "Hadley Wickham [trl, cre, cph], Sridhar Ratnakumar [aut], Trent Mick [aut], ActiveState [cph] (R/appdir.r, R/cache.r, R/data.r, R/log.r translated from appdirs), Eddy Petrisor [ctb], Trevor Davis [trl, aut] (ORCID: <https://orcid.org/0000-0001-6341-4639>), Gabor Csardi [ctb], Gregory Jefferis [ctb], Posit Software, PBC [cph, fnd] (ROR: <https://ror.org/03wc8by49>)",
+      "Maintainer": "Hadley Wickham <hadley@posit.co>",
       "Repository": "CRAN"
     },
     "rbibutils": {
@@ -9431,7 +9455,7 @@
     },
     "rstudioapi": {
       "Package": "rstudioapi",
-      "Version": "0.17.1",
+      "Version": "0.18.0",
       "Source": "Repository",
       "Title": "Safely Access the RStudio API",
       "Description": "Access the RStudio API (if available) and provide informative error messages when it's not.",
@@ -9440,13 +9464,16 @@
       "License": "MIT + file LICENSE",
       "URL": "https://rstudio.github.io/rstudioapi/, https://github.com/rstudio/rstudioapi",
       "BugReports": "https://github.com/rstudio/rstudioapi/issues",
-      "RoxygenNote": "7.3.2",
+      "RoxygenNote": "7.3.3",
       "Suggests": [
         "testthat",
         "knitr",
         "rmarkdown",
         "clipr",
-        "covr"
+        "covr",
+        "curl",
+        "jsonlite",
+        "withr"
       ],
       "VignetteBuilder": "knitr",
       "Encoding": "UTF-8",
@@ -9659,7 +9686,8 @@
       "NeedsCompilation": "no",
       "Author": "Simon Potter [aut, trl, cre], Simon Sapin [aut], Ian Bicking [aut]",
       "Maintainer": "Simon Potter <simon@sjp.co.nz>",
-      "Repository": "CRAN"
+      "Repository": "RSPM",
+      "Encoding": "UTF-8"
     },
     "shape": {
       "Package": "shape",
@@ -11139,8 +11167,8 @@
     },
     "tsfeatures": {
       "Package": "tsfeatures",
-      "Version": "1.1.1",
-      "Source": "Repository",
+      "Version": "1.1.1.9000",
+      "Source": "GitHub",
       "Title": "Time Series Feature Extraction",
       "Authors@R": "c( person(\"Rob\", \"Hyndman\", email = \"Rob.Hyndman@monash.edu\", role = c(\"aut\",\"cre\"), comment = c(ORCID = \"0000-0002-2140-5352\")), person(\"Yanfei\", \"Kang\", role = \"aut\", comment = c(ORCID = \"0000-0001-8769-6650\")), person(\"Pablo\", \"Montero-Manso\", email=\"p.montero.manso@udc.es\", role=\"aut\"), person(\"Mitchell\", \"O'Hara-Wild\", role=\"aut\", comment=c(ORCID = \"0000-0001-6729-7695\")), person(\"Thiyanga\", \"Talagala\", role = \"aut\", comment=c(ORCID = \"0000-0002-0656-9789\")), person(\"Earo\", \"Wang\", role = \"aut\", comment=c(ORCID = \"0000-0001-6448-5260\")), person(\"Yangzhuoran\", \"Yang\", email = \"Fin.Yang@monash.edu\", role = \"aut\"), person(\"Souhaib\", \"Ben Taieb\", role = \"ctb\"), person(\"Cao\", \"Hanqing\", role=\"ctb\"), person(\"D K\", \"Lake\", role=\"ctb\"), person(\"Nikolay\", \"Laptev\", role=\"ctb\"), person(\"J R\", \"Moorman\", role=\"ctb\"), person(\"Bohan\", \"Zhang\", role = \"ctb\"))",
       "Description": "Methods for extracting various features from time series data. The features provided are those from Hyndman, Wang and Laptev (2013) <doi:10.1109/ICDMW.2015.104>, Kang, Hyndman and Smith-Miles (2017) <doi:10.1016/j.ijforecast.2016.09.004> and from Fulcher, Little and Jones (2013) <doi:10.1098/rsif.2013.0048>. Features include spectral entropy, autocorrelations, measures of the strength of seasonality and trend, and so on. Users can also define their own feature functions.",
@@ -11174,12 +11202,17 @@
       "URL": "https://pkg.robjhyndman.com/tsfeatures/, https://github.com/robjhyndman/tsfeatures",
       "BugReports": "https://github.com/robjhyndman/tsfeatures/issues",
       "RoxygenNote": "7.2.3",
+      "Roxygen": "list(markdown = TRUE, roclets=c('rd', 'collate', 'namespace'))",
       "VignetteBuilder": "knitr",
       "Encoding": "UTF-8",
-      "NeedsCompilation": "no",
       "Author": "Rob Hyndman [aut, cre] (<https://orcid.org/0000-0002-2140-5352>), Yanfei Kang [aut] (<https://orcid.org/0000-0001-8769-6650>), Pablo Montero-Manso [aut], Mitchell O'Hara-Wild [aut] (<https://orcid.org/0000-0001-6729-7695>), Thiyanga Talagala [aut] (<https://orcid.org/0000-0002-0656-9789>), Earo Wang [aut] (<https://orcid.org/0000-0001-6448-5260>), Yangzhuoran Yang [aut], Souhaib Ben Taieb [ctb], Cao Hanqing [ctb], D K Lake [ctb], Nikolay Laptev [ctb], J R Moorman [ctb], Bohan Zhang [ctb]",
       "Maintainer": "Rob Hyndman <Rob.Hyndman@monash.edu>",
-      "Repository": "CRAN"
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "robjhyndman",
+      "RemoteRepo": "tsfeatures",
+      "RemoteRef": "master",
+      "RemoteSha": "2094edaab8167558a0de8b57a601d9e06f5af395"
     },
     "tzdb": {
       "Package": "tzdb",
@@ -11271,10 +11304,10 @@
     },
     "uuid": {
       "Package": "uuid",
-      "Version": "1.2-1",
+      "Version": "1.2-2",
       "Source": "Repository",
       "Title": "Tools for Generating and Handling of UUIDs",
-      "Author": "Simon Urbanek [aut, cre, cph] (https://urbanek.org, <https://orcid.org/0000-0003-2297-1732>), Theodore Ts'o [aut, cph] (libuuid)",
+      "Author": "Simon Urbanek [aut, cre, cph] (https://urbanek.org, ORCID: <https://orcid.org/0000-0003-2297-1732>), Theodore Ts'o [aut, cph] (libuuid)",
       "Maintainer": "Simon Urbanek <Simon.Urbanek@r-project.org>",
       "Authors@R": "c(person(\"Simon\", \"Urbanek\", role=c(\"aut\",\"cre\",\"cph\"), email=\"Simon.Urbanek@r-project.org\", comment=c(\"https://urbanek.org\", ORCID=\"0000-0003-2297-1732\")), person(\"Theodore\",\"Ts'o\", email=\"tytso@thunk.org\", role=c(\"aut\",\"cph\"), comment=\"libuuid\"))",
       "Depends": [
