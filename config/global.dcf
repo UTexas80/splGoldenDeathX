@@ -6,15 +6,19 @@ data_loading: TRUE
 data_loading_header: TRUE
 data_ignore:
 load_libraries: TRUE
-libraries: zoo, animation, billboarder, blotter, checkpoint, curl, data.table, DataEditR, DataExplorer, dataMeta,
-            datapasta, dataspice, devtools, DiagrammeR, DT, dygraphs, excelR, ezknitr, FinancialInstrument,
-            flexdashboard, flextable, forecast, foreach, formatR, formattable, futile.logger, fuzzyjoin,
-            GetDFPData, gt, here, hydroTSM, janitor, knitr, kableExtra, lintr, logger, log4r, lubridate, naniar,
-            packagefinder, pacman, paletteer, parallel, pbapply, pdftools, PerformanceAnalytics, plotly, plyr,
-            poorman, ProjectTemplate, ppsr, Quandl, quantmod, quantstrat, r2d3, readr, readxl, repurrrsive,
-            renv, reprex, repo, reshape2, rio, rmarkdown, RVerbalExpressions, rvest, scales, shiny,
-            shinydashboard, shinydashboardPlus, shinyEffects, shinyjqui, statar, stringi, stringr, tibble,
-            tibbletime, tidyquant, timetk, timeSeries, tryCatchLog, TSstudio, TTR, xaringan, xtable, xts
+libraries: zoo, animation, billboarder, blotter, checkpoint, curl, data.table,
+         DataEditR, DataExplorer, dataMeta, datapasta, dataspice, devtools,
+         DiagrammeR, DT, dygraphs, excelR, ezknitr, FinancialInstrument,
+         flexdashboard, flextable, forecast, foreach, formatR, formattable,
+         futile.logger, fuzzyjoin, GetDFPData, gt, here, hydroTSM, janitor, knitr,
+         kableExtra, lintr, logger, log4r, lubridate, naniar, packagefinder, pacman,
+         paletteer, parallel, pbapply, pdftools, PerformanceAnalytics, plotly, plyr,
+         poorman, ProjectTemplate, ppsr, Quandl, quantmod, quantstrat, r2d3, readr,
+         readxl, repurrrsive, renv, reprex, repo, reshape2, rio, rmarkdown,
+         RVerbalExpressions, rvest, scales, shiny, shinydashboard,
+         shinydashboardPlus, shinyEffects, shinyjqui, statar, stringi, stringr,
+         tibble, tibbletime, tidyquant, timetk, timeSeries, tryCatchLog, TSstudio,
+         TTR, xaringan, xtable, xts
 logging: TRUE
 logging_level: INFO
 munging: TRUE
