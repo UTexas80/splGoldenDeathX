@@ -1,0 +1,16 @@
+# Copy this file to config.yaml and fill in your values.
+# config.yaml is gitignored — never commit real API keys.
+
+# Anthropic API key for --refine. Prefer setting ANTHROPIC_API_KEY as an
+# environment variable instead of putting it here; env var wins if both are set.
+anthropic_api_key: ""
+
+# Model to use for --refine.
+model: "claude-sonnet-4-5"
+
+# Default command for --run, if you use the same downstream tool every time.
+# Leave blank to require --run to be passed explicitly each time.
+default_run_command: ""
+
+# Where generated prompts are written, relative to the repo root.
+output_dir: "prompts/generated"
