@@ -17,7 +17,7 @@ library(dplyr)
 library(aod)
 library(readxl)
 # Visualization packages
-library(Deducer)
+# library(Deducer)
 library(ggplot2)
 library(plotly)
 # Machine learnning method packages

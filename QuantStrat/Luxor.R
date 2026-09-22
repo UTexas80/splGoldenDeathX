@@ -280,7 +280,7 @@ if( Sys.info()['sysname'] == "Windows" )
   library(doParallel)
   registerDoParallel(cores=detectCores())
 } else {
-  library(doMC)
+  # library(doMC)
   registerDoMC(cores=detectCores())
 }
 

@@ -18,7 +18,7 @@ options(width=79,continue=" ",digits=8)
 
 ## ----results='hide'------------------------------------------------------
 library(quantstrat)
-library(xtsExtra)
+# library(xtsExtra)
 
 ## ----results='hide'------------------------------------------------------
 stock.st = c("USO")
@@ -134,7 +134,7 @@ if( Sys.info()['sysname'] == "Windows" )
   # uncomment line below when combine function bug is fixed for Windows
   #registerDoParallel(cores=detectCores())
 } else {
-  library(doMC)
+  # library(doMC)
   registerDoMC(cores=detectCores())
 }
 

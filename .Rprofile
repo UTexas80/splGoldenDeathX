@@ -1,4 +1,11 @@
 source("renv/activate.R")
+
+# Skip "Suggests" dependencies during renv::restore().
+# ProjectTemplate suggests xlsx and RJDBC, both of which hard-depend on rJava.
+# rJava requires a working Java SDK + R CMD javareconf, and the macOS stub at
+# /usr/bin/java fails with "Unable to locate a Java Runtime".
+options(renv.config.install.suggests = FALSE)
+
 # LanguageServer Setup Start (do not change this chunk)
 # to remove this, run languageserversetup::remove_from_rprofile
 if (requireNamespace('languageserversetup', quietly = TRUE)) {
